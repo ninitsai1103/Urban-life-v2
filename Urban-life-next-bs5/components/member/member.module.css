@@ -1,0 +1,18 @@
+/* login */
+.box {
+  padding: 80px;
+  color: #fbfbfb;
+}
+
+@media (max-width: 768px) {
+  .box {
+    display: none;
+    padding: 0px !important;
+  }
+}
+.link{
+    color: #fbfbfb;
+}
+.link:hover {
+  color: #62a60a;
+}

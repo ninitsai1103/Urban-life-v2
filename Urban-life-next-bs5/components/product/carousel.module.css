@@ -1,0 +1,22 @@
+.mySwiper2 {
+  margin-bottom:10px;
+}
+.wrap-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+
+
+  @media (min-width: 768px) {
+    .mySwiper2 {
+      width: 600px;
+      height: 500px;
+    }
+    .mySwiper {
+      width: 600px;
+    }
+  }
+
+

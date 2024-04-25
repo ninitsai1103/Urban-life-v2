@@ -1,0 +1,23 @@
+.card {
+  width: 200px;
+  border-radius: 12px;
+}
+
+@media (max-width: 1200px) {
+  .card {
+    height: 250px;
+  }
+}
+.cardImg {
+  position: relative;
+  height: 100%;
+}
+.cardImgTop {
+  border-radius: 12px;
+  height: 100%;
+}
+.cardBody {
+  position: absolute;
+  left: 25%;
+  top: 30%;
+}

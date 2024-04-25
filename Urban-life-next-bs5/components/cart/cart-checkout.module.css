@@ -1,0 +1,86 @@
+/* @import '＠/styles/globals.scss'; */
+
+.coupon_name {
+    font-size: 20px;
+    color: black;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.coupon_detail {
+    font-size: 16px;
+    color: gray;
+    display: flex;
+    align-items: center;
+}
+
+.coupon_question {
+    font-size: 14px;
+}
+
+.coupon_limit {
+    display: block;
+}
+
+.d_cell {
+    text-align: center;
+    display: block;
+    font-size: 16px;
+}
+
+.d_td {
+    display: table-cell;
+    text-align: center;
+}
+
+.d_img {
+    width: 200px;
+    height: auto;
+}
+
+.name {
+    font-size: 20px;
+}
+
+.d_cell_price {
+    display: none;
+}
+
+.d_cell_amount {
+    display: none;
+}
+
+@media (max-width: 1200px) {
+    .coupon_name {
+        font-size: 14px;
+    }
+    .coupon_detail {
+        font-size: 12px;
+    }
+    .coupon_limit {
+        display: none;
+    }
+    .d_cell {
+        display: none;
+    }
+    .d_td {
+        display: none;
+    }
+    .d_img {
+        display: none;
+    }
+    .name {
+        font-size: 16px;
+        padding-bottom: 10px;
+    }
+    .d_cell_price {
+        display: block;
+        font-size: 14px;
+        padding-bottom: 10px;
+    }
+    .d_cell_amount {
+        display: block;
+        font-size: 14px;
+    }
+}

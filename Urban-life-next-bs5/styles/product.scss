@@ -1,0 +1,270 @@
+@import './globals.scss';
+
+body {
+  background-color: $secondary;
+  font-family: Roboto;
+}
+.set-fs12 {
+  font-size: 12px;
+}
+
+//分類
+.header-color {
+  background-color: $primary4;
+}
+
+.accordion-button {
+  background-color: white;
+
+  &:active,
+  &:hover {
+    color: white;
+    background-color: $primary2;
+  }
+
+  &:focus {
+    box-shadow: none; /* 取消陰影 */
+    color: white;
+    background-color: $primary2;
+  }
+}
+
+.sec-category {
+  border-bottom: 1px solid transparent;
+  &:hover {
+    color: $button-default;
+    border-bottom: 1px solid $button-default;
+  }
+}
+
+// .set-border,
+// .set-border:hover {
+//   border-bottom: 1px  $grey-700;
+// }
+
+.set-padding {
+  padding: 12px;
+}
+
+
+// 篩選
+.set-text-color {
+  color: $primary4;
+}
+.no-border-bg {
+  border: none;
+  background-color: transparent;
+}
+.set-button-style {
+  border: none;
+  height: 22px;
+  background-color: $button-default;
+  &:hover {
+    background-color: $button-hover;
+  }
+}
+.set-size {
+  height: 22px;
+}
+.set-fw700 {
+  font-weight: 700;
+}
+#set-text {
+  color: $primary3;
+  &:hover {
+    color: $primary2;
+  }
+}
+.set-text-color2 {
+  color: $button-default;
+  &:hover {
+    color: $button-hover;
+  }
+}
+
+.text-color2-nohover {
+  color: $button-default;
+}
+.set-dropdown-size {
+  width: 170px;
+}
+
+//商品列表
+.circle {
+  border-radius: 50%;
+  background-color: $primary2;
+  color: white;
+}
+.text-delete {
+  text-decoration: line-through;
+}
+
+.sort-btn-size {
+  width: 160px;
+  background-color: white;
+  &:hover {
+    background-color: white;
+  }
+  @media (max-width: 500px) {
+    width: 60px;
+  }
+}
+
+.offcanvas{
+  background-color: $secondary;
+}
+
+//商品細節頁
+.set-text-color3 {
+  color: $grey-700;
+}
+
+.set-border {
+  border-bottom: 1px dashed $grey-700;
+}
+.set-div-height{
+  height: 500px;
+}
+.fs-18 {
+  font-size: 18px;
+}
+.fs-17 {
+  font-size: 17px;
+}
+.btn-add{
+  width: 250px;
+}
+.padding {
+  padding-bottom: 1px;
+}
+.btn-bg {
+  background-color: rgb(168, 158, 146, 0.5);
+  &:hover {
+    background-color: rgb(168, 158, 146);
+  }
+}
+#button-plus {
+  width: 32.77px;
+}
+.btn-hover:hover {
+  background-color: $primary4;
+}
+.btn-hover2:hover {
+  background-color: $button-hover;
+}
+
+.size {
+  width: 400px;
+  height: 500px;
+  &img {
+    width: 100%;
+    height: auto;
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+
+//商品介紹
+.set-font {
+  font-family: 'Zen Kaku Gothic New';
+}
+.border-rd {
+ border-radius:$border-radius;
+}
+.bg {
+  background-color: rgb(255, 255, 255,0.8);  
+} 
+.bg-opacity  {
+  background-color: rgb(255, 255, 255,0.4); 
+}
+.fw-400 {
+  font-weight: 400;
+  line-height: 2.5;
+}
+.fw-700{
+  font-weight: 700;
+}
+.set-width {
+  width: 600px;
+}
+.set-width2 {
+  width: 700px;
+}
+.set-height {
+  height: 120px;
+}
+
+//買家評價
+.set-size2{
+  width: 45px;
+  height: 45px;
+}
+.grey {
+  color: $grey-500;
+}
+.grey-hover {
+  color: $grey-500;
+  &:hover {
+    color :$grey-700
+  }
+}
+.btn-color {
+  background-color: rgb(248, 240, 224);
+  border: 1px solid $grey-300;
+  &:hover,&:focus{
+    background-color: rgb(248, 240, 224);
+  }
+}
+
+//推薦商品
+.carousel-control-prev, .carousel-control-next {
+  position: absolute;
+  top: 50%; /* 調整到垂直中心 */
+  transform: translateY(-50%); /* 確保完全垂直居中 */
+}
+
+.carousel-control-prev {
+  left: -100px; /* 向左側移動按鈕 */
+}
+
+.carousel-control-next {
+  right: -100px; /* 向右側移動按鈕 */
+}
+
+.carousel-control-prev-icon{
+  border-radius: 50%;
+  background-size:20px;
+  padding: 1px;
+  background-color:  rgb(241, 241, 239);
+  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236b6b6b'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e")
+}
+
+.carousel-control-next-icon{
+  border-radius: 50%;
+  padding: 5px;
+  background-size:20px;
+  background-color:  rgb(241, 241, 239);
+  color: $grey-700;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%236b6b6b'%3e%3cpath d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") 
+}
+
+
+
+
+@media (max-width: 500px) {
+.direction {
+  flex-direction: column;
+}
+.set-width,.set-width2 {
+  width: 300px;
+}
+.size {
+  width: 300px;
+  height: 400px;
+}
+.btn-add{
+  width: 170px;
+}
+
+}

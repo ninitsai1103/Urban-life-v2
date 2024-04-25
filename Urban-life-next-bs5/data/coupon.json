@@ -1,0 +1,115 @@
+[
+  {
+    "id": 1,
+    "name": "註冊優惠券",
+    "code": "VIP666",
+    "amount": 0.9,
+    "startedAt": "2024/04/24",
+    "deadline": "2024/05/31",
+    "status": "可使用",
+    "min_price": 500,
+    "scope": "資材"
+  },
+  {
+    "id": 2,
+    "name": "新會員禮券",
+    "code": "AM44L",
+    "amount": 200,
+    "startedAt": "2024/04/24",
+    "deadline": "2024/05/31",
+    "status": "可使用",
+    "min_price": 1000,
+    "scope": "資材"
+  },{
+    "id": 3,
+    "name": "折抵好優惠",
+    "code": "MA5LC",
+    "amount": 300,
+    "startedAt": "2024/04/24",
+    "deadline": "2024/06/30",
+    "status": "可使用",
+    "min_price": 1500,
+    "scope": "農藥"
+  },{
+    "id": 4,
+    "name": "種植工具特價",
+    "code": "AZ2AJ",
+    "amount": 200,
+    "startedAt": "2024/04/24",
+    "deadline": "2024/06/30",
+    "status": "可使用",
+    "min_price": 1000,
+    "scope": "種苗"
+  },{
+    "id": 5,
+    "name": "蔬菜種子特價",
+    "code": "UZVHK",
+    "amount": 100,
+    "startedAt": "2024/04/24",
+    "deadline": "2024/06/30",
+    "status": "已使用",
+    "min_price": 500,
+    "scope": "種子"
+  },{
+    "id": 6,
+    "name": "精選專區折",
+    "code": "USKR5",
+    "amount": 0.95,
+    "startedAt": "2024/04/24",
+    "deadline": "2024/06/30",
+    "status": "已使用",
+    "min_price": 500,
+    "scope": "資材"
+  },{
+    "id": 7,
+    "name": "農藥限時優",
+    "code": "AZ2AJ",
+    "amount": 200,
+    "startedAt": "2024/01/12",
+    "deadline": "2024/03/26",
+    "status": "已過期",
+    "min_price": 600,
+    "scope": "農藥"
+  },{
+    "id": 8,
+    "name": "種結賬享優惠",
+    "code": "2CRRL",
+    "amount": 100,
+    "startedAt": "2024/01/02",
+    "deadline": "2024/03/26",
+    "status": "已過期",
+    "min_price": 300,
+    "scope": "資材"
+  },{
+    "id": 9,
+    "name": "折抵真優惠",
+    "code": "ZB1OU",
+    "amount": 300,
+    "startedAt": "2024/01/17",
+    "deadline": "2024/03/26",
+    "status": "已過期",
+    "min_price": 1000,
+    "scope": "資材"
+  },{
+    "id": 10,
+    "name": "資展學生招待",
+    "code": "MFEE48",
+    "amount": 300,
+    "startedAt": "2023/12/06",
+    "deadline": "2024/05/24",
+    "status": "可使用",
+    "min_price": 1500,
+    "scope": "肥料"
+  },{
+    "id": 11,
+    "name": "工作順利",
+    "code": "WORK666",
+    "amount": 0.9,
+    "startedAt": "2024/01/01",
+    "deadline": "2024/12/31",
+    "status": "可使用",
+    "min_price": 500,
+    "scope": "書籍"
+  }
+
+]
