@@ -1,13 +1,23 @@
 .card {
     display: flex;
-    width: 335px;
-    min-width: 335px;
-    padding: 15px 20px;
+    width: 631px;
+    height: 140px;
+    /* flex-direction: column; */
+    justify-content: flex-end;
+    align-items: flex-start;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.cardBody {
+    display: flex;
+    width: 427px;
+    padding: 20px 20px;
     flex-direction: column;
+    justify-content: center;
     align-items: flex-start;
     gap: 10px;
-    border-radius: 8px;
-    background: #FFF;
+    align-self: stretch;
 }
 
 .cardBodyArea {
@@ -37,9 +47,9 @@
     line-height: normal;
 }
 
-.lectureName {
+.articleName {
     display: -webkit-box;
-    width: 225px;
+    width: 387px;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     overflow: hidden;
@@ -53,7 +63,7 @@
     line-height: normal;
 }
 
-.lectureText {
+.articleText {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
@@ -61,29 +71,16 @@
     color: var(--grey-700, #6b6b6b);
     text-overflow: ellipsis;
     /* ZenKaku-h5 */
-    font-family: 'Zen Kaku Gothic New';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    align-items: center;
-}
-.priceText {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
-    color: var(--grey-700, #6b6b6b);
-    text-overflow: ellipsis;
-    /* ZenKaku-h5 */
-    font-family: 'Zen Kaku Gothic New';
-    font-size: 24px;
+    font-family: "Zen Kaku Gothic New";
+    font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    align-items: center;
 }
-.img{
-    width: 20px;
-    height: 23px;
+
+.img {
+    width: 204px;
+    height: 140px;
+    border-radius: 8px 0px 0px 8px;
+    background: lightgray 50% / cover no-repeat;
 }

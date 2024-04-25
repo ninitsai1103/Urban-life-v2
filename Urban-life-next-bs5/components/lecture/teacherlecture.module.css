@@ -1,14 +1,25 @@
 .card {
     display: flex;
-    width: 335px;
+    width: 580px;
+    height: 140px;
     min-width: 335px;
+    /* flex-direction: column; */
+    justify-content: flex-end;
+    align-items: flex-start;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.cardBody {
+    display: flex;
+    width: 335px;
     padding: 15px 20px;
     flex-direction: column;
+    justify-content: center;
     align-items: flex-start;
     gap: 10px;
-    border-radius: 8px;
-    background: #FFF;
-}
+    align-self: stretch;
+  }
 
 .cardBodyArea {
     height: 23px;
@@ -68,6 +79,7 @@
     line-height: normal;
     align-items: center;
 }
+
 .priceText {
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -83,7 +95,15 @@
     line-height: normal;
     align-items: center;
 }
-.img{
+
+.icon {
     width: 20px;
     height: 23px;
+}
+
+.img {
+    width: 245px;
+    height: 140px;
+    border-radius: 8px 0px 0px 8px;
+    background: lightgray 50% / cover no-repeat;
 }
