@@ -40,7 +40,7 @@ export default function CouponMainPage() {
       console.log(error)
     }
   }
-// 連線伺服器後，才將coupon資料抓下來渲染頁面
+  // 連線伺服器後，才將coupon資料抓下來渲染頁面
   useEffect(() => {
     getCoupons()
   }, [])
@@ -106,24 +106,24 @@ export default function CouponMainPage() {
                       name,
                       code,
                       amount,
-                      startedAt,
+                      started_at,
                       deadline,
                       status,
                       min_price,
-                      scope,
+                      condition,
                     } = filteredCoupon
-
+                    console.log(filteredCoupon)
                     return (
                       <div className="col-12 col-lg-6 g-2" key={id}>
                         <CouponCard
                           name={name}
                           code={code}
                           amount={amount}
-                          startedAt={startedAt}
+                          started_at={started_at}
                           deadline={deadline}
                           status={status}
                           min_price={min_price}
-                          scope={scope}
+                          condition={condition}
                         />
                       </div>
                     )
