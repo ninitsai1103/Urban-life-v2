@@ -9,16 +9,10 @@ import sequelize from '#configs/db.js'
 const { Product } = sequelize.models
 import { QueryTypes, Op } from 'sequelize'
 
-
-import db from '#configs/mysql.js'
-
-router.get('/product/list',async function(req, res){
-  let sqlCoupons = 'SELECT * FROM product_lecture'
-  try {
-    const[rows, fields] = await db.query()
-  }
-})
-
+/* 
+測試連結:
+/products?page=3&perpage=10&brand_ids=1,2,4&cat_ids=4,5,6,10,11,12&color_ids=1,2&size_ids=2,3&tag_ids=1,2,4&name_like=e&price_gte=1500&price_lte=10000&sort=price&order=asc
+*/
 // GET 獲得所有資料，加入分頁與搜尋字串功能，單一資料表處理
 router.get('/', async (req, res) => {
   // 獲取query參數值

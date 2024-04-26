@@ -9,6 +9,7 @@ import { BsCart3 } from 'react-icons/bs'
 import { GoHeart } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
 
+
 export default function Detail() {
   return (
     <>

@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 // import LoadingImageSvg from './loading-image-svg'
 import Image from 'next/image'
 import { FaHeart } from 'react-icons/fa'
@@ -6,11 +6,21 @@ import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 
 export default function ProductCard({ item }) {
+
+  //抓資料
+  useEffect(() => {
+    fetch('') //後端路由
+      .then((response) => response.json())
+      .then((data) => setList(data))
+      .catch((error) => console.log(error))
+  },[])//空陣列代表只在組件掛載時執行一次
+
   return (
     <>
       {/* 桌機版*/}
       <div className="container mb-3 d-none d-lg-block">
         <div className="row row-cols-4 g-4 ">
+        {ProductStateList.map(product => (
           <div className="col">
             <div className="card h-100">
               <img
@@ -41,9 +51,10 @@ export default function ProductCard({ item }) {
                   </p>
                 </div>
               </div>
+            ))}
             </div>
           </div>
-          <div className="col">
+          {/* <div className="col">
             <div className="card h-100">
               <img
                 src="/images/product/list/product.jpg"
@@ -74,8 +85,8 @@ export default function ProductCard({ item }) {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col">
+          </div> */}
+          {/* <div className="col">
             <div className="card h-100">
               <img
                 src="/images/product/list/product.jpg"
@@ -106,8 +117,8 @@ export default function ProductCard({ item }) {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col">
+          </div> */}
+          {/* <div className="col">
             <div className="card h-100">
               <img
                 src="/images/product/list/product.jpg"
@@ -138,7 +149,7 @@ export default function ProductCard({ item }) {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       {/* 手機版:1 */}
