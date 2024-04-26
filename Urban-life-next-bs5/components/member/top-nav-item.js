@@ -29,8 +29,12 @@ export default function TopNavItem(props) {
         .nav-link {
           width: 100%;
         }
+        .nav-item button:hover {
+          color: #bd9250;
+        }
         .nav-item.active .nav-link {
           color: #bd9250;
+          border-bottom-color: #bd9250 !important;
         }
       `}</style>
     </>
