@@ -11,28 +11,37 @@ import ReactDOM from 'react-dom'
 
 export default function CouponMainPage() {
   // top-nav-item 篩選資料的狀態: 可使用、已使用、已過期
-  const [couponFilter, setCouponFilter] = useState('+')
+  const [couponFilter, setCouponFilter] = useState('可使用')
 
-  // coupon資料的狀態，加進去需要用到
+  // coupons資料的狀態，加進去需要用到
   const [coupons, setCoupons] = useState([])
 
   // 接收coupon-add狀態的回調function
   const [couponAdd, setCouponAdd] = useState()
 
-  // 從前端寫街口將 後端把資料拿過來
+  // 從前端寫接口將後端把user_coupon裡的資料拿過來
   const getCoupons = async () => {
     // 後端網址
-    const url = 'http://localhost:3005/api/coupons'
+    const url = 'http://localhost:3005/api/user_coupons'
 
     // fetch抓資料
     try {
       const res = await fetch(url)
       const data = await res.json()
+      // 所有此user擁有的coupon
+      const userCoupons = data.data.user_coupons
+      // 先顯示"可使用"的coupon
+      // const couponstatus = []
+      // userCoupons.map((coupon) => {
+      //   couponstatus
+      //   if(coupon.status === '可使用'){
+      //     couponstatus.push(coupon)
+      //   }
+      // })
 
-      console.log(data.data.coupons)
-
-      if (Array.isArray(data.data.coupons)) {
-        setCoupons(data.data.coupons)
+      // 成功獲取資料就把資料設定到coupons狀態裡面
+      if (Array.isArray(userCoupons)) {
+        setCoupons(userCoupons)
       } else {
         alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
       }
@@ -40,33 +49,51 @@ export default function CouponMainPage() {
       console.log(error)
     }
   }
-// 連線伺服器後，才將coupon資料抓下來渲染頁面
+  // 連線伺服器後，才將coupon資料抓下來渲染頁面
   useEffect(() => {
     getCoupons()
   }, [])
 
-  // 檢查 coupon 是否存在，如果存在就新增到資料庫
-  useEffect(() => {
-    const codeArray = Coupons.map((coupon) => coupon.code)
-    console.log(codeArray)
-    if (codeArray.includes(couponAdd)) {
+  // 新增優惠券要從coupon資料庫找否有這張
+
+  const addCoupon = async () => {
+    const url = `http://localhost:3005/api/coupons`
+
+    const res = await fetch(url)
+    const data = await res.json()
+    const coupons = data.data.coupons
+    const couponsCode = coupons.map((coupon) => coupon.code)
+    // 從coupon.code去判斷是否存在
+    // 檢查 coupon 是否存在，如果存在就新增到資料庫
+    if (couponsCode.includes(couponAdd)) {
       console.log(`${couponAdd} 優惠券存在`)
-      let newCoupon = Coupons.find((coupon) => coupon.code === couponAdd)
+      let newCoupon = coupons.find((coupon) => coupon.code === couponAdd)
       console.log(newCoupon)
+      
 
-      // 新增新的，並修改id
-      const ids = Coupons.map((v) => v.id)
-      const newId = Coupons.length > 0 ? Math.max(...ids) + 1 : 1
+      // 新增此coupon到user_coupon資料庫裏面
+      const url = `http://localhost:3005/api/user_coupons`
 
-      newCoupon = { ...newCoupon, id: newId }
-      console.log(newCoupon)
+      await fetch(url, {
+        method: 'post',
+        body: JSON.stringify(newCoupon)
+      })
+        .then((result) => result.json())
+        .then((data) => console.log(data))
+        .catch((error) => {
+          console.log(error)
+        })
 
-      // 新增到資料庫我不會做.....
-
-      // setNewCoupons((prevCoupons) => [...prevCoupons, newCoupon])
+      // 新的id
+      // const ids = coupons.map((v) => v.id)
+      // const newId = coupons.length > 0 ? Math.max(...ids) + 1 : 1
     } else {
       console.log('根本就沒有')
     }
+  }
+
+  useEffect(() => {
+    addCoupon()
   }, [couponAdd])
 
   return (

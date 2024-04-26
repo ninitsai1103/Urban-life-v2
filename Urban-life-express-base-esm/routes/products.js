@@ -12,12 +12,17 @@ import { QueryTypes, Op } from 'sequelize'
 
 import db from '#configs/mysql.js'
 
-router.get('/product/list',async function(req, res){
-  let sqlCoupons = 'SELECT * FROM product_lecture'
+router.get('/product/list', async function(req, res){
+  let sqlProducts = 'SELECT * FROM product_lecture';
   try {
-    const[rows, fields] = await db.query()
+    const [rows, fields] = await db.query(sqlProducts); // 將 sqlCoupons 作為參數傳遞給 db.query()
+    
+  } catch (error) {
+    // 錯誤處理
+    console.error( error);
+    
   }
-})
+});
 
 // GET 獲得所有資料，加入分頁與搜尋字串功能，單一資料表處理
 router.get('/', async (req, res) => {

@@ -11,8 +11,14 @@ const { coupon } = sequelize.models
 // 一般sql
 import db from '#configs/mysql.js'
 
+
+
+
 router.get('/', async function (req, res) {
+  // coupon資料庫 SQL
   let sqlCoupons = 'SELECT * FROM coupon'
+  
+
   try {
     const [rows, fields] = await db.query(sqlCoupons)
     // 標準回傳JSON
@@ -26,5 +32,7 @@ router.get('/', async function (req, res) {
     console.log(error)
   }
 })
+
+
 
 export default router
