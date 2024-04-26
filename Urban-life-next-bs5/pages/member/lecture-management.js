@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TeacherAsideAccount from '@/components/member/teacher-aside-account'
 import { Nav, Tab } from 'react-bootstrap'
 import Page from '@/components/product/pagination'
@@ -9,6 +9,15 @@ import LectureAddModal from '@/components/member/lecture-add-modal'
 import LectureWishContent from '@/components/member/lecture-wish-content'
 
 export default function LectureManagement() {
+  // 浩雲的程式碼
+  const [activeIndex, setActiveIndex] = useState('我的課程')
+
+  const lectureItemClick = (index) => {
+    setActiveIndex(index);
+    // 以下這行是幹嘛的??
+    // props.setCouponFilter(index);
+  }
+
   return (
     <>
       <div className="container">
@@ -34,24 +43,62 @@ export default function LectureManagement() {
                 </button>
               </div>
             </div>
-            <ul className="nav nav-underline ul-margin">
+
+            {/* 原本的ul */}
+            {/* <ul className="nav nav-underline ul-margin">
               <li className="nav-item col">
                 <button className="nav-link active111">我的課程</button>
               </li>
               <li className="nav-item col">
                 <button className="nav-link">課程許願池</button>
               </li>
+            </ul> */}
+
+            {/* 浩雲的ul */}
+            <ul className="nav nav-underline ul-margin">
+              <li
+                className={`nav-item col ${
+                  activeIndex === '我的課程' ? 'active' : ''
+                }`}
+              >
+                <button
+                  className="nav-link"
+                  onClick={() => lectureItemClick('我的課程')}
+                >
+                  我的課程
+                </button>
+              </li>
+              <li
+                className={`nav-item col ${
+                  activeIndex === '課程許願池' ? 'active' : ''
+                }`}
+              >
+                <button
+                  className="nav-link"
+                  onClick={() => lectureItemClick('課程許願池')}
+                >
+                  課程許願池
+                </button>
+              </li>
             </ul>
 
-            
-
             <div>
-              <div className="lecture_content d-none">
+              {/* <div className="lecture_content d-none">
                 <LectureContent />
               </div>
               <div className="lecture_wish_content ">
                 <LectureWishContent />
-              </div>
+              </div> */}
+
+              {activeIndex === '我的課程' ? (
+                <div className="lecture_content">
+                  <LectureContent />
+                </div>
+              ) : (
+                <div className="lecture_wish_content">
+                  <LectureWishContent />
+                </div>
+              )}
             </div>
 
             <Page />
@@ -66,8 +113,12 @@ export default function LectureManagement() {
         .teacher-lecture-management {
           margin: 20px;
           padding: 33px 0px;
-          {/* margin: 20px 0px; */}
-          {/* padding: 0px; */}
+           {
+            /* margin: 20px 0px; */
+          }
+           {
+            /* padding: 0px; */
+          }
         }
         .teacher-lecture {
           padding: 30px 20px;
@@ -90,8 +141,12 @@ export default function LectureManagement() {
           margin-top: 50px;
           margin-bottom: 20px;
         }
-        
-        .nav-item {
+
+         {
+          /* 原本的ul樣式 */
+        }
+         {
+          /* .nav-item {
           text-align: center;
         }
         .nav-item button {
@@ -103,9 +158,28 @@ export default function LectureManagement() {
         .nav-item {
           .active111 {
             color: #bd9250 !important;
-            border-bottom-color: #bd9250;
+            border-bottom-color: #bd9250 !important;
           }
+        } */
         }
+
+         {
+          /* 浩雲的active */
+        }
+        .nav-item {
+          text-align: center;
+        }
+        .nav-link {
+          width: 100%;
+        }
+        .nav-item button:hover {
+          color: #bd9250;
+        }
+        .nav-item.active .nav-link {
+          color: #bd9250 !important;
+          border-bottom-color: #bd9250 !important;
+        }
+
         .lecture_body_window {
           height: 100vh;
         }
@@ -130,7 +204,6 @@ export default function LectureManagement() {
             margin-left: auto;
             margin-right: 0px;
           }
-          
         }
       `}</style>
     </>

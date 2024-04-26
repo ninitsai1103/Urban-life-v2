@@ -46,7 +46,7 @@ export default function LectureContent() {
               <th scope="col">課程名稱</th>
               <th scope="col">上課時間</th>
               <th scope="col" className="nodisplay_768px">
-                報名時間
+                報名截止時間
               </th>
               <th scope="col">上課人數</th>
               <th scope="col">價錢</th>
@@ -58,8 +58,6 @@ export default function LectureContent() {
               <td scope="row">上課好有趣</td>
               <td>2023-12-04</td>
               <td className="nodisplay_768px">
-                <div>2023-12-04</div>
-                <div>~</div>
                 <div>2023-12-04</div>
               </td>
               <td>20</td>

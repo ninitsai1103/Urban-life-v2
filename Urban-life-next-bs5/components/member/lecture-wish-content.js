@@ -45,7 +45,7 @@ export default function LectureWishContent() {
           <tbody className="text-center align-middle">
             <tr>
               <td scope="row">想要上課</td>
-              <td>2023-12-04</td>
+              <td>8月</td>
               <td className="nodisplay_768px wish_content_overflow">
                 超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈
               </td>
@@ -75,11 +75,13 @@ export default function LectureWishContent() {
               </tr>
               <tr>
                 <th>期望上課時間：</th>
-                <td>2025-12-04</td>
+                <td>8月</td>
               </tr>
               <tr className="w-100">
                 <th className="w-50">課程內容：</th>
-                <td className="w-50 wish_phone_content_overflow">超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈</td>
+                <td className="w-50 wish_phone_content_overflow">
+                  超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈
+                </td>
               </tr>
               <tr>
                 <th>期望價錢：</th>
@@ -132,7 +134,7 @@ export default function LectureWishContent() {
                         </tr>
                         <tr>
                           <th>期望上課時間：</th>
-                          <td>2025-12-04</td>
+                          <td>8月</td>
                         </tr>
                         <tr>
                           <th>期望課程內容：</th>
@@ -221,18 +223,27 @@ export default function LectureWishContent() {
           }
         }
 
-        .nodisplay_768px{
+        .nodisplay_768px {
           width: 20%;
         }
 
-        .wish_content_overflow {
+        {/* 原本的樣式 */}
+        {/* .wish_content_overflow {
           width: 100%;
-          height: 60px;
+          height: 55px;
           display: -webkit-box;
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
+        }  */}
+
+        .wish_content_overflow {
+          max-width: 30px;
+          height: 55px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .lectureWish_phone_card {
@@ -247,16 +258,15 @@ export default function LectureWishContent() {
             }
           }
         }
-        .wish_phone_content_overflow{
+        .wish_phone_content_overflow {
           width: 100% !important;
-          height:30px;
+          height: 30px;
           display: -webkit-box;
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
         }
-
 
         .phone-lectureWish-detail {
           padding: 10px;
@@ -280,9 +290,11 @@ export default function LectureWishContent() {
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            {/* display: flex;
+             {
+              /* display: flex;
             align-items: center;
-            justify-content: center;  */}
+            justify-content: center;  */
+            }
           }
           input {
             margin: 3px;
