@@ -26,12 +26,12 @@ export default function Detail() {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mt-3">
               <li className="breadcrumb-item">
-                <Link className="text-decoration-none" href="#">
+                <Link className="text-decoration-none" href="/product/list">
                   商品總覽
                 </Link>
               </li>
               <li className="breadcrumb-item " aria-current="page">
-                <Link className="text-decoration-none" href="#">
+                <Link className="text-decoration-none" href="">
                   商品主分類
                 </Link>
               </li>

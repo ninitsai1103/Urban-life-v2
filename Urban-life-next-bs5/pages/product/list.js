@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState,useEffect } from 'react'
 import Link from 'next/link'
 import Search from '@/components/product/search'
 import ProductCard from '@/components/product-test/product-card'
@@ -604,11 +604,11 @@ export default function List() {
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mt-3">
                   <li class="breadcrumb-item">
-                    <Link className="text-decoration-none" href="#">
+                    <Link className="text-decoration-none" href="/">
                       首頁
                     </Link>
                   </li>
-                  <li class="breadcrumb-item active" aria-current="page">
+                  <li class="breadcrumb-item active" aria-current="page" href="/product/list">
                     商品總覽
                   </li>
                 </ol>
