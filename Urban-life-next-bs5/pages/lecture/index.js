@@ -6,6 +6,8 @@ import TeacherCard from '@/components/lecture/teacher-card'
 import TeacherLectureCard from '@/components/lecture/teacherlecture'
 import ArticleCard from '@/components/lecture/article-card'
 import MessageCard from '@/components/lecture/message-card'
+import Lectureslider from '@/components/lecture/lectureslider'
+import LectureInfo from '@/components/lecture/lectureinfo'
 
 
 export default function LectureMain() {
@@ -22,6 +24,9 @@ export default function LectureMain() {
         <MessageCard />
         <MessageCard />
         <MessageCard />
+        <Lectureslider />
+        <LectureInfo />
+
         </div>
     </>
   )

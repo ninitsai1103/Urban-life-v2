@@ -51,7 +51,7 @@ export default function LectureWish() {
                 </div>
                 <div className="shrink-0 h-px bg-black border border-black border-solid max-md:max-w-full" />
                 <div className={styles.wishBtn}>
-                    <button className="btn btn-detail px-5">
+                    <button className="btn btn-add px-5">
                         課程許願
                     </button>
                 </div>
