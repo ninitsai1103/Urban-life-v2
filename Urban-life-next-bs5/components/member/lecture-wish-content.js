@@ -33,23 +33,25 @@ export default function LectureWishContent() {
         <table className="table">
           <thead className="text-center">
             <tr>
-              <th scope="col">期望課程名稱：</th>
+              {/* <th scope="col">期望課程名稱：</th> */}
               <th scope="col">期望上課時間：</th>
-              <th scope="col" className="nodisplay_768px">
+              <th scope="col" className="">
                 課程內容：
               </th>
               <th scope="col">期望價錢：</th>
+              {/* <th scope="col" className="nodisplay_768px">建立時間</th> */}
               <th></th>
             </tr>
           </thead>
           <tbody className="text-center align-middle">
             <tr>
-              <td scope="row">想要上課</td>
+              {/* <td scope="row">想要上課</td> */}
               <td>8月</td>
-              <td className="nodisplay_768px wish_content_overflow">
+              <td className="wish_content_overflow">
                 超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈
               </td>
               <td>$888</td>
+              {/* <td className="nodisplay_768px">2024-12-04 12:00:00</td> */}
               <td>
                 <button
                   className="btn btn-detail"
@@ -69,10 +71,10 @@ export default function LectureWishContent() {
         <div className="lectureWish_phone_card p-3 ">
           <table className="w-100">
             <tbody className="w-100">
-              <tr>
+              {/* <tr>
                 <th>期望課程名稱：</th>
                 <td>想要上課</td>
-              </tr>
+              </tr> */}
               <tr>
                 <th>期望上課時間：</th>
                 <td>8月</td>
@@ -87,6 +89,10 @@ export default function LectureWishContent() {
                 <th>期望價錢：</th>
                 <td>$888</td>
               </tr>
+              {/* <tr>
+                <th>建立時間：</th>
+                <td>2024-12-04 12:00:00</td>
+              </tr> */}
             </tbody>
           </table>
           <div className="phone-lectureWish-detail w-100 d-flex">
@@ -113,9 +119,9 @@ export default function LectureWishContent() {
           <div className="modal-content">
             <form>
               <div className="modal-header">
-                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                {/* <h1 className="modal-title fs-5" id="exampleModalLabel">
                   這裡是課程名稱
-                </h1>
+                </h1> */}
                 <button
                   type="button"
                   className="btn-close"
@@ -128,10 +134,10 @@ export default function LectureWishContent() {
                   <div className="col-12">
                     <table className="table modal-table">
                       <tbody>
-                        <tr>
+                        {/* <tr>
                           <th>期望課程名稱：</th>
                           <td>想要上課</td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <th>期望上課時間：</th>
                           <td>8月</td>
@@ -146,6 +152,10 @@ export default function LectureWishContent() {
                           <th>期望價錢：</th>
                           <td>$888</td>
                         </tr>
+                        {/* <tr>
+                          <th>建立時間：</th>
+                          <td>2024-12-04 12:00:00</td>
+                        </tr> */}
                       </tbody>
                     </table>
                   </div>
