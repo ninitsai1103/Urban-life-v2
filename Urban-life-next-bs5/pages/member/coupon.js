@@ -10,30 +10,40 @@ import Coupons from '@/data/coupon.json'
 import ReactDOM from 'react-dom'
 
 export default function CouponMainPage() {
-  // 從後端把資料拿過來
-
-  // const getCoupon = async () => {
-  //   let url = 'http://localhost:3005/api/coupon'
-  //   try {
-  //     const res = await fetch(url)
-  //     const data = await res.json()
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getCoupon()
-  // }, [])
-
   // top-nav-item 篩選資料的狀態: 可使用、已使用、已過期
-  const [couponFilter, setCouponFilter] = useState('可使用')
+  const [couponFilter, setCouponFilter] = useState('+')
 
   // coupon資料的狀態，加進去需要用到
-  const [coupons, setNewCoupons] = useState(Coupons)
+  const [coupons, setCoupons] = useState([])
 
   // 接收coupon-add狀態的回調function
   const [couponAdd, setCouponAdd] = useState()
+
+  // 從前端寫街口將 後端把資料拿過來
+  const getCoupons = async () => {
+    // 後端網址
+    const url = 'http://localhost:3005/api/coupons'
+
+    // fetch抓資料
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+
+      console.log(data.data.coupons)
+
+      if (Array.isArray(data.data.coupons)) {
+        setCoupons(data.data.coupons)
+      } else {
+        alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+// 連線伺服器後，才將coupon資料抓下來渲染頁面
+  useEffect(() => {
+    getCoupons()
+  }, [])
 
   // 檢查 coupon 是否存在，如果存在就新增到資料庫
   useEffect(() => {
@@ -59,29 +69,8 @@ export default function CouponMainPage() {
     }
   }, [couponAdd])
 
-  // // 查詢coupon這個是否存在
-  // const codeArray = []
-  // Coupons.map((coupon) => {
-  //   return codeArray.push(coupon.code)
-  // })
-  // console.log(codeArray)
-
-  // let coupondatabase = []
-  // // 如果存在的話，就新增到資料庫
-  // if (codeArray.includes(couponAdd)) {
-  //   console.log(`${couponAdd}優惠券存在`)
-  //   const newCoupon = Coupons.find((coupon) => {
-  //     return coupon.code === couponAdd
-  //   })
-  //   console.log(newCoupon)
-  //   addCoupon(newCoupon)
-  // } else {
-  //   console.log('根本就沒有')
-  // }
-
   return (
     <>
-      {/* EBE3DB */}
       <div className="container coupon-management-body">
         <div className="row coupon-management">
           <div className="col-lg-3 col-md-12 coupon-aside">
