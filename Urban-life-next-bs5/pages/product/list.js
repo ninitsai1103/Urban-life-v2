@@ -1274,10 +1274,10 @@ export default function List() {
             {/* 商品欄 */}
             <div className="product">
               <ProductCard />
+              {/* <ProductCard />
               <ProductCard />
               <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              <ProductCard /> */}
             </div>
             {/* 分頁 */}
             <Page />
