@@ -16,12 +16,11 @@ export default function CheckoutProductsTable() {
     totalPrice,
   } = useCheckout()
 
-  //const [productsChecked, setProductsChecked] = useState([])
-
+  useEffect(() => {
+   console.log(items); 
+  }, [items])
   //全選checkbox初始狀態
   const [checkAll, setCheckAll] = useState(false)
-  // 狀態變數 state，用於判斷全選按鈕的前一個狀態
-  let state = true
 
   // 監聽購物車項目變化，以確定是否全選
   useEffect(() => {
@@ -85,7 +84,7 @@ export default function CheckoutProductsTable() {
   }
   return (
     <>
-      {items.length > 0 && ( // 條件渲染：只有在有商品時渲染 thead
+      {items.filter((item) => item.pdlt_id === 1).length > 0 && ( // 條件渲染：只有在有商品時渲染 thead
         <table className="table">
           <thead>
             <tr>
@@ -106,7 +105,7 @@ export default function CheckoutProductsTable() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {items.map((v, i) => {
+            {items.filter((item) => item.pdlt_id === 1).map((v, i) => {
               //撈出加入購物車的商品陣列物件
               return (
                 <tr className="align-middle" key={i}>
