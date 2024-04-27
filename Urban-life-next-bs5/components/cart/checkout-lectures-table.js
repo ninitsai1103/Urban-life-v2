@@ -1,10 +1,10 @@
 import React from 'react'
-import { useCart } from '@/hooks/use-checkout'
+import { useCheckout } from '@/hooks/use-checkout'
 import { FaTrashAlt } from 'react-icons/fa'
 import styles from './cart-checkout.module.css'
 
 export default function CheckoutProductsTable() {
-  const { items, removeItem, increaseItem, decreaseItem } = useCart()
+  const { items, removeItem, increaseItem, decreaseItem } = useCheckout()
   return (
     <>
       <table className="table">
