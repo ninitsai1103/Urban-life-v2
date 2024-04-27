@@ -1,5 +1,5 @@
 import React from 'react'
-import products from '@/data/products-lectures-test/products.json'
+import products from '@/data/products-lectures-test/products-lectures.json'
 import { useCheckout } from '@/hooks/use-checkout'
 import toast, { Toast, Toaster } from 'react-hot-toast'
 import Swal from 'sweetalert2'
