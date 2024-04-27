@@ -40,7 +40,7 @@ export default function CheckoutPage() {
         <section className="d-sm-flex justify-content-between mb-3">
           <div className="flex-fill me-sm-3">
             <h4 className="text-light bg-primary4 p-2 mt-2">
-              選擇優惠券或輸入優惠代碼
+              選擇優惠券
             </h4>
             <CheckoutCouponsSelect />
           </div>

@@ -5,7 +5,7 @@ import { FaCircleQuestion } from 'react-icons/fa6'
 export default function CheckoutCouponsSelect() {
   return (
     <>
-      <div className="input-group mb-2">
+      {/* <div className="input-group mb-2">
         <input
           type="text"
           className="form-control"
@@ -14,7 +14,7 @@ export default function CheckoutCouponsSelect() {
         <button className="btn btn-main-r" type="button">
           使用
         </button>
-      </div>
+      </div> */}
       <div>
         <div className="fs-5 fw-bold">我有的優惠券</div>
         <div className="d-none">
