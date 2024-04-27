@@ -26,6 +26,7 @@
     "react-icons": "^4.10.1",
     "react-infinite-scroll-hook": "^4.1.1",
     "react-paginate": "^8.2.0",
+    "sweetalert2": "^11.10.8",
     "swiper": "^11.0.3",
     "swr": "^2.2.4",
     "validator": "^13.9.0",

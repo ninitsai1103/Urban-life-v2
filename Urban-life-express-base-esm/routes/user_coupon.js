@@ -11,44 +11,48 @@ const { coupon } = sequelize.models
 // 一般sql
 import db from '#configs/mysql.js'
 
-
-
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
   let sqlUserCoupons = `SELECT * FROM user_coupon JOIN coupon ON user_coupon.coupon_id =coupon.id 
   `
-
   try {
     const [rows, fields] = await db.query(sqlUserCoupons)
+
     // 標準回傳JSON
     return res.json({
       status: 'success',
       data: {
-        user_coupons: rows,
-      },
-    })
-  } catch (err) {
-    console.log(error)
-  }
-})
-
-router.post('/', async (req, res) => {
-    return res.json({status: 'success'})
-  console.log(req.body)
-  const id = req.body.id
-  return
-  let addtoUserCoupon = `INSERT INTO user_coupons (user_id,coupon_id,valid)VALUES(43,${id},1)`
-
-  try {
-    const [rows, fields] = await db.query(addtoUserCoupon)
-    return res.json({
-      status: 'success',
-      data: {
-        user_coupons: rows,
+        user_coupon: rows,
       },
     })
   } catch (error) {
     console.log(error)
+  }
+})
+
+router.post('/', async function (req, res) {
+ 
+  try {
+    console.log(req.body)
+    const couponID = req.body.id
+    let userID = 43
+    
+    let addtoUserCoupon = `INSERT INTO user_coupon (user_id,coupon_id,valid)VALUES(?,?,1)`
+    const values = [userID, couponID]
+    const [rows, fields] = await db.query(addtoUserCoupon, values)
+    return res.json({
+      status: 'success',
+      data: {
+        user_coupon: rows,
+      },
+    })
+  } catch (error) {
+    return res.json({
+      status: 'error',
+      data: {
+        error: error,
+      },
+    })
   }
 })
 

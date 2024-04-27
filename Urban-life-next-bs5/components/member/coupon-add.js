@@ -3,7 +3,11 @@ import { FaPlus } from 'react-icons/fa6'
 import data from '@/data/coupon.json'
 
 export default function CouponAdd(props) {
-  const [newCoupon, setNewCoupon] = useState("")
+
+  //props.setCouponAdd()是此元件要傳給coupon主頁面的參數 
+
+  // 輸入框的狀態(coupon.code)
+  const [newCoupon, setNewCoupon] = useState('')
 
   
  
@@ -11,10 +15,11 @@ export default function CouponAdd(props) {
     // 在這裡處理提交邏輯，例如驗證優惠券代碼是否有效等
     console.log("優惠券代碼已提交:", newCoupon);
     // 清空輸入框
-    setNewCoupon("");
+    setNewCoupon('');
     // 傳給coupon頁面的狀態
     // 傳給父元素
     props.setCouponAdd(newCoupon)
+    
   }
 
   function setCoupon(e) {
