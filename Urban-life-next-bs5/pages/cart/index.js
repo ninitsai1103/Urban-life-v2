@@ -6,12 +6,13 @@ import CheckoutCouponsSelect from '@/components/cart/checkout-coupons'
 import CheckoutCounter from '@/components/cart/checkout-counter'
 import styles from '@/components/cart/cart.module.css'
 import Link from 'next/link'
-import { useCart } from '@/hooks/use-checkout'
+import AddProducts from '@/components/cart/add-products'
 
 export default function CheckoutPage() {
 
   return (
     <>
+      <AddProducts />
       <div className="container pt-3">
         <Link type="button" className="btn btn-main" href="../product/list">
           繼續購物

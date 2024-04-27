@@ -63,7 +63,7 @@ export function CartProvider({ children }) {
       increaseItem(item.id)
     } else {
       // 否則作新增商品，擴充商品數量屬性qty，預設為1
-      const newItem = { ...item, qty: 1 }
+      const newItem = { ...item, qty: 1, checked: false }
       const nextItems = [...items, newItem]
 
       setItems(nextItems)
@@ -96,6 +96,7 @@ export function CartProvider({ children }) {
       // 使用value屬性提供資料給提供者階層以下的所有後代元件
       value={{
         items,
+        setItems,
         addItem,
         increaseItem,
         decreaseItem,
@@ -111,4 +112,4 @@ export function CartProvider({ children }) {
 
 // 3. 提供一個包裝好的useContext名稱
 // 提供給消費者(consumer)們方便使用，呼叫useTheme()就可以取得共享狀態
-export const useCart = () => useContext(CartContext)
+export const useCheckout = () => useContext(CartContext)

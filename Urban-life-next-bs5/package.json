@@ -27,6 +27,10 @@
     "react-infinite-scroll-hook": "^4.1.1",
     "react-paginate": "^8.2.0",
     "sweetalert2": "^11.10.8",
+<<<<<<< HEAD
+=======
+    "sweetalert2-react-content": "^5.0.7",
+>>>>>>> a6237263fb1be710ec1206a8dc1b90f449dd3c8b
     "swiper": "^11.0.3",
     "swr": "^2.2.4",
     "validator": "^13.9.0",
