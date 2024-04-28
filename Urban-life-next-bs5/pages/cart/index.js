@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import CheckoutProductsTable from '@/components/cart/checkout-products-table'
 import CheckoutLecturesTable from '@/components/cart/checkout-lectures-table'
 import Step from '@/components/cart/step'
@@ -7,9 +7,13 @@ import CheckoutCounter from '@/components/cart/checkout-counter'
 import styles from '@/components/cart/cart.module.css'
 import Link from 'next/link'
 import AddProducts from '@/components/cart/add-products'
+import coupons from '@/data/coupon.json'
 
 export default function CheckoutPage() {
-
+  const [couponSelected, setCouponSelected] = useState([])
+  const handleCouponSelected = (coupon) => {
+    setCouponSelected(coupon)
+  }
   return (
     <>
       <AddProducts />
@@ -42,11 +46,11 @@ export default function CheckoutPage() {
             <h4 className="text-light bg-primary4 p-2 mt-2">
               選擇優惠券
             </h4>
-            <CheckoutCouponsSelect />
+            <CheckoutCouponsSelect coupons={coupons} sendSelectedCoupon={handleCouponSelected}/>
           </div>
           <div className="flex-fill">
             <h4 className="text-light bg-primary4 p-2 mt-2">訂單資訊</h4>
-            <CheckoutCounter />
+            <CheckoutCounter selectedCoupon={couponSelected}/>
             <div className="text-end mt-3">
               <button className="btn btn-main" type="button" onClick={() => {}}>
                 結帳去

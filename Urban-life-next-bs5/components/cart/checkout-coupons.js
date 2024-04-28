@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react'
 import styles from './cart-checkout.module.css'
-import { FaCircleQuestion } from 'react-icons/fa6'
-import coupons from '@/data/coupon.json'
+// import coupons from '@/data/coupon.json'
 import { useCheckout } from '@/hooks/use-checkout'
-import category from '@/data/products-lectures-test/product-category.json'
+// import category from '@/data/products-lectures-test/product-category.json'
 
-export default function CheckoutCouponsSelect() {
-  const { items, totalPrice } = useCheckout()
+export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
+  // const { items, totalPrice } = useCheckout()
 
   const couponNotExpired = coupons.filter(
     (v) => new Date(v.deadline) > new Date() && v.status === '可使用'
   )
 
+  const [selectedCoupon, setSelectedCoupon] = useState([])
+  const handleSendSelectedCoupon = (e) => {
+    setSelectedCoupon(e)
+    sendSelectedCoupon(e)
+  }
   // const [couponCanUse, setCouponCanUse] = useState(couponNotExpired)
 
   // useEffect(() => {
@@ -59,40 +63,36 @@ export default function CheckoutCouponsSelect() {
             <div className="row  py-2" key={i}>
               <div
                 className="form-check-label d-flex align-items-center col-3"
-                htmlFor="exampleRadios1"
+                htmlFor={`coupon${i}`}
               >
                 <input
                   className="form-check-input"
                   type="radio"
-                  name="exampleRadios"
-                  id="exampleRadios1"
-                  value="option1"
-                  disabled={v.disabled}
+                  name="couponRadios"
+                  id={`coupon${i}`}
+                  value={v.id}
+                  checked={selectedCoupon.id === v.id}
+                  onChange={() => handleSendSelectedCoupon(v)}
                 />
                 <div className={styles.coupon_name}>{v.name}</div>
               </div>
               <div
                 className={`col-3 ${styles.coupon_detail}`}
-                htmlFor="exampleRadios1"
+                htmlFor={`coupon${i}`}
+              >
+                折扣：{v.amount}元
+              </div>
+              <div
+                className={`col-3 ${styles.coupon_detail}`}
+                htmlFor={`coupon${i}`}
               >
                 低消：{v.min_price}元
               </div>
               <div
                 className={`col-3 ${styles.coupon_detail}`}
-                htmlFor="exampleRadios1"
+                htmlFor={`coupon${i}`}
               >
                 有效期限：{v.deadline}
-              </div>
-              <div
-                className={`col-3 ${styles.coupon_question}`}
-                htmlFor="exampleRadios1"
-              >
-                <button className="btn btn-detail d-flex">
-                  <div>
-                    <FaCircleQuestion />
-                  </div>
-                  <div className={styles.coupon_limit}>使用限制</div>
-                </button>
               </div>
             </div>
           )
