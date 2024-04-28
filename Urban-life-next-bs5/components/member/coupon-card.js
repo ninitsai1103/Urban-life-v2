@@ -8,11 +8,11 @@ export default function CouponCard({
   name,
   code,
   amount,
-  startedAt,
+  started_at,
   deadline,
   status,
   min_price,
-  scope,
+  condition,
 }) {
   const [coupon, setCoupon] = useState()
   return (
@@ -27,12 +27,12 @@ export default function CouponCard({
         <div className="card-bottom">
           <p>{code}</p>
           <div className="d-flex gap-3">
-            <p>{scope}</p>
-            <p>{amount >= 1 ? amount : amount * 10 + '折'}</p>
+            <p>{condition}</p>
+            <p>{amount >= 1 ? `折抵${amount}元` : `${amount*10}折`}</p>
           </div>
 
           <p>
-            {startedAt} - {deadline}
+            {started_at} - {deadline}
           </p>
           <p>低消 {min_price}</p>
         </div>
