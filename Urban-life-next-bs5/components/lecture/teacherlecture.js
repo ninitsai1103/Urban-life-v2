@@ -30,7 +30,7 @@ export default function TeacherLectureCard() {
                     </div>
                     <div className={styles.cardBodyPrice}>
                         <div className={styles.priceText}>NT：888</div>
-                        <button className="btn btn-detail">
+                        <button className="btn btn-main">
                             加入購物車
                         </button>
                     </div>

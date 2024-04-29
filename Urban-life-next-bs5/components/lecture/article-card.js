@@ -22,8 +22,8 @@ export default function ArticleCard() {
                         <div className={styles.articleName}>植物真好重 我根本不知道打甚麼</div>                        
                     </div>
                     <div className={styles.cardBodyPrice}>
-                        <div className={styles.priceText}></div>
-                        <button className="btn btn-detail">
+                        <div></div>
+                        <button className="btn btn-main">
                             開始閱讀
                         </button>
                     </div>

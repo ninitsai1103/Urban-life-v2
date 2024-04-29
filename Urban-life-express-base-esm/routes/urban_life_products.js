@@ -9,31 +9,12 @@ import sequelize from '#configs/db.js'
 const { Product } = sequelize.models
 import { QueryTypes, Op } from 'sequelize'
 
-
-import db from '#configs/mysql.js'
-
-router.get('/', async function(req, res){
-  let sqlProducts = 'SELECT * FROM product_lecture';
-  try {
-    const [rows, fields] = await db.query(sqlProducts); // 將 sqlProducts 作為參數傳遞給 db.query()
-    return res.json({
-      status: 'success',
-      data:{
-        products:rows
-      },
-  })
-  } catch (error) {
-    // 錯誤處理
-    console.error( error);
-    return res.status(500).json({
-      status:'error',
-      message:'Internal Server Error'
-    });
-  }
-});
-
+/* 
+測試連結:
+/products?page=3&perpage=10&brand_ids=1,2,4&cat_ids=4,5,6,10,11,12&color_ids=1,2&size_ids=2,3&tag_ids=1,2,4&name_like=e&price_gte=1500&price_lte=10000&sort=price&order=asc
+*/
 // GET 獲得所有資料，加入分頁與搜尋字串功能，單一資料表處理
-// router.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
   // 獲取query參數值
   // const {
   //   page = 1, // number,  用於 OFFSET =  (Number(page) - 1) * Number(perpage),
@@ -53,120 +34,120 @@ router.get('/', async function(req, res){
 
   // !!注意: 以下都要檢查各query參數值的正確性，或給定預設值，要不然可能會產生資料庫查詢錯誤
   // 建立例如: `CONCAT(",", color, ",") REGEXP ",(1|2),"`
-  // const genConcatRegexp = (param, column) => {
-  //   return sequelize.where(
-  //     sequelize.fn('CONCAT', ',', sequelize.col(column), ','),
-  //     {
-  //       [Op.regexp]: `,(${param.split(',').join('|')}),`,
-  //     }
-  //   )
-  // }
+  const genConcatRegexp = (param, column) => {
+    return sequelize.where(
+      sequelize.fn('CONCAT', ',', sequelize.col(column), ','),
+      {
+        [Op.regexp]: `,(${param.split(',').join('|')}),`,
+      }
+    )
+  }
 
   // 建立各where條件從句用
-  // const genClause = (key, value) => {
-  //   switch (key) {
-  //     case 'name_like':
-  //       return {
-  //         name: {
-  //           [Op.like]: `%${value}%`,
-  //         },
-  //       }
-  //     case 'brand_ids':
-  //       return {
-  //         brand_id: value.split(',').map((v) => Number(v)),
-  //       }
-  //     case 'cat_ids':
-  //       return {
-  //         cat_id: value.split(',').map((v) => Number(v)),
-  //       }
-  //     case 'color_ids':
-  //       return genConcatRegexp(value, 'color')
-  //     case 'size_ids':
-  //       return genConcatRegexp(value, 'size')
-  //     case 'tag_ids':
-  //       return genConcatRegexp(value, 'tag')
-  //     case 'price_gte':
-  //       // 會有'0'字串的情況，注意要跳過此條件
-  //       if (!Number(value)) return ''
+  const genClause = (key, value) => {
+    switch (key) {
+      case 'name_like':
+        return {
+          name: {
+            [Op.like]: `%${value}%`,
+          },
+        }
+      case 'brand_ids':
+        return {
+          brand_id: value.split(',').map((v) => Number(v)),
+        }
+      case 'cat_ids':
+        return {
+          cat_id: value.split(',').map((v) => Number(v)),
+        }
+      case 'color_ids':
+        return genConcatRegexp(value, 'color')
+      case 'size_ids':
+        return genConcatRegexp(value, 'size')
+      case 'tag_ids':
+        return genConcatRegexp(value, 'tag')
+      case 'price_gte':
+        // 會有'0'字串的情況，注意要跳過此條件
+        if (!Number(value)) return ''
 
-  //       return {
-  //         price: {
-  //           [Op.gte]: Number(value),
-  //         },
-  //       }
-  //     case 'price_lte':
-  //       // 會有'0'字串的情況，注意要跳過此條件
-  //       if (!Number(value)) return ''
+        return {
+          price: {
+            [Op.gte]: Number(value),
+          },
+        }
+      case 'price_lte':
+        // 會有'0'字串的情況，注意要跳過此條件
+        if (!Number(value)) return ''
 
-  //       return {
-  //         price: {
-  //           [Op.lte]: Number(value),
-  //         },
-  //       }
-  //     default:
-  //       return ''
-  //   }
-  // }
+        return {
+          price: {
+            [Op.lte]: Number(value),
+          },
+        }
+      default:
+        return ''
+    }
+  }
 
   // where各條件(以AND相連)
-  // const conditions = []
-  // for (const [key, value] of Object.entries(req.query)) {
-  //   if (value) {
-  //     conditions.push(genClause(key, value))
-  //   }
-  // }
+  const conditions = []
+  for (const [key, value] of Object.entries(req.query)) {
+    if (value) {
+      conditions.push(genClause(key, value))
+    }
+  }
 
   // console.log(conditions)
 
   // 分頁用
-  // const page = Number(req.query.page) || 1
-  // const perpage = Number(req.query.perpage) || 10
-  // const offset = (page - 1) * perpage
-  // const limit = perpage
+  const page = Number(req.query.page) || 1
+  const perpage = Number(req.query.perpage) || 10
+  const offset = (page - 1) * perpage
+  const limit = perpage
 
   // 排序用
-  // const orderDirection = req.query.order || 'ASC'
-  // const order = req.query.sort
-  //   ? [[req.query.sort, orderDirection]]
-  //   : [['id', 'ASC']]
+  const orderDirection = req.query.order || 'ASC'
+  const order = req.query.sort
+    ? [[req.query.sort, orderDirection]]
+    : [['id', 'ASC']]
 
   // 避免sql查詢錯誤導致後端當掉，使用try/catch語句
-  // try {
-  //   const { count, rows } = await Product.findAndCountAll({
-  //     where: { [Op.and]: conditions },
-  //     raw: true, // 只需要資料表中資料,
-  //     // logging: (msg) => console.log(msg.bgWhite),
-  //     offset,
-  //     limit,
-  //     order,
-  //   })
+  try {
+    const { count, rows } = await Product.findAndCountAll({
+      where: { [Op.and]: conditions },
+      raw: true, // 只需要資料表中資料,
+      // logging: (msg) => console.log(msg.bgWhite),
+      offset,
+      limit,
+      order,
+    })
 
-  //   if (req.query.raw === 'true') {
-  //     return res.json(rows)
-  //   }
+    if (req.query.raw === 'true') {
+      return res.json(rows)
+    }
 
     // 計算總頁數
-//     const pageCount = Math.ceil(count / Number(perpage)) || 0
+    const pageCount = Math.ceil(count / Number(perpage)) || 0
 
-//     return res.json({
-//       status: 'success',
-//       data: {
-//         total: count,
-//         pageCount,
-//         page,
-//         perpage,
-//         products: rows,
-//       },
-//     })
-//   } catch (e) {
-//     console.log(e)
+    return res.json({
+      status: 'success',
+      data: {
+        total: count,
+        pageCount,
+        page,
+        perpage,
+        products: rows,
+      },
+    })
+  } catch (e) {
+    console.log(e)
 
-//     return res.json({
-//       status: 'error',
-//       message: '無法查詢到資料，查詢字串可能有誤',
-//     })
-//   }
-// })
+    return res.json({
+      status: 'error',
+      message: '無法查詢到資料，查詢字串可能有誤',
+    })
+  }
+})
 
 // 獲得所有資料，加入分頁與搜尋字串功能，單一資料表處理
 // products/qs?page=1&keyword=Ele&brand_ids=1&cat_ids=4,5,6,7,8&sizes=1,2&tags=3,4&colors=1,2&orderby=id,asc&perpage=10&price_range=1500,10000
@@ -268,17 +249,17 @@ router.get('/', async function(req, res){
 // })
 
 // 獲得單筆資料
-// router.get('/:id', async (req, res, next) => {
-//   // 轉為數字
-//   const id = getIdParam(req)
+router.get('/:id', async (req, res, next) => {
+  // 轉為數字
+  const id = getIdParam(req)
 
-//   // 只會回傳單筆資料
-//   const product = await Product.findByPk(id, {
-//     raw: true, // 只需要資料表中資料
-//   })
+  // 只會回傳單筆資料
+  const product = await Product.findByPk(id, {
+    raw: true, // 只需要資料表中資料
+  })
 
-//   return res.json({ status: 'success', data: { product } })
-// })
+  return res.json({ status: 'success', data: { product } })
+})
 
 // 獲得所有資料(測試用，不適合資料太多使用)
 // router.get('/', async (req, res, next) => {

@@ -31,7 +31,7 @@ export default function LectureMyCardNp() {
                 </div>
                 <div className={styles.cardBodyPrice}>
                     <div className={styles.priceText}>NT：888</div>
-                    <button className="btn btn-detail">
+                    <button className="btn btn-main">
                         加入行事曆
                     </button>
                 </div>

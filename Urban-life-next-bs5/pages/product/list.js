@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Search from '@/components/product/search'
 import ProductCard from '@/components/product-test/product-card'
@@ -11,6 +11,16 @@ import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
 
 export default function List() {
+  const [list, setList] = useState([])
+
+  //抓資料
+  useEffect(() => {
+    fetch('')
+      .then((response) => response.json())
+      .then((data) => setList(data))
+      .catch((error) => console.log(error))
+  },[])//空陣列代表只在組件掛載時執行一次
+
   // Toggle the side navigation
   useEffect(() => {
     // fix next issue
@@ -604,11 +614,15 @@ export default function List() {
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mt-3">
                   <li class="breadcrumb-item">
-                    <Link className="text-decoration-none" href="#">
+                    <Link className="text-decoration-none" href="/">
                       首頁
                     </Link>
                   </li>
-                  <li class="breadcrumb-item active" aria-current="page">
+                  <li
+                    class="breadcrumb-item active"
+                    aria-current="page"
+                    href="/product/list"
+                  >
                     商品總覽
                   </li>
                 </ol>
@@ -698,7 +712,7 @@ export default function List() {
                                     春季種子
                                   </Link>
                                 </li>
-                                <li >
+                                <li>
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
@@ -1260,10 +1274,10 @@ export default function List() {
             {/* 商品欄 */}
             <div className="product">
               <ProductCard />
+              {/* <ProductCard />
               <ProductCard />
               <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              <ProductCard /> */}
             </div>
             {/* 分頁 */}
             <Page />

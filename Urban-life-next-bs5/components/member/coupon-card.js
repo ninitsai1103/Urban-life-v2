@@ -28,7 +28,11 @@ export default function CouponCard({
           <p>{code}</p>
           <div className="d-flex gap-3">
             <p>{condition}</p>
+<<<<<<< HEAD
             <p>{amount >= 1 ? amount : amount * 10 + '折'}</p>
+=======
+            <p>{amount >= 1 ? `折抵${amount}元` : `${amount*10}折`}</p>
+>>>>>>> 8102575df8c9f069bdaf8f0357c73f8aca3f314d
           </div>
 
           <p>

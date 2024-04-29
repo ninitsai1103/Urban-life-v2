@@ -1,0 +1,24 @@
+.infocard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 34px;
+  flex: 1 0 0;
+  align-self: stretch;
+  max-width: 563px;
+}
+
+.icon {
+  width: 20px;
+  height: 23px;
+}
+.infotext {
+  color: var(--grey-700, #6b6b6b);
+  /* ZenKaku-h4 */
+  font-family: 'Zen Kaku Gothic New';
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  
+}
