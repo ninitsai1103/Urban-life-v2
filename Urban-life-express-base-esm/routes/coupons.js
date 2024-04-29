@@ -17,14 +17,6 @@ import db from '#configs/mysql.js'
 router.get('/', async function (req, res) {
   // coupon資料庫 SQL
   let sqlCoupons = 'SELECT * FROM coupon'
-<<<<<<< HEAD
-
-
-  letUserCoupons='SELECT user_coupon.*, FROM'
-=======
-  
-
->>>>>>> 8102575df8c9f069bdaf8f0357c73f8aca3f314d
   try {
     const [rows, fields] = await db.query(sqlCoupons)
     // 標準回傳JSON
