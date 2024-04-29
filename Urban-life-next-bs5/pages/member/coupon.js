@@ -6,6 +6,7 @@ import CouponAdd from '@/components/member/coupon-add'
 import CouponCard from '@/components/member/coupon-card'
 
 import Swal from 'sweetalert2'
+import { useUserCoupon } from '@/hooks/use-usercoupon'
 
 // 假資料測試
 // import Coupons from '@/data/coupon.json'
@@ -13,6 +14,8 @@ import Swal from 'sweetalert2'
 import ReactDOM from 'react-dom'
 
 export default function CouponMainPage() {
+  // 利用use-usercoupon的hooks把要的東西拉過來
+  const { userCoupons, setUserCoupons, getCoupons } = useUserCoupon()
   // sweetalert跳出的框框
   const notifyAddSuccess = (couponName) => {
     Swal.fire({
@@ -29,6 +32,14 @@ export default function CouponMainPage() {
       icon: 'warning',
     })
   }
+
+  const notifyAddExpired = (couponName) => {
+    Swal.fire({
+      title: `新增優惠券失敗`,
+      text: ` 『${couponName}』 此優惠券早就過期了`,
+      icon: 'warning',
+    })
+  }
   const notifyAddExist = (couponName) => {
     Swal.fire({
       title: `新增優惠券失敗`,
@@ -40,42 +51,42 @@ export default function CouponMainPage() {
   const [couponFilter, setCouponFilter] = useState('可使用')
 
   // user_coupons資料的狀態，加進去需要用到
-  const [userCoupons, setUserCoupons] = useState([])
+  // const [userCoupons, setUserCoupons] = useState([])
 
   // 接收coupon-add狀態的回調function
   const [couponAdd, setCouponAdd] = useState('')
 
   // 從前端寫接口將後端把user_coupon裡的資料拿過來
-  const getCoupons = async () => {
-    // 後端網址
-    const url = 'http://localhost:3005/api/user_coupon'
 
-    // fetch抓資料
-    try {
-      const res = await fetch(url)
-      const data = await res.json()
-      // 所有此user擁有的coupon
-      const userCoupon = data.data.user_coupon
-      // 先顯示"可使用"的coupon
-      // const couponstatus = []
-      // userCoupons.map((coupon) => {
-      //   couponstatus
-      //   if(coupon.status === '可使用'){
-      //     couponstatus.push(coupon)
-      //   }
-      // })
+  // const getCoupons = async () => {
+  //   // 後端網址
+  //   const url = 'http://localhost:3005/api/user_coupon'
 
-      // 成功獲取資料就把資料設定到coupons狀態裡面
-      if (Array.isArray(userCoupon)) {
-        
-        setUserCoupons(userCoupon)
-      } else {
-        alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  //   // fetch抓資料
+  //   try {
+  //     const res = await fetch(url)
+  //     const data = await res.json()
+  //     // 所有此user擁有的coupon
+  //     const userCoupon = data.data.user_coupon
+  //     // 先顯示"可使用"的coupon
+  //     // const couponstatus = []
+  //     // userCoupons.map((coupon) => {
+  //     //   couponstatus
+  //     //   if(coupon.status === '可使用'){
+  //     //     couponstatus.push(coupon)
+  //     //   }
+  //     // })
+
+  //     // 成功獲取資料就把資料設定到coupons狀態裡面
+  //     if (Array.isArray(userCoupon)) {
+  //       setUserCoupons(userCoupon)
+  //     } else {
+  //       alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
   // 連線伺服器後，才將coupon資料抓下來渲染頁面
   useEffect(() => {
     getCoupons()
@@ -93,13 +104,12 @@ export default function CouponMainPage() {
       const data = await res.json()
 
       const userCoupons = data.data.user_coupon
-      
+
       const userCouponsCode = userCoupons.map((userCoupon) => userCoupon.code)
-      
-      console.log(userCouponsCode)
 
-      return userCouponsCode.includes(couponCode);
+      // console.log(userCouponsCode)
 
+      return userCouponsCode.includes(couponCode)
     } catch (error) {
       console.log(error)
     }
@@ -110,60 +120,94 @@ export default function CouponMainPage() {
     const res = await fetch(url)
     const data = await res.json()
     const coupons = data.data.coupons
-    
+
     const couponsCode = coupons.map((coupon) => coupon.code)
+    let newCoupon = null // 在這裡初始化變量
+
     // 從coupon.code去判斷是否存在
     // couponAdd 搜尋元件傳過來的資料
     // 檢查 couponAdd 是否存在，如果存在就新增到user_coupon的資料庫
     if (couponsCode.includes(couponAdd)) {
       console.log(`${couponAdd} 優惠券存在`)
-      let newCoupon = coupons.find((coupon) => coupon.code === couponAdd)
-      console.log(newCoupon)
-      
+      newCoupon = coupons.find((coupon) => coupon.code === couponAdd)
+      // console.log(newCoupon)
 
       // 判斷user是不是有這張優惠券
-      if (await checkCoupon(newCoupon.code)===false) {
-        console.log("可以進行新增的動作")
-        
-        try {
-          // 新增此coupon到user_coupon資料庫裏面
-          const url = `http://localhost:3005/api/user_coupon`
-          // 不處理UPDATE從後端丟回來的東西，只是做叫後端更新資料的動作
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(newCoupon),
-          })
+      if ((await checkCoupon(newCoupon.code)) === false) {
+        console.log('可以進行新增的動作')
+        if (new Date(newCoupon.deadline) < new Date()) {
+          notifyAddExpired(couponAdd)
+          console.log('此優惠券已經過期了')
           setCouponAdd('')
+        } else {
+          try {
+            // 新增此coupon到user_coupon資料庫裏面
+            const url = `http://localhost:3005/api/user_coupon`
+            // 不處理UPDATE從後端丟回來的東西，只是做叫後端更新資料的動作
+            const res = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(newCoupon),
+            })
+            // 增加優惠券成功
+            notifyAddSuccess(newCoupon.name)
+            setCouponAdd('')
 
-          // 成功獲取資料就把資料設定到coupons狀態裡面
-          // ....
-          // ....
-          // ....
-        } catch (error) {
-          console.log(error)
+            // 成功獲取資料就把資料設定到coupons狀態裡面
+            // ....
+            // ....
+            // ....
+          } catch (error) {
+            console.log(error)
+          }
         }
       } else {
-        notifyAddFailed()
+        // 使用者已經有這張優惠券
+        notifyAddFailed(couponAdd)
         console.log('已經有此張優惠券啦')
         setCouponAdd('')
       }
-      // // 跳出來的框框
-      // notifyAddSuccess(newCoupon.name)
     } else {
-      // notifyAddExist()
+      notifyAddExist(couponAdd)
       console.log('此優惠券不存在')
       setCouponAdd('')
+    }
+  }
+
+  const deleteCoupon = async (couponID) => {
+    const url = 'http://localhost:3005/api/user_coupon'
+
+    // fetch抓資料
+    try {
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: couponID }),
+      })
+      const data = await res.json()
+      console.log(data)
+
+      // 在成功刪除優惠券後執行 getCoupon
+      await getCoupons()
+      
+      return <div></div>
+    } catch (error) {
+      console.log(error)
+      return <div></div>
     }
   }
 
   // 新增完後再渲染一次
   useEffect(() => {
     const fetchData = async () => {
-      await addCoupon()
-      await getCoupons()
+      if (couponAdd !== '') {
+        await addCoupon()
+        await getCoupons()
+      }
     }
     fetchData()
   }, [couponAdd])
@@ -190,17 +234,24 @@ export default function CouponMainPage() {
                   .filter((coupon) => {
                     switch (couponFilter) {
                       case '可使用':
-                        return coupon.status === '可使用'
+                        return (
+                          coupon.status === '可使用' &&
+                          new Date(coupon.deadline) > new Date()
+                        )
                       case '已使用':
                         return coupon.status === '已使用'
                       case '已過期':
-                        return coupon.status === '已過期'
+                        return (
+                          coupon.status === '已過期' &&
+                          new Date(coupon.deadline) < new Date()
+                        )
                       default:
                         return true // 如果沒有篩選條件，返回 true
                     }
                   })
                   .map((filteredCoupon) => {
                     const {
+                      id,
                       name,
                       code,
                       amount,
@@ -210,10 +261,13 @@ export default function CouponMainPage() {
                       min_price,
                       condition,
                     } = filteredCoupon
-                    console.log(filteredCoupon)
+                    {
+                      /* console.log(filteredCoupon) */
+                    }
                     return (
                       <div className="col-12 col-lg-6 g-2" key={code}>
                         <CouponCard
+                          id={id}
                           name={name}
                           code={code}
                           amount={amount}
@@ -222,6 +276,7 @@ export default function CouponMainPage() {
                           status={status}
                           min_price={min_price}
                           condition={condition}
+                          deleteCoupon={deleteCoupon}
                         />
                       </div>
                     )
