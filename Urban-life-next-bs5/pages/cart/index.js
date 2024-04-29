@@ -13,10 +13,10 @@ export default function CheckoutPage() {
   // 使用 useState hook 創建 couponSelected 狀態，初始值為空陣列
   const [couponSelected, setCouponSelected] = useState([])
   // 定義處理選擇優惠券的函數
-  const handleCouponSelected = (coupon) => {
-    // 將選擇的優惠券設定為 couponSelected 狀態
-    setCouponSelected(coupon)
-  }
+  // const handleCouponSelected = (coupon) => {
+  //   // 將選擇的優惠券設定為 couponSelected 狀態
+  //   setCouponSelected(coupon)
+  // }
   return (
     <>
       <AddProducts />
@@ -49,7 +49,7 @@ export default function CheckoutPage() {
             <h4 className="text-light bg-primary4 p-2 mt-2">
               選擇優惠券
             </h4>
-            <CheckoutCouponsSelect coupons={coupons} sendSelectedCoupon={handleCouponSelected}/>
+            <CheckoutCouponsSelect coupons={coupons} sendSelectedCoupon={setCouponSelected}/>
           </div>
           <div className="flex-fill">
             <h4 className="text-light bg-primary4 p-2 mt-2">訂單資訊</h4>
