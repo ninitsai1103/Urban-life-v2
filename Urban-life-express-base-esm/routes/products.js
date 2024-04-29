@@ -13,7 +13,7 @@ import { QueryTypes, Op } from 'sequelize'
 import db from '#configs/mysql.js'
 
 router.get('/', async function(req, res){
-  let sqlProducts = 'SELECT * FROM product_lecture';
+  let sqlProducts = 'SELECT * FROM product_lecture WHERE id BETWEEN 1 AND 450';
   try {
     const [rows, fields] = await db.query(sqlProducts); // 將 sqlProducts 作為參數傳遞給 db.query()
     return res.json({

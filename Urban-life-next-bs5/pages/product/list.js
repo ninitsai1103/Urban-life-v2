@@ -1,25 +1,33 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Search from '@/components/product/search'
-import ProductCard from '@/components/product-test/product-card'
+import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
+import useProducts from '@/hooks/product/useProducts'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
-
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
+// import { totalItems } from '@/hooks/cart-reducer-state'
 
 export default function List() {
   const [list, setList] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalItems = 450;
+  const perpages = 40;
 
-  //抓資料
+  const { products } = useProducts();
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  }
+
   useEffect(() => {
-    fetch('')
-      .then((response) => response.json())
-      .then((data) => setList(data))
-      .catch((error) => console.log(error))
-  },[])//空陣列代表只在組件掛載時執行一次
+    const startIndex = (currentPage - 1) * perpages;
+    const endIndex = Math.min(startIndex + perpages, products.length);
+    setList(products.slice(startIndex, endIndex));
+  }, [currentPage, products])
 
   // Toggle the side navigation
   useEffect(() => {
@@ -629,7 +637,7 @@ export default function List() {
               </nav>
               {/* 搜尋、排序 */}
               <div className="amount&sort d-flex justify-content-between align-items-center">
-                <p className="mb-0 text-color2-nohover">共 36 筆商品</p>
+                <p className="mb-0 text-color2-nohover">共 {products.length} 筆商品</p>
                 <div className="d-flex align-items-center">
                   <CiViewTable
                     className="d-lg-none"
@@ -1272,18 +1280,25 @@ export default function List() {
               </div>
             </div>
             {/* 商品欄 */}
-            <div className="product">
-              <ProductCard />
-              {/* <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard /> */}
+            < div div className="container " >
+              <div className="row row-cols-2 row-cols-lg-4 g-4">
+                {list.map(product => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
             {/* 分頁 */}
-            <Page />
+            < div div className="container " >
+              <Page
+                totalItems={totalItems}
+                perpages={perpages}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }
