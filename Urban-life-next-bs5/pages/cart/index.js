@@ -10,8 +10,11 @@ import AddProducts from '@/components/cart/add-products'
 import coupons from '@/data/coupon.json'
 
 export default function CheckoutPage() {
+  // 使用 useState hook 創建 couponSelected 狀態，初始值為空陣列
   const [couponSelected, setCouponSelected] = useState([])
+  // 定義處理選擇優惠券的函數
   const handleCouponSelected = (coupon) => {
+    // 將選擇的優惠券設定為 couponSelected 狀態
     setCouponSelected(coupon)
   }
   return (

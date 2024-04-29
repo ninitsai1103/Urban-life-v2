@@ -7,12 +7,14 @@ import { useCheckout } from '@/hooks/use-checkout'
 export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
   // const { items, totalPrice } = useCheckout()
 
+  // 過濾出未過期且可使用的優惠券
   const couponNotExpired = coupons.filter(
     (v) => new Date(v.deadline) > new Date() && v.status === '可使用'
   )
-
+  // 狀態用於存儲所選擇的優惠券
   const [selectedCoupon, setSelectedCoupon] = useState([])
-  const handleSendSelectedCoupon = (e) => {
+  // 處理當使用者選擇優惠券時的函數
+  const handleSelectedCoupon = (e) => {
     setSelectedCoupon(e)
     sendSelectedCoupon(e)
   }
@@ -71,8 +73,9 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
                   name="couponRadios"
                   id={`coupon${i}`}
                   value={v.id}
+                  //如果當前迴圈遍歷到的優惠券的 ID 等於被選擇的優惠券的 ID，則表示這個 radio 按鈕應該被選中，因此 checked 屬性設置為 true；否則，則為 false。
                   checked={selectedCoupon.id === v.id}
-                  onChange={() => handleSendSelectedCoupon(v)}
+                  onChange={() => handleSelectedCoupon(v)}
                 />
                 <div className={styles.coupon_name}>{v.name}</div>
               </div>
