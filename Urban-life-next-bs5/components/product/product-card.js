@@ -26,7 +26,7 @@ export default function ProductCard({ product }) {
                 </div>
                 <div className="card-body">
                   <div className="product-name d-flex justify-content-between">
-                    <h5 className="card-title fs-6">{product.name}({product.size})</h5>
+                    <h5 className="card-title fs-6">{product.id>440 && product.id <451 ? product.name : `${product.name}(${product.size})`}</h5>
                     <FaRegHeart style={{ fontSize: '25px', cursor: 'pointer' }} />
                   </div>
                   <div className="star d-flex">
@@ -97,7 +97,7 @@ export default function ProductCard({ product }) {
    
 
       {/* 手機版:2 */}
-      < div div className="container d-none d-lg-none " >
+      <div div className="container d-none d-lg-none " >
         <div className="card mb-3" >
             <div className="row g-0">
               <div className="col-5 imgWrap">

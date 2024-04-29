@@ -27,6 +27,7 @@ export default function List() {
     const startIndex = (currentPage - 1) * perpages;
     const endIndex = Math.min(startIndex + perpages, products.length);
     setList(products.slice(startIndex, endIndex));
+    console.log(list);
   }, [currentPage, products])
 
   // Toggle the side navigation
@@ -1280,7 +1281,7 @@ export default function List() {
               </div>
             </div>
             {/* 商品欄 */}
-            < div div className="container " >
+            <div div className="container " >
               <div className="row row-cols-2 row-cols-lg-4 g-4">
                 {list.map(product => (
                   <ProductCard key={product.id} product={product} />
@@ -1288,7 +1289,7 @@ export default function List() {
               </div>
             </div>
             {/* 分頁 */}
-            < div div className="container " >
+            <div  className="container " >
               <Page
                 totalItems={totalItems}
                 perpages={perpages}
@@ -1298,7 +1299,7 @@ export default function List() {
             </div>
           </div>
         </div>
-      </div >
+      </div>
     </>
   )
 }

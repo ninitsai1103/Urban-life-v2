@@ -42,7 +42,6 @@ export default function Page({ totalItems, perpages, currentPage, startIndex, en
             </a>
           </li>
         </ul>
-
       </nav>
       <style jsx>
         {`
