@@ -12,8 +12,11 @@ import { QueryTypes, Op } from 'sequelize'
 
 import db from '#configs/mysql.js'
 
+//獲取所有商品資料
 router.get('/', async function(req, res){
   let sqlProducts = 'SELECT * FROM product_lecture WHERE id BETWEEN 1 AND 450';
+
+
   try {
     const [rows, fields] = await db.query(sqlProducts); // 將 sqlProducts 作為參數傳遞給 db.query()
     return res.json({
@@ -32,22 +35,15 @@ router.get('/', async function(req, res){
   }
 });
 
-// GET 獲得所有資料，加入分頁與搜尋字串功能，單一資料表處理
-// router.get('/', async (req, res) => {
-  // 獲取query參數值
+  //  獲取query參數值
   // const {
-  //   page = 1, // number,  用於 OFFSET =  (Number(page) - 1) * Number(perpage),
-  //   perpage = 10, // number, 用於 LIMIT
   //   name_like = '', // string, 對應 name 欄位, `name LIKE '%name_like%'`
-  //   brand_ids = '', // string, 對應 brand_id 欄位,  `brand_id IN (brand_ids)`
-  //   cat_ids = '', // string, 對應 cat_id 欄位,  `cat_id IN (cat_ids)`
-  //   color_ids = '', // string, 對應 color 欄位,  `CONCAT(",", color, ",") REGEXP ",(1|2),"`
-  //   tag_ids = '', // string, 對應 tag 欄位,
-  //   size_ids = '', // string, 對應 size 欄位,
-  //   sort='price' // string, 排序欄位 用於 ORDER BY
-  //   order='asc' // string, 排序順序 用於 ORDER BY 'asc' | 'desc', 預設為'asc'
-  //   price_gte = 1500 // number, 對應 price 欄位, `price >= 1500`
-  //   price_lte = 100000 // number, 對應 price 欄位, `price <= 10000`
+  //   // star = '', // number, 對應 star 欄位,  `star`
+  //   size_like = '', // string, 對應 size 欄位, `size LIKE '%size_like%'`
+  //   sort='price', // string, 排序欄位 用於 ORDER BY sort='price'|| sort='star',
+  //   order='asc', // string, 排序順序 用於 ORDER BY 'asc' | 'desc', 預設為'asc'
+  //   price_gte = '', // number, 對應 price 欄位, `price >= `
+  //   price_lte = '', // number, 對應 price 欄位, `price <= `
   //   raw=true, //boolean, 代表只回傳products陣列
   // } = req.query
 
@@ -173,7 +169,6 @@ router.get('/', async function(req, res){
 // router.get('/qs', async (req, res, next) => {
 //   // 獲取網頁的搜尋字串
 //   const {
-//     page,
 //     keyword,
 //     brand_ids,
 //     cat_ids,
