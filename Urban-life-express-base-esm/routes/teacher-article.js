@@ -31,16 +31,30 @@ router.get('/', async function(req, res){
       ON 
         article.user_id = user_teacher.id 
       WHERE 
-        article.valid = 1  AND article.user_id = 2
+        article.valid = 1
+    `;
+
+    // 計算文章總數量
+    const sqlTotalCount = `
+      SELECT 
+        COUNT(*) AS total_count
+      FROM 
+        article
+      WHERE 
+        valid = 1
     `;
 
 
+    // 計算文章總數量
+    const [totalCountRows, _] = await db.query(sqlTotalCount);
+    const totalCount = totalCountRows[0].total_count; // 從結果中獲取總數量
 
     const [rows, fields] = await db.query(sqlArticles); // 將 sqlProducts 作為參數傳遞給 db.query()
     return res.json({
       status: 'success',
       data:{
-        articles:rows
+        articles:rows,
+        total: totalCount // 將總數量包含在回應中
       },
   })
   } catch (error) {

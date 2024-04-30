@@ -3,11 +3,33 @@ import ArticleCard from '@/components/member/article-card'
 import TeacherAsideAccount from '@/components/member/teacher-aside-account'
 import Page from '@/components/product/pagination'
 import { IoAdd } from 'react-icons/io5'
-import useArticles from '@/hooks/use-teacherarticle'
+import useTeacherArticles from '@/hooks/use-teacherarticle'
 
 export default function ArticleManagement() {
-  const [ArticleManagement, setArticleManagement] = useState([]);
-  const { articles } = useArticles();
+  
+  const { articles, totalArticles } = useTeacherArticles()
+
+  // 到底要不要
+  const [articleCurrentPage, setarticleCurrentPage] = useState(1);
+  const ArticleTotalItems = totalArticles;
+  const ArticlePerpages = 5;
+
+  const [ArticleManagement, setArticleManagement] = useState([])
+
+  // 處理頁碼變更事件
+  const handleArticlePageChange = (articlePage) => {
+    setarticleCurrentPage(articlePage);
+  }
+
+  useEffect(() => {
+    if (articles.length > 0) {
+      const startIndex = (articleCurrentPage - 1) * ArticlePerpages;
+      const endIndex = Math.min(startIndex + ArticlePerpages, articles.length);
+      setArticleManagement(articles.slice(startIndex, endIndex));
+      console.log(ArticleManagement);
+    }
+  }, [articleCurrentPage, articles, ArticlePerpages])
+
   return (
     <>
       {/* EBE3DB */}
@@ -27,12 +49,17 @@ export default function ArticleManagement() {
               </div>
             </div>
             <div className="teacher-margin-bottom">
-              {articles.map(article => (
+              {articles.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
             <div>
-              <Page />
+              <Page
+                totalItems={ArticleTotalItems}
+                currentPage={articleCurrentPage}
+                perpages={ArticlePerpages}
+                onPageChange={handleArticlePageChange}
+              />
             </div>
           </div>
         </div>
