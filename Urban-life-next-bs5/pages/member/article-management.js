@@ -1,10 +1,13 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import ArticleCard from '@/components/member/article-card'
 import TeacherAsideAccount from '@/components/member/teacher-aside-account'
 import Page from '@/components/product/pagination'
 import { IoAdd } from 'react-icons/io5'
+import useArticles from '@/hooks/use-teacherarticle'
 
 export default function ArticleManagement() {
+  const [ArticleManagement, setArticleManagement] = useState([]);
+  const { articles } = useArticles();
   return (
     <>
       {/* EBE3DB */}
@@ -24,10 +27,9 @@ export default function ArticleManagement() {
               </div>
             </div>
             <div className="teacher-margin-bottom">
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
+              {articles.map(article => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
             </div>
             <div>
               <Page />
@@ -71,8 +73,12 @@ export default function ArticleManagement() {
         .teacher-article-management {
           margin: 20px;
           padding: 33px 0;
-          {/* margin: 20px 0px; */}
-          {/* padding: 0px; */}
+           {
+            /* margin: 20px 0px; */
+          }
+           {
+            /* padding: 0px; */
+          }
         }
 
         @media (max-width: 992px) {
