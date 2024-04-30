@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import CheckoutProductsTable from '@/components/cart/checkout-products-table'
 import CheckoutLecturesTable from '@/components/cart/checkout-lectures-table'
 import Step from '@/components/cart/step'
@@ -12,11 +12,18 @@ import coupons from '@/data/coupon.json'
 export default function CheckoutPage() {
   // 使用 useState hook 創建 couponSelected 狀態，初始值為空陣列
   const [couponSelected, setCouponSelected] = useState([])
-  // 定義處理選擇優惠券的函數
-  // const handleCouponSelected = (coupon) => {
-  //   // 將選擇的優惠券設定為 couponSelected 狀態
-  //   setCouponSelected(coupon)
-  // }
+ 
+  // 傳遞勾選的商品陣列物件
+  // const [selectedProductsToPay, setSelectedProductsToPay] = useState([])
+  // 傳遞勾選的課程陣列物件
+  // const [selectedLecturesToPay, setSelectedLecturesToPay] = useState([])
+  //合併勾選的商品及課程陣列物件
+  // const selectedToPay = [...selectedProductsToPay,...selectedLecturesToPay]
+
+  // useEffect (() => {
+  //   console.log("selectedToPay", selectedToPay);
+  // }, [selectedToPay])
+
   return (
     <>
       <AddProducts />
@@ -42,8 +49,13 @@ export default function CheckoutPage() {
             circle_color={styles.circle_color_undo}
           />
         </div>
-        <CheckoutProductsTable/>
-        <CheckoutLecturesTable />
+        <CheckoutProductsTable
+        // setSelectedProductsToPay={setSelectedProductsToPay}
+
+         />
+        <CheckoutLecturesTable 
+        //setSelectedLecturesToPay={setSelectedLecturesToPay}
+        />
         <section className="d-sm-flex justify-content-between mb-3">
           <div className="flex-fill me-sm-3">
             <h4 className="text-light bg-primary4 p-2 mt-2">
@@ -53,7 +65,10 @@ export default function CheckoutPage() {
           </div>
           <div className="flex-fill">
             <h4 className="text-light bg-primary4 p-2 mt-2">訂單資訊</h4>
-            <CheckoutCounter selectedCoupon={couponSelected}/>
+            <CheckoutCounter 
+            selectedCoupon={couponSelected}
+            //selectedToPay={selectedToPay}
+            />
             <div className="text-end mt-3">
               <button className="btn btn-main" type="button" onClick={() => {}}>
                 結帳去
