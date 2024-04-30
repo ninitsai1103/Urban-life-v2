@@ -2,8 +2,9 @@ import React from 'react'
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md'
 
 
-export default function Page({ totalItems, perpages, currentPage, startIndex, endIndex, onPageChange }) {
-  //props=> totalItems:資料總數,perpages:一頁幾筆資料,currentPage:當前所在頁數,startIndex:每頁起始索引,endIndex:每頁結束索引
+export default function Page({ totalItems, perpages, currentPage, onPageChange }) {
+  //須設定props=> totalItems:資料總數,perpages:一頁幾筆資料,currentPage:當前所在頁數
+  //函式可到list.js查看
   const totalPages = Math.ceil(totalItems / perpages);
   const pages = [];
   for (let i = 1; i <= totalPages; i++) {
@@ -17,16 +18,14 @@ export default function Page({ totalItems, perpages, currentPage, startIndex, en
         <ul className="pagination d-flex justify-content-center align-items-center py-3 px-2  my-5">
           <li className="page-item ">
             <a className="page-link no-bg" href="#" onClick={(e) => {
-              e.preventDefault();
               if(currentPage>1)onPageChange(currentPage-1)
             }}>
-              <MdArrowBackIos />
+              <MdArrowBackIos style={{fontSize:'18px'}} />
             </a>
           </li>
           {pages.map(page => (
             <li className="page-item" key={page}>
-              <a className="page-link rounded-circle  link-bg" onClick={(e) => {
-                e.preventDefault();
+              <a className={`page-link rounded-circle link-bg ${currentPage === page? 'active' : '' }`} href='#' onClick={(e) => {
                 onPageChange(page)
               }} >
                 {page}
@@ -35,10 +34,9 @@ export default function Page({ totalItems, perpages, currentPage, startIndex, en
           ))}
           <li className="page-item ">
             <a className="page-link no-bg" href="#" onClick={(e) => {
-              e.preventDefault();
               if(currentPage<totalPages)onPageChange(currentPage+1)
             }}>
-              <MdArrowForwardIos />
+              <MdArrowForwardIos style={{fontSize:'18px'}}/>
             </a>
           </li>
         </ul>
@@ -47,7 +45,7 @@ export default function Page({ totalItems, perpages, currentPage, startIndex, en
         {`
           .pagination {
             display: grid;
-            grid-gap: 20px;
+            grid-gap: 12px;
           }
           .page-link {
             border-radius: 50%;       
@@ -86,6 +84,10 @@ export default function Page({ totalItems, perpages, currentPage, startIndex, en
               color: black;
             }
           }
+          .active {
+            background-color:#f3b454;
+            color: black;
+          }
 
           .no-bg,
           .no-bg:hover,
@@ -95,8 +97,16 @@ export default function Page({ totalItems, perpages, currentPage, startIndex, en
           }
 
           @media (max-width: 500px) {
+            .pagination {
+            display: grid;
+            grid-gap: 6px;
+          }
+            
             .page-link {
               margin:0 2px;
+              font-size:10px;
+              width: 25px;              
+            height: 25px;  
             }
           }
         `}

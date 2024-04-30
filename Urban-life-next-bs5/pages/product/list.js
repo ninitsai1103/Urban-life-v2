@@ -13,22 +13,44 @@ import { RxTable } from 'react-icons/rx'
 
 export default function List() {
   const [list, setList] = useState([])
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalItems = 450;
-  const perpages = 40;
-
   const { products } = useProducts();
 
+  //分頁
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalItems = 450;
+  const perpages = 48;
   const handlePageChange = (page) => {
     setCurrentPage(page);
   }
 
-  useEffect(() => {
+  //分類
+  const[selectCategory, setSelectCategory] = useState(null);
+  const handleCategory = (category) => {
+    setSelectCategory(category);
+    setCurrentPage(1) //重新設定為第一頁
+  }
+
+
+//分頁
+  // useEffect(() => {
+  //   //startIndex:每頁起始索引,endIndex:每頁結束索引
+  //   const startIndex = (currentPage - 1) * perpages;
+  //   const endIndex = Math.min(startIndex + perpages, products.length);
+  //   setList(products.slice(startIndex, endIndex));
+  //   console.log(list);
+  // }, [currentPage, products])
+
+  //分類
+  useEffect(()=>{
+    let filterProducts = products;
+    if(selectCategory){
+      filterProducts = products.filter(product => product.category === selectCategory)
+    }
     const startIndex = (currentPage - 1) * perpages;
-    const endIndex = Math.min(startIndex + perpages, products.length);
-    setList(products.slice(startIndex, endIndex));
-    console.log(list);
-  }, [currentPage, products])
+    const endIndex = Math.min(startIndex + perpages, filterProducts.length);
+    setList( filterProducts.slice(startIndex, endIndex));
+    console.log(filterProducts);
+  },[currentPage, products, selectCategory])
 
   // Toggle the side navigation
   useEffect(() => {
@@ -98,6 +120,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleCategory(1)}}
                           >
                             春季種子
                           </Link>
@@ -436,7 +462,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios2"
                   >
-                    NTD 150-300
+                    NTD 151-300
                   </label>
                 </div>
                 <div className="form-check">
@@ -451,7 +477,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios3"
                   >
-                    NTD 300-500
+                    NTD 301-500
                   </label>
                 </div>
                 <div className="form-check">
@@ -466,7 +492,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios4"
                   >
-                    NTD 500-1000
+                    NTD 501-1000
                   </label>
                 </div>
                 <div className="form-check">
@@ -481,7 +507,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios5"
                   >
-                    NTD 1000以上
+                    NTD 1001以上
                   </label>
                 </div>
 

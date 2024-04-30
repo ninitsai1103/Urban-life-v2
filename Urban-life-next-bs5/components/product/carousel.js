@@ -34,6 +34,7 @@ export default function Carousel() {
         thumbs={{ swiper: thumbsSwiper }}
         modules={[Autoplay, FreeMode, Navigation, Thumbs]}
         className={styles.mySwiper2}
+        loop = {true}
       >
         <SwiperSlide className='wrap-img'>
           <img src="/images/product/slide/p1.jpg" />
