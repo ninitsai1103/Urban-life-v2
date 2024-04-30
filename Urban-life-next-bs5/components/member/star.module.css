@@ -1,0 +1,14 @@
+.on {
+  color: gold;
+}
+
+.off {
+  color: gray;
+}
+
+.star-btn {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}

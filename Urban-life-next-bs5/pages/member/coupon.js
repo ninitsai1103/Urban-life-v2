@@ -118,6 +118,7 @@ export default function CouponMainPage() {
     const url = `http://localhost:3005/api/coupons`
 
     const res = await fetch(url)
+    
     const data = await res.json()
     const coupons = data.data.coupons
 

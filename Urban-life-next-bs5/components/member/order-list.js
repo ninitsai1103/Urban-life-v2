@@ -1,100 +1,64 @@
-import React from 'react'
-import styles from '../cart/info-pay.module.css'
+import { useState } from 'react'
+
 import Image from 'next/image'
-export default function OrderCard() {
+
+import styles from './star.module.css'
+
+export default function Order() {
+  // 點按時的評分，一開始是0分代表沒有評分
+  const [rating, setRating] = useState(0)
+  // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
+  const [hoverRating, setHoverRating] = useState(0)
+
+  // 商品評論的狀態
+  const [productComment, setProductComment] = useState('')
+  // 課程評論的狀態
+  const [lectureComment, setLectureComment] = useState('')
+
+
+
+  const handleProductTextAreaChange = (e) => {
+    setProductComment(e.target.value)
+  }
+  const handleLectureTextAreaChange = (e) => {
+    setLectureComment(e.target.value)
+  }
+
   return (
     <>
-{/* 商品評價Modal */}
-<div
-        className="modal fade"
-        id="ProductRate"
-        tabIndex={-1}
-        aria-labelledby="RateLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg modal-dialog-centered ">
-          <div className="modal-content modal-content-padding">
-            <div className="modal-header border-0">
-              <div className="header-title">商品名稱-評價</div>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
-            </div>
-            <div className="modal-body">
-              <div className="rate-star">
-                <div className="body-title">評價</div>
-                <div className="">
-                  <span className="good-style">&#9733;</span>
-                  <span>&#9733;</span>
-                  <span>&#9733;</span>
-                  <span>&#9733;</span>
-                  <span>&#9733;</span>
-                </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">訂單ID</th>
+            <th scope="col">訂單日期</th>
+            <th scope="col">金額</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="align-middle tab">
+            <td>#24535_63224</td>
+            <td>October 17,2023</td>
+            <td>$1256</td>
+            <td>
+              <div className="button">
+                <button
+                  className="btn btn-main"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#Detail"
+                >
+                  查看訂單細節
+                </button>
               </div>
-              <div>
-                <div className="body-title">詳細評價</div>
-                <textarea className="form-control" rows="4"></textarea>
-              </div>
-            </div>
-            <div className="modal-footer d-flex justify-content-center border-0">
-              <button type="button" className="btn btn-main">
-                送出評價
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 課程評價Modal */}
-      <div
-        className="modal fade"
-        id="LectureRate"
-        tabIndex={-1}
-        aria-labelledby="RateLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg modal-dialog-centered ">
-          <div className="modal-content modal-content-padding">
-            <div className="modal-header border-0">
-              <div className="header-title">課程名稱-評價</div>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
-            </div>
-            <div className="modal-body">
-              <div className="rate-star">
-                <div className="body-title">評價</div>
-                <div className="">
-                  <span className="good-style">&#9733;</span>
-                  <span>&#9733;</span>
-                  <span>&#9733;</span>
-                  <span>&#9733;</span>
-                  <span>&#9733;</span>
-                </div>
-              </div>
-              <div>
-                <div className="body-title">詳細評價</div>
-                <textarea className="form-control" rows="4"></textarea>
-              </div>
-            </div>
-            <div className="modal-footer d-flex justify-content-center border-0">
-              <button type="button" className="btn btn-main">
-                送出評價
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
       {/* 訂單細節的Modal */}
       <div
         className="modal fade"
-        id="MobileDetail"
+        id="Detail"
         tabIndex={-1}
         aria-labelledby="DetailLabel"
         aria-hidden="true"
@@ -267,140 +231,193 @@ export default function OrderCard() {
           </div>
         </div>
       </div>
+      {/* 商品評價Modal */}
+      <div
+        className="modal fade"
+        id="ProductRate"
+        tabIndex={-1}
+        aria-labelledby="RateLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg modal-dialog-centered ">
+          <div className="modal-content modal-content-padding">
+            <div className="modal-header border-0">
+              <div className="header-title">商品名稱-評價</div>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
+            </div>
+            <div className="modal-body">
+              <div className="rate-star">
+                <div className="body-title">評價</div>
+                <div className="">
+                  {/* STAR RATING */}
+                  {Array(5)
+                    .fill(1)
+                    .map((v, i) => {
+                      // 每個按鈕的分數，相當於索引+1
+                      const score = i + 1
 
-      {/* 訂單card */}
-      <div className="col-12 ">
-        <div className="card mb-3">
-          <div className="row px-3 pt-3 pb-2">
-            <div className="col-6">訂單ID</div>
-            <div className="col-6">#24535_63224</div>
-          </div>
-          <div className="row pb-2 px-3">
-            <div className="col-6">訂單日期</div>
-            <div className="col-6">October 17,2023</div>
-          </div>
-          <div className="row pb-2 px-3">
-            <div className="col-6">金額</div>
-            <div className="col-6">$1256</div>
-          </div>
-          <div className="button mt-3 mb-2 d-flex justify-content-end">
-            <button
-              className="btn btn-main"
-              type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#MobileDetail"
-            >
-              訂單細節
-            </button>
+                      return (
+                        <button
+                          key={i}
+                          className={styles['star-btn']}
+                          onClick={() => {
+                            // 點按後設定分數
+                            setRating(score)
+                          }}
+                          onMouseEnter={() => {
+                            setHoverRating(score)
+                          }}
+                          onMouseLeave={() => {
+                            setHoverRating(0)
+                          }}
+                        >
+                          <span
+                            className={
+                              score <= rating || score <= hoverRating
+                                ? styles['on']
+                                : styles['off']
+                            }
+                          >
+                            &#9733;
+                          </span>
+                        </button>
+                      )
+                    })}
+                </div>
+              </div>
+              <div>
+                <div className="body-title">詳細評價</div>
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  value={productComment}
+                  onChange={handleProductTextAreaChange}
+                ></textarea>
+              </div>
+            </div>
+            <div className="modal-footer d-flex justify-content-center border-0">
+              <button type="button" className="btn btn-main">
+                送出評價
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      
-
-      {/* 訂單細節 */}
-      {/* <div className="col-12 ">
-        <div className="card mb-3">
-          <div className="text-center">
-            <p style={{ fontSize: '36px' }}>#3456_768</p>
-            <p style={{ fontSize: '14px' }}>2024/4/2,3:00pm</p>
-          </div>
-          <hr />
-          <div className="">
-            <table>
-              <tbody className="table-group-divider">
-                <tr className="align-middle">
-                  <td className="w-50">
-                    <div className="d-flex align-items-center">
-                      <div className="img me-3">
-                        <Image
-                          src="/images/product/product_img/Pi2401260932.jpg"
-                          width={30}
-                          height={30}
-                        />
-                      </div>
-                      <div className="ps-sm-2">
-                        <div className={styles.name}>商品名稱</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className={styles.d_td}>
-                    <div className={styles.d_cell}>NTD 100</div>
-                  </td>
-                  <td className={styles.d_td}>
-                    <span> 數量 </span>
-                  </td>
-                  <td className="text-center">NTD 100</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <hr />
-          <div className="row text-center">
-            <div className="col-12 ">
-              <div className="fw-bold" style={{ fontSize: '20px' }}>
-                選擇送貨及付款方式
-              </div>
-              <div>送貨地點</div>
-              <div>桃園市中壢區陸光五街65號-71號</div>
-              <div>付款方式</div>
-              <div>信用卡</div>
-              <hr />
+      {/* 課程評價Modal */}
+      <div
+        className="modal fade"
+        id="LectureRate"
+        tabIndex={-1}
+        aria-labelledby="RateLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg modal-dialog-centered ">
+          <div className="modal-content modal-content-padding">
+            <div className="modal-header border-0">
+              <div className="header-title">課程名稱-評價</div>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
             </div>
-            <div className="col-12">
-              <div>共 13 件</div>
-              <div className="">
-                <div>小計： 78424元</div>
-                <div>運費： 60元</div>
-                <div>優惠券折扣： - 60元</div>
+            <div className="modal-body">
+              <div className="rate-star">
+                <div className="body-title">評價</div>
+                <div className="">
+                  {/* STAR RATING */}
+                  {Array(5)
+                    .fill(1)
+                    .map((v, i) => {
+                      // 每個按鈕的分數，相當於索引+1
+                      const score = i + 1
 
-                <div>總金額： 78424元</div>
+                      return (
+                        <button
+                          key={i}
+                          className={styles['star-btn']}
+                          onClick={() => {
+                            // 點按後設定分數
+                            setRating(score)
+                          }}
+                          onMouseEnter={() => {
+                            setHoverRating(score)
+                          }}
+                          onMouseLeave={() => {
+                            setHoverRating(0)
+                          }}
+                        >
+                          <span
+                            className={
+                              score <= rating || score <= hoverRating
+                                ? styles['on']
+                                : styles['off']
+                            }
+                          >
+                            &#9733;
+                          </span>
+                        </button>
+                      )
+                    })}
+                </div>
+              </div>
+              <div>
+                <div className="body-title">詳細評價</div>
+                {/* 課程評論的欄位 */}
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  value={lectureComment}
+                  onChange={handleLectureTextAreaChange}
+                ></textarea>
               </div>
             </div>
-          </div>
-        </div>
-      </div> */}
-      {/* 訂單評價 */}
-      {/* <div className="col-12">
-        <div className='text-center pb-3'>
-        <div className="card mb-3">
-          <div>評價</div>
-          <div className="">
-            <span className="good-style">&#9733;</span>
-            <span>&#9733;</span>
-            <span>&#9733;</span>
-            <span>&#9733;</span>
-            <span>&#9733;</span>
-          </div>
-          <div>
-            <div className="">詳細評價</div>
-            <textarea className="form-control" rows="4"></textarea>
-          </div>
-          <div className='mt-2'>
-          <button type="button" className="btn btn-main">
+            <div className="modal-footer d-flex justify-content-center border-0">
+              <button type="button" className="btn btn-main">
                 送出評價
               </button>
+            </div>
           </div>
-         
         </div>
-        </div>
-      </div> */}
+      </div>
+
       <style jsx>{`
-        table {
-          border-collapse: none;
-        }
         .img {
           width: 80px;
           height: 80px;
-        }
-        .card {
-          border-radius: 8px;
-          padding: 10px;
         }
         .button {
           display: flex;
           gap: 1rem;
           justify-content: center;
+        }
+        .modal-content-padding {
+          padding: 20px 50px;
+        }
+        .header-title {
+          font-size: 24px;
+          font-weight: bold;
+          margin: 0;
+        }
+         {
+          /* modat-rate */
+        }
+        .body-title {
+          color: #6c7275;
+          font-size: 16px;
+        }
+        .rate-star {
+          margin-bottom: 10px;
+        }
+        .good-style {
+          color: #f7871b;
         }
       `}</style>
     </>
