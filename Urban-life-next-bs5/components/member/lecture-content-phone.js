@@ -1,37 +1,49 @@
 import React from 'react'
 
-export default function LectureContentTbody({ lecture }) {
+export default function LectureContentPhone({ lecture }) {
   return (
     <>
-      <tbody className="text-center align-middle" key={lecture.id}>
-        <tr>
-          <td scope="row" className="setup-max-width">
-            {lecture.name}
-          </td>
-          <td>{lecture.lecture_date}</td>
-          <td className="nodisplay_992px">
-            <div className="setup-max-width-time text-center">
-              {lecture.sign_up_deadline}
-            </div>
-          </td>
-          <td>{lecture.amount}</td>
-          <td>{lecture.price}</td>
-          <td>
-            <button
-              className="btn btn-detail"
-              data-bs-toggle="modal"
-              data-bs-target="#detailModal"
-            >
-              檢視
-            </button>
-          </td>
-        </tr>
-      </tbody>
+      <div className="lecture_phone_card p-3 ">
+        <table className="w-100">
+          <tbody className="w-100" key={lecture.id}>
+            <tr>
+              <th>課程名稱：</th>
+              <td>{lecture.name}</td>
+            </tr>
+            <tr>
+              <th>上課時間：</th>
+              <td>{lecture.lecture_date}</td>
+            </tr>
+            <tr>
+              <th>報名截止時間：</th>
+              <td>{lecture.sign_up_deadline}</td>
+            </tr>
+            <tr>
+              <th>上課人數：</th>
+              <td>{lecture.amount}</td>
+            </tr>
+            <tr>
+              <th>價錢：</th>
+              <td>${lecture.price}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="phone-lecture-detail w-100 d-flex">
+          <button
+            className="btn btn-detail"
+            data-bs-toggle="modal"
+            data-bs-target="#detailPhoneModal"
+          >
+            檢視
+          </button>
+        </div>
+      </div>
+
 
       {/* 檢視modal */}
       <div
         className="modal fade"
-        id="detailModal"
+        id="detailPhoneModal"
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -113,7 +125,7 @@ export default function LectureContentTbody({ lecture }) {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deleteModal"
+                    data-bs-target="#deletePhoneModal"
                   >
                     下架課程
                   </button>
@@ -121,7 +133,7 @@ export default function LectureContentTbody({ lecture }) {
                     type="button"
                     className="btn btn-main"
                     data-bs-toggle="modal"
-                    data-bs-target="#updateModal"
+                    data-bs-target="#updatePhoneModal"
                   >
                     修改
                   </button>
@@ -135,7 +147,7 @@ export default function LectureContentTbody({ lecture }) {
       {/* 修改modal */}
       <div
         className="modal fade"
-        id="updateModal"
+        id="updatePhoneModal"
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -256,7 +268,7 @@ export default function LectureContentTbody({ lecture }) {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deleteModal"
+                    data-bs-target="#deletePhoneModal"
                   >
                     下架課程
                   </button>
@@ -264,7 +276,7 @@ export default function LectureContentTbody({ lecture }) {
                     type="submit"
                     className="btn btn-main"
                     data-bs-toggle="modal"
-                    data-bs-target="#updateModal"
+                    data-bs-target="#updatePhoneModal"
                   >
                     確認修改
                   </button>
@@ -278,7 +290,7 @@ export default function LectureContentTbody({ lecture }) {
       {/* 刪除modal */}
       <div
         className="modal fade"
-        id="deleteModal"
+        id="deletePhoneModal"
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -314,18 +326,24 @@ export default function LectureContentTbody({ lecture }) {
       </div>
 
       <style jsx>{`
-        .setup-max-width {
-          max-width: 100px;
-          white-space: nowrap; /* 防止文字換行 */
-          overflow: hidden; /* 隱藏超出範圍的文字 */
-          text-overflow: ellipsis; /* 顯示省略號 */
+        .lecture_phone_card {
+          background-color: #ffffff;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          margin-bottom: 20px;
+          table {
+            th,
+            td {
+              width: 50%;
+              padding: 10px;
+            }
+          }
         }
-        .setup-max-width-time {
-          margin: auto;
-          max-width: 100px;
-          white-space: nowrap; /* 防止文字換行 */
-          overflow: hidden; /* 隱藏超出範圍的文字 */
-          text-overflow: ellipsis; /* 顯示省略號 */
+        .phone-lecture-detail {
+          {/* padding: 10px; */}
+          button {
+            margin-left: auto;
+          }
         }
 
         .modal-table {
@@ -351,12 +369,6 @@ export default function LectureContentTbody({ lecture }) {
           }
           input {
             margin: 3px;
-          }
-        }
-
-        @media (max-width: 992px) {
-          .nodisplay_992px {
-            display: none;
           }
         }
       `}</style>
