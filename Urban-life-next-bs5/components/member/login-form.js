@@ -5,14 +5,14 @@ import styles from './member.module.css'
 export default function LoginForm() {
   // 用物件狀態對應整個表單欄位
   const [user, setUser] = useState({
-    account: '',
+    email: '',
     password: '',
   })
 // 顯示密碼的核取方塊用
   const [showPassword, setShowPassword] = useState(false)
 // 錯誤訊息狀態
   const [errors, setErrors] = useState({
-    account: '',
+    email: '',
     password: '',
   })
 // 多欄位共用事件處理函式
@@ -20,20 +20,20 @@ export default function LoginForm() {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
 //表單送出
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 // 整理要送到伺服器的資料
     // 檢查欄位
     // 建立一個新的錯誤物件
     const newErrors = {
-      account: '',
+      email: '',
       password: '',
     }
 // 信號值，代表有出現錯誤，判斷是否要送出表單用
     let hasErrors = false
 // 如果檢查有發生錯誤時
-    if (!user.account) {
-      newErrors.account = '帳號為必填'
+    if (!user.email) {
+      newErrors.email = '帳號為必填'
       hasErrors = true
     }
 
@@ -45,7 +45,25 @@ export default function LoginForm() {
     setErrors(newErrors)
 
     if (!hasErrors) {
-      alert('檢查通過，送到伺服器去')
+      try {
+        const response = await fetch('/api/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          // 登入成功，導向到用戶資料頁面或其他頁面
+          window.location.href = '/member/information';
+        } else {
+          // 登入失敗，顯示錯誤訊息
+          console.error('Login failed:', data.message);
+        }
+      } catch (error) {
+        console.error('Error logging in:', error);
+      }
     }
   }
 
@@ -63,10 +81,10 @@ export default function LoginForm() {
                 type="email"
                 className="form-control w-100"
                 placeholder="電子信箱"
-                name="account"
+                name="email"
                 onChange={handleFieldChange}
               />
-              <span className="error my-1 text-start">{errors.account}</span>
+              <span className="error my-1 text-start">{errors.email}</span>
             </div>
           </div>
 

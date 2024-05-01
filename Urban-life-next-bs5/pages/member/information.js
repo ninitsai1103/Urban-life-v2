@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import {  useEffect,useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
+import TWZipCode from '@/components/tw-zipcode'
+import useMembers from '@/hooks/use-member'
 import dynamic from 'next/dynamic'
 const InputDatePicker = dynamic(
   () => import('@/components/common/input-date-picker'),
@@ -7,12 +9,20 @@ const InputDatePicker = dynamic(
     ssr: false,
   }
 )
+
 export default function Information() {
+  //生日
   const [showDatepicker, setShowDatepicker] = useState(false)
   const [date, setDate] = useState('')
+  //地址
+ 
+  //連接資料庫
+  const { members} = useMembers()
+
   return (
     <>
       <div className="container">
+
         <div className="row margin-padding">
           <div className="col-lg-3 col-md-12 aside">
             <AsideAccount />
@@ -24,7 +34,7 @@ export default function Information() {
             >
               <div className="title">個人資料</div>
             </div>
-            <div className="form">
+            <div className="form" >
               <form>
                 <div className="mb-3 section-font text-primary2">帳戶資訊</div>
                 <div className="mb-3">
@@ -33,12 +43,14 @@ export default function Information() {
                     className="form-label fonts"
                   >
                     姓名 *
+                  
                   </label>
                   <input
                     type="name"
                     className="form-control"
                     id="exampleInputName"
-                    placeholder="姓名"
+                    placeholder=  {members.name}
+                    value={members.name}
                   />
                 </div>
                 <div className="mb-3">
@@ -113,37 +125,7 @@ export default function Information() {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label
-                    htmlFor="exampleInputAddress"
-                    className="form-label fonts"
-                  >
-                    地址 *
-                  </label>
-                  <div className="col-md-4 ">
-                    <select className="form-control">
-                      <option disabled selected>
-                        選擇縣市
-                      </option>
-                      <option>台北市</option>
-                      <option>新北市</option>
-                      {/* 其他縣市 */}
-                    </select>
-                  </div>
-                  <div className="col-md-4 mt-3 mt-md-0 ">
-                    <select className="form-control">
-                      <option disabled selected>
-                        選擇鄉鎮區
-                      </option>
-                      {/* 根據所選縣市提供對應的鄉鎮區選項 */}
-                    </select>
-                  </div>
-                  <div className="col-md-4 mt-3 mt-md-0 ">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入地址"
-                    />
-                  </div>
+                <TWZipCode />
                 </div>
 
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
@@ -163,7 +145,7 @@ export default function Information() {
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="exampleInputPassword1"
+                    htmlFor="exampleInputPassword2"
                     className="form-label fonts"
                   >
                     新密碼
@@ -171,13 +153,13 @@ export default function Information() {
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword2"
                     placeholder="請輸入新密碼"
                   />
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="exampleInputPassword1"
+                    htmlFor="exampleInputPassword3"
                     className="form-label fonts"
                   >
                     重新輸入新密碼
@@ -185,7 +167,7 @@ export default function Information() {
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword3"
                     placeholder="請輸入新密碼"
                   />
                 </div>
