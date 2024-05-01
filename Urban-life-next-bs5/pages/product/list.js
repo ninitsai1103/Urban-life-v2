@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Search from '@/components/product/search'
 import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
+import UseSortData from '@/hooks/product/useSortData'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
+import { filter } from 'lodash'
 // import { totalItems } from '@/hooks/cart-reducer-state'
 
 export default function List() {
@@ -31,49 +33,55 @@ export default function List() {
     setSelectCategory(category)
     setCurrentPage(1) //重新設定為第一頁
   }
+  const filterProducts = useMemo(() => {
+    return selectCategory
+      ? products.filter((product) => product.category === selectCategory)
+      : products
+  })
 
+  //排序
 
+  const { sortData, handleSortData } = UseSortData(filterProducts)
+  const changeSort = (key, order) => {
+    handleSortData(key, order);
+  }
 
-  //分頁&分類
+  //分頁&分類&排序
   useEffect(() => {
-    let filterProducts = products
-    if (selectCategory) {
-      filterProducts = products.filter(
-        (product) => product.category === selectCategory
-      )
-    }
-    const newTotalPages = Math.ceil(filterProducts.length / perpages)
+    //更新分頁總數
+    const newTotalPages = Math.ceil(sortData.length / perpages)
     setTotalPages(newTotalPages)
+    //更新列表
     const startIndex = (currentPage - 1) * perpages
-    const endIndex = Math.min(startIndex + perpages, filterProducts.length)
-    setList(filterProducts.slice(startIndex, endIndex))
-  }, [currentPage, products, selectCategory])
+    const endIndex = Math.min(startIndex + perpages, sortData.length)
+    setList(sortData.slice(startIndex, endIndex))
+  }, [currentPage, sortData])
 
   // Toggle the side navigation
-  useEffect(() => {
-    // fix next issue
-    if (typeof window !== 'undefined') {
-      const sidebarToggle = document.body.querySelector('#sidebarToggle')
+  // useEffect(() => {
+  //   // fix next issue
+  //   if (typeof window !== 'undefined') {
+  //     const sidebarToggle = document.body.querySelector('#sidebarToggle')
 
-      if (sidebarToggle) {
-        // 在localStorage中儲存目前sidebar情況
-        if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-          document.body.classList.toggle('sb-sidenav-toggled')
-        }
+  //     if (sidebarToggle) {
+  //       // 在localStorage中儲存目前sidebar情況
+  //       if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+  //         document.body.classList.toggle('sb-sidenav-toggled')
+  //       }
 
-        sidebarToggle.addEventListener('click', (event) => {
-          event.preventDefault()
+  //       sidebarToggle.addEventListener('click', (event) => {
+  //         event.preventDefault()
 
-          document.body.classList.toggle('sb-sidenav-toggled')
+  //         document.body.classList.toggle('sb-sidenav-toggled')
 
-          localStorage.setItem(
-            'sb|sidebar-toggle',
-            document.body.classList.contains('sb-sidenav-toggled')
-          )
-        })
-      }
-    }
-  }, [])
+  //         localStorage.setItem(
+  //           'sb|sidebar-toggle',
+  //           document.body.classList.contains('sb-sidenav-toggled')
+  //         )
+  //       })
+  //     }
+  //   }
+  // }, [])
 
   return (
     <>
@@ -776,7 +784,7 @@ export default function List() {
                   <div
                     className="offcanvas offcanvas-start "
                     data-bs-scroll="true"
-                    tabindex="-1"
+                    tabIndex="-1"
                     id="offcanvasWithBothOptions"
                     aria-labelledby="offcanvasWithBothOptionsLabel"
                   >
@@ -824,6 +832,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(1)
+                                    }}
                                   >
                                     春季種子
                                   </Link>
@@ -832,6 +844,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(2)
+                                    }}
                                   >
                                     夏季種子
                                   </Link>
@@ -840,6 +856,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(3)
+                                    }}
                                   >
                                     秋季種子
                                   </Link>
@@ -848,6 +868,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(4)
+                                    }}
                                   >
                                     冬季種子
                                   </Link>
@@ -881,6 +905,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(5)
+                                    }}
                                   >
                                     春季種苗
                                   </Link>
@@ -889,6 +917,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(6)
+                                    }}
                                   >
                                     夏季種苗
                                   </Link>
@@ -897,6 +929,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(7)
+                                    }}
                                   >
                                     秋季種苗
                                   </Link>
@@ -905,6 +941,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(8)
+                                    }}
                                   >
                                     冬季種苗
                                   </Link>
@@ -939,6 +979,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(9)
+                                    }}
                                   >
                                     殺蟲劑
                                   </Link>
@@ -947,6 +991,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(10)
+                                    }}
                                   >
                                     殺真菌劑
                                   </Link>
@@ -955,6 +1003,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(11)
+                                    }}
                                   >
                                     除草劑
                                   </Link>
@@ -989,6 +1041,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(12)
+                                    }}
                                   >
                                     花盆
                                   </Link>
@@ -998,6 +1054,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(13)
+                                    }}
                                   >
                                     工具
                                   </Link>
@@ -1006,6 +1066,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(14)
+                                    }}
                                   >
                                     介質
                                   </Link>
@@ -1015,6 +1079,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(15)
+                                    }}
                                   >
                                     其他
                                   </Link>
@@ -1048,6 +1116,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(16)
+                                    }}
                                   >
                                     成長期肥料
                                   </Link>
@@ -1056,6 +1128,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(17)
+                                    }}
                                   >
                                     開花期肥料
                                   </Link>
@@ -1065,6 +1141,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(18)
+                                    }}
                                   >
                                     結果期肥料
                                   </Link>
@@ -1098,6 +1178,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(19)
+                                    }}
                                   >
                                     圖鑑
                                   </Link>
@@ -1106,6 +1190,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(20)
+                                    }}
                                   >
                                     指南
                                   </Link>
@@ -1114,6 +1202,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(21)
+                                    }}
                                   >
                                     DIY
                                   </Link>
@@ -1363,33 +1455,50 @@ export default function List() {
                       aria-labelledby="dropdownMenuButton1"
                     >
                       <li>
-                        <a className="dropdown-item" href="#"
-                        onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          // filterProducts={filterProducts}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('price', 'descending')
+                          }}
                         >
                           價格由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                        onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('price', 'ascending')
+                          }}
                         >
                           價格由低到高
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                         onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('star', 'descending')
+                          }}
                         >
                           評價由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                         onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('star', 'ascending')
+                          }}
                         >
                           評價由低到高
                         </a>
