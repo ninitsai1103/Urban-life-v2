@@ -165,15 +165,17 @@ export default function LectureManagement() {
                       <LectureContentPhone key={lecture.id} lecture={lecture} />
                     ))}
                   </div>
+                  <Page />
                 </div>
               ) : (
-                <div className="lecture_wish_content">
-                  <LectureWishContent />
+                <div>
+                  <div className="lecture_wish_content">
+                    <LectureWishContent />
+                  </div>
+                  <Page />
                 </div>
               )}
             </div>
-
-            <Page />
           </div>
         </div>
       </div>
@@ -289,7 +291,7 @@ export default function LectureManagement() {
             padding: 5px 50px;
           }
         }
-        @media (max-width: 992px){
+        @media (max-width: 992px) {
           .nodisplay_992px {
             display: none;
           }
@@ -302,7 +304,7 @@ export default function LectureManagement() {
               width: 50%;
             }
           }
-          
+
           .lecture_window_table {
             display: none;
           }

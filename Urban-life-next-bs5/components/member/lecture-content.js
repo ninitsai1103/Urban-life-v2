@@ -91,7 +91,20 @@ export default function LectureContentTbody({ lecture }) {
                         </tr>
                         <tr>
                           <th>課程圖片：</th>
-                          <td>圖片一、圖片二、圖片三、圖片四</td>
+                          <td>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.cover}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
+                            ></img>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -348,9 +361,15 @@ export default function LectureContentTbody({ lecture }) {
             align-items: center;
             justify-content: center; */
             }
+            
           }
           input {
             margin: 3px;
+          }
+          img {
+            width: 90%;
+            margin-bottom: 10px;
+            margin-left: 15px;
           }
         }
 
