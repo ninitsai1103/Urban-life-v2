@@ -11,6 +11,9 @@ import LectureCard1 from '@/components/home-page/lecture-card1'
 import LectureCard2 from '@/components/home-page/lecture-card2'
 import TeacherCard from '@/components/home-page/teacher-card'
 
+// CALENDER
+import Calendar from '@/components/calender/calender'
+
 // REACT ICON
 import { IoIosArrowForward } from 'react-icons/io'
 import { FaRunning } from 'react-icons/fa'
@@ -74,6 +77,11 @@ export default function Home() {
               <ProductCard />
             </div>
           </div>
+        </Container>
+      </section>
+      <section>
+        <Container>
+          <Calendar />
         </Container>
       </section>
       <section className="商品分類">
