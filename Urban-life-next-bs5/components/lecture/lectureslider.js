@@ -26,6 +26,7 @@ export default function Lectureslider() {
         thumbs={{ swiper: thumbsSwiper }}
         modules={[Autoplay, FreeMode, Navigation, Thumbs]}
         className={styles.lectureSliderBig}
+        loop={true}
       >
         <SwiperSlide className="wrap-img">
           <img src="/images/lecture/lecture_1.jpg" />
