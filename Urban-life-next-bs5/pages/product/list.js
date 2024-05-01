@@ -4,16 +4,20 @@ import Search from '@/components/product/search'
 import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
+import UseSortData from '@/hooks/product/useSortData'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
+import { setConfig } from 'next/config'
 // import { totalItems } from '@/hooks/cart-reducer-state'
 
 export default function List() {
   const [list, setList] = useState([])
   const { products } = useProducts()
+  //排序
+  const {  sortData, sortConfig, handleSortData } = UseSortData()
 
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
@@ -32,21 +36,19 @@ export default function List() {
     setCurrentPage(1) //重新設定為第一頁
   }
 
-
-
-  //分頁&分類
+  //分頁&分類&排序
   useEffect(() => {
-    let filterProducts = products
-    if (selectCategory) {
-      filterProducts = products.filter(
-        (product) => product.category === selectCategory
-      )
-    }
-    const newTotalPages = Math.ceil(filterProducts.length / perpages)
+    let filterProducts = selectCategory ? products.filter(
+      (product) => product.category === selectCategory) : products
+   
+     
+
+    const newTotalPages = Math.ceil(filterProducts.length / perpages) 
     setTotalPages(newTotalPages)
     const startIndex = (currentPage - 1) * perpages
     const endIndex = Math.min(startIndex + perpages, filterProducts.length)
     setList(filterProducts.slice(startIndex, endIndex))
+    setConfig(filterProducts,config)
   }, [currentPage, products, selectCategory])
 
   // Toggle the side navigation
@@ -1363,33 +1365,50 @@ export default function List() {
                       aria-labelledby="dropdownMenuButton1"
                     >
                       <li>
-                        <a className="dropdown-item" href="#"
-                        onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          filterProducts = {filterProducts}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSortData('price', 'descending')
+                          }}
                         >
                           價格由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                        onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSortData('price', 'ascending')
+                          }}
                         >
                           價格由低到高
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                         onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSortData('star', 'descending')
+                          }}
                         >
                           評價由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                         onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSortData('star', 'ascending')
+                          }}
                         >
                           評價由低到高
                         </a>
