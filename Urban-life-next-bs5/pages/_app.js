@@ -18,6 +18,9 @@ import { CatLoader, NoLoader } from '@/hooks/use-loader/components'
 //兆妮導入use-checkout hook
 import { CartProvider } from '@/hooks/use-checkout'
 
+// 浩雲導入user-coupon hook
+import { UserCouponProvider } from '@/hooks/use-usercoupon'
+
 export default function MyApp({ Component, pageProps }) {
   // 導入bootstrap的JS函式庫
   useEffect(() => {
@@ -30,11 +33,12 @@ export default function MyApp({ Component, pageProps }) {
     Component.getLayout || ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
   return (
-    
-      <LoaderProvider close={2} CustomLoader={CatLoader}>
+    <LoaderProvider close={2} CustomLoader={CatLoader}>
+      <UserCouponProvider>
         <CartProvider>{getLayout(<Component {...pageProps} />)}</CartProvider>
-      </LoaderProvider>
-    
-    // 我把 AuthProvider刪掉 就不會跳出問題了      
+      </UserCouponProvider>
+    </LoaderProvider>
+
+    // 我把 AuthProvider刪掉 就不會跳出問題了
   )
 }

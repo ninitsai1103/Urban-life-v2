@@ -1,7 +1,7 @@
 import React from 'react'
 import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
-import ProductCard from '@/components/product-test/product-card'
+import ProductCard from '@/components/product/product-card'
 
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'

@@ -1,0 +1,128 @@
+[
+    {
+        "id": 1,
+        "name": "春天種子",
+        "primary_id": 1,
+        "primary_name": "種子"
+    },
+    {
+        "id": 2,
+        "name": "夏天種子",
+        "primary_id": 1,
+        "primary_name": "種子"
+    },
+    {
+        "id": 3,
+        "name": "秋天種子",
+        "primary_id": 1,
+        "primary_name": "種子"
+    },
+    {
+        "id": 4,
+        "name": "冬天種子",
+        "primary_id": 1,
+        "primary_name": "種子"
+    },
+    {
+        "id": 5,
+        "name": "春天種苗",
+        "primary_id": 2,
+        "primary_name": "種苗"
+    },
+    {
+        "id": 6,
+        "name": "夏天種苗",
+        "primary_id": 2,
+        "primary_name": "種苗"
+    },
+    {
+        "id": 7,
+        "name": "秋天種苗",
+        "primary_id": 2,
+        "primary_name": "種苗"
+    },
+    {
+        "id": 8,
+        "name": "冬天種苗",
+        "primary_id": 2,
+        "primary_name": "種苗"
+    },
+    {
+        "id": 9,
+        "name": "殺蟲劑",
+        "primary_id": 3,
+        "primary_name": "農藥"
+    },
+    {
+        "id": 10,
+        "name": "殺真菌劑",
+        "primary_id": 3,
+        "primary_name": "農藥"
+    },
+    {
+        "id": 11,
+        "name": "除草劑",
+        "primary_id": 3,
+        "primary_name": "農藥"
+    },
+    {
+        "id": 12,
+        "name": "花盆",
+        "primary_id": 4,
+        "primary_name": "資材"
+    },
+    {
+        "id": 13,
+        "name": "工具",
+        "primary_id": 4,
+        "primary_name": "資材"
+    },
+    {
+        "id": 14,
+        "name": "介質",
+        "primary_id": 4,
+        "primary_name": "資材"
+    },
+    {
+        "id": 15,
+        "name": "其他",
+        "primary_id": 4,
+        "primary_name": "資材"
+    },
+    {
+        "id": 16,
+        "name": "成長期肥料",
+        "primary_id": 5,
+        "primary_name": "肥料"
+    },
+    {
+        "id": 17,
+        "name": "開花期肥料",
+        "primary_id": 5,
+        "primary_name": "肥料"
+    },
+    {
+        "id": 18,
+        "name": "結果期肥料",
+        "primary_id": 5,
+        "primary_name": "肥料"
+    },
+    {
+        "id": 19,
+        "name": "圖鑑",
+        "primary_id": 6,
+        "primary_name": "書籍"
+    },
+    {
+        "id": 20,
+        "name": "指南",
+        "primary_id": 6,
+        "primary_name": "書籍"
+    },
+    {
+        "id": 21,
+        "name": "DIY",
+        "primary_id": 6,
+        "primary_name": "書籍"
+    }
+]

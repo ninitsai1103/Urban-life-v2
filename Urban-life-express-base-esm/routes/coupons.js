@@ -6,7 +6,7 @@ import { getIdParam } from '#db-helpers/db-tool.js'
 
 // 資料庫使用
 import sequelize from '#configs/db.js'
-const { coupon } = sequelize.models
+
 
 // 一般sql
 import db from '#configs/mysql.js'
@@ -17,8 +17,6 @@ import db from '#configs/mysql.js'
 router.get('/', async function (req, res) {
   // coupon資料庫 SQL
   let sqlCoupons = 'SELECT * FROM coupon'
-  
-
   try {
     const [rows, fields] = await db.query(sqlCoupons)
     // 標準回傳JSON

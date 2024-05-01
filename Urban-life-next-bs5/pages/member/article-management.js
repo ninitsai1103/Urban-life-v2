@@ -1,10 +1,32 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import ArticleCard from '@/components/member/article-card'
 import TeacherAsideAccount from '@/components/member/teacher-aside-account'
 import Page from '@/components/product/pagination'
 import { IoAdd } from 'react-icons/io5'
+import useTeacherArticles from '@/hooks/use-teacherarticle'
 
 export default function ArticleManagement() {
+  const [ArticlesList, setArticlesList] = useState([])
+  const { articles } = useTeacherArticles()
+
+  //分頁
+  const [articleCurrentPage, setArticleCurrentPage] = useState(1)
+  const [ArticleTotalPages, setArticleTotalPages] = useState(1)
+  const ArticlePerpages = 5;
+
+  const handleArticlePageChange = (articlePage) => {
+    setArticleCurrentPage(articlePage);
+  }
+
+  useEffect(() => {
+    let filterArticles = articles
+    const newArticleTotalPages = Math.ceil(filterArticles.length / ArticlePerpages)
+    setArticleTotalPages(newArticleTotalPages)
+    const ArticleStartIndex = (articleCurrentPage - 1) * ArticlePerpages
+    const ArticleEndIndex = Math.min(ArticleStartIndex + ArticlePerpages, filterArticles.length)
+    setArticlesList(filterArticles.slice(ArticleStartIndex, ArticleEndIndex))
+  }, [articleCurrentPage, articles])
+
   return (
     <>
       {/* EBE3DB */}
@@ -24,13 +46,17 @@ export default function ArticleManagement() {
               </div>
             </div>
             <div className="teacher-margin-bottom">
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
+              {ArticlesList.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
             </div>
             <div>
-              <Page />
+              <Page
+                totalPages={ArticleTotalPages}
+                currentPage={articleCurrentPage}
+                perpages={ArticlePerpages}
+                onPageChange={handleArticlePageChange}
+              />
             </div>
           </div>
         </div>
@@ -71,8 +97,12 @@ export default function ArticleManagement() {
         .teacher-article-management {
           margin: 20px;
           padding: 33px 0;
-          {/* margin: 20px 0px; */}
-          {/* padding: 0px; */}
+           {
+            /* margin: 20px 0px; */
+          }
+           {
+            /* padding: 0px; */
+          }
         }
 
         @media (max-width: 992px) {

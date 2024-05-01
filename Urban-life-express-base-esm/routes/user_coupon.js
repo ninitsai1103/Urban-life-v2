@@ -13,13 +13,10 @@ import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
-  const sqlUserCoupons = `SELECT * FROM user_coupon JOIN coupon ON user_coupon.coupon_id =coupon.id 
+  const sqlUserCoupons = `SELECT * FROM user_coupon 
+  JOIN coupon ON user_coupon.coupon_id =coupon.id 
+  WHERE user_coupon.valid = 1
   `
-
-
-  
-
-
   try {
     const [rows, fields] = await db.query(sqlUserCoupons)
 
@@ -52,6 +49,34 @@ router.post('/', async function (req, res) {
         user_coupon: rows,
       },
     })
+  } catch (error) {
+    return res.json({
+      status: 'error',
+      data: {
+        error: error,
+      },
+    })
+  }
+})
+
+router.delete('/', async function (req, res) {
+ 
+  try {
+    console.log(req.body)
+    const couponID = req.body.id
+    
+    
+    let addtoUserCoupon = `UPDATE user_coupon
+    SET valid = 0
+    WHERE coupon_id = ? ;`
+    
+    const [rows, fields] = await db.query(addtoUserCoupon,[couponID])
+    return res.json({
+      status: 'success',
+      data: {
+        message: '使用者的coupon被刪除成功',
+      },
+    });
   } catch (error) {
     return res.json({
       status: 'error',

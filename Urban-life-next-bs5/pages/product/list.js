@@ -1,25 +1,53 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Search from '@/components/product/search'
-import ProductCard from '@/components/product-test/product-card'
+import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
+import useProducts from '@/hooks/product/useProducts'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
-
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
+// import { totalItems } from '@/hooks/cart-reducer-state'
 
 export default function List() {
   const [list, setList] = useState([])
+  const { products } = useProducts()
 
-  //抓資料
+  //分頁
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  // const totalItems = 450;
+  const perpages = 48 //一頁幾筆資料
+  //
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  //分類
+  const [selectCategory, setSelectCategory] = useState(null)
+  const handleCategory = (category) => {
+    setSelectCategory(category)
+    setCurrentPage(1) //重新設定為第一頁
+  }
+
+
+
+  //分頁&分類
   useEffect(() => {
-    fetch('')
-      .then((response) => response.json())
-      .then((data) => setList(data))
-      .catch((error) => console.log(error))
-  },[])//空陣列代表只在組件掛載時執行一次
+    let filterProducts = products
+    if (selectCategory) {
+      filterProducts = products.filter(
+        (product) => product.category === selectCategory
+      )
+    }
+    const newTotalPages = Math.ceil(filterProducts.length / perpages)
+    setTotalPages(newTotalPages)
+    const startIndex = (currentPage - 1) * perpages
+    const endIndex = Math.min(startIndex + perpages, filterProducts.length)
+    setList(filterProducts.slice(startIndex, endIndex))
+  }, [currentPage, products, selectCategory])
 
   // Toggle the side navigation
   useEffect(() => {
@@ -89,6 +117,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(1)
+                            }}
                           >
                             春季種子
                           </Link>
@@ -97,6 +129,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(2)
+                            }}
                           >
                             夏季種子
                           </Link>
@@ -105,6 +141,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(3)
+                            }}
                           >
                             秋季種子
                           </Link>
@@ -113,6 +153,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(4)
+                            }}
                           >
                             冬季種子
                           </Link>
@@ -146,6 +190,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(5)
+                            }}
                           >
                             春季種苗
                           </Link>
@@ -154,6 +202,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(6)
+                            }}
                           >
                             夏季種苗
                           </Link>
@@ -162,6 +214,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(7)
+                            }}
                           >
                             秋季種苗
                           </Link>
@@ -170,6 +226,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(8)
+                            }}
                           >
                             冬季種苗
                           </Link>
@@ -204,6 +264,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(9)
+                            }}
                           >
                             殺蟲劑
                           </Link>
@@ -212,6 +276,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(10)
+                            }}
                           >
                             殺真菌劑
                           </Link>
@@ -220,6 +288,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(11)
+                            }}
                           >
                             除草劑
                           </Link>
@@ -254,6 +326,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(12)
+                            }}
                           >
                             花盆
                           </Link>
@@ -263,6 +339,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(13)
+                            }}
                           >
                             工具
                           </Link>
@@ -271,6 +351,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(14)
+                            }}
                           >
                             介質
                           </Link>
@@ -280,6 +364,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(15)
+                            }}
                           >
                             其他
                           </Link>
@@ -313,6 +401,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(16)
+                            }}
                           >
                             成長期肥料
                           </Link>
@@ -321,6 +413,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(17)
+                            }}
                           >
                             開花期肥料
                           </Link>
@@ -330,6 +426,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(18)
+                            }}
                           >
                             結果期肥料
                           </Link>
@@ -363,6 +463,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(19)
+                            }}
                           >
                             圖鑑
                           </Link>
@@ -371,6 +475,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(20)
+                            }}
                           >
                             指南
                           </Link>
@@ -379,6 +487,10 @@ export default function List() {
                           <Link
                             href=""
                             className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleCategory(21)
+                            }}
                           >
                             DIY
                           </Link>
@@ -427,7 +539,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios2"
                   >
-                    NTD 150-300
+                    NTD 151-300
                   </label>
                 </div>
                 <div className="form-check">
@@ -442,7 +554,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios3"
                   >
-                    NTD 300-500
+                    NTD 301-500
                   </label>
                 </div>
                 <div className="form-check">
@@ -457,7 +569,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios4"
                   >
-                    NTD 500-1000
+                    NTD 501-1000
                   </label>
                 </div>
                 <div className="form-check">
@@ -472,7 +584,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios5"
                   >
-                    NTD 1000以上
+                    NTD 1001以上
                   </label>
                 </div>
 
@@ -623,13 +735,17 @@ export default function List() {
                     aria-current="page"
                     href="/product/list"
                   >
-                    商品總覽
+                    <Link className="text-decoration-none" href="#">
+                      商品總覽
+                    </Link>
                   </li>
                 </ol>
               </nav>
               {/* 搜尋、排序 */}
               <div className="amount&sort d-flex justify-content-between align-items-center">
-                <p className="mb-0 text-color2-nohover">共 36 筆商品</p>
+                <p className="mb-0 text-color2-nohover">
+                  共 {products.length} 筆商品
+                </p>
                 <div className="d-flex align-items-center">
                   <CiViewTable
                     className="d-lg-none"
@@ -1247,22 +1363,34 @@ export default function List() {
                       aria-labelledby="dropdownMenuButton1"
                     >
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <a className="dropdown-item" href="#"
+                        onClick={()=>{
+                        }}
+                        >
                           價格由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <a className="dropdown-item" href="#"
+                        onClick={()=>{
+                        }}
+                        >
                           價格由低到高
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <a className="dropdown-item" href="#"
+                         onClick={()=>{
+                        }}
+                        >
                           評價由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#">
+                        <a className="dropdown-item" href="#"
+                         onClick={()=>{
+                        }}
+                        >
                           評價由低到高
                         </a>
                       </li>
@@ -1272,15 +1400,22 @@ export default function List() {
               </div>
             </div>
             {/* 商品欄 */}
-            <div className="product">
-              <ProductCard />
-              {/* <ProductCard />
-              <ProductCard />
-              <ProductCard />
-              <ProductCard /> */}
+            <div div className="container ">
+              <div className="row row-cols-2 row-cols-lg-4 g-4">
+                {list.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
             {/* 分頁 */}
-            <Page />
+            <div className="container ">
+              <Page
+                perpages={perpages}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
           </div>
         </div>
       </div>
