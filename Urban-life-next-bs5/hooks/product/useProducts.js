@@ -10,7 +10,6 @@ const useProducts = () => {
             const url = `http://localhost:3005/api/products`
             const res = await fetch(url);
             const data = await res.json();
-            console.log(data);
             const products = data.data.products
             if (Array.isArray(products)) {
               setProducts(products)

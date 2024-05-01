@@ -1,26 +1,32 @@
 import {useState, useMemo} from 'react'
 
-export default function UseSortData(produccts, sortKey, sortOrder) {
-    const [sortConfig, setSortConfig] = useState(produccts, sortKey, sortOrder)
+export default function UseSortData(products, initSortConfig = { key: '', order: '' }) {
+    const [sortConfig, setSortConfig] = useState( initSortConfig)
 
     const sortData = useMemo(() => {
-     
-      if(sortKey){
+
+     let sortItems = [...products];
+      if(sortConfig.key && sortItems.length > 0){
         sortItems.sort((a, b) => {
-          if(a[sortKey] < b[sortKey]){ //先比較要排序的屬性(price或star)
-            return sortOrder ==='ascending' ? -1 : 1 //再根據設定的排序方向決定返回的值(-1為升序，1為降序)
+          if(a[sortConfig.key] < b[sortConfig.key]){ //先比較要排序的屬性(price或star)
+            return sortConfig.order ==='ascending' ? -1 : 1 //再根據設定的排序方向決定返回的值(-1為升序，1為降序)
           }
-          if(a[sortKey] > b[sortKey]){ 
-            return sortOrder === 'ascending' ? 1 : -1
+          if(a[sortConfig.key] > b[sortConfig.key]){ 
+            return sortConfig.order === 'ascending' ? 1 : -1
           }
           return 0 //順序不變
         })
+      }else{
+        return products; 
       }
+      console.log(sortItems);
       return sortItems
-    },[produccts, sortConfig])
-    const handleSortData = (sortKey, sortOrder) => {
-      setSortConfig({sortKey, sortOrder});
+    },[products, sortConfig])
+    const handleSortData = (key, order) => {
+      console.log(key,order);
+      setSortConfig({key, order});
+      
     }
-
-  return ({ sortData, sortConfig, handleSortData})
+   
+  return ({ sortData, handleSortData})
 }

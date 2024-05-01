@@ -11,7 +11,7 @@ export default function ProductCard({ product }) {
   return (
     <>
       {/* 桌機版*/}
-      <div className="col  d-none d-lg-block" key={product.id}>
+      <div className="col  d-none d-lg-block" key={`desktop-${product.id}`}>
         <div className="card h-100">
           <div className="imgWrap">
             <img
@@ -46,7 +46,7 @@ export default function ProductCard({ product }) {
       </div>
       {/* 手機版:1 */}
 
-      <div className="col d-lg-none gy-3" key={product.id}>
+      <div className="col d-lg-none gy-3" key={`mobile1-${product.id}`}>
         <div className="card h-100">
           <div className="imgWrap">
             <img
@@ -90,7 +90,7 @@ export default function ProductCard({ product }) {
 
       {/* 手機版:2 */}
       <div div className="container d-none d-lg-none ">
-        <div className="card mb-3">
+        <div className="card mb-3" key={`mobile2-${product.id}`}>
           <div className="row g-0">
             <div className="col-5 imgWrap">
               <img

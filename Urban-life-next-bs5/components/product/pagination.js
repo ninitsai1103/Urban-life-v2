@@ -20,7 +20,7 @@ export default function Page({ totalPages, currentPage, onPageChange }) {
             <a className="page-link no-bg" href="#" onClick={(e) => {
               if(currentPage>1)onPageChange(currentPage-1)
             }}>
-              <MdArrowBackIos style={{fontSize:'18px'}} />
+              <MdArrowBackIos className='pageIcon' />
             </a>
           </li>
           {pages.map(page => (
@@ -36,7 +36,7 @@ export default function Page({ totalPages, currentPage, onPageChange }) {
             <a className="page-link no-bg" href="#" onClick={(e) => {
               if(currentPage<totalPages)onPageChange(currentPage+1)
             }}>
-              <MdArrowForwardIos style={{fontSize:'18px'}}/>
+              <MdArrowForwardIos className='pageIcon' />
             </a>
           </li>
         </ul>
@@ -49,8 +49,8 @@ export default function Page({ totalPages, currentPage, onPageChange }) {
           }
           .page-link {
             border-radius: 50%;       
-            width: 40px;              
-            height: 40px;             
+            width: 34px;              
+            height: 34px;             
             text-align: center;       
             line-height: 40px;        
             padding: 0;               
@@ -95,7 +95,7 @@ export default function Page({ totalPages, currentPage, onPageChange }) {
             //設定上下頁樣式
             background-color: transparent;
           }
-
+        
           @media (max-width: 500px) {
             .pagination {
             display: grid;
@@ -108,6 +108,8 @@ export default function Page({ totalPages, currentPage, onPageChange }) {
               width: 25px;              
             height: 25px;  
             }
+
+        
           }
         `}
       </style>
