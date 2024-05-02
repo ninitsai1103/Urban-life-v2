@@ -12,7 +12,7 @@ import LectureCard2 from '@/components/home-page/lecture-card2'
 import TeacherCard from '@/components/home-page/teacher-card'
 
 // CALENDER
-import Calendar from '@/components/calander/calendar'
+import Calendar from '@/components/calandar/calendar'
 
 // REACT ICON
 import { IoIosArrowForward } from 'react-icons/io'

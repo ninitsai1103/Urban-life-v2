@@ -34,6 +34,8 @@ function processWeekDays(mmt, isFirstWeek = false) {
 
 // 取得當月每週的資訊
 export default function getWeeksInMonth(calendarMain) {
+  // calendarMain是從會跟header傳過來的
+  // 讓整個元件都會以那邊的moment()為主
   const mmt = calendarMain
   const weekDayList = [] //<-- 建立一個Array，負責存放每週的日期
 
