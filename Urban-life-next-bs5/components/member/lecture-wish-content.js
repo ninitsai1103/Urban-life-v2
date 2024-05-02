@@ -1,6 +1,30 @@
 import React from 'react'
 
 export default function LectureWishContent({ TeacherWish }) {
+
+  // 定義處理刪除操作的函數
+  const handleDelete = async () => {
+    try {
+      // 發送刪除請求到後端 API
+      const response = await axios.put(`/api/teacher-wish/${TeacherWish.id}`, {
+        valid: 0  // 更新 valid 欄位為 0 表示已刪除
+      });
+
+      if (response.status === 200) {
+        // 刪除成功後的處理
+        console.log('Wish deleted successfully!');
+        // 在此處可以更新頁面或重新加載數據
+      } else {
+        console.error('Failed to delete wish.');
+      }
+    } catch (error) {
+      console.error('Error deleting wish:', error);
+    }
+  };
+
+
+
+
   return (
     <>
       {/* 許願池頁面 */}
@@ -121,7 +145,7 @@ export default function LectureWishContent({ TeacherWish }) {
               >
                 取消
               </button>
-              <a type="button" href="" className="btn btn-delete" role="button">
+              <a type="button" href="" className="btn btn-delete" role="button" onClick={handleDelete}>
                 確認
               </a>
             </div>
