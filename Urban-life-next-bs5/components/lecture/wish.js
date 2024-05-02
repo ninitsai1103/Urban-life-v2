@@ -12,7 +12,7 @@ export default function LectureWish() {
                     填寫表單，許下你的課程願望讓我們知道！
                 </div>
                 <div className="shrink-0 mt-3 h-px bg-black border border-black border-solid max-md:max-w-full" />
-                <textarea name="" id="" className={styles.textarea} cols="100" rows="5" maxlength="200" placeholder="請以最多200字內稍微描述課程內容（0/200）"></textarea>
+                <textarea name="" id="" className={styles.textarea} cols="80" rows="5" maxlength="200" placeholder="請以最多200字內稍微描述課程內容（0/200）"></textarea>
                 <div className="shrink-0 h-px bg-black border border-black border-solid max-md:max-w-full" />
                 <div className={styles.wishArea}>
                     希望哪一位講師帶課呢？

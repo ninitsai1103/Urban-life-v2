@@ -1,8 +1,8 @@
 .card {
   display: flex;
-  width: 335px;
-  height: 427px;
-  min-width: 335px;
+  width: 316px;
+  height: 399px;
+  min-width: 316px;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
