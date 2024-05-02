@@ -6,29 +6,26 @@ import { IoAdd } from 'react-icons/io5'
 import useTeacherArticles from '@/hooks/use-teacherarticle'
 
 export default function ArticleManagement() {
-  
-  const { articles, totalArticles } = useTeacherArticles()
+  const [ArticlesList, setArticlesList] = useState([])
+  const { articles } = useTeacherArticles()
 
-  // 到底要不要
-  const [articleCurrentPage, setarticleCurrentPage] = useState(1);
-  const ArticleTotalItems = totalArticles;
+  //分頁
+  const [articleCurrentPage, setArticleCurrentPage] = useState(1)
+  const [ArticleTotalPages, setArticleTotalPages] = useState(1)
   const ArticlePerpages = 5;
 
-  const [ArticleManagement, setArticleManagement] = useState([])
-
-  // 處理頁碼變更事件
   const handleArticlePageChange = (articlePage) => {
-    setarticleCurrentPage(articlePage);
+    setArticleCurrentPage(articlePage);
   }
 
   useEffect(() => {
-    if (articles.length > 0) {
-      const startIndex = (articleCurrentPage - 1) * ArticlePerpages;
-      const endIndex = Math.min(startIndex + ArticlePerpages, articles.length);
-      setArticleManagement(articles.slice(startIndex, endIndex));
-      console.log(ArticleManagement);
-    }
-  }, [articleCurrentPage, articles, ArticlePerpages])
+    let filterArticles = articles
+    const newArticleTotalPages = Math.ceil(filterArticles.length / ArticlePerpages)
+    setArticleTotalPages(newArticleTotalPages)
+    const ArticleStartIndex = (articleCurrentPage - 1) * ArticlePerpages
+    const ArticleEndIndex = Math.min(ArticleStartIndex + ArticlePerpages, filterArticles.length)
+    setArticlesList(filterArticles.slice(ArticleStartIndex, ArticleEndIndex))
+  }, [articleCurrentPage, articles])
 
   return (
     <>
@@ -49,13 +46,13 @@ export default function ArticleManagement() {
               </div>
             </div>
             <div className="teacher-margin-bottom">
-              {articles.map((article) => (
+              {ArticlesList.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
             <div>
               <Page
-                totalItems={ArticleTotalItems}
+                totalPages={ArticleTotalPages}
                 currentPage={articleCurrentPage}
                 perpages={ArticlePerpages}
                 onPageChange={handleArticlePageChange}
