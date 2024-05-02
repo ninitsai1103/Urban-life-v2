@@ -175,15 +175,6 @@ export default function LectureManagement() {
               </div>
             </div>
 
-            {/* 原本的ul */}
-            {/* <ul className="nav nav-underline ul-margin">
-              <li className="nav-item col">
-                <button className="nav-link active111">我的課程</button>
-              </li>
-              <li className="nav-item col">
-                <button className="nav-link">課程許願池</button>
-              </li>
-            </ul> */}
 
             {/* 浩雲的ul */}
             <ul className="nav nav-underline ul-margin">
@@ -214,12 +205,6 @@ export default function LectureManagement() {
             </ul>
 
             <div>
-              {/* <div className="lecture_content d-none">
-                <LectureContent />
-              </div>
-              <div className="lecture_wish_content ">
-                <LectureWishContent />
-              </div> */}
 
               {activeIndex === '我的課程' ? (
                 <div className="lecture_content">
@@ -353,6 +338,7 @@ export default function LectureManagement() {
                               課程內容：
                             </th>
                             <th scope="col">期望價錢：</th>
+                            <th scope="col">建立時間：</th>
                             {/* <th scope="col" className="nodisplay_768px">建立時間</th> */}
                             <th></th>
                           </tr>
@@ -400,12 +386,6 @@ export default function LectureManagement() {
         .teacher-lecture-management {
           margin: 20px;
           padding: 33px 0px;
-           {
-            /* margin: 20px 0px; */
-          }
-           {
-            /* padding: 0px; */
-          }
         }
         .teacher-lecture {
           padding: 30px 20px;
@@ -429,26 +409,6 @@ export default function LectureManagement() {
           margin-bottom: 20px;
         }
 
-         {
-          /* 原本的ul樣式 */
-        }
-         {
-          /* .nav-item {
-          text-align: center;
-        }
-        .nav-item button {
-          width: 100%;
-        }
-        .nav-item button:hover {
-          color: #bd9250;
-        }
-        .nav-item {
-          .active111 {
-            color: #bd9250 !important;
-            border-bottom-color: #bd9250 !important;
-          }
-        } */
-        }
 
          {
           /* 浩雲的active */
@@ -492,6 +452,7 @@ export default function LectureManagement() {
             margin-right: 0px;
           }
         }
+
 
          {
           /* lecture content 的css */

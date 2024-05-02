@@ -6,11 +6,10 @@ export default function LectureWishContent({ TeacherWish }) {
       {/* 許願池頁面 */}
       <tbody className="text-center align-middle" key={TeacherWish.id}>
         <tr>
-          {/* <td scope="row">想要上課</td> */}
           <td>{TeacherWish.date}月</td>
           <td className="wish_content_overflow">{TeacherWish.content}</td>
           <td>${TeacherWish.price}</td>
-          {/* <td className="nodisplay_768px">2024-12-04 12:00:00</td> */}
+          <td>{TeacherWish.created_at}</td>
           <td>
             <button
               className="btn btn-detail"
@@ -35,9 +34,6 @@ export default function LectureWishContent({ TeacherWish }) {
           <div className="modal-content">
             <form>
               <div className="modal-header">
-                {/* <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
-                </h1> */}
                 <button
                   type="button"
                   className="btn-close"
@@ -50,10 +46,6 @@ export default function LectureWishContent({ TeacherWish }) {
                   <div className="col-12">
                     <table className="table modal-table">
                       <tbody>
-                        {/* <tr>
-                          <th>期望課程名稱：</th>
-                          <td>想要上課</td>
-                        </tr> */}
                         <tr>
                           <th>期望上課時間：</th>
                           <td>{TeacherWish.date}月</td>
@@ -66,10 +58,10 @@ export default function LectureWishContent({ TeacherWish }) {
                           <th>期望價錢：</th>
                           <td>${TeacherWish.price}</td>
                         </tr>
-                        {/* <tr>
+                        <tr>
                           <th>建立時間：</th>
-                          <td>2024-12-04 12:00:00</td>
-                        </tr> */}
+                          <td>{TeacherWish.created_at}</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -138,38 +130,6 @@ export default function LectureWishContent({ TeacherWish }) {
       </div>
 
       <style jsx>{`
-         {
-          /* .dropdown {
-          margin-bottom: 20px;
-          button {
-            margin-left: auto;
-            background-color: #ffffff;
-            padding: 5px 50px;
-          }
-        } */
-        }
-
-         {
-          /* .nodisplay_768px {
-          width: 20%;
-        } */
-        }
-
-         {
-          /* 原本的樣式 */
-        }
-         {
-          /* .wish_content_overflow {
-          width: 100%;
-          height: 55px;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }  */
-        }
-
         .wish_content_overflow {
           max-width: 30px;
           height: 55px;
@@ -183,44 +143,13 @@ export default function LectureWishContent({ TeacherWish }) {
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 150px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
           }
-
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center;  */
-            }
           }
           input {
             margin: 3px;
-          }
-        }
-
-         {
-          /* @media (max-width: 992px) {
-          .nodisplay_768px {
-            display: none;
-          }
-        } */
-        }
-
-        @media (max-width: 768px) {
-           {
-            /* .dropdown {
-            button {
-              border: 1px solid #ccc;
-              padding: 5px 0px;
-              width: 50%;
-            }
-          } */
           }
         }
       `}</style>

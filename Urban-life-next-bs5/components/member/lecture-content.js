@@ -43,7 +43,7 @@ export default function LectureContentTbody({ lecture }) {
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                {lecture.name}
+                  {lecture.name}
                 </h1>
                 <button
                   type="button"
@@ -351,24 +351,12 @@ export default function LectureContentTbody({ lecture }) {
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 30%;
-            {/* width: 150px; */}
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 70%;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
-            
           }
           input {
             margin: 3px;
@@ -380,7 +368,6 @@ export default function LectureContentTbody({ lecture }) {
             margin-left: 7px;
           }
         }
-        
 
         @media (max-width: 992px) {
           .nodisplay_992px {

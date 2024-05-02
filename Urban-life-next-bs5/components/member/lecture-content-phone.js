@@ -1,19 +1,6 @@
-import {React, useState} from 'react'
+import { React, useState } from 'react'
 
 export default function LectureContentPhone({ lecture }) {
-  // const [showModal, setShowModal] = useState(false);
-  // const [selectedLecture, setSelectedLecture] = useState(null);
-
-  // const handleViewDetails = (selectedLecture) => {
-  //   setSelectedLecture(selectedLecture);
-  //   setShowModal(true)
-  // }
-
-  // const handleCloseModal = () => {
-  //   setSelectedLecture(null);
-  //   setShowModal(false)
-  // }
-
   return (
     <>
       <div className="lecture_phone_card p-3 ">
@@ -55,124 +42,121 @@ export default function LectureContentPhone({ lecture }) {
       </div>
 
       {/* 檢視modal */}
-      {/* {showModal && selectedLecture && ( */}
-        <div
-          className="modal fade"
-          id={`detailPhoneModal-${lecture.id}`}
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog" key={lecture.id}>
-            <div className="modal-content">
-              <form>
-                <div className="modal-header">
-                  <h1 className="modal-title fs-5" id="exampleModalLabel">
-                    {lecture.name}
-                  </h1>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    // onClick={handleCloseModal}
-                  ></button>
-                </div>
-                <div className="modal-body">
-                  <div className="row">
-                    <div className="col-12">
-                      <table className="table modal-table">
-                        <tbody>
-                          <tr>
-                            <th>課程名稱：</th>
-                            <td>{lecture.name}</td>
-                          </tr>
-                          <tr>
-                            <th>上課時間：</th>
-                            <td>{lecture.lecture_date}</td>
-                          </tr>
-                          <tr>
-                            <th>報名開始時間：</th>
-                            <td>{lecture.sign_up_starting}</td>
-                          </tr>
-                          <tr>
-                            <th>報名截止時間：</th>
-                            <td>{lecture.sign_up_deadline}</td>
-                          </tr>
-                          <tr>
-                            <th>價格：</th>
-                            <td>${lecture.price}</td>
-                          </tr>
-                          <tr>
-                            <th>可報名人數：</th>
-                            <td>{lecture.amount}</td>
-                          </tr>
-                          <tr>
-                            <th>已報名人數：</th>
-                            <td>15</td>
-                          </tr>
-                          <tr>
-                            <th>已報名學員：</th>
-                            <td>
-                              許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
-                            </td>
-                          </tr>
-                          <tr>
-                            <th>課程圖片：</th>
-                            <td>
-                              <img
-                                src={`/images/lecture/lecture_img/${lecture.cover}`}
-                              ></img>
-                              <img
-                                src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
-                              ></img>
-                              <img
-                                src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
-                              ></img>
-                              <img
-                                src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
-                              ></img>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+      <div
+        className="modal fade"
+        id={`detailPhoneModal-${lecture.id}`}
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog" key={lecture.id}>
+          <div className="modal-content">
+            <form>
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                  {lecture.name}
+                </h1>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-12">
+                    <table className="table modal-table">
+                      <tbody>
+                        <tr>
+                          <th>課程名稱：</th>
+                          <td>{lecture.name}</td>
+                        </tr>
+                        <tr>
+                          <th>上課時間：</th>
+                          <td>{lecture.lecture_date}</td>
+                        </tr>
+                        <tr>
+                          <th>報名開始時間：</th>
+                          <td>{lecture.sign_up_starting}</td>
+                        </tr>
+                        <tr>
+                          <th>報名截止時間：</th>
+                          <td>{lecture.sign_up_deadline}</td>
+                        </tr>
+                        <tr>
+                          <th>價格：</th>
+                          <td>${lecture.price}</td>
+                        </tr>
+                        <tr>
+                          <th>可報名人數：</th>
+                          <td>{lecture.amount}</td>
+                        </tr>
+                        <tr>
+                          <th>已報名人數：</th>
+                          <td>15</td>
+                        </tr>
+                        <tr>
+                          <th>已報名學員：</th>
+                          <td>
+                            許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>課程圖片：</th>
+                          <td>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.cover}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
+                            ></img>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-                <div className="modal-footer d-flex justify-content-between">
+              </div>
+              <div className="modal-footer d-flex justify-content-between">
+                <button
+                  type="button"
+                  className="btn btn-detail"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  取消
+                </button>
+                <div>
                   <button
                     type="button"
-                    className="btn btn-detail"
+                    className="btn btn-delete mx-1"
+                    data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    aria-label="Close"
+                    data-bs-target={`#deletePhoneModal-${lecture.id}`}
                   >
-                    取消
+                    下架課程
                   </button>
-                  <div>
-                    <button
-                      type="button"
-                      className="btn btn-delete mx-1"
-                      data-bs-toggle="modal"
-                      data-bs-dismiss="modal"
-                      data-bs-target={`#deletePhoneModal-${lecture.id}`}
-                    >
-                      下架課程
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-main"
-                      data-bs-toggle="modal"
-                      data-bs-target={`#updatePhoneModal-${lecture.id}`}
-                    >
-                      修改
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-main"
+                    data-bs-toggle="modal"
+                    data-bs-target={`#updatePhoneModal-${lecture.id}`}
+                  >
+                    修改
+                  </button>
                 </div>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
-      {/* )} */}
+      </div>
 
       {/* 修改modal */}
       <div
@@ -373,9 +357,7 @@ export default function LectureContentPhone({ lecture }) {
           }
         }
         .phone-lecture-detail {
-           {
-            /* padding: 10px; */
-          }
+          padding: 10px;
           button {
             margin-left: auto;
           }
@@ -386,21 +368,11 @@ export default function LectureContentPhone({ lecture }) {
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 150px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
           }
           input {
             margin: 3px;
