@@ -6,7 +6,7 @@ export default function LectureWish() {
         <>
             <div className={styles.card}>
                 <div className={styles.wishTitle}>
-                    對什麼有興趣呢？許個有興趣的課程吧
+                    對什麼有興趣呢？許個有興趣的課程吧！
                 </div>
                 <div className={styles.wishInfo}>
                     填寫表單，許下你的課程願望讓我們知道！
