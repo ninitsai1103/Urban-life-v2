@@ -7,8 +7,7 @@ export default function CalendarBody({ calendarMain }) {
   const WeekDayNameList = ['Sun', 'Mon', 'Tue', 'Wen', 'Thr', 'Fri', 'Sat']
   let result = []
 
-  // 點擊日期後的處理函式
-
+  // 點擊日期後的會出現當天日期的資訊
   const handleDateClick = (day) => {
     const clickedDate = moment(calendarMain).date(day)
     console.log('Clicked Date:', clickedDate.format('YYYY-MM-DD'))
@@ -17,7 +16,7 @@ export default function CalendarBody({ calendarMain }) {
   return (
     <>
       <div className="body mt-4">
-        {/* 星期幾的呈現 */}
+        {/* MONDAY,TUESDAY, .....SUNDAY的呈現 */}
         <div className="d-flex justify-content-between ">
           {WeekDayNameList.map((day) => {
             return (
@@ -29,9 +28,9 @@ export default function CalendarBody({ calendarMain }) {
         </div>
 
         {/* 日期加進去 */}
-        {weekContentList.map((week, wIdx) => {
+        {weekContentList.map((week) => {
           let aWeek = []
-          week.map((day, dIdx) => aWeek.push(day === 0 ? '' : day))
+          week.map((day) => aWeek.push(day === 0 ? '' : day))
           result.push({ aWeek })
         })}
         {result.map((item, idx) => (
@@ -56,7 +55,6 @@ export default function CalendarBody({ calendarMain }) {
         .date-block {
           width: 80px;
           height: 100px;
-          
         }
       `}</style>
     </>
