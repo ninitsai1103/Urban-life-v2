@@ -5,15 +5,16 @@ import moment from 'moment'
 // GLobal Vars
 const SEVENDAYS = 7 // 建立一個通用變數，存放一週有7天
 
+// 處理上個月跟下個月的日期
+
 // 處理每週的資訊
 function processWeekDays(mmt, isFirstWeek = false) {
   const totalDays = mmt.daysInMonth()
-  
+
   // mmt 就是當下的時間
   // isFirstDay=true, 取得第一週的第一天，在星期幾，快速建立一第一週的資訊
   // isFirstDay=false, 直接從0，也就是Sunday開始
   const startDay = isFirstWeek ? mmt.startOf('month').day() : 0
-  
 
   const weekDays = Array(SEVENDAYS).fill(0) // 先建立一週的Array，內容先放0
   let isFinished = false //<-- 通知上一層函式的迴圈是否結束
@@ -26,15 +27,14 @@ function processWeekDays(mmt, isFirstWeek = false) {
       isFinished = true //<--如果處理的天數已經是最後一天了，就離開回圈
       break
     }
-    
   }
 
   return { weekDays, isFinished } //<-- 回傳weekDays & isFinished
 }
 
 // 取得當月每週的資訊
-export default function getWeeksInMonth() {
-  const mmt = new moment()
+export default function getWeeksInMonth(calendarMain) {
+  const mmt = calendarMain
   const weekDayList = [] //<-- 建立一個Array，負責存放每週的日期
 
   // 由於每月的第一天不見得是在星期天，故我們需要先處理第一週的部分

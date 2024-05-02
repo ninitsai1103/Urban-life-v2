@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import styles from './star.module.css'
 
 import Image from 'next/image'
+import useProducts from '@/hooks/product/useProducts'
+import { ClientPageRoot } from 'next/dist/client/components/client-page'
 
 export default function Order({
   order_id,
@@ -35,16 +37,17 @@ export default function Order({
     setLectureComment(e.target.value)
   }
 
-  // 控制MODAL的開關
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  // 獲取商品資料
+  const { products } = useProducts()
+  
+  useEffect(()=>{
+    console.log("-----------------");
+    console.log(items[0]);
+    console.log(products[3]);
 
-  const openModal = () => {
-    setModalIsOpen(true)
-  }
-
-  const closeModal = () => {
-    setModalIsOpen(false)
-  }
+  })
+  
+  
 
   return (
     <>
@@ -59,7 +62,7 @@ export default function Order({
                 className="btn btn-main"
                 type="button"
                 data-bs-toggle="modal"
-                data-bs-target="#Detail"
+                data-bs-target={`#Detail${address}`}
               >
                 查看訂單細節
               </button>
@@ -71,7 +74,7 @@ export default function Order({
       {/* 訂單細節的Modal */}
       <div
         className="modal fade"
-        id="Detail"
+        id={`Detail${address}`}
         tabIndex={-1}
         aria-labelledby="DetailLabel"
         aria-hidden="true"
@@ -106,6 +109,7 @@ export default function Order({
                     <th className="text-center">小計</th> */}
                   </tr>
                 </thead>
+                {/* 訂單購買的商品 */}
                 <tbody className="table-group-divider">
                   <tr className="align-middle ">
                     <td className="w-50">
@@ -129,6 +133,7 @@ export default function Order({
                         </div>
                       </div>
                     </td>
+
                     <td>
                       <div>NTD 100</div>
                     </td>
@@ -136,6 +141,7 @@ export default function Order({
                       <span> 數量 </span>
                     </td>
                     <td className="text-center">NTD 100</td>
+
                     <td>
                       <button
                         className="btn btn-main"
@@ -158,6 +164,7 @@ export default function Order({
                     <th className="text-center">小計</th> */}
                   </tr>
                 </thead>
+                {/* 訂單購買的課程 */}
                 <tbody className="table-group-divider">
                   <tr className="align-middle">
                     <td className="w-50">
