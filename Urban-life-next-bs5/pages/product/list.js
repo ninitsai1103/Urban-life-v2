@@ -44,6 +44,7 @@ export default function List() {
     hrsExpress: '0',
     location: '0',
   })
+  const [selectedValue, setSelectedValue] = useState('')
 
   const filteredProducts = useMemo(() => {
     return sortDatas.filter((secProducts) => {
@@ -51,19 +52,19 @@ export default function List() {
         (!filterCondition.minPrice ||
           secProducts.price >= Number(filterCondition.minPrice)) &&
         (!filterCondition.maxPrice ||
-          secProducts.maxPrice <= Number(filterCondition.maxPrice)) &&
+          secProducts.price <= Number(filterCondition.maxPrice)) &&
         (!filterCondition.size || secProducts.size === filterCondition.size) &&
-        (!filterCondition.freeShipping === '0' ||
+        (filterCondition.freeShipping === '0' ||
           secProducts.freeShipping ===
             (filterCondition.freeShipping === '1')) &&
-        (!filterCondition.hrsExpress === '0' ||
+        (filterCondition.hrsExpress === '0' ||
           secProducts.hrsExpress === (filterCondition.hrsExpress === '1')) &&
-        (!filterCondition.location === '0' ||
+        (filterCondition.location === '0' ||
           secProducts.location === (filterCondition.location === '1'))
       )
     })
   }, [sortDatas, filterCondition])
-
+ 
   //分頁&分類&排序
   useEffect(() => {
     //更新分頁總數
@@ -73,6 +74,7 @@ export default function List() {
     const startIndex = (currentPage - 1) * perpages
     const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
     setList(filteredProducts.slice(startIndex, endIndex))
+    console.log(filterCondition);
   }, [currentPage, perpages, filteredProducts])
 
   //分頁控制
@@ -92,14 +94,18 @@ export default function List() {
   }
 
   //篩選控制
-  const handleDataFilter = (filterParms) => {
+  const handleDataFilter = (newCondition) => {
     //更新filterCondition狀態
-    setFilterCondition((prev) => ({
-      ...prev,
-      ...filterParms,
+    setFilterCondition((prevCondition) => ({
+      ...prevCondition,
+      ...newCondition,
     }))
   }
-
+   //抓取選中的值
+  const handleSelectedValue = (e) => {
+    setSelectedValue(e.target.value)
+  }
+   //清空篩選
   const clearFilter = () => {
     setFilterCondition({
       minPrice: '',
@@ -109,7 +115,7 @@ export default function List() {
       hrsExpress: '0',
       location: '0',
     })
-    setCurrentPage(1);
+    setSelectedValue('')
   }
 
   //
@@ -573,8 +579,14 @@ export default function List() {
                 篩選
               </h2>
               <div className="form-control set-text-color">
-                <Link href="" className="text-decoration-none" id="set-text"
-                onclick={clearFilter}
+                <Link
+                  href=""
+                  className="text-decoration-none"
+                  id="set-text"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    clearFilter()
+                  }}
                 >
                   清除篩選
                 </Link>
@@ -585,9 +597,11 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios1"
-                    value="option1"
+                    value="<149"
+                    checked={selectedValue === "<149"}
                     onChange={(e) => {
-                      handleDataFilter({ minPrice: 150 })
+                      handleDataFilter({minPrice:'',maxPrice: 149 })
+                      handleSelectedValue(e)
                     }}
                   />
                   <label
@@ -603,7 +617,12 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios2"
-                    value="option2"
+                    value="150-299"
+                    checked={selectedValue === "150-299"}
+                    onChange={(e) => {
+                      handleDataFilter({ minPrice: 150, maxPrice: 299 })
+                      handleSelectedValue(e)
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -618,7 +637,12 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios3"
-                    value="option3"
+                    value="300-499"
+                    checked={selectedValue === "300-499"}
+                    onChange={(e) => {
+                      handleDataFilter({ minPrice: 300, maxPrice: 499 })
+                      handleSelectedValue(e)
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -633,7 +657,12 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios4"
-                    value="option4"
+                    value="500-999"
+                    checked={selectedValue === "500-999"}
+                    onChange={(e) => {
+                      handleDataFilter({ minPrice: 500, maxPrice: 999 })
+                      handleSelectedValue(e)
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -648,7 +677,12 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios5"
-                    value="option5"
+                    value=">1000"
+                    checked={selectedValue === ">1000"}
+                    onChange={(e) => {
+                      handleDataFilter({ minPrice: 1000, maxPrice:'' })
+                      handleSelectedValue(e)
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
