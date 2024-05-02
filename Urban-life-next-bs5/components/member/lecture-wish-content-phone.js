@@ -1,32 +1,52 @@
 import React from 'react'
 
-export default function LectureWishContent({ TeacherWish }) {
+export default function LectureWishContentPhone({ TeacherWish }) {
   return (
     <>
-      {/* 許願池頁面 */}
-      <tbody className="text-center align-middle" key={TeacherWish.id}>
-        <tr>
-          {/* <td scope="row">想要上課</td> */}
-          <td>{TeacherWish.date}月</td>
-          <td className="wish_content_overflow">{TeacherWish.content}</td>
-          <td>${TeacherWish.price}</td>
-          {/* <td className="nodisplay_768px">2024-12-04 12:00:00</td> */}
-          <td>
+      {/* 手機板 */}
+        <div className="lectureWish_phone_card p-3" key={TeacherWish.id}>
+          <table className="w-100">
+            <tbody className="w-100">
+              {/* <tr>
+                <th>期望課程名稱：</th>
+                <td>想要上課</td>
+              </tr> */}
+              <tr>
+                <th>期望上課時間：</th>
+                <td>{TeacherWish.date}月</td>
+              </tr>
+              <tr className="w-100">
+                <th className="w-50">課程內容：</th>
+                <td className="w-50 wish_phone_content_overflow">
+                {TeacherWish.content}
+                </td>
+              </tr>
+              <tr>
+                <th>期望價錢：</th>
+                <td>${TeacherWish.price}</td>
+              </tr>
+              {/* <tr>
+                <th>建立時間：</th>
+                <td>2024-12-04 12:00:00</td>
+              </tr> */}
+            </tbody>
+          </table>
+          <div className="phone-lectureWish-detail w-100 d-flex">
             <button
               className="btn btn-detail"
               data-bs-toggle="modal"
-              data-bs-target={`#wishDetailModal-${TeacherWish.id}`}
+              data-bs-target={`#wishPhoneDetailModal-${TeacherWish.id}`}
             >
               檢視
             </button>
-          </td>
-        </tr>
-      </tbody>
+          </div>
+        </div>
+      
 
       {/* 檢視modal */}
       <div
         className="modal fade"
-        id={`wishDetailModal-${TeacherWish.id}`}
+        id={`wishPhoneDetailModal-${TeacherWish.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -60,7 +80,9 @@ export default function LectureWishContent({ TeacherWish }) {
                         </tr>
                         <tr>
                           <th>期望課程內容：</th>
-                          <td>{TeacherWish.content}</td>
+                          <td>
+                          {TeacherWish.content}
+                          </td>
                         </tr>
                         <tr>
                           <th>期望價錢：</th>
@@ -89,7 +111,7 @@ export default function LectureWishContent({ TeacherWish }) {
                   className="btn btn-delete mx-1"
                   data-bs-toggle="modal"
                   data-bs-dismiss="modal"
-                  data-bs-target={`#wishDeleteModal-${TeacherWish.id}`}
+                  data-bs-target={`#wishPhoneDeleteModal-${TeacherWish.id}`}
                 >
                   刪除清單
                 </button>
@@ -102,7 +124,7 @@ export default function LectureWishContent({ TeacherWish }) {
       {/* 刪除modal */}
       <div
         className="modal fade"
-        id={`wishDeleteModal-${TeacherWish.id}`}
+        id={`wishPhoneDeleteModal-${TeacherWish.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -120,7 +142,7 @@ export default function LectureWishContent({ TeacherWish }) {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">確認刪除此筆許願清單?</div>
+            <div className="modal-body">確認刪除?</div>
             <div className="modal-footer">
               <button
                 type="button"
@@ -138,46 +160,34 @@ export default function LectureWishContent({ TeacherWish }) {
       </div>
 
       <style jsx>{`
-         {
-          /* .dropdown {
+        .lectureWish_phone_card {
+          background-color: #ffffff;
+          border-radius: 8px;
+          border: 1px solid #ccc;
           margin-bottom: 20px;
-          button {
-            margin-left: auto;
-            background-color: #ffffff;
-            padding: 5px 50px;
+          table {
+            th,
+            td {
+              width: 50%;
+              padding: 10px;
+            }
           }
-        } */
         }
-
-         {
-          /* .nodisplay_768px {
-          width: 20%;
-        } */
-        }
-
-         {
-          /* 原本的樣式 */
-        }
-         {
-          /* .wish_content_overflow {
-          width: 100%;
-          height: 55px;
+        .wish_phone_content_overflow {
+          width: 100% !important;
+          height: 30px;
           display: -webkit-box;
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
-        }  */
         }
-
-        .wish_content_overflow {
-          max-width: 30px;
-          height: 55px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+        .phone-lectureWish-detail {
+          padding: 10px;
+          button {
+            margin-left: auto;
+          }
         }
-
         .modal-table {
           th {
             border: 1px solid #ccc;
@@ -199,30 +209,11 @@ export default function LectureWishContent({ TeacherWish }) {
             justify-content: center;  */
             }
           }
-          input {
+          {/* input {
             margin: 3px;
-          }
+          } */}
         }
-
-         {
-          /* @media (max-width: 992px) {
-          .nodisplay_768px {
-            display: none;
-          }
-        } */
-        }
-
-        @media (max-width: 768px) {
-           {
-            /* .dropdown {
-            button {
-              border: 1px solid #ccc;
-              padding: 5px 0px;
-              width: 50%;
-            }
-          } */
-          }
-        }
+        
       `}</style>
     </>
   )

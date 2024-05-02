@@ -45,7 +45,8 @@ export default function LectureContentPhone({ lecture }) {
           <button
             className="btn btn-detail"
             data-bs-toggle="modal"
-            data-bs-target="#detailPhoneModal"
+            data-bs-target={`#detailPhoneModal-${lecture.id}`}
+            // data-bs-target="#${lecture.id}detailPhoneModal"
             // onClick={() => handleViewDetails(lecture)}
           >
             檢視
@@ -57,7 +58,7 @@ export default function LectureContentPhone({ lecture }) {
       {/* {showModal && selectedLecture && ( */}
         <div
           className="modal fade"
-          id="detailPhoneModal"
+          id={`detailPhoneModal-${lecture.id}`}
           tabindex="-1"
           aria-labelledby="exampleModalLabel"
           aria-hidden="true"
@@ -153,7 +154,7 @@ export default function LectureContentPhone({ lecture }) {
                       className="btn btn-delete mx-1"
                       data-bs-toggle="modal"
                       data-bs-dismiss="modal"
-                      data-bs-target="#deletePhoneModal"
+                      data-bs-target={`#deletePhoneModal-${lecture.id}`}
                     >
                       下架課程
                     </button>
@@ -161,7 +162,7 @@ export default function LectureContentPhone({ lecture }) {
                       type="button"
                       className="btn btn-main"
                       data-bs-toggle="modal"
-                      data-bs-target="#updatePhoneModal"
+                      data-bs-target={`#updatePhoneModal-${lecture.id}`}
                     >
                       修改
                     </button>
@@ -176,7 +177,7 @@ export default function LectureContentPhone({ lecture }) {
       {/* 修改modal */}
       <div
         className="modal fade"
-        id="updatePhoneModal"
+        id={`updatePhoneModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -186,7 +187,7 @@ export default function LectureContentPhone({ lecture }) {
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
+                  {lecture.name}
                 </h1>
                 <button
                   type="button"
@@ -207,7 +208,7 @@ export default function LectureContentPhone({ lecture }) {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="大吉大利-採摘體驗"
+                              value={`${lecture.name}`}
                             />
                           </td>
                         </tr>
@@ -218,7 +219,7 @@ export default function LectureContentPhone({ lecture }) {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="2025-12-04"
+                              value={`${lecture.lecture_date}`}
                             />
                           </td>
                         </tr>
@@ -229,7 +230,7 @@ export default function LectureContentPhone({ lecture }) {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="2025-12-04 00:00:00"
+                              value={`${lecture.sign_up_starting}`}
                             />
                           </td>
                         </tr>
@@ -240,7 +241,7 @@ export default function LectureContentPhone({ lecture }) {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="2025-12-04 00:00:00"
+                              value={`${lecture.sign_up_deadline}`}
                             />
                           </td>
                         </tr>
@@ -251,18 +252,18 @@ export default function LectureContentPhone({ lecture }) {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="1000"
+                              value={`${lecture.price}`}
                             />
                           </td>
                         </tr>
                         <tr>
-                          <th>報名人數：</th>
+                          <th>可報名人數：</th>
                           <td>
                             <input
                               type="text"
                               className="form-control"
                               name="name"
-                              value="20"
+                              value={`${lecture.amount}`}
                             />
                           </td>
                         </tr>
@@ -297,15 +298,18 @@ export default function LectureContentPhone({ lecture }) {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deletePhoneModal"
+                    data-bs-target={`#deletePhoneModal-${lecture.id}`}
                   >
                     下架課程
                   </button>
                   <button
-                    type="submit"
+                    type="button"
+                    // type="submit"
                     className="btn btn-main"
-                    data-bs-toggle="modal"
-                    data-bs-target="#updatePhoneModal"
+                    data-bs-dismiss="modal"
+                    // data-bs-toggle="modal"
+                    aria-label="Close"
+                    // data-bs-target={`#updatePhoneModal-${lecture.id}`}
                   >
                     確認修改
                   </button>
@@ -319,7 +323,7 @@ export default function LectureContentPhone({ lecture }) {
       {/* 刪除modal */}
       <div
         className="modal fade"
-        id="deletePhoneModal"
+        id={`deletePhoneModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -328,7 +332,7 @@ export default function LectureContentPhone({ lecture }) {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                刪除課程
+                刪除「{lecture.name}」課程
               </h1>
               <button
                 type="button"
@@ -337,7 +341,7 @@ export default function LectureContentPhone({ lecture }) {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">確認刪除?</div>
+            <div className="modal-body">確認刪除「{lecture.name}」?</div>
             <div className="modal-footer">
               <button
                 type="button"
