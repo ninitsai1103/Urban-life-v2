@@ -4,7 +4,7 @@ import Search from '@/components/product/search'
 import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
-import UseSortData from '@/hooks/product/useSortData'
+import UseSortDatas from '@/hooks/product/useSortDatas'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
@@ -20,42 +20,99 @@ export default function List() {
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  // const totalItems = 450;
   const perpages = 48 //一頁幾筆資料
-  //
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-  }
 
-  //分類
+  //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
-  const handleCategory = (category) => {
-    setSelectCategory(category)
-    setCurrentPage(1) //重新設定為第一頁
-  }
-  const filterProducts = useMemo(() => {
+
+  //分類後的產品
+  const secProducts = useMemo(() => {
     return selectCategory
       ? products.filter((product) => product.category === selectCategory)
       : products
   })
 
-  //排序
+  //排序狀態和邏輯(初始值代入分類後的產品)
+  const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
 
-  const { sortData, handleSortData } = UseSortData(filterProducts)
-  const changeSort = (key, order) => {
-    handleSortData(key, order);
-  }
+  //篩選狀態與邏輯
+  const [filterCondition, setFilterCondition] = useState({
+    minPrice: '',
+    maxPrice: '',
+    size: '',
+    freeShipping: '0',
+    hrsExpress: '0',
+    location: '0',
+  })
+
+  const filteredProducts = useMemo(() => {
+    return sortDatas.filter((secProducts) => {
+      return (
+        (!filterCondition.minPrice ||
+          secProducts.price >= Number(filterCondition.minPrice)) &&
+        (!filterCondition.maxPrice ||
+          secProducts.maxPrice <= Number(filterCondition.maxPrice)) &&
+        (!filterCondition.size || secProducts.size === filterCondition.size) &&
+        (!filterCondition.freeShipping === '0' ||
+          secProducts.freeShipping ===
+            (filterCondition.freeShipping === '1')) &&
+        (!filterCondition.hrsExpress === '0' ||
+          secProducts.hrsExpress === (filterCondition.hrsExpress === '1')) &&
+        (!filterCondition.location === '0' ||
+          secProducts.location === (filterCondition.location === '1'))
+      )
+    })
+  }, [sortDatas, filterCondition])
 
   //分頁&分類&排序
   useEffect(() => {
     //更新分頁總數
-    const newTotalPages = Math.ceil(sortData.length / perpages)
+    const newTotalPages = Math.ceil(filteredProducts.length / perpages)
     setTotalPages(newTotalPages)
     //更新列表
     const startIndex = (currentPage - 1) * perpages
-    const endIndex = Math.min(startIndex + perpages, sortData.length)
-    setList(sortData.slice(startIndex, endIndex))
-  }, [currentPage, sortData])
+    const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
+    setList(filteredProducts.slice(startIndex, endIndex))
+  }, [currentPage, perpages, filteredProducts])
+
+  //分頁控制
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  //分類控制
+  const handleCategory = (category) => {
+    setSelectCategory(category)
+    setCurrentPage(1) //重新設定為第一頁
+  }
+
+  //排序控制
+  const changeSort = (key, order) => {
+    handleSortDatas(key, order)
+  }
+
+  //篩選控制
+  const handleDataFilter = (filterParms) => {
+    //更新filterCondition狀態
+    setFilterCondition((prev) => ({
+      ...prev,
+      ...filterParms,
+    }))
+  }
+
+  const clearFilter = () => {
+    setFilterCondition({
+      minPrice: '',
+      maxPrice: '',
+      size: '',
+      freeShipping: '0',
+      hrsExpress: '0',
+      location: '0',
+    })
+    setCurrentPage(1);
+  }
+
+  //
 
   // Toggle the side navigation
   // useEffect(() => {
@@ -516,7 +573,9 @@ export default function List() {
                 篩選
               </h2>
               <div className="form-control set-text-color">
-                <Link href="" className="text-decoration-none" id="set-text">
+                <Link href="" className="text-decoration-none" id="set-text"
+                onclick={clearFilter}
+                >
                   清除篩選
                 </Link>
                 <p className="mt-1 mb-0 set-fw700">金額</p>
@@ -527,6 +586,9 @@ export default function List() {
                     name="exampleRadios"
                     id="exampleRadios1"
                     value="option1"
+                    onChange={(e) => {
+                      handleDataFilter({ minPrice: 150 })
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -547,7 +609,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios2"
                   >
-                    NTD 151-300
+                    NTD 150-299
                   </label>
                 </div>
                 <div className="form-check">
@@ -562,7 +624,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios3"
                   >
-                    NTD 301-500
+                    NTD 300-499
                   </label>
                 </div>
                 <div className="form-check">
@@ -577,7 +639,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios4"
                   >
-                    NTD 501-1000
+                    NTD 500-999
                   </label>
                 </div>
                 <div className="form-check">
@@ -592,7 +654,7 @@ export default function List() {
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios5"
                   >
-                    NTD 1001以上
+                    NTD 1000以上
                   </label>
                 </div>
 
@@ -638,6 +700,9 @@ export default function List() {
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios6"
+                    onChange={(e) => {
+                      handleDataFilter({ size: '大' })
+                    }}
                   >
                     大
                   </label>
@@ -1458,7 +1523,6 @@ export default function List() {
                         <a
                           className="dropdown-item"
                           href="#"
-                          // filterProducts={filterProducts}
                           onClick={(e) => {
                             e.preventDefault()
                             changeSort('price', 'descending')
