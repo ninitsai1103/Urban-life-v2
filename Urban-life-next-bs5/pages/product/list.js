@@ -37,22 +37,39 @@ export default function List() {
 
   //篩選狀態與邏輯
   const [filterCondition, setFilterCondition] = useState({
-    minPrice: '',
-    maxPrice: '',
+    radio_price: {
+      minPrice: '',
+      maxPrice: '',
+    },
+    input_price: {
+      minPrice_text: '',
+      maxPrice_text: '',
+    },
     size: '',
     freeShipping: '0',
     hrsExpress: '0',
     location: '0',
   })
-  const [selectedValue, setSelectedValue] = useState('')
+  const [selectedValue, setSelectedValue] = useState('') //金額radio
+  const [priceRange, setPriceRange] = useState({
+    //金額input
+    minPrice_text: '',
+    maxPrice_text: '',
+  })
 
   const filteredProducts = useMemo(() => {
     return sortDatas.filter((secProducts) => {
       return (
-        (!filterCondition.minPrice ||
-          secProducts.price >= Number(filterCondition.minPrice)) &&
-        (!filterCondition.maxPrice ||
-          secProducts.price <= Number(filterCondition.maxPrice)) &&
+        (!filterCondition.radio_price.minPrice ||
+          secProducts.price >= Number(filterCondition.radio_price.minPrice)) &&
+        (!filterCondition.radio_price.maxPrice ||
+          secProducts.price <= Number(filterCondition.radio_price.maxPrice)) &&
+        (!filterCondition.input_price.minPrice_text ||
+          secProducts.price >=
+            Number(filterCondition.input_price.minPrice_text)) &&
+        (!filterCondition.input_price.maxPrice_text ||
+          secProducts.price <=
+            Number(filterCondition.input_price.maxPrice_text)) &&
         (!filterCondition.size || secProducts.size === filterCondition.size) &&
         (filterCondition.freeShipping === '0' ||
           secProducts.freeShipping ===
@@ -64,7 +81,7 @@ export default function List() {
       )
     })
   }, [sortDatas, filterCondition])
- 
+
   //分頁&分類&排序
   useEffect(() => {
     //更新分頁總數
@@ -74,7 +91,7 @@ export default function List() {
     const startIndex = (currentPage - 1) * perpages
     const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
     setList(filteredProducts.slice(startIndex, endIndex))
-    console.log(filterCondition);
+    console.log(filterCondition)
   }, [currentPage, perpages, filteredProducts])
 
   //分頁控制
@@ -94,22 +111,90 @@ export default function List() {
   }
 
   //篩選控制
-  const handleDataFilter = (newCondition) => {
-    //更新filterCondition狀態
+  // const handleDataFilter = (newCondition) => {
+  //   //更新filterCondition狀態
+  //   setFilterCondition((prevCondition) => ({
+  //     ...prevCondition,
+  //     ...newCondition,
+  //   }))
+  // }
+  
+  const handleInputChange = (minPrice, maxPrice) => {
+    setSelectedValue('');
+    //如果輸入金額時=>清空並禁用radio
+    setFilterCondition(prevCondition => ({
+      ...prevCondition,
+      radio_price: {
+        minPrice: '',
+        maxPrice: '',
+      },
+      input_price:{
+        minPrice_text:minPrice,
+        maxPrice_text:maxPrice
+      }
+    }))
+    //清空radio選中的值
+    setSelectedValue('')
+  }
+
+  //金額輸入框控制
+const handleMinPrice = (e) => {
+  setPriceRange(prev => ({
+    ...prev,
+    minPrice_text:e.target.value
+  }))
+}
+
+const handleMaxPrice = (e => {
+  setPriceRange(prev => ({
+    ...prev,
+    maxPrice_text:e.target.value
+  }))
+})
+
+ //送出金額按鈕控制
+ const handleSubmit = (e) => {
+  //使用輸入的價格更新篩選條件
+  setFilterCondition(prevCondition => ({
+    ...prevCondition,
+    input_price:{
+      minPrice_text:priceRange.minPrice_text,
+      maxPrice_text:priceRange.maxPrice_text
+    }
+  }))
+console.log(selectedValue, filterCondition);
+ }
+
+
+
+  //更新radio按鈕處理邏輯，同時清空篩選
+  const handleSelectedValue = (e, minPrice, maxPrice) => {
+    setSelectedValue(e.target.value);
     setFilterCondition((prevCondition) => ({
       ...prevCondition,
-      ...newCondition,
-    }))
-  }
-   //抓取選中的值
-  const handleSelectedValue = (e) => {
-    setSelectedValue(e.target.value)
-  }
-   //清空篩選
+      radio_price: {
+        minPrice:minPrice || '',
+        maxPrice:maxPrice || '',
+      },
+      input_price: {
+        minPrice_text: minPrice,
+        maxPrice_text: maxPrice,
+      },
+  })
+  )
+}
+
+  //清空篩選
   const clearFilter = () => {
     setFilterCondition({
-      minPrice: '',
-      maxPrice: '',
+      radio_price: {
+        minPrice: '',
+        maxPrice: '',
+      },
+      input_price: {
+        minPrice_text: '',
+        maxPrice_text: '',
+      },
       size: '',
       freeShipping: '0',
       hrsExpress: '0',
@@ -117,6 +202,19 @@ export default function List() {
     })
     setSelectedValue('')
   }
+  //清空金額input的值
+  const clearInputPrice = () => {
+    setFilterCondition((prevCondition => ({
+      ...prevCondition,
+      input_price: {
+        minPrice_text: '',
+        maxPrice_text: '',
+      },
+    })))
+    setPriceRange({minPrice_text:"",maxPrice_text:""})
+  }
+
+  //radio或text禁用
 
   //
 
@@ -598,10 +696,15 @@ export default function List() {
                     name="exampleRadios"
                     id="exampleRadios1"
                     value="<149"
-                    checked={selectedValue === "<149"}
+                    checked={selectedValue === '<149'}
+                    disabled={
+                      priceRange.minPrice_text || priceRange.maxPrice_text
+                    }
                     onChange={(e) => {
-                      handleDataFilter({minPrice:'',maxPrice: 149 })
-                      handleSelectedValue(e)
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: '', maxPrice: 149 },
+                      // })
+                      handleSelectedValue(e,'',149)
                     }}
                   />
                   <label
@@ -618,10 +721,12 @@ export default function List() {
                     name="exampleRadios"
                     id="exampleRadios2"
                     value="150-299"
-                    checked={selectedValue === "150-299"}
+                    checked={selectedValue === '150-299'}
                     onChange={(e) => {
-                      handleDataFilter({ minPrice: 150, maxPrice: 299 })
-                      handleSelectedValue(e)
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 150, maxPrice: 299 },
+                      // })
+                      handleSelectedValue(e,'150','299')
                     }}
                   />
                   <label
@@ -638,10 +743,12 @@ export default function List() {
                     name="exampleRadios"
                     id="exampleRadios3"
                     value="300-499"
-                    checked={selectedValue === "300-499"}
+                    checked={selectedValue === '300-499'}
                     onChange={(e) => {
-                      handleDataFilter({ minPrice: 300, maxPrice: 499 })
-                      handleSelectedValue(e)
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 300, maxPrice: 499 },
+                      // })
+                      handleSelectedValue(e,'300','499')
                     }}
                   />
                   <label
@@ -658,10 +765,12 @@ export default function List() {
                     name="exampleRadios"
                     id="exampleRadios4"
                     value="500-999"
-                    checked={selectedValue === "500-999"}
+                    checked={selectedValue === '500-999'}
                     onChange={(e) => {
-                      handleDataFilter({ minPrice: 500, maxPrice: 999 })
-                      handleSelectedValue(e)
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 500, maxPrice: 999 },
+                      // })
+                      handleSelectedValue(e,'500','999')
                     }}
                   />
                   <label
@@ -678,10 +787,12 @@ export default function List() {
                     name="exampleRadios"
                     id="exampleRadios5"
                     value=">1000"
-                    checked={selectedValue === ">1000"}
+                    checked={selectedValue === '>1000'}
                     onChange={(e) => {
-                      handleDataFilter({ minPrice: 1000, maxPrice:'' })
-                      handleSelectedValue(e)
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 1000, maxPrice: '' },
+                      // })
+                      handleSelectedValue(e,1000,'')
                     }}
                   />
                   <label
@@ -700,18 +811,31 @@ export default function List() {
                     type="text"
                     className="form-control ms-1 p-1 set-fs12 set-size"
                     placeholder=""
-                    aria-label="lowPrice"
+                    aria-label="minPrice_text"
+                    value={priceRange.minPrice_text}
+                    disabled={selectedValue}
+                    onChange={(e) => {
+                     handleMinPrice(e);
+                    }}
                   />
                   <span className="input-group-text px-1 no-border-bg">-</span>
                   <input
                     type="text"
                     className="form-control me-2 p-1 set-fs12 set-size"
                     placeholder=""
-                    aria-label="highPrice"
+                    aria-label="maxPrice_text"
+                    value={priceRange.maxPrice_text}
+                    disabled={selectedValue}
+                    onChange={(e) => {
+                      handleMaxPrice(e);
+                    }}
                   />
                   <button
                     className="set-button-style d-flex align-items-center p-1 rounded"
-                    type="submit"
+                    type="button"
+                    onClick={(e) => {
+                      handleSubmit(e);
+                    }}
                   >
                     <MdKeyboardArrowRight className="text-white" />
                   </button>
@@ -719,6 +843,10 @@ export default function List() {
                 <Link
                   href=""
                   className="set-fs12 text-decoration-none set-text-color2"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    clearInputPrice()
+                  }}
                 >
                   清除輸入金額
                 </Link>
