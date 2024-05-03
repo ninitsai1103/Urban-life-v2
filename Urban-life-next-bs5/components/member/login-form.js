@@ -8,30 +8,30 @@ export default function LoginForm() {
     email: '',
     password: '',
   })
-// 顯示密碼的核取方塊用
+  // 顯示密碼的核取方塊用
   const [showPassword, setShowPassword] = useState(false)
-// 錯誤訊息狀態
+  // 錯誤訊息狀態
   const [errors, setErrors] = useState({
     email: '',
     password: '',
   })
-// 多欄位共用事件處理函式
+  // 多欄位共用事件處理函式
   const handleFieldChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
-//表單送出
+  //表單送出
   const handleSubmit = async (e) => {
     e.preventDefault()
-// 整理要送到伺服器的資料
+    // 整理要送到伺服器的資料
     // 檢查欄位
     // 建立一個新的錯誤物件
     const newErrors = {
       email: '',
       password: '',
     }
-// 信號值，代表有出現錯誤，判斷是否要送出表單用
+    // 信號值，代表有出現錯誤，判斷是否要送出表單用
     let hasErrors = false
-// 如果檢查有發生錯誤時
+    // 如果檢查有發生錯誤時
     if (!user.email) {
       newErrors.email = '帳號為必填'
       hasErrors = true
@@ -46,30 +46,47 @@ export default function LoginForm() {
 
     if (!hasErrors) {
       try {
-        const response = await fetch('/api/user/login', {
+        const response = await fetch('http://localhost:3005/api/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(user),
-        });
-        const data = await response.json();
+        })
+        const data = await response.json()// 建立一個包含使用者資訊的物件
+        const memberInfo = {
+          id: data.user.id,
+          name: data.user.name,
+          // user: data.user,
+          identity_id: data.user.identity_id
+        };
+        
+        
+        // 將 JSON 字串存儲到 localStorage 中
+        
         if (response.ok) {
-          // 登入成功，導向到用戶資料頁面或其他頁面
-          window.location.href = '/member/information';
+          console.log('登入成功')
+          console.log('使用者資訊：', data.user) // 這裡是使用者的所有資訊
+          console.log('Token：', data.token) // 這裡是登入後返回的 token
+          localStorage.setItem('member-info', JSON.stringify(memberInfo));
+
+          // 登录成功，重定向到用户资料页面或其他页面
+          window.location.href = '/member/information'
         } else {
-          // 登入失敗，顯示錯誤訊息
-          console.error('Login failed:', data.message);
+          // 登录失败，显示错误消息
+          console.error('Login failed:', data.message)
         }
       } catch (error) {
-        console.error('Error logging in:', error);
+        console.error('Error logging in:', error)
       }
     }
   }
 
   return (
     <>
-      <div className={`box d-flex justify-content-center align-items-center bg-primary4 ${styles.box}`}>
+      <div
+        className={`box d-flex justify-content-center align-items-center bg-primary4 ${styles.box}`}
+      >
         <form onSubmit={handleSubmit}>
           <div className="text-center mb-2" style={{ fontSize: '24px' }}>
             會員登入
@@ -82,6 +99,7 @@ export default function LoginForm() {
                 className="form-control w-100"
                 placeholder="電子信箱"
                 name="email"
+                value={user.email}
                 onChange={handleFieldChange}
               />
               <span className="error my-1 text-start">{errors.email}</span>
@@ -94,6 +112,7 @@ export default function LoginForm() {
                 type={showPassword ? 'text' : 'password'}
                 className="form-control w-100"
                 placeholder="密碼"
+                value={user.password}
                 name="password"
                 onChange={handleFieldChange}
               />
@@ -121,6 +140,24 @@ export default function LoginForm() {
               style={{ fontSize: '20px' }}
             >
               登入
+            </button>
+            <button
+              type="button"
+              className="btn btn-add-r"
+              style={{ fontSize: '20px' }}
+              onClick={() => {
+                setUser({
+                  email: 'bif105@test.com',
+                  password: '24823',
+                })
+                // 清空错误状态
+                setErrors({
+                  email: '',
+                  password: '',
+                })
+              }}
+            >
+              一鍵填入
             </button>
           </div>
 
