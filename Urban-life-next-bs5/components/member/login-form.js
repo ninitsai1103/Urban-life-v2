@@ -54,6 +54,8 @@ export default function LoginForm() {
           body: JSON.stringify(user),
         })
         const data = await response.json()// 建立一個包含使用者資訊的物件
+
+        console.log(data);
         const memberInfo = {
           id: data.user.id,
           name: data.user.name,

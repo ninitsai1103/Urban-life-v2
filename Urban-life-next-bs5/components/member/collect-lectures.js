@@ -4,7 +4,7 @@ import { RxCross2 } from 'react-icons/rx'
 import Image from 'next/image'
 
 export default function CollectLectures() {
-  const { items, removeItem, increaseItem, decreaseItem } = useCart()
+  // const { items, removeItem, increaseItem, decreaseItem } = useCart()
   return (
     <>
       <table className="table ">
