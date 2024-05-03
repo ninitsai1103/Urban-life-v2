@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react'
+import { createContext, useState, useContext, useEffect } from 'react'
 
 // 1. 建立與導出它
 // 不需要再用額外的檔案來建立Context，直接在這裡建立與使用
@@ -89,7 +89,36 @@ export function CartProvider({ children }) {
   // 陣列迭代方法: reduce(累加、歸納)
   // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
   const totalItems = items.reduce((acc, v) => acc + v.qty, 0)
+  const totalItemsChecked = items.filter((v)=>v.checked).reduce((acc, v) => acc + v.qty, 0)
   const totalPrice = items.reduce((acc, v) => acc + v.qty * v.price, 0)
+  const totalPriceChecked = items.filter((v)=>v.checked).reduce((acc, v) => acc + v.qty * v.price, 0)
+  const itemsChecked = items.filter((v)=>v.checked)
+
+  //coupon
+
+
+  //localStorage items
+  //getItem
+  useEffect(()=> {
+    const data = window.localStorage.getItem('Checkout-info')
+    if (data !== null) setItems(JSON.parse(data))
+  }, [])
+  //setItem
+  useEffect(()=> {
+    window.localStorage.setItem('Checkout-info', JSON.stringify(items))
+  }, [items])
+
+  //localStorage itemsChecked(勾選的商品)、totalItemsChecked(勾選的商品數量)、totalPriceChecked(勾選的商品總價)
+  //getItem
+  useEffect(()=> {
+    const data = window.localStorage.getItem('Checked-info')
+    if (data !== null) setItems(JSON.parse(data))
+  }, [])
+  //setItem
+  useEffect(()=> {
+    window.localStorage.setItem('Checked-info', JSON.stringify(itemsChecked, totalItemsChecked, totalPriceChecked))
+  }, [items])
+
 
   return (
     <CartContext.Provider
@@ -103,6 +132,8 @@ export function CartProvider({ children }) {
         removeItem,
         totalItems,
         totalPrice,
+        totalPriceChecked,
+        totalItemsChecked
       }}
     >
       {children}

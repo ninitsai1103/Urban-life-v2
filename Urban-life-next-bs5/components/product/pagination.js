@@ -2,10 +2,10 @@ import React from 'react'
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md'
 
 
-export default function Page({ totalItems, perpages, currentPage, onPageChange }) {
-  //須設定props=> totalItems:資料總數,perpages:一頁幾筆資料,currentPage:當前所在頁數
-  //函式可到list.js查看
-  const totalPages = Math.ceil(totalItems / perpages);
+export default function Page({ totalPages, currentPage,  onPageChange}) {
+  //須設定props=>  totalPages:總頁數,currentPage:當前所在頁數
+  //函式可到list.js參考
+  
   const pages = [];
   for (let i = 1; i <= totalPages; i++) {
     pages.push(i);
@@ -20,7 +20,7 @@ export default function Page({ totalItems, perpages, currentPage, onPageChange }
             <a className="page-link no-bg" href="#" onClick={(e) => {
               if(currentPage>1)onPageChange(currentPage-1)
             }}>
-              <MdArrowBackIos style={{fontSize:'18px'}} />
+              <MdArrowBackIos className='pageIcon' />
             </a>
           </li>
           {pages.map(page => (
@@ -36,7 +36,7 @@ export default function Page({ totalItems, perpages, currentPage, onPageChange }
             <a className="page-link no-bg" href="#" onClick={(e) => {
               if(currentPage<totalPages)onPageChange(currentPage+1)
             }}>
-              <MdArrowForwardIos style={{fontSize:'18px'}}/>
+              <MdArrowForwardIos className='pageIcon' />
             </a>
           </li>
         </ul>
@@ -49,8 +49,8 @@ export default function Page({ totalItems, perpages, currentPage, onPageChange }
           }
           .page-link {
             border-radius: 50%;       
-            width: 40px;              
-            height: 40px;             
+            width: 34px;              
+            height: 34px;             
             text-align: center;       
             line-height: 40px;        
             padding: 0;               
@@ -95,7 +95,7 @@ export default function Page({ totalItems, perpages, currentPage, onPageChange }
             //設定上下頁樣式
             background-color: transparent;
           }
-
+        
           @media (max-width: 500px) {
             .pagination {
             display: grid;
@@ -108,6 +108,8 @@ export default function Page({ totalItems, perpages, currentPage, onPageChange }
               width: 25px;              
             height: 25px;  
             }
+
+        
           }
         `}
       </style>

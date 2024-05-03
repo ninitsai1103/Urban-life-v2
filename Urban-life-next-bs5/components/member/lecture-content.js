@@ -1,124 +1,39 @@
 import React from 'react'
 
-export default function LectureContent() {
+export default function LectureContentTbody({ lecture }) {
   return (
     <>
-      {/* 我的課程排序 */}
-      <div className="dropdown">
-        <button
-          className="btn dropdown-toggle fs-6 d-flex justify-content-center align-items-center"
-          type="button"
-          id="lectureDropdown1"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          排序
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="lectureDropdown1">
-          <li>
-            <a className="dropdown-item" href="#">
-              上課時間由新到舊
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              上課時間由舊到新
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              更新時間由新到舊
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              更新時間由舊到新
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      {/* 我的課程頁面 */}
-      <div className="lecture_window_table">
-        <table className="table">
-          <thead className="text-center">
-            <tr>
-              <th scope="col">課程名稱</th>
-              <th scope="col">上課時間</th>
-              <th scope="col" className="nodisplay_768px">
-                報名截止時間
-              </th>
-              <th scope="col">上課人數</th>
-              <th scope="col">價錢</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody className="text-center align-middle">
-            <tr>
-              <td scope="row">上課好有趣</td>
-              <td>2023-12-04</td>
-              <td className="nodisplay_768px">
-                <div>2023-12-04</div>
-              </td>
-              <td>20</td>
-              <td>$888</td>
-              <td>
-                <button
-                  className="btn btn-detail"
-                  data-bs-toggle="modal"
-                  data-bs-target="#detailModal"
-                >
-                  檢視
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* 手機板課程頁面 */}
-      <div className="lecture_body_phone d-none">
-        <div className="lecture_phone_card p-3 ">
-          <table className="w-100">
-            <tbody className="w-100">
-              <tr>
-                <th>課程名稱：</th>
-                <td>大吉大利-採摘體驗</td>
-              </tr>
-              <tr>
-                <th>上課時間：</th>
-                <td>2025-12-04</td>
-              </tr>
-              <tr>
-                <th>報名截止時間：</th>
-                <td>2025-12-04</td>
-              </tr>
-              <tr>
-                <th>上課人數：</th>
-                <td>20</td>
-              </tr>
-              <tr>
-                <th>價錢：</th>
-                <td>$800</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="phone-lecture-detail w-100 d-flex">
+      <tbody className="text-center align-middle" key={lecture.id}>
+        <tr>
+          <td scope="row" className="setup-max-width">
+            {lecture.name}
+          </td>
+          <td>{lecture.lecture_date}</td>
+          <td className="nodisplay_992px">
+            <div className="setup-max-width-time text-center">
+              {lecture.sign_up_deadline}
+            </div>
+          </td>
+          <td>{lecture.amount}</td>
+          <td>{lecture.price}</td>
+          <td>
             <button
               className="btn btn-detail"
               data-bs-toggle="modal"
-              data-bs-target="#detailModal"
+              // data-bs-target="#detailModal-${lecture.id}"
+              data-bs-target={`#detailModal-${lecture.id}`}
             >
               檢視
             </button>
-          </div>
-        </div>
-      </div>
+          </td>
+        </tr>
+      </tbody>
 
       {/* 檢視modal */}
       <div
         className="modal fade"
-        id="detailModal"
+        // id="detailModal-${lecture.id}"
+        id={`detailModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -128,7 +43,7 @@ export default function LectureContent() {
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
+                  {lecture.name}
                 </h1>
                 <button
                   type="button"
@@ -144,27 +59,27 @@ export default function LectureContent() {
                       <tbody>
                         <tr>
                           <th>課程名稱：</th>
-                          <td>大吉大利-採摘體驗</td>
+                          <td>{lecture.name}</td>
                         </tr>
                         <tr>
                           <th>上課時間：</th>
-                          <td>2025-12-04</td>
+                          <td>{lecture.lecture_date}</td>
                         </tr>
                         <tr>
                           <th>報名開始時間：</th>
-                          <td>2025-12-04</td>
+                          <td>{lecture.sign_up_starting}</td>
                         </tr>
                         <tr>
                           <th>報名截止時間：</th>
-                          <td>2025-12-04</td>
+                          <td>{lecture.sign_up_deadline}</td>
                         </tr>
                         <tr>
                           <th>價格：</th>
-                          <td>1000</td>
+                          <td>${lecture.price}</td>
                         </tr>
                         <tr>
-                          <th>報名人數：</th>
-                          <td>20</td>
+                          <th>可報名人數：</th>
+                          <td>{lecture.amount}</td>
                         </tr>
                         <tr>
                           <th>已報名人數：</th>
@@ -178,7 +93,20 @@ export default function LectureContent() {
                         </tr>
                         <tr>
                           <th>課程圖片：</th>
-                          <td>圖片一、圖片二、圖片三、圖片四</td>
+                          <td>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.cover}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
+                            ></img>
+                            <img
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
+                            ></img>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -200,7 +128,7 @@ export default function LectureContent() {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deleteModal"
+                    data-bs-target={`#deleteModal-${lecture.id}`}
                   >
                     下架課程
                   </button>
@@ -208,7 +136,7 @@ export default function LectureContent() {
                     type="button"
                     className="btn btn-main"
                     data-bs-toggle="modal"
-                    data-bs-target="#updateModal"
+                    data-bs-target={`#updateModal-${lecture.id}`}
                   >
                     修改
                   </button>
@@ -222,7 +150,7 @@ export default function LectureContent() {
       {/* 修改modal */}
       <div
         className="modal fade"
-        id="updateModal"
+        id={`updateModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -232,7 +160,7 @@ export default function LectureContent() {
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
+                  {lecture.name}
                 </h1>
                 <button
                   type="button"
@@ -253,7 +181,7 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="大吉大利-採摘體驗"
+                              value={`${lecture.name}`}
                             />
                           </td>
                         </tr>
@@ -264,7 +192,7 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="2025-12-04"
+                              value={`${lecture.lecture_date}`}
                             />
                           </td>
                         </tr>
@@ -275,7 +203,7 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="2025-12-04"
+                              value={`${lecture.sign_up_starting}`}
                             />
                           </td>
                         </tr>
@@ -286,7 +214,7 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="2025-12-04"
+                              value={`${lecture.sign_up_deadline}`}
                             />
                           </td>
                         </tr>
@@ -297,18 +225,18 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="1000"
+                              value={`${lecture.price}`}
                             />
                           </td>
                         </tr>
                         <tr>
-                          <th>報名人數：</th>
+                          <th>可報名人數：</th>
                           <td>
                             <input
                               type="text"
                               className="form-control"
                               name="name"
-                              value="20"
+                              value={`${lecture.amount}`}
                             />
                           </td>
                         </tr>
@@ -343,15 +271,18 @@ export default function LectureContent() {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deleteModal"
+                    data-bs-target={`#deleteModal-${lecture.id}`}
                   >
                     下架課程
                   </button>
                   <button
-                    type="submit"
+                    type="button"
+                    // type="submit"
                     className="btn btn-main"
-                    data-bs-toggle="modal"
-                    data-bs-target="#updateModal"
+                    data-bs-dismiss="modal"
+                    // data-bs-toggle="modal"
+                    aria-label="Close"
+                    // data-bs-target={`#updateModal-${lecture.id}`}
                   >
                     確認修改
                   </button>
@@ -365,7 +296,7 @@ export default function LectureContent() {
       {/* 刪除modal */}
       <div
         className="modal fade"
-        id="deleteModal"
+        id={`deleteModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -374,7 +305,7 @@ export default function LectureContent() {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                刪除課程
+                刪除「{lecture.name}」課程
               </h1>
               <button
                 type="button"
@@ -383,7 +314,7 @@ export default function LectureContent() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">確認刪除?</div>
+            <div className="modal-body">確認刪除「{lecture.name}」?</div>
             <div className="modal-footer">
               <button
                 type="button"
@@ -401,87 +332,46 @@ export default function LectureContent() {
       </div>
 
       <style jsx>{`
-        .dropdown {
-          margin-bottom: 20px;
-          button {
-            margin-left: auto;
-            background-color: #ffffff;
-            padding: 5px 50px;
-          }
+        .setup-max-width {
+          max-width: 100px;
+          white-space: nowrap; /* 防止文字換行 */
+          overflow: hidden; /* 隱藏超出範圍的文字 */
+          text-overflow: ellipsis; /* 顯示省略號 */
         }
-        .lecture_phone_card {
-          background-color: #ffffff;
-          border-radius: 8px;
-          border: 1px solid #ccc;
-          table{
-            th, td {
-            width: 50%;
-            padding: 10px;
-          }
-          }
-        }
-        .phone-lecture-detail {
-          padding: 10px;
-          button {
-            margin-left: auto;
-          }
+        .setup-max-width-time {
+          margin: auto;
+          max-width: 100px;
+          white-space: nowrap; /* 防止文字換行 */
+          overflow: hidden; /* 隱藏超出範圍的文字 */
+          text-overflow: ellipsis; /* 顯示省略號 */
         }
 
         .modal-table {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 150px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
+            width: 30%;
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
+            width: 70%;
           }
           input {
             margin: 3px;
           }
+          img {
+            width: 45%;
+            margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px;
+          }
         }
 
-        @media (max-width: 768px) {
-          .dropdown {
-            button {
-              border: 1px solid #ccc;
-              padding: 5px 0px;
-              width: 50%;
-            }
-          }
-          .nodisplay_768px {
+        @media (max-width: 992px) {
+          .nodisplay_992px {
             display: none;
-          }
-          .lecture_window_table {
-            display: none;
-          }
-          .lecture_body_phone {
-            display: block !important;
-          }
-        }
-        @media (max-width: 576px) {
-          .lecture_window_table table {
-            th {
-              font-size: 10px;
-            }
-            td {
-              font-size: 10px;
-            }
-            button {
-              font-size: 10px;
-            }
           }
         }
       `}</style>

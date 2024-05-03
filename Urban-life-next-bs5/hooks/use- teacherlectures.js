@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 
-const useProducts = () => {
-  const [products, setProducts] = useState([]);
+const useTeacherLectures = () => {
+  const [lectures, setLectures] = useState([]);
 
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchLectures = async () => {
         try {
-            const url = `http://localhost:3005/api/products`
+            const url = `http://localhost:3005/api/teacher-lecture`
             const res = await fetch(url);
             const data = await res.json();
             console.log(data);
-            const products = data.data.products
-            if (Array.isArray(products)) {
-              setProducts(products)
+            const lectures = data.data.lectures
+            if (Array.isArray(lectures)) {
+                setLectures(lectures)
             } else {
               console.log('伺服器回傳資料類型錯誤，無法設定到狀態中');
             }
@@ -22,10 +22,10 @@ const useProducts = () => {
           }
     };
 
-    fetchProducts();
+    fetchLectures();
   }, []);
 
-  return { products };
+  return { lectures }; 
 };
 
-export default useProducts;
+export default useTeacherLectures;

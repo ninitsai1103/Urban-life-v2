@@ -1,116 +1,55 @@
 import React from 'react'
 
-export default function LectureWishContent() {
+export default function LectureWishContent({ TeacherWish }) {
+
+  // 定義處理刪除操作的函數
+  const handleDelete = async () => {
+    try {
+      // 發送刪除請求到後端 API
+      const response = await axios.put(`/api/teacher-wish/${TeacherWish.id}`, {
+        valid: 0  // 更新 valid 欄位為 0 表示已刪除
+      });
+
+      if (response.status === 200) {
+        // 刪除成功後的處理
+        console.log('Wish deleted successfully!');
+        // 在此處可以更新頁面或重新加載數據
+      } else {
+        console.error('Failed to delete wish.');
+      }
+    } catch (error) {
+      console.error('Error deleting wish:', error);
+    }
+  };
+
+
+
+
   return (
     <>
-      {/* 許願池排序 */}
-      <div className="dropdown">
-        <button
-          className="btn dropdown-toggle fs-6 d-flex justify-content-center align-items-center"
-          type="button"
-          id="lectureDropdown1"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          排序
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="lectureDropdown1">
-          <li>
-            <a className="dropdown-item" href="#">
-              更新時間由新到舊
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              更新時間由舊到新
-            </a>
-          </li>
-        </ul>
-      </div>
-
       {/* 許願池頁面 */}
-      <div className="lecture_wish_window_table">
-        <table className="table">
-          <thead className="text-center">
-            <tr>
-              {/* <th scope="col">期望課程名稱：</th> */}
-              <th scope="col">期望上課時間：</th>
-              <th scope="col" className="">
-                課程內容：
-              </th>
-              <th scope="col">期望價錢：</th>
-              {/* <th scope="col" className="nodisplay_768px">建立時間</th> */}
-              <th></th>
-            </tr>
-          </thead>
-          <tbody className="text-center align-middle">
-            <tr>
-              {/* <td scope="row">想要上課</td> */}
-              <td>8月</td>
-              <td className="wish_content_overflow">
-                超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈
-              </td>
-              <td>$888</td>
-              {/* <td className="nodisplay_768px">2024-12-04 12:00:00</td> */}
-              <td>
-                <button
-                  className="btn btn-detail"
-                  data-bs-toggle="modal"
-                  data-bs-target="#wishDetailModal"
-                >
-                  檢視
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* 手機板 */}
-      <div className="lectureWish_body_phone d-none">
-        <div className="lectureWish_phone_card p-3 ">
-          <table className="w-100">
-            <tbody className="w-100">
-              {/* <tr>
-                <th>期望課程名稱：</th>
-                <td>想要上課</td>
-              </tr> */}
-              <tr>
-                <th>期望上課時間：</th>
-                <td>8月</td>
-              </tr>
-              <tr className="w-100">
-                <th className="w-50">課程內容：</th>
-                <td className="w-50 wish_phone_content_overflow">
-                  超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈
-                </td>
-              </tr>
-              <tr>
-                <th>期望價錢：</th>
-                <td>$888</td>
-              </tr>
-              {/* <tr>
-                <th>建立時間：</th>
-                <td>2024-12-04 12:00:00</td>
-              </tr> */}
-            </tbody>
-          </table>
-          <div className="phone-lectureWish-detail w-100 d-flex">
+      <tbody className="text-center align-middle" key={TeacherWish.id}>
+        <tr>
+          <td>{TeacherWish.date}月</td>
+          <td className="wish_content_overflow">{TeacherWish.content}</td>
+          <td>${TeacherWish.price}</td>
+          <td>{TeacherWish.created_at}</td>
+          <td>
             <button
               className="btn btn-detail"
               data-bs-toggle="modal"
-              data-bs-target="#wishDetailModal"
+              data-bs-target={`#wishDetailModal-${TeacherWish.id}`}
             >
               檢視
             </button>
-          </div>
-        </div>
-      </div>
+          </td>
+        </tr>
+      </tbody>
 
       {/* 檢視modal */}
       <div
         className="modal fade"
-        id="wishDetailModal"
+        id={`wishDetailModal-${TeacherWish.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -119,9 +58,6 @@ export default function LectureWishContent() {
           <div className="modal-content">
             <form>
               <div className="modal-header">
-                {/* <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
-                </h1> */}
                 <button
                   type="button"
                   className="btn-close"
@@ -134,28 +70,22 @@ export default function LectureWishContent() {
                   <div className="col-12">
                     <table className="table modal-table">
                       <tbody>
-                        {/* <tr>
-                          <th>期望課程名稱：</th>
-                          <td>想要上課</td>
-                        </tr> */}
                         <tr>
                           <th>期望上課時間：</th>
-                          <td>8月</td>
+                          <td>{TeacherWish.date}月</td>
                         </tr>
                         <tr>
                           <th>期望課程內容：</th>
-                          <td>
-                            超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈超級多課程內容哈哈哈哈哈哈哈哈哈哈
-                          </td>
+                          <td>{TeacherWish.content}</td>
                         </tr>
                         <tr>
                           <th>期望價錢：</th>
-                          <td>$888</td>
+                          <td>${TeacherWish.price}</td>
                         </tr>
-                        {/* <tr>
+                        <tr>
                           <th>建立時間：</th>
-                          <td>2024-12-04 12:00:00</td>
-                        </tr> */}
+                          <td>{TeacherWish.created_at}</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -175,7 +105,7 @@ export default function LectureWishContent() {
                   className="btn btn-delete mx-1"
                   data-bs-toggle="modal"
                   data-bs-dismiss="modal"
-                  data-bs-target="#deleteWishModal"
+                  data-bs-target={`#wishDeleteModal-${TeacherWish.id}`}
                 >
                   刪除清單
                 </button>
@@ -188,7 +118,7 @@ export default function LectureWishContent() {
       {/* 刪除modal */}
       <div
         className="modal fade"
-        id="deleteWishModal"
+        id={`wishDeleteModal-${TeacherWish.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -206,7 +136,7 @@ export default function LectureWishContent() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">確認刪除?</div>
+            <div className="modal-body">確認刪除此筆許願清單?</div>
             <div className="modal-footer">
               <button
                 type="button"
@@ -215,7 +145,7 @@ export default function LectureWishContent() {
               >
                 取消
               </button>
-              <a type="button" href="" className="btn btn-delete" role="button">
+              <a type="button" href="" className="btn btn-delete" role="button" onClick={handleDelete}>
                 確認
               </a>
             </div>
@@ -224,30 +154,6 @@ export default function LectureWishContent() {
       </div>
 
       <style jsx>{`
-        .dropdown {
-          margin-bottom: 20px;
-          button {
-            margin-left: auto;
-            background-color: #ffffff;
-            padding: 5px 50px;
-          }
-        }
-
-        .nodisplay_768px {
-          width: 20%;
-        }
-
-        {/* 原本的樣式 */}
-        {/* .wish_content_overflow {
-          width: 100%;
-          height: 55px;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }  */}
-
         .wish_content_overflow {
           max-width: 30px;
           height: 55px;
@@ -256,80 +162,18 @@ export default function LectureWishContent() {
           white-space: nowrap;
         }
 
-        .lectureWish_phone_card {
-          background-color: #ffffff;
-          border-radius: 8px;
-          border: 1px solid #ccc;
-          table {
-            th,
-            td {
-              width: 50%;
-              padding: 10px;
-            }
-          }
-        }
-        .wish_phone_content_overflow {
-          width: 100% !important;
-          height: 30px;
-          display: -webkit-box;
-          -webkit-line-clamp: 1;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .phone-lectureWish-detail {
-          padding: 10px;
-          button {
-            margin-left: auto;
-          }
-        }
-
         .modal-table {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 150px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
           }
-
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center;  */
-            }
           }
           input {
             margin: 3px;
-          }
-        }
-
-        @media (max-width: 992px) {
-          .nodisplay_768px {
-            display: none;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .dropdown {
-            button {
-              border: 1px solid #ccc;
-              padding: 5px 0px;
-              width: 50%;
-            }
-          }
-          .lecture_wish_window_table {
-            display: none;
-          }
-          .lectureWish_body_phone {
-            display: block !important;
           }
         }
       `}</style>

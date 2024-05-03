@@ -12,13 +12,11 @@ export default function CheckoutProductsTable() {
     removeItem,
     increaseItem,
     decreaseItem,
-    totalItems,
-    totalPrice,
   } = useCheckout()
 
-  useEffect(() => {
-   console.log(items); 
-  }, [items])
+  // useEffect(() => {
+  //  console.log(items);
+  // }, [items])
   //全選checkbox初始狀態
   const [checkAll, setCheckAll] = useState(false)
 
@@ -69,6 +67,9 @@ export default function CheckoutProductsTable() {
     })
     // 更新購物車項目狀態
     setItems(nextProductsChecked)
+
+  // const selectedItems = nextProductsChecked.filter((item) => item.checked)
+  // props.setSelectedProductsToPay(selectedItems)
   }
 
   // 全選的核取方塊用的事件處理函式
@@ -105,88 +106,90 @@ export default function CheckoutProductsTable() {
             </tr>
           </thead>
           <tbody className="table-group-divider">
-            {items.filter((item) => item.pdlt_id === 1).map((v, i) => {
-              //撈出加入購物車的商品陣列物件
-              return (
-                <tr className="align-middle" key={i}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={v.checked}
-                      value={v.tr}
-                      onChange={() => handleToggleChecked(v.id)}
-                    />
-                  </td>
-                  <td className="w-50">
-                    <div className="d-flex align-items-center">
-                      <div className={styles.d_img}>
-                        <img src={v.cover} className="img-fluid" />
+            {items
+              .filter((item) => item.pdlt_id === 1)
+              .map((v, i) => {
+                //撈出加入購物車的商品陣列物件
+                return (
+                  <tr className="align-middle" key={i}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={v.checked}
+                        value={v.tr}
+                        onChange={() => handleToggleChecked(v.id)}
+                      />
+                    </td>
+                    <td className="w-50">
+                      <div className="d-flex align-items-center">
+                        <div className={styles.d_img}>
+                          <img src={v.cover} className="img-fluid" />
+                        </div>
+                        <div className="ps-sm-2">
+                          <div className={styles.name}>
+                            {v.name} ({v.size})
+                          </div>
+                          <div className={styles.d_cell_price}>
+                            單價：{v.price}
+                          </div>
+                          <div className={styles.d_cell_amount}>
+                            <button
+                              className="btn btn-main-r"
+                              onClick={() => {
+                                decreaseItem(v.id)
+                              }}
+                            >
+                              -
+                            </button>
+                            <span> {v.qty} </span>
+                            <button
+                              className="btn btn-main-r"
+                              onClick={() => {
+                                increaseItem(v.id)
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="ps-sm-2">
-                        <div className={styles.name}>
-                          {v.name} ({v.size})
-                        </div>
-                        <div className={styles.d_cell_price}>
-                          單價：{v.price}
-                        </div>
-                        <div className={styles.d_cell_amount}>
-                          <button
-                            className="btn btn-main-r"
-                            onClick={() => {
-                              decreaseItem(v.id)
-                            }}
-                          >
-                            -
-                          </button>
-                          <span> {v.qty} </span>
-                          <button
-                            className="btn btn-main-r"
-                            onClick={() => {
-                              increaseItem(v.id)
-                            }}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className={styles.d_td}>
-                    <div className={styles.d_cell}>NTD {v.price}</div>
-                  </td>
-                  <td className={styles.d_td}>
-                    <button
-                      className="btn btn-main-r ts-5"
-                      onClick={() => {
-                        decreaseItem(v.id)
-                      }}
-                    >
-                      -
-                    </button>
-                    <span> {v.qty} </span>
-                    <button
-                      className="btn btn-main-r ts-5"
-                      onClick={() => {
-                        increaseItem(v.id)
-                      }}
-                    >
-                      +
-                    </button>
-                  </td>
-                  <td className="text-center">NTD {v.price * v.qty}</td>
-                  <td className="text-center">
-                    <button
-                      className="btn btn-delete-r"
-                      onClick={() => {
-                        removeItem(v.id)
-                      }}
-                    >
-                      <FaTrashAlt />
-                    </button>
-                  </td>
-                </tr>
-              )
-            })}
+                    </td>
+                    <td className={styles.d_td}>
+                      <div className={styles.d_cell}>NTD {v.price}</div>
+                    </td>
+                    <td className={styles.d_td}>
+                      <button
+                        className="btn btn-main-r ts-5"
+                        onClick={() => {
+                          decreaseItem(v.id)
+                        }}
+                      >
+                        -
+                      </button>
+                      <span> {v.qty} </span>
+                      <button
+                        className="btn btn-main-r ts-5"
+                        onClick={() => {
+                          increaseItem(v.id)
+                        }}
+                      >
+                        +
+                      </button>
+                    </td>
+                    <td className="text-center">NTD {v.price * v.qty}</td>
+                    <td className="text-center">
+                      <button
+                        className="btn btn-delete-r"
+                        onClick={() => {
+                          removeItem(v.id)
+                        }}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })}
           </tbody>
         </table>
       )}

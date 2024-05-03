@@ -12,8 +12,6 @@ export default function CheckoutProductsTable() {
     removeItem,
     increaseItem,
     decreaseItem,
-    totalItems,
-    totalPrice,
   } = useCheckout()
 
   //全選checkbox初始狀態

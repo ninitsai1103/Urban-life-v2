@@ -42,6 +42,17 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
   //   setCouponCanUse(nextCouponCanUse)
   // }
 
+  //localStorage
+  //getItem
+  useEffect(() => {
+    const data = window.localStorage.getItem('coupon')
+    if (data !== null) setSelectedCoupon(JSON.parse(data))
+  }, [])
+  //setItem
+  useEffect(() => {
+    window.localStorage.setItem('coupon', JSON.stringify(selectedCoupon))
+  }, [selectedCoupon])
+
   return (
     <>
       {/* <div className="input-group mb-2">
@@ -83,7 +94,7 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
                 className={`col-3 ${styles.coupon_detail}`}
                 htmlFor={`coupon${i}`}
               >
-                折扣：{v.amount}元
+                {v.amount > 1 ? `${v.amount}元` : `${v.amount*10}折`}
               </div>
               <div
                 className={`col-3 ${styles.coupon_detail}`}
