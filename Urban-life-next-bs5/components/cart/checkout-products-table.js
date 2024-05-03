@@ -6,13 +6,8 @@ import styles from './cart-checkout.module.css'
 export default function CheckoutProductsTable() {
   // 使用 useCheckout hook 來獲取購物車項目和相關函數
   //-----加到購物車的商品項目與項目狀態、刪除、增加、減少、總數、總金額
-  const {
-    items,
-    setItems,
-    removeItem,
-    increaseItem,
-    decreaseItem,
-  } = useCheckout()
+  const { items, setItems, removeItem, increaseItem, decreaseItem } =
+    useCheckout()
 
   // useEffect(() => {
   //  console.log(items);
@@ -68,8 +63,8 @@ export default function CheckoutProductsTable() {
     // 更新購物車項目狀態
     setItems(nextProductsChecked)
 
-  // const selectedItems = nextProductsChecked.filter((item) => item.checked)
-  // props.setSelectedProductsToPay(selectedItems)
+    // const selectedItems = nextProductsChecked.filter((item) => item.checked)
+    // props.setSelectedProductsToPay(selectedItems)
   }
 
   // 全選的核取方塊用的事件處理函式
@@ -85,18 +80,29 @@ export default function CheckoutProductsTable() {
   }
   return (
     <>
+      {items.length > 0 && 
+      <div className='ms-2'>
+        <input
+          type="checkbox"
+          checked={checkAll}
+          onClick={(e) => {
+            handleToggleCheckedAll(e)
+          }}
+        /> 選取全部商品課程
+      </div>
+    }
       {items.filter((item) => item.pdlt_id === 1).length > 0 && ( // 條件渲染：只有在有商品時渲染 thead
         <table className="table">
           <thead>
             <tr>
               <th>
-                <input
+                {/* <input
                   type="checkbox"
                   checked={checkAll}
                   onClick={(e) => {
                     handleToggleCheckedAll(e)
                   }}
-                />
+                /> */}
               </th>
               <th>商品</th>
               <th className={styles.d_td}>單價</th>

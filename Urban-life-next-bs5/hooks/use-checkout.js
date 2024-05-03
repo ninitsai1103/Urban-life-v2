@@ -89,36 +89,51 @@ export function CartProvider({ children }) {
   // 陣列迭代方法: reduce(累加、歸納)
   // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
   const totalItems = items.reduce((acc, v) => acc + v.qty, 0)
-  const totalItemsChecked = items.filter((v)=>v.checked).reduce((acc, v) => acc + v.qty, 0)
   const totalPrice = items.reduce((acc, v) => acc + v.qty * v.price, 0)
-  const totalPriceChecked = items.filter((v)=>v.checked).reduce((acc, v) => acc + v.qty * v.price, 0)
-  const itemsChecked = items.filter((v)=>v.checked)
-
-  //coupon
-
+  const totalItemsChecked = items.filter((v) => v.checked).reduce((acc, v) => acc + v.qty, 0)
+  const totalPriceChecked = items.filter((v) => v.checked).reduce((acc, v) => acc + v.qty * v.price, 0)
+  const itemsChecked = items.filter((v) => v.checked)
+  // const storedItems = items.filter((v,i) => v)
 
   //localStorage items
   //getItem
-  useEffect(()=> {
-    const data = window.localStorage.getItem('Checkout-info')
-    if (data !== null) setItems(JSON.parse(data))
+
+  useEffect(() => {
+    const data = window.localStorage.getItem('items')
+    if (data) {
+      setItems(JSON.parse(data))
+    }
   }, [])
   //setItem
-  useEffect(()=> {
-    window.localStorage.setItem('Checkout-info', JSON.stringify(items))
+  useEffect(() => {
+    if (items.length > 0) {
+      window.localStorage.setItem('items', JSON.stringify(items))
+    }
   }, [items])
+  // useEffect(() => {
+  //   if (localStorage.getItem('items')) {
+  //     const reRenderItems = JSON.parse(localStorage.getItem('items'))
+  //     setItems(reRenderItems)
+  //   }
+  // }, [])
+
+  // useEffect(() => {
+  //   localStorage.setItem('items', JSON.stringify(items))
+  // }, [items])
 
   //localStorage itemsChecked(勾選的商品)、totalItemsChecked(勾選的商品數量)、totalPriceChecked(勾選的商品總價)
   //getItem
-  useEffect(()=> {
-    const data = window.localStorage.getItem('Checked-info')
-    if (data !== null) setItems(JSON.parse(data))
-  }, [])
+  // useEffect(() => {
+  //   const data = window.localStorage.getItem('Checked-info')
+  //   if (data !== null) setItems(JSON.parse(data))
+  // }, [])
   //setItem
-  useEffect(()=> {
-    window.localStorage.setItem('Checked-info', JSON.stringify(itemsChecked, totalItemsChecked, totalPriceChecked))
+  useEffect(() => {
+    window.localStorage.setItem(
+      'Checked-info',
+      JSON.stringify(itemsChecked, totalItemsChecked, totalPriceChecked)
+    )
   }, [items])
-
 
   return (
     <CartContext.Provider
@@ -133,7 +148,7 @@ export function CartProvider({ children }) {
         totalItems,
         totalPrice,
         totalPriceChecked,
-        totalItemsChecked
+        totalItemsChecked,
       }}
     >
       {children}

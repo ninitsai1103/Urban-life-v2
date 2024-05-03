@@ -21,18 +21,58 @@ export default function CheckoutCounter({ selectedCoupon }) {
       setShippingFee(60)
     }
   }
+  const [discount, setDiscount] = useState(0)
+  const [pricePayable, setPricePayable] = useState(
+    totalPriceChecked + shippingFee
+  )
+  useEffect(() => {
+    let updatedDiscount = window.localStorage.getItem('discount')
+    let updatedPrice = window.localStorage.getItem('pricePayable')
+    // let updatedDiscount = 0
+    // let updatedPrice = totalPriceChecked + shippingFee
 
-  let discount = 0
-  let pricePayable = totalPriceChecked + shippingFee
-  if (selectedCoupon && totalPriceChecked >= selectedCoupon.min_price) {
-    if (selectedCoupon.amount > 1) {
-      discount = selectedCoupon.amount
-      pricePayable = totalPriceChecked + shippingFee - selectedCoupon.amount
-    } else {
-      pricePayable = totalPriceChecked * selectedCoupon.amount + shippingFee
-      discount = totalPriceChecked - totalPriceChecked * selectedCoupon.amount
+    if (selectedCoupon && totalPriceChecked >= selectedCoupon.min_price) {
+      if (selectedCoupon.amount > 1) {
+        updatedDiscount = selectedCoupon.amount
+        updatedPrice = totalPriceChecked + shippingFee - selectedCoupon.amount
+      } else {
+        updatedDiscount =
+          totalPriceChecked - totalPriceChecked * selectedCoupon.amount
+        updatedPrice = totalPriceChecked * selectedCoupon.amount + shippingFee
+      }
     }
-  }
+    // else {
+    //   updatedDiscount = 0
+    //   updatedPrice = totalPriceChecked + shippingFee
+    // }
+
+    setDiscount(updatedDiscount)
+    setPricePayable(updatedPrice)
+  }, [totalPriceChecked, shippingFee, selectedCoupon])
+
+  // const [discount, setDiscount] = useState(0)
+  // let pricePayable = totalPriceChecked + shippingFee
+
+  //   if (selectedCoupon && totalPriceChecked >= selectedCoupon.min_price) {
+  //     if (selectedCoupon.amount > 1) {
+  //       setDiscount(selectedCoupon.amount)
+  //       pricePayable = totalPriceChecked + shippingFee - selectedCoupon.amount
+  //     } else {
+  //       pricePayable = totalPriceChecked * selectedCoupon.amount + shippingFee
+  //       setDiscount(totalPriceChecked - totalPriceChecked * selectedCoupon.amount)
+  //     }
+  //   }
+  // let discount = 0
+  // let pricePayable = totalPriceChecked + shippingFee
+  // if (selectedCoupon && totalPriceChecked >= selectedCoupon.min_price) {
+  //   if (selectedCoupon.amount > 1) {
+  //     discount = selectedCoupon.amount
+  //     pricePayable = totalPriceChecked + shippingFee - selectedCoupon.amount
+  //   } else {
+  //     pricePayable = totalPriceChecked * selectedCoupon.amount + shippingFee
+  //     discount = totalPriceChecked - totalPriceChecked * selectedCoupon.amount
+  //   }
+  // }
 
   // const [payable, setPayable] = useState(pricePayable)
   // const handlePayable = () => {
@@ -66,18 +106,28 @@ export default function CheckoutCounter({ selectedCoupon }) {
     window.localStorage.setItem('pricePayable', pricePayable)
   })
 
+
   // localStorage discount
+  // useEffect(() => {
+  //   const data = window.localStorage.getItem('discount')
+  //   console.log('discount', data)
+  //   setDiscount(data)
+  // }, [])
   useEffect(() => {
-    window.localStorage.setItem('discount', discount.toString())
+    if (discount >= 0) {
+      window.localStorage.setItem('discount', discount)
+    }
   }, [discount])
 
-  // localStorage selectedCoupon
-  useEffect(() => {
-    window.localStorage.setItem(
-      'selectedCoupon',
-      JSON.stringify(selectedCoupon)
-    )
-  }, [selectedCoupon])
+  // // localStorage selectedCoupon
+  // useEffect(() => {
+  //   if (selectedCoupon) {
+  //     window.localStorage.setItem(
+  //       'selectedCoupon',
+  //       JSON.stringify(selectedCoupon)
+  //     )
+  //   }
+  // }, [selectedCoupon])
 
   //不需要，因為不是用狀態控制
   // useEffect(() => {
