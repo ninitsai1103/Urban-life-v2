@@ -58,7 +58,8 @@ export default function LoginForm() {
           id: data.user.id,
           name: data.user.name,
           // user: data.user,
-          identity_id: data.user.identity_id
+          identity_id: data.user.identity_id,
+          token:data.token
         };
         
         
