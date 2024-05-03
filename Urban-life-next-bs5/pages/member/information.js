@@ -1,8 +1,8 @@
-import {  useEffect,useState } from 'react'
+import { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
 import TWZipCode from '@/components/tw-zipcode'
-import useMembers from '@/hooks/use-member'
 import dynamic from 'next/dynamic'
+import useMemberInfo from '@/hooks/use-member-info'
 const InputDatePicker = dynamic(
   () => import('@/components/common/input-date-picker'),
   {
@@ -14,15 +14,32 @@ export default function Information() {
   //生日
   const [showDatepicker, setShowDatepicker] = useState(false)
   const [date, setDate] = useState('')
-  //地址
- 
-  //連接資料庫
-  const { members} = useMembers()
+  const [userId, setUserId] = useState(null)
+
+ // hooks
+  const user = useMemberInfo();
+  // useEffect(() => {
+  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+  //   if (memberInfo) {
+  //     const userId = memberInfo.id
+  //     setUserId(userId)
+  //   }
+  // }, []) // 確保這個 useEffect 只運行一次
+
+  //檢查localStorage登入資訊
+  // if (typeof window !== 'undefined') {
+  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+  //   const userId = memberInfo.id
+  //   if (userId) {
+  //     console.log(userId) // 這裡是使用者的 id
+  //   } else {
+  //     console.error('沒有登入資訊')
+  //   }
+  // }
 
   return (
     <>
       <div className="container">
-
         <div className="row margin-padding">
           <div className="col-lg-3 col-md-12 aside">
             <AsideAccount />
@@ -34,7 +51,7 @@ export default function Information() {
             >
               <div className="title">個人資料</div>
             </div>
-            <div className="form" >
+            <div className="form">
               <form>
                 <div className="mb-3 section-font text-primary2">帳戶資訊</div>
                 <div className="mb-3">
@@ -43,14 +60,12 @@ export default function Information() {
                     className="form-label fonts"
                   >
                     姓名 *
-                  
                   </label>
                   <input
                     type="name"
                     className="form-control"
                     id="exampleInputName"
-                    placeholder=  {members.name}
-                    value={members.name}
+                    placeholder={user ? user.name : "姓名"}
                   />
                 </div>
                 <div className="mb-3">
@@ -64,7 +79,7 @@ export default function Information() {
                     type="phone"
                     className="form-control"
                     id="exampleInputPhone"
-                    placeholder="09"
+                    placeholder={user ? user.phone: "09"}
                   />
                 </div>
                 <div className="mb-3">
@@ -84,7 +99,7 @@ export default function Information() {
                       style={{
                         borderRadius: 2.8,
                       }}
-                      placeholder="出生年月日"
+                      placeholder={user ? user.birthday : "出生年月日"}
                     />
                     <i
                       className="bi bi-calendar4 position-absolute"
@@ -102,6 +117,7 @@ export default function Information() {
                       name="sex"
                       id="option1"
                       autoComplete="off"
+                      checked={user && user.gender === "男"}
                     />
                     <label
                       className="btn btn-outline-primary"
@@ -115,6 +131,7 @@ export default function Information() {
                       name="sex"
                       id="option2"
                       autoComplete="off"
+                      checked={user && user.gender === "女"}
                     />
                     <label
                       className="btn btn-outline-primary"
@@ -125,7 +142,7 @@ export default function Information() {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                <TWZipCode />
+                  <TWZipCode />
                 </div>
 
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
@@ -187,7 +204,7 @@ export default function Information() {
           margin: 20px;
           padding: 33px 0px;
         }
-        
+
         .main-content {
           padding: 30px 20px;
           background-color: #ffffff;
@@ -223,8 +240,8 @@ export default function Information() {
 
         @media (max-width: 768px) {
           .title-margin {
-          margin-bottom: 0px;
-        }
+            margin-bottom: 0px;
+          }
           .title {
             display: none;
           }

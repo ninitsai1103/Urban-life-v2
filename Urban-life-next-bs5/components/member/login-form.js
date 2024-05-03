@@ -69,6 +69,7 @@ export default function LoginForm() {
           console.log('使用者資訊：', data.user) // 這裡是使用者的所有資訊
           console.log('Token：', data.token) // 這裡是登入後返回的 token
           localStorage.setItem('member-info', JSON.stringify(memberInfo));
+          // storage.clear();
 
           // 登录成功，重定向到用户资料页面或其他页面
           window.location.href = '/member/information'
