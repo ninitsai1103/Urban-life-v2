@@ -1,6 +1,16 @@
 import React from 'react'
 
-export default function LectureWishContentPhone({ TeacherWish }) {
+export default function LectureWishContentPhone({ TeacherWish, deleteWish }) {
+  const handleDelete = async (id) => {
+    try {
+      // 在這裡調用 deleteWish 函數並傳遞
+      await deleteWish(id)
+
+      // 可以在這裡添加更新頁面或重新加載數據的邏輯
+    } catch (error) {
+      console.error('Error deleting wish:', error)
+    }
+  }
   return (
     <>
       {/* 手機板 */}
@@ -137,7 +147,7 @@ export default function LectureWishContentPhone({ TeacherWish }) {
               >
                 取消
               </button>
-              <a type="button" href="" className="btn btn-delete" role="button">
+              <a type="button" href="" className="btn btn-delete" role="button" onClick={() => handleDelete(TeacherWish.id)}>
                 確認
               </a>
             </div>
