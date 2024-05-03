@@ -5,13 +5,14 @@
   gap: 34px;
   flex: 1 0 0;
   align-self: stretch;
-  max-width: 563px;
+  max-width: 524px;
 }
 
 .icon {
   width: 20px;
   height: 23px;
 }
+
 .infotext {
   color: var(--grey-700, #6b6b6b);
   /* ZenKaku-h4 */
@@ -20,5 +21,63 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  
+  align-self: stretch;
+}
+
+.lecturename {
+  color: var(--primary-5, #2F4715);
+
+  /* ZenKaku-h3 */
+  font-family: "Zen Kaku Gothic New";
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.lectureinfo {
+  color: var(--grey-700, #6B6B6B);
+  /* ZenKaku-h4 */
+  font-family: "Zen Kaku Gothic New";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex: 1 0 0;
+  width: 269px;
+  height: 200px;
+}
+
+.infogroup {
+  display: flex !important;
+  align-items: center;
+  gap: 25px;
+  align-self: stretch;
+  justify-content: space-between;
+}
+
+.buybtn {
+  display: flex;
+  padding: 15px 25px;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  align-self: stretch;
+  border-radius: 100px;
+}
+
+.btnarea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  align-self: stretch;
 }

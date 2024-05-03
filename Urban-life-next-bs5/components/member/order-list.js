@@ -1,10 +1,25 @@
-import { useState } from 'react'
-
-import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 import styles from './star.module.css'
 
-export default function Order() {
+import Image from 'next/image'
+import useProducts from '@/hooks/product/useProducts'
+import { ClientPageRoot } from 'next/dist/client/components/client-page'
+
+export default function Order({
+  order_id,
+  user_id,
+  pay,
+  order_code,
+  name,
+  phone,
+  address,
+  email,
+  total,
+  date,
+  coupon_id,
+  items,
+}) {
   // 點按時的評分，一開始是0分代表沒有評分
   const [rating, setRating] = useState(0)
   // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
@@ -15,8 +30,6 @@ export default function Order() {
   // 課程評論的狀態
   const [lectureComment, setLectureComment] = useState('')
 
-
-
   const handleProductTextAreaChange = (e) => {
     setProductComment(e.target.value)
   }
@@ -24,41 +37,44 @@ export default function Order() {
     setLectureComment(e.target.value)
   }
 
+  // 獲取商品資料
+  const { products } = useProducts()
+  
+  useEffect(()=>{
+    console.log("-----------------");
+    console.log(items[0]);
+    console.log(products[3]);
+
+  })
+  
+  
+
   return (
     <>
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">訂單ID</th>
-            <th scope="col">訂單日期</th>
-            <th scope="col">金額</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="align-middle tab">
-            <td>#24535_63224</td>
-            <td>October 17,2023</td>
-            <td>$1256</td>
-            <td>
-              <div className="button">
-                <button
-                  className="btn btn-main"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#Detail"
-                >
-                  查看訂單細節
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <tbody>
+        <tr className="align-middle tab">
+          <td>{order_code}</td>
+          <td>{new Date(date).toISOString().slice(0, 19).replace('T', ' ')}</td>
+          <td>{total}</td>
+          <td>
+            <div className="button">
+              <button
+                className="btn btn-main"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target={`#Detail${address}`}
+              >
+                查看訂單細節
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+
       {/* 訂單細節的Modal */}
       <div
         className="modal fade"
-        id="Detail"
+        id={`Detail${address}`}
         tabIndex={-1}
         aria-labelledby="DetailLabel"
         aria-hidden="true"
@@ -68,9 +84,11 @@ export default function Order() {
             <div className="modal-header border-0 p-0 px-3">
               <div className="modal-title fs-5" id="Detail">
                 <p className="m-0" style={{ fontSize: '36px' }}>
-                  3456_768
+                  {order_code}
                 </p>
-                <p style={{ fontSize: '14px' }}>2024/04/23:00pm</p>
+                <p style={{ fontSize: '14px' }}>
+                  {new Date(date).toISOString().slice(0, 19).replace('T', ' ')}
+                </p>
               </div>
               <button
                 type="button"
@@ -91,12 +109,14 @@ export default function Order() {
                     <th className="text-center">小計</th> */}
                   </tr>
                 </thead>
+                {/* 訂單購買的商品 */}
                 <tbody className="table-group-divider">
                   <tr className="align-middle ">
                     <td className="w-50">
                       <div className="d-flex align-items-center">
                         <div className="img me-3">
                           <Image
+                            alt="product"
                             src="/images/product/product_img/Pi2401260932.jpg"
                             width={30}
                             height={30}
@@ -113,6 +133,7 @@ export default function Order() {
                         </div>
                       </div>
                     </td>
+
                     <td>
                       <div>NTD 100</div>
                     </td>
@@ -120,6 +141,7 @@ export default function Order() {
                       <span> 數量 </span>
                     </td>
                     <td className="text-center">NTD 100</td>
+
                     <td>
                       <button
                         className="btn btn-main"
@@ -142,12 +164,14 @@ export default function Order() {
                     <th className="text-center">小計</th> */}
                   </tr>
                 </thead>
+                {/* 訂單購買的課程 */}
                 <tbody className="table-group-divider">
                   <tr className="align-middle">
                     <td className="w-50">
                       <div className="d-flex align-items-center">
                         <div className="img me-3">
                           <Image
+                            alt="product"
                             src="/images/product/product_img/Pi2401260932.jpg"
                             width={30}
                             height={30}
@@ -308,7 +332,6 @@ export default function Order() {
           </div>
         </div>
       </div>
-
       {/* 課程評價Modal */}
       <div
         className="modal fade"

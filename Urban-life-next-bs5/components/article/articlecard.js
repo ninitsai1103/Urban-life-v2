@@ -1,178 +1,51 @@
-import React from 'react'
 // import LoadingImageSvg from './loading-image-svg'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar, TbMessage } from 'react-icons/tb'
+import useArticles from '@/hooks/use-articles'
 
-export default function ArticleCard({ item }) {
+export default function ArticleCard({ article }) {
   return (
     <>
       {/* 列表1*/}
-      <div className="container mb-5">
-        <div className="row row-cols-2 row-cols-lg-4 g-4">
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="/images/article/article_phone_card_image.png"
-                className="card-img-top"
-                alt="..."
-              />
-              {/* 卡片下 */}
-              <div className="card-body ">
-                <div className="product-name ">
-                  <span> 2024-03-12 | 課程分享</span>
-                  <h5 className="card-title fs-6">2023帶狀課程圓滿結束</h5>
-                </div>
-                <span className="card-text text-overflow">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </span>
-                <div className="card-end d-flex gap-3">
-                  <div>
-                    <FaRegHeart />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                  <div>
-                    <TbMessage />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                </div>
-
-                
-              </div>
+      <div className="card " key={article.id}>
+        {/* 卡片上 */}
+        <div className="h-50"> <img
+          src={`/images/article/article_img/${article.img}`}
+          alt="..."
+          className="card-img-top  object-fit-cover "
+        /></div>
+       
+        {/* 卡片下 */}
+        <div className="card-body ">
+          <div className="product-name ">
+            <span> {article.date}| 課程分享</span>
+            <h5 className="card-title fs-6">{article.title}</h5>
+          </div>
+          <span className="card-text text-overflow">{article.content}</span>
+          <div className="card-end d-flex gap-3">
+            <div>
+              <FaRegHeart />
+              <p className="d-inline ms-1">20</p>
+            </div>
+            <div>
+              <TbMessage />
+              <p className="d-inline ms-1">20</p>
             </div>
           </div>
-          {/* card2 */}
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="/images/article/article_phone_card_image.png"
-                className="card-img-top"
-                alt="..."
-              />
-              {/* 卡片下 */}
-              <div className="card-body ">
-                <div className="product-name ">
-                  <span> 2024-03-12 | 課程分享</span>
-                  <h5 className="card-title fs-6">2023帶狀課程圓滿結束</h5>
-                </div>
-                <span className="card-text text-overflow">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </span>
-                <div className="card-end d-flex gap-3">
-                  <div>
-                    <FaRegHeart />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                  <div>
-                    <TbMessage />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
-          </div>
-
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="/images/article/article_phone_card_image.png"
-                className="card-img-top"
-                alt="..."
-              />
-              {/* 卡片下 */}
-              <div className="card-body ">
-                <div className="product-name ">
-                  <span> 2024-03-12 | 課程分享</span>
-                  <h5 className="card-title fs-6">2023帶狀課程圓滿結束</h5>
-                </div>
-                <span className="card-text text-overflow">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </span>
-                <div className="card-end d-flex gap-3">
-                  <div>
-                    <FaRegHeart />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                  <div>
-                    <TbMessage />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
-          </div>
-
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="/images/article/article_phone_card_image.png"
-                className="card-img-top"
-                alt="..."
-              />
-              {/* 卡片下 */}
-              <div className="card-body ">
-                <div className="product-name ">
-                  <span> 2024-03-12 | 課程分享</span>
-                  <h5 className="card-title fs-6">2023帶狀課程圓滿結束</h5>
-                </div>
-                <span className="card-text text-overflow">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </span>
-                <div className="card-end d-flex gap-3">
-                  <div>
-                    <FaRegHeart />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                  <div>
-                    <TbMessage />
-                    <p className="d-inline ms-1">20</p>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
-          </div>
-          
-          
         </div>
       </div>
-      {/* 列表2(橫版) */}
-      {/* <div className="container mb-5 d-lg-none">
-        <div className="card mb-3" >
-          <div className="row g-0">
-            <div className="col-6">
-              <img src="/images/product/list/product.jpg" className="img-fluid rounded-start" alt="..." />
-            </div>
-            <div className="col-6">
-              <div className="card-body">
-                <h5 className="card-title">Card title</h5>
-                <p className="card-text">
-                  This is a wider card with supporting text below as a natural
-                  lead-in to additional content. This content is a little bit
-                  longer.
-                </p>
-                <p className="card-text">
-                  <small className="text-body-secondary">
-                    Last updated 3 mins ago
-                  </small>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> */}
-      {/* </div> */}
 
       <style jsx>{`
+        .article_card_styles {
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          height: 170px;
+          margin-bottom: 20px;
+          background-color: #ffffff;
+        }
         span {
           font-size: 12px;
           font-weight: 500;
@@ -192,6 +65,18 @@ export default function ArticleCard({ item }) {
         }
         .card {
           border-radius: 8px;
+          height: 300px; /* 可以根據需要調整高度 */
+          display: flex;
+          flex-direction: column;
+        }
+        card-img-top {
+          flex: 1; /* 確保圖片和卡片本體分配相等的空間 */
+          background-size: cover; /* 覆蓋整個可視區域 */
+          background-position: center; /* 圖片居中 */
+        }
+        card-body {
+          flex: 1; /* 確保圖片和卡片本體分配相等的空間 */
+          overflow: auto; /* 添加滾動條如果內容過多 */
         }
         .text-through {
           text-decoration: line-through;
@@ -209,7 +94,6 @@ export default function ArticleCard({ item }) {
           font-size: 15px;
         }
         @media (max-width: 500px) {
-          
           .card-text {
             font-size: 14px;
           }
