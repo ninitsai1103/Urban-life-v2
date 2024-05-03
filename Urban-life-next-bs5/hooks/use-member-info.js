@@ -5,12 +5,14 @@ function useMemberInfo() {
 
   useEffect(() => {
     const memberInfo = JSON.parse(localStorage.getItem('member-info'))
-    const userId = memberInfo.id;
-    if (!userId) {
-      console.error('localStorage 中找不到使用者 ID');
+    
+    if (!memberInfo) {
+      console.error('localStorage 中找不到使用者 ID，請先登入');
+      alert("請先登入")
+      window.location.href = '/member/login'
       return;
     }
-
+    const userId = memberInfo.id;
     fetch(`http://localhost:3005/api/user/${userId}`)
       .then(response => response.json())
       .then(data => {

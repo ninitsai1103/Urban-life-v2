@@ -6,25 +6,29 @@ import Image from 'next/image'
 import useProducts from '@/hooks/product/useProducts'
 import { ClientPageRoot } from 'next/dist/client/components/client-page'
 
-export default function Order({
-  order_id,
-  user_id,
-  pay,
-  order_code,
-  name,
-  phone,
-  address,
-  email,
-  total,
-  date,
-  coupon_id,
-  items,
-}) {
+export default function Order({ order }) {
+  const {
+    id,
+    order_id,
+    user_id,
+    name,
+    order_code,
+    date,
+    items,
+    phone,
+    address,
+    email,
+    total,
+    coupon_id,
+    pay,
+  } = order
+
   // 點按時的評分，一開始是0分代表沒有評分
-  const [rating, setRating] = useState(0)
+  const [productRating, setProductRating] = useState(0)
+  // 點按時的評分，一開始是0分代表沒有評分
+  const [lectureRating, setLectureRating] = useState(0)
   // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
   const [hoverRating, setHoverRating] = useState(0)
-
   // 商品評論的狀態
   const [productComment, setProductComment] = useState('')
   // 課程評論的狀態
@@ -39,15 +43,15 @@ export default function Order({
 
   // 獲取商品資料
   const { products } = useProducts()
-  
-  useEffect(()=>{
-    console.log("-----------------");
-    console.log(items[0]);
-    console.log(products[3]);
 
-  })
-  
-  
+  const totalAmount = items.reduce((acc, item) => {
+    return acc + 1
+  }, 0)
+
+  useEffect(() => {
+    // 狀態更新後執行的操作
+    console.log('Product rating updated:', productRating);
+  }, [productRating]); 
 
   return (
     <>
@@ -102,115 +106,119 @@ export default function Order({
               {/*訂單資訊 */}
               <table className="table">
                 <thead>
-                  <tr>
-                    <th className="font-weight-bold p-0 px-2">商品</th>
-                    {/* <th className={styles.d_td}>單價</th>
-                    <th className={styles.d_td}>數量</th>
-                    <th className="text-center">小計</th> */}
+                  <tr className='border-bottom border-black'>
+                    <th className="p-0 px-2">商品</th>
+                    <th className=" p-0 px-2">單價</th>
+                    <th className=" p-0 px-2">數量</th>
+                    <th className=" p-0 px-2">小計</th>
+                    <th></th>
                   </tr>
                 </thead>
                 {/* 訂單購買的商品 */}
-                <tbody className="table-group-divider">
-                  <tr className="align-middle ">
-                    <td className="w-50">
-                      <div className="d-flex align-items-center">
-                        <div className="img me-3">
-                          <Image
-                            alt="product"
-                            src="/images/product/product_img/Pi2401260932.jpg"
-                            width={30}
-                            height={30}
-                          />
-                        </div>
-                        <div className="ps-sm-2">
-                          <div>商品名稱</div>
-                          {/* <div className={styles.d_cell_price}>
-                            單價：NTD 100
-                          </div>
-                          <div className={styles.d_cell_amount}>
-                            <span> 數量 </span>
-                          </div> */}
-                        </div>
-                      </div>
-                    </td>
-
-                    <td>
-                      <div>NTD 100</div>
-                    </td>
-                    <td>
-                      <span> 數量 </span>
-                    </td>
-                    <td className="text-center">NTD 100</td>
-
-                    <td>
-                      <button
-                        className="btn btn-main"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#ProductRate"
-                      >
-                        商品評價
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
+                {items.map((item) => {
+                  if (item.pdlt_id === 1) {
+                    return (
+                      <tbody key={item.id}>
+                        <tr className="align-middle ">
+                          <td className="w-50">
+                            <div className="d-flex align-items-center">
+                              <div className="img me-3">
+                                <Image
+                                  alt={item.cover}
+                                  src={`/images/product/product_cover/${item.cover}`}
+                                  width={30}
+                                  height={30}
+                                />
+                              </div>
+                              <div className="ps-sm-2">
+                                <div>{item.name}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div>NTD {item.price}</div>
+                          </td>
+                          <td className="text-center">
+                            <span> {item.amount} </span>
+                          </td>
+                          <td className="text-center">
+                            NTD {item.price * item.amount}
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-main"
+                              type="button"
+                              data-bs-toggle="modal"
+                              data-bs-target="#ProductRate"
+                            >
+                              商品評價
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    )
+                  }
+                })}
               </table>
               <table className="table">
                 <thead>
-                  <tr>
+                  <tr className='border-bottom border-black'>
                     <th className="font-weight-bold p-0 px-2">課程</th>
-                    {/* <th className={styles.d_td}>單價</th>
-                    <th className={styles.d_td}>數量</th>
-                    <th className="text-center">小計</th> */}
+                    <th className="font-weight-bold p-0 px-2">單價</th>
+                    <th className="font-weight-bold p-0 px-2">數量</th>
+                    <th className="font-weight-bold p-0 px-2">小計</th>
+                    <th></th>
                   </tr>
                 </thead>
                 {/* 訂單購買的課程 */}
-                <tbody className="table-group-divider">
-                  <tr className="align-middle">
-                    <td className="w-50">
-                      <div className="d-flex align-items-center">
-                        <div className="img me-3">
-                          <Image
-                            alt="product"
-                            src="/images/product/product_img/Pi2401260932.jpg"
-                            width={30}
-                            height={30}
-                          />
-                        </div>
-                        <div className="ps-sm-2">
-                          <div>商品名稱</div>
-                          {/* <div className={styles.d_cell_price}>
-                            單價：NTD 100
-                          </div>
-                          <div className={styles.d_cell_amount}>
-                            <span> 數量 </span>
-                          </div> */}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div>NTD 100</div>
-                    </td>
-                    <td>
-                      <span> 數量 </span>
-                    </td>
-                    <td className="text-center">NTD 100</td>
-                    <td>
-                      {' '}
-                      <button
-                        className="btn btn-main"
-                        type="button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#LectureRate"
-                      >
-                        課程評價
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
+                {items.map((item) => {
+                  if (item.pdlt_id === 2) {
+                    return (
+                      <tbody key={item.id}>
+                        <tr className="align-middle">
+                          <td className="w-50">
+                            <div className="d-flex align-items-center">
+                              <div className="img me-3">
+                                <Image
+                                  alt="product"
+                                  src={`/images/lecture/lecture_img/${item.cover}`}
+                                  width={30}
+                                  height={30}
+                                />
+                              </div>
+                              <div className="ps-sm-2">
+                                <div>{item.name}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text-center">
+                            <div>NTD {item.price}</div>
+                          </td>
+                          <td  className="text-center">
+                            <span> {item.amount} </span>
+                          </td>
+                          <td className="text-center">
+                            NTD {item.price * item.amount}
+                          </td>
+                          <td>
+                            {' '}
+                            <button
+                              className="btn btn-main"
+                              type="button"
+                              data-bs-toggle="modal"
+                              data-bs-target="#LectureRate"
+                            >
+                              課程評價
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    )
+                  }
+                })}
               </table>
               <div className="d-flex justify-content-end">
-                <div>共 13 件</div>
+                <div>共 {totalAmount} 件</div>
               </div>
               <div className="row my-3">
                 <div className="col-5">
@@ -221,11 +229,9 @@ export default function Order({
                     選擇送貨及付款方式
                   </div>
                   <div className=" px-2 mb-1">送貨地點 </div>
-                  <div className=" px-2 mb-2">
-                    桃園市中壢區陸光五街65號-71號
-                  </div>
+                  <div className=" px-2 mb-2">{address}</div>
                   <div className=" px-2 mb-1">付款方式</div>
-                  <div className=" px-2 mb-2">信用卡</div>
+                  <div className=" px-2 mb-2">{pay}</div>
                 </div>
                 <div className="col-2"></div>
                 <div className="col-5">
@@ -235,19 +241,35 @@ export default function Order({
                   <div className="">
                     <div className="mb-1 d-flex justify-content-between">
                       <div>小計：</div>
-                      <div>78424元</div>
+                      <div>{total}元</div>
                     </div>
+
                     <div className="mb-1 d-flex justify-content-between">
                       <div>運費：</div>
-                      <div> 60元</div>
+                      {total < 1000 ? (
+                        <>
+                          <div> 60元</div>
+                        </>
+                      ) : (
+                        <div>0元</div>
+                      )}
                     </div>
                     <div className="mb-2 d-flex justify-content-between">
-                      <div>優惠券折扣：</div>
-                      <div> - 60元</div>
+                      {coupon_id !== 0 ? (
+                        <>
+                          <div>優惠券折扣：</div>
+                          <div> - 60元</div>
+                        </>
+                      ) : (
+                        <div></div>
+                      )}
                     </div>
 
                     <hr />
-                    <div className="mb-1">總金額： 78424元</div>
+                    <div className="mb-1 d-flex justify-content-between">
+                      <div>總金額： </div>
+                      <div>{total}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -291,7 +313,7 @@ export default function Order({
                           className={styles['star-btn']}
                           onClick={() => {
                             // 點按後設定分數
-                            setRating(score)
+                            setProductRating(score)
                           }}
                           onMouseEnter={() => {
                             setHoverRating(score)
@@ -302,7 +324,7 @@ export default function Order({
                         >
                           <span
                             className={
-                              score <= rating || score <= hoverRating
+                              score <= productRating || score <= hoverRating
                                 ? styles['on']
                                 : styles['off']
                             }
@@ -368,7 +390,7 @@ export default function Order({
                           className={styles['star-btn']}
                           onClick={() => {
                             // 點按後設定分數
-                            setRating(score)
+                            setLectureRating(score)
                           }}
                           onMouseEnter={() => {
                             setHoverRating(score)
@@ -379,7 +401,7 @@ export default function Order({
                         >
                           <span
                             className={
-                              score <= rating || score <= hoverRating
+                              score <= lectureRating || score <= hoverRating
                                 ? styles['on']
                                 : styles['off']
                             }
