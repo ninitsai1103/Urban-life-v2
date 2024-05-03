@@ -1,9 +1,9 @@
 import React from 'react'
 import AsideAccount from '@/components/member/aside-account'
-import OrderList from '@/components/member/order'
+import OrderList from '@/components/member/order-list'
 import OrderCard from '@/components/member/order-card'
 import Page from '@/components/product/pagination'
-export default function Order() {
+export default function OrderMainPage() {
   return (
     <>
       <div className="container">

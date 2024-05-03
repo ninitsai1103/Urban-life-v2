@@ -2,10 +2,10 @@ import React from 'react'
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md'
 
 
-export default function Page({ totalItems, perpages, currentPage, onPageChange }) {
-  //須設定props=> totalItems:資料總數,perpages:一頁幾筆資料,currentPage:當前所在頁數
-  //函式可到list.js查看
-  const totalPages = Math.ceil(totalItems / perpages);
+export default function Page({ totalPages, currentPage, onPageChange }) {
+  //須設定props=>  totalPages:總頁數,currentPage:當前所在頁數
+  //函式可到list.js參考
+  
   const pages = [];
   for (let i = 1; i <= totalPages; i++) {
     pages.push(i);

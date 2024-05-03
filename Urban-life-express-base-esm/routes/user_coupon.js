@@ -13,7 +13,8 @@ import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
-  const sqlUserCoupons = `SELECT * FROM user_coupon JOIN coupon ON user_coupon.coupon_id =coupon.id 
+  const sqlUserCoupons = `SELECT * FROM user_coupon 
+  JOIN coupon ON user_coupon.coupon_id =coupon.id 
   WHERE user_coupon.valid = 1
   `
   try {

@@ -4,16 +4,21 @@ import { Nav, Tab } from 'react-bootstrap'
 import Page from '@/components/product/pagination'
 import { IoAdd } from 'react-icons/io5'
 import { FaCaretDown } from 'react-icons/fa'
-import LectureContent from '@/components/member/lecture-content'
+import LectureContentTbody from '@/components/member/lecture-content'
 import LectureAddModal from '@/components/member/lecture-add-modal'
 import LectureWishContent from '@/components/member/lecture-wish-content'
+import useTeacherLectures from '@/hooks/use- teacherlectures'
+import LectureContentPhone from '@/components/member/lecture-content-phone'
 
 export default function LectureManagement() {
+  // const [LecturesList, setLecturesList] = useState([])
+  const { lectures } = useTeacherLectures()
+
   // 浩雲的程式碼
   const [activeIndex, setActiveIndex] = useState('我的課程')
 
   const lectureItemClick = (index) => {
-    setActiveIndex(index);
+    setActiveIndex(index)
     // 以下這行是幹嘛的??
     // props.setCouponFilter(index);
   }
@@ -92,7 +97,74 @@ export default function LectureManagement() {
 
               {activeIndex === '我的課程' ? (
                 <div className="lecture_content">
-                  <LectureContent />
+                  {/* 我的課程排序 */}
+                  <div className="dropdown">
+                    <button
+                      className="btn dropdown-toggle fs-6 d-flex justify-content-center align-items-center"
+                      type="button"
+                      id="lectureDropdown1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      排序
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="lectureDropdown1"
+                    >
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          上課時間由新到舊
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          上課時間由舊到新
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          更新時間由新到舊
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          更新時間由舊到新
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* 我的課程頁面 */}
+                  <div className="lecture_window_table">
+                    <table className="table">
+                      <thead className="text-center">
+                        <tr>
+                          <th scope="col">課程名稱</th>
+                          <th scope="col">上課日期</th>
+                          <th scope="col" className="nodisplay_992px">
+                            報名截止時間
+                          </th>
+                          <th scope="col">上課人數</th>
+                          <th scope="col">價錢</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      {lectures.map((lecture) => (
+                        <LectureContentTbody
+                          key={lecture.id}
+                          lecture={lecture}
+                        />
+                      ))}
+                    </table>
+                  </div>
+
+                  {/* 手機板課程頁面 */}
+                  <div className="lecture_body_phone d-none">
+                    {lectures.map((lecture) => (
+                      <LectureContentPhone key={lecture.id} lecture={lecture} />
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <div className="lecture_wish_content">
@@ -203,6 +275,59 @@ export default function LectureManagement() {
           .add-lecture-btn {
             margin-left: auto;
             margin-right: 0px;
+          }
+        }
+
+         {
+          /* lecture content 的css */
+        }
+        .dropdown {
+          margin-bottom: 20px;
+          button {
+            margin-left: auto;
+            background-color: #ffffff;
+            padding: 5px 50px;
+          }
+        }
+        @media (max-width: 992px){
+          .nodisplay_992px {
+            display: none;
+          }
+        }
+        @media (max-width: 768px) {
+          .dropdown {
+            button {
+              border: 1px solid #ccc;
+              padding: 5px 0px;
+              width: 50%;
+            }
+          }
+          
+          .lecture_window_table {
+            display: none;
+          }
+        }
+        @media (max-width: 576px) {
+          .lecture_window_table table {
+            th {
+              font-size: 10px;
+            }
+            td {
+              font-size: 10px;
+            }
+            button {
+              font-size: 10px;
+            }
+          }
+        }
+
+         {
+          /* kecture-content-phone的css */
+        }
+
+        @media (max-width: 768px) {
+          .lecture_body_phone {
+            display: block !important;
           }
         }
       `}</style>
