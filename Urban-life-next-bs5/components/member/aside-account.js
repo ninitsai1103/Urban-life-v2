@@ -1,4 +1,4 @@
-import {useState,useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { MdOutlineAddAPhoto } from 'react-icons/md'
@@ -10,15 +10,36 @@ import { IoIosLogOut } from 'react-icons/io'
 import { useRouter } from 'next/router'
 export default function AsideAccount() {
   const router = useRouter()
-  
-  const [name, setName] = useState('');
+
+  const [name, setName] = useState('')
+  const [token, setToken] = useState('')
 
   useEffect(() => {
-    const storedMemberInfo = JSON.parse(localStorage.getItem('member-info'));
+    const storedMemberInfo = JSON.parse(localStorage.getItem('member-info'))
     if (storedMemberInfo && storedMemberInfo.name) {
-      setName(storedMemberInfo.name);
+      setName(storedMemberInfo.name)
     }
-  }, []);
+    if (storedMemberInfo && storedMemberInfo.token) {
+      setToken(storedMemberInfo.token)
+    }
+  }, [])
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3005/api/user/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // 替換為有效的 JWT
+        },
+      })
+      const data = await response.json()
+      console.log(data)
+      localStorage.removeItem('member-info')
+      window.location.href = '/product/list'
+    } catch (error) {
+      console.error('登出失敗:', error)
+    }
+  }
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value
@@ -39,7 +60,7 @@ export default function AsideAccount() {
 
   return (
     <>
-    <div className="text-center aside_title d-none">會員專區</div>
+      <div className="text-center aside_title d-none">會員專區</div>
       <aside>
         <div className="account">
           <div className="user d-flex flex-column align-items-center">
@@ -99,7 +120,9 @@ export default function AsideAccount() {
             {/* 網址待修 */}
             <li>
               <a
-                className={currentPath === '/member/information' ? 'active' : ''}
+                className={
+                  currentPath === '/member/information' ? 'active' : ''
+                }
                 href="/member/information"
               >
                 <BiIdCard /> 個人資料
@@ -116,9 +139,7 @@ export default function AsideAccount() {
             </li>
             <li>
               <a
-                className={
-                  currentPath === '/member/coupon' ? 'active' : ''
-                }
+                className={currentPath === '/member/coupon' ? 'active' : ''}
                 href="/member/coupon"
               >
                 <RiCoupon2Line /> 我的優惠券
@@ -126,9 +147,7 @@ export default function AsideAccount() {
             </li>
             <li>
               <a
-                className={
-                  currentPath === '/member/collect' ? 'active' : ''
-                }
+                className={currentPath === '/member/collect' ? 'active' : ''}
                 href="/member/collect"
               >
                 <MdFavoriteBorder /> 我的收藏
@@ -137,26 +156,28 @@ export default function AsideAccount() {
           </ul>
           <ul className="list-unstyled signOut">
             <li>
-              <Link
+              <a
                 className="d-block py-2 px-2 text-decoration-none d-flex align-items-center signOut_text"
                 style={{ color: '#849474' }}
-                href=""
+                onClick={handleLogout}
               >
                 登出
                 <IoIosLogOut />
-              </Link>
+              </a>
             </li>
           </ul>
         </div>
       </aside>
 
       <style jsx>{`
-     .aside_title{
-        margin: 0px 0px 20px 0px;
-        font-size: 48px;
-        font-weight: bold;
-        {/* color: #2F4715; */}
-      }
+        .aside_title {
+          margin: 0px 0px 20px 0px;
+          font-size: 48px;
+          font-weight: bold;
+           {
+            /* color: #2F4715; */
+          }
+        }
         aside {
           width: 100%;
           background: #ffffff;
@@ -224,9 +245,11 @@ export default function AsideAccount() {
         .signOut {
           margin-top: 140px;
         }
-
+        a:hover {
+              cursor: pointer;
+            }
         @media (max-width: 992px) {
-          .aside_title{
+          .aside_title {
             display: block !important;
           }
           .phone-select {
@@ -239,8 +262,10 @@ export default function AsideAccount() {
             margin-top: 10px;
             padding: 0px;
           }
+         
           .signOut_text {
             padding: 0px;
+            
           }
         }
       `}</style>
