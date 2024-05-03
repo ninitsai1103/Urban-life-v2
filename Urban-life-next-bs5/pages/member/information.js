@@ -1,15 +1,42 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
+import TWZipCode from '@/components/tw-zipcode'
 import dynamic from 'next/dynamic'
+import useMemberInfo from '@/hooks/use-member-info'
 const InputDatePicker = dynamic(
   () => import('@/components/common/input-date-picker'),
   {
     ssr: false,
   }
 )
+
 export default function Information() {
+  //生日
   const [showDatepicker, setShowDatepicker] = useState(false)
   const [date, setDate] = useState('')
+  const [userId, setUserId] = useState(null)
+
+ // hooks
+  const user = useMemberInfo();
+  // useEffect(() => {
+  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+  //   if (memberInfo) {
+  //     const userId = memberInfo.id
+  //     setUserId(userId)
+  //   }
+  // }, []) // 確保這個 useEffect 只運行一次
+
+  //檢查localStorage登入資訊
+  // if (typeof window !== 'undefined') {
+  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+  //   const userId = memberInfo.id
+  //   if (userId) {
+  //     console.log(userId) // 這裡是使用者的 id
+  //   } else {
+  //     console.error('沒有登入資訊')
+  //   }
+  // }
+
   return (
     <>
       <div className="container">
@@ -38,7 +65,7 @@ export default function Information() {
                     type="name"
                     className="form-control"
                     id="exampleInputName"
-                    placeholder="姓名"
+                    placeholder={user ? user.name : "姓名"}
                   />
                 </div>
                 <div className="mb-3">
@@ -52,7 +79,7 @@ export default function Information() {
                     type="phone"
                     className="form-control"
                     id="exampleInputPhone"
-                    placeholder="09"
+                    placeholder={user ? user.phone: "09"}
                   />
                 </div>
                 <div className="mb-3">
@@ -72,7 +99,7 @@ export default function Information() {
                       style={{
                         borderRadius: 2.8,
                       }}
-                      placeholder="出生年月日"
+                      placeholder={user ? user.birthday : "出生年月日"}
                     />
                     <i
                       className="bi bi-calendar4 position-absolute"
@@ -90,6 +117,7 @@ export default function Information() {
                       name="sex"
                       id="option1"
                       autoComplete="off"
+                      checked={user && user.gender === "男"}
                     />
                     <label
                       className="btn btn-outline-primary"
@@ -103,6 +131,7 @@ export default function Information() {
                       name="sex"
                       id="option2"
                       autoComplete="off"
+                      checked={user && user.gender === "女"}
                     />
                     <label
                       className="btn btn-outline-primary"
@@ -113,37 +142,7 @@ export default function Information() {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label
-                    htmlFor="exampleInputAddress"
-                    className="form-label fonts"
-                  >
-                    地址 *
-                  </label>
-                  <div className="col-md-4 ">
-                    <select className="form-control">
-                      <option disabled selected>
-                        選擇縣市
-                      </option>
-                      <option>台北市</option>
-                      <option>新北市</option>
-                      {/* 其他縣市 */}
-                    </select>
-                  </div>
-                  <div className="col-md-4 mt-3 mt-md-0 ">
-                    <select className="form-control">
-                      <option disabled selected>
-                        選擇鄉鎮區
-                      </option>
-                      {/* 根據所選縣市提供對應的鄉鎮區選項 */}
-                    </select>
-                  </div>
-                  <div className="col-md-4 mt-3 mt-md-0 ">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="請輸入地址"
-                    />
-                  </div>
+                  <TWZipCode />
                 </div>
 
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
@@ -163,7 +162,7 @@ export default function Information() {
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="exampleInputPassword1"
+                    htmlFor="exampleInputPassword2"
                     className="form-label fonts"
                   >
                     新密碼
@@ -171,13 +170,13 @@ export default function Information() {
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword2"
                     placeholder="請輸入新密碼"
                   />
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="exampleInputPassword1"
+                    htmlFor="exampleInputPassword3"
                     className="form-label fonts"
                   >
                     重新輸入新密碼
@@ -185,7 +184,7 @@ export default function Information() {
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword3"
                     placeholder="請輸入新密碼"
                   />
                 </div>
@@ -205,7 +204,7 @@ export default function Information() {
           margin: 20px;
           padding: 33px 0px;
         }
-        
+
         .main-content {
           padding: 30px 20px;
           background-color: #ffffff;
@@ -241,8 +240,8 @@ export default function Information() {
 
         @media (max-width: 768px) {
           .title-margin {
-          margin-bottom: 0px;
-        }
+            margin-bottom: 0px;
+          }
           .title {
             display: none;
           }

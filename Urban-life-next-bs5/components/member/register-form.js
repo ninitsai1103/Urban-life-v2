@@ -3,13 +3,13 @@ import styles from './member.module.css'
 import Link from 'next/link'
 export default function RegisterForm() {
   const [user, setUser] = useState({
-    account: '',
+    email: '',
     password: '',
     confirmPassword: '',
   })
   // 錯誤訊息狀態
   const [errors, setErrors] = useState({
-    account: '',
+    email: '',
     password: '',
     confirmPassword: '',
   })
@@ -31,7 +31,7 @@ const handleSubmit = async (e) => {
   // 表單檢查 --- START
   // 建立一個新的錯誤物件
   const newErrors = {
-    account: '',
+    email: '',
     password: '',
     confirmPassword: '',
   }
@@ -40,8 +40,8 @@ const handleSubmit = async (e) => {
   let hasErrors = false
 
  
-  if (!user.account) {
-    newErrors.account = '帳號為必填'
+  if (!user.email) {
+    newErrors.email = '帳號為必填'
     hasErrors = true
   }
 
@@ -101,10 +101,10 @@ const handleSubmit = async (e) => {
                 type="email"
                 className="form-control w-100"
                 placeholder="電子信箱"
-                name="account"
+                name="email"
                 onChange={handleFieldChange}
               />
-              <span className="error my-1 text-start">{errors.account}</span>
+              <span className="error my-1 text-start">{errors.email}</span>
             </div>
           </div>
           <div className="row mb-2">

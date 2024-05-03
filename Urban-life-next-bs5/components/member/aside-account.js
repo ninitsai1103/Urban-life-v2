@@ -1,6 +1,5 @@
-import React from 'react'
+import {useState,useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { MdOutlineAddAPhoto } from 'react-icons/md'
 import { BiFile } from 'react-icons/bi'
 import { BiIdCard } from 'react-icons/bi'
@@ -8,9 +7,17 @@ import { MdFavoriteBorder } from 'react-icons/md'
 import { RiCoupon2Line } from 'react-icons/ri'
 import { IoIosLogOut } from 'react-icons/io'
 import { useRouter } from 'next/router'
-
 export default function AsideAccount() {
   const router = useRouter()
+  
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    const storedMemberInfo = JSON.parse(localStorage.getItem('member-info'));
+    if (storedMemberInfo && storedMemberInfo.name) {
+      setName(storedMemberInfo.name);
+    }
+  }, []);
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value
@@ -52,7 +59,7 @@ export default function AsideAccount() {
               </div>
             </div>
             <div className="d-flex justify-content-center">
-              <div className="name text-center">jenny</div>
+              <div className="name text-center">{name}</div>
             </div>
             <div className="d-flex justify-content-center">
               <button className="user-identify">
