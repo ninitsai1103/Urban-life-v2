@@ -278,8 +278,31 @@ export default function LectureManagement() {
     setPhoneWishTotalPages(PhoneWishTotalPages);
   }, [PhoneWishCurrentPage, TeacherWish, WishSortOption]);
 
+  const deleteWish = async (wishID) => {
+    const url = 'http://localhost:3005/api/teacher-wish'
 
+    // fetch抓資料
+    try {
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: wishID }),
+      })
+      const data = await res.json()
+      console.log(data)
 
+      // 在成功刪除優惠券後執行 getCoupon
+      // await getWishs()
+
+      return <div></div>
+    } catch (error) {
+      console.log(error)
+      return <div></div>
+    }
+  }
+  
 
 
   return (
@@ -480,6 +503,7 @@ export default function LectureManagement() {
                           <LectureWishContent
                             key={TeacherWish.id}
                             TeacherWish={TeacherWish}
+                            deleteWish={deleteWish}
                           />
                         ))}
                       </table>
@@ -497,6 +521,7 @@ export default function LectureManagement() {
                         <LectureWishContentPhone
                           key={TeacherWish.id}
                           TeacherWish={TeacherWish}
+                          deleteWish={deleteWish}
                         />
                       ))}
                     </div>

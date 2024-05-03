@@ -17,7 +17,7 @@ export default function OrderMainPage() {
       const data = await res.json()
 
       const orders = data.data.order
-
+      console.log(orders)
       // 將相同order_id的東西儲存成一個物件
       // 新增一個key專門儲存product的資料
       const mergedOrders = orders.reduce((acc, order) => {
@@ -25,12 +25,18 @@ export default function OrderMainPage() {
           (item) => item.order_id === order.order_id
         )
         if (existingOrder) {
+          // 如果訂單已存在，將新的商品資料合併到 items 陣列中
           existingOrder.items.push({
             id: order.id,
             product_id: order.product_id,
+            pdlt_id: order.pdlt_id,
+            name: order.name,
+            price: order.price,
+            cover: order.cover,
             amount: order.amount,
           })
         } else {
+          // 如果訂單不存在，新增一個新的訂單物件
           acc.push({
             order_id: order.order_id,
             user_id: order.user_id,
@@ -47,7 +53,11 @@ export default function OrderMainPage() {
               {
                 id: order.id,
                 product_id: order.product_id,
+                pdlt_id: order.pdlt_id,
                 amount: order.amount,
+                name: order.name,
+                price: order.price,
+                cover: order.cover,
               },
             ],
           })
@@ -94,34 +104,7 @@ export default function OrderMainPage() {
                       </tr>
                     </thead>
                     {orders.map((order) => {
-                      const {
-                        id,
-                        name,
-                        order_code,
-                        date,
-                        items,
-                        phone,
-                        address,
-                        email,
-                        total,
-                        coupon_id,
-                      } = order
-                      return (
-                        <OrderList
-                          key={order_code}
-                          order_id={id}
-                          name={name}
-                          pay={order.pay}
-                          order_code={order_code}
-                          phone={phone}
-                          address={address}
-                          email={email}
-                          total={total}
-                          date={date}
-                          coupon_id={coupon_id}
-                          items={items}
-                        />
-                      )
+                      return <OrderList order={order} key={order.order_code} />
                     })}
                   </table>
                 </div>

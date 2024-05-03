@@ -1,9 +1,39 @@
-import React from 'react'
+import { React, useState } from 'react'
 
 export default function LectureAddModal() {
+  // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
+  const [selectedFile1, setSelectedFile1] = useState(null)
+  const [selectedFile2, setSelectedFile2] = useState(null)
+  const [selectedFile3, setSelectedFile3] = useState(null)
+  const [selectedFile4, setSelectedFile4] = useState(null)
+  
+  // 預覽圖片的網址(呼叫URL.createObjectURL得到的網址)
+  const [previewURL1, setPreviewURL1] = useState('')
+  const [previewURL2, setPreviewURL2] = useState('')
+  const [previewURL3, setPreviewURL3] = useState('')
+  const [previewURL4, setPreviewURL4] = useState('')
+
+  // 定義一個通用的處理文件變化的函數
+  const handleFileChange = (e, fileNumber) => {
+    const file = e.target.files[0]
+    const setSelectedFile = `setSelectedFile${fileNumber}`
+    const setPreviewURL = `setPreviewURL${fileNumber}`
+
+    if (file) {
+      // 設定到狀態中
+      eval(`${setSelectedFile}(file)`) // 設置選中的文件狀態
+      // 產生預覽網址
+      eval(`${setPreviewURL}(URL.createObjectURL(file))`) // 設置預覽URL
+    } else {
+      eval(`${setSelectedFile}(null)`) // 清空選中的文件狀態
+      eval(`${setPreviewURL}('')`) // 清空預覽URL
+    }
+  }
+  
+
   return (
     <>
-        {/* 新增modal */}
+      {/* 新增modal */}
       <div
         className="modal fade"
         id="addModal"
@@ -99,12 +129,75 @@ export default function LectureAddModal() {
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <input
-                              type="text"
-                              className="form-control"
-                              name="name"
-                              value=""
-                            />
+                            <div>
+                              <div>*第一章圖為封面圖</div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 1)}
+                              />
+                              {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>圖片預覽：</div>
+                                  <img
+                                    className="updateImg mb-4"
+                                    src={previewURL1}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            <div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 2)}
+                              />
+                              {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>圖片預覽：</div>
+                                  <img
+                                    className="updateImg mb-4"
+                                    src={previewURL2}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            <div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 3)}
+                              />
+                              {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>圖片預覽：</div>
+                                  <img
+                                    className="updateImg mb-4"
+                                    src={previewURL3}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            <div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 4)}
+                                multiple
+                              />
+                              {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>圖片預覽：</div>
+                                  <img
+                                    className="updateImg"
+                                    src={previewURL4}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       </tbody>
@@ -122,12 +215,12 @@ export default function LectureAddModal() {
                   取消
                 </button>
                 <button
-                    type="submit"
-                    className="btn btn-main"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addModal"
-                  >
-                    確認新增
+                  type="submit"
+                  className="btn btn-main"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addModal"
+                >
+                  確認新增
                 </button>
               </div>
             </form>
@@ -135,27 +228,38 @@ export default function LectureAddModal() {
         </div>
       </div>
 
-
       <style jsx>{`
-      .modal-table {
+        .modal-table {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 150px;
-            {/* display: flex;
+            width: 30%;
+             {
+              /* display: flex;
             align-items: center;
-            justify-content: center; */}
+            justify-content: center; */
+            }
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            {/* display: flex;
+            width: 70%;
+             {
+              /* display: flex;
             align-items: center;
-            justify-content: center; */}
+            justify-content: center; */
+            }
           }
           input {
             margin: 3px;
+            width: 80%;
+          }
+          .updateImg {
+            width: 50%;
+            margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px;
           }
         }
       `}</style>

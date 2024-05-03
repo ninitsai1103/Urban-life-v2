@@ -1,29 +1,18 @@
 import React from 'react'
 
-export default function LectureWishContent({ TeacherWish }) {
+export default function LectureWishContent({ TeacherWish, deleteWish }) {
+  
 
-  // 定義處理刪除操作的函數
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
     try {
-      // 發送刪除請求到後端 API
-      const response = await axios.put(`/api/teacher-wish/${TeacherWish.id}`, {
-        valid: 0  // 更新 valid 欄位為 0 表示已刪除
-      });
+      // 在這裡調用 deleteWish 函數並傳遞
+      await deleteWish(id)
 
-      if (response.status === 200) {
-        // 刪除成功後的處理
-        console.log('Wish deleted successfully!');
-        // 在此處可以更新頁面或重新加載數據
-      } else {
-        console.error('Failed to delete wish.');
-      }
+      // 可以在這裡添加更新頁面或重新加載數據的邏輯
     } catch (error) {
-      console.error('Error deleting wish:', error);
+      console.error('Error deleting wish:', error)
     }
-  };
-
-
-
+  }
 
   return (
     <>
@@ -145,7 +134,13 @@ export default function LectureWishContent({ TeacherWish }) {
               >
                 取消
               </button>
-              <a type="button" href="" className="btn btn-delete" role="button" onClick={handleDelete}>
+              <a
+                type="button"
+                href=""
+                className="btn btn-delete"
+                role="button"
+                onClick={() => handleDelete(TeacherWish.id)}
+              >
                 確認
               </a>
             </div>

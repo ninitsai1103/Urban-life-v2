@@ -1,6 +1,41 @@
 import { React, useState } from 'react'
 
 export default function LectureContentPhone({ lecture }) {
+  // 處理時間字符串，僅顯示到秒
+  function formatTime(timeString) {
+    // 切割字符串，只保留時分秒部分
+    const timeWithoutMilliseconds = timeString.split('.')[0]
+    return timeWithoutMilliseconds
+  }
+
+  // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
+  const [selectedFile1, setSelectedFile1] = useState(null)
+  const [selectedFile2, setSelectedFile2] = useState(null)
+  const [selectedFile3, setSelectedFile3] = useState(null)
+  const [selectedFile4, setSelectedFile4] = useState(null)
+  // 預覽圖片的網址(呼叫URL.createObjectURL得到的網址)
+  const [previewURL1, setPreviewURL1] = useState('')
+  const [previewURL2, setPreviewURL2] = useState('')
+  const [previewURL3, setPreviewURL3] = useState('')
+  const [previewURL4, setPreviewURL4] = useState('')
+
+  // 定義一個通用的處理文件變化的函數
+  const handleFileChange = (e, fileNumber) => {
+    const file = e.target.files[0]
+    const setSelectedFile = `setSelectedFile${fileNumber}`
+    const setPreviewURL = `setPreviewURL${fileNumber}`
+
+    if (file) {
+      // 設定到狀態中
+      eval(`${setSelectedFile}(file)`) // 設置選中的文件狀態
+      // 產生預覽網址
+      eval(`${setPreviewURL}(URL.createObjectURL(file))`) // 設置預覽URL
+    } else {
+      eval(`${setSelectedFile}(null)`) // 清空選中的文件狀態
+      eval(`${setPreviewURL}('')`) // 清空預覽URL
+    }
+  }
+
   return (
     <>
       <div className="lecture_phone_card p-3 ">
@@ -11,7 +46,7 @@ export default function LectureContentPhone({ lecture }) {
               <td>{lecture.name}</td>
             </tr>
             <tr>
-              <th>上課時間：</th>
+              <th>上課日期：</th>
               <td>{lecture.lecture_date}</td>
             </tr>
             <tr>
@@ -73,8 +108,15 @@ export default function LectureContentPhone({ lecture }) {
                           <td>{lecture.name}</td>
                         </tr>
                         <tr>
-                          <th>上課時間：</th>
+                          <th>上課日期：</th>
                           <td>{lecture.lecture_date}</td>
+                        </tr>
+                        <tr>
+                          <th>上課時間：</th>
+                          <td>
+                            {formatTime(lecture.starting_time)}~
+                            {formatTime(lecture.ending_time)}
+                          </td>
                         </tr>
                         <tr>
                           <th>報名開始時間：</th>
@@ -105,16 +147,16 @@ export default function LectureContentPhone({ lecture }) {
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <img
+                            <img className="displayOriginImg"
                               src={`/images/lecture/lecture_img/${lecture.cover}`}
                             ></img>
-                            <img
+                            <img className="displayOriginImg"
                               src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
                             ></img>
-                            <img
+                            <img className="displayOriginImg"
                               src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
                             ></img>
-                            <img
+                            <img className="displayOriginImg"
                               src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
                             ></img>
                           </td>
@@ -197,13 +239,30 @@ export default function LectureContentPhone({ lecture }) {
                           </td>
                         </tr>
                         <tr>
-                          <th>上課時間：</th>
+                          <th>上課日期：</th>
                           <td>
                             <input
                               type="text"
                               className="form-control"
                               name="name"
                               value={`${lecture.lecture_date}`}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>上課時間：</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="name"
+                              value={`${lecture.starting_time}`}
+                            />
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="name"
+                              value={`${lecture.ending_time}`}
                             />
                           </td>
                         </tr>
@@ -254,12 +313,88 @@ export default function LectureContentPhone({ lecture }) {
                         <tr>
                           <th>課程圖片：</th>
                           <td>
+                            <div>*第一章圖為封面圖</div>
+                            <img
+                              className="originImg"
+                              src={`/images/lecture/lecture_img/${lecture.cover}`}
+                            ></img>
+                            <div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 1)}
+                              />
+                              {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>替換圖片預覽：</div>
+                                  <img
+                                    className="updateImg"
+                                    src={previewURL1}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            <img
+                              className="originImg mt-4"
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
+                            ></img>
+                            <div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 2)}
+                              />
+                              {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>替換圖片預覽：</div>
+                                  <img
+                                    className="updateImg"
+                                    src={previewURL2}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            <img
+                              className="originImg mt-4"
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
+                            ></img>
+                            <div>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e, 3)}
+                              />
+                              {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
+                                <>
+                                  <div>替換圖片預覽：</div>
+                                  <img
+                                    className="updateImg"
+                                    src={previewURL3}
+                                    alt=""
+                                  />
+                                </>
+                              )}
+                            </div>
+
+                            <img
+                              className="originImg mt-4"
+                              src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
+                            ></img>
                             <input
-                              type="text"
-                              className="form-control"
-                              name="name"
-                              value="圖片一、圖片二、圖片三、圖片四"
+                              type="file"
+                              onChange={(e) => handleFileChange(e, 4)}
                             />
+                            {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
+                              <>
+                                <div>替換圖片預覽：</div>
+                                <img
+                                  className="updateImg"
+                                  src={previewURL4}
+                                  alt=""
+                                />
+                              </>
+                            )}
                           </td>
                         </tr>
                       </tbody>
@@ -367,19 +502,35 @@ export default function LectureContentPhone({ lecture }) {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 150px;
+            width: 40%;
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
+            width: 60%;
           }
           input {
             margin: 3px;
+            width: 80%;
           }
-          img {
-            width: 45%;
+          .displayOriginImg{
+            width: 40%;
+            margin-bottom: 10px;
             margin: 5px;
+            margin-left: 7px;
+          }
+          .originImg {
+            width: 80%;
+            margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px;
+          }
+          .updateImg {
+            width: 50%;
+            margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px;
           }
         }
       `}</style>
