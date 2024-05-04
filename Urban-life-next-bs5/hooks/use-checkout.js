@@ -131,7 +131,7 @@ export function CartProvider({ children }) {
   useEffect(() => {
     window.localStorage.setItem(
       'Checked-info',
-      JSON.stringify(itemsChecked, totalItemsChecked, totalPriceChecked)
+      JSON.stringify(itemsChecked)
     )
   }, [items])
 

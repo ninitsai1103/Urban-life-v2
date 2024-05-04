@@ -4,7 +4,7 @@ import styles from '@/components/cart/cart.module.css'
 import InfoPayOrder from '@/components/cart/info-pay-order'
 import InfoPayInfo from '@/components/cart/info-pay-info'
 import InfoPayPay from '@/components/cart/info-pay-pay'
-import CheckoutCounter from '@/components/cart/checkout-counter'
+import InfoPayCounter from '@/components/cart/info-pay-counter'
 import Link from 'next/link'
 
 export default function InfoPayPage() {
@@ -22,7 +22,7 @@ export default function InfoPayPage() {
         <InfoPayInfo />
         <InfoPayPay />
         <h4 className="text-light bg-primary4 p-2 mt-2">實付金額</h4>
-        <CheckoutCounter />
+        <InfoPayCounter />
         <div className="w-100 text-center">
           <button type="submit" className="btn btn-add w-50">確認付款</button>
         </div>

@@ -50,7 +50,7 @@ export default function InfoPayPage() {
             LINE Pay
           </label>
         </div>
-        <div className="form-check">
+        {/* <div className="form-check">
           <input
             className="form-check-input"
             type="radio"
@@ -146,8 +146,8 @@ export default function InfoPayPage() {
                 className="form-control"
               />
             </div>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
       </div>
     </>
   )

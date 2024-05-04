@@ -22,23 +22,27 @@ export default function CheckoutCounter({ selectedCoupon }) {
     }
   }
   const [discount, setDiscount] = useState(0)
-  const [pricePayable, setPricePayable] = useState(
-    totalPriceChecked + shippingFee
-  )
+  // const [pricePayable, setPricePayable] = useState(
+  //   totalPriceChecked + shippingFee
+  // )
   useEffect(() => {
     let updatedDiscount = window.localStorage.getItem('discount')
-    let updatedPrice = window.localStorage.getItem('pricePayable')
+    // let updatedPrice = window.localStorage.getItem('pricePayable')
     // let updatedDiscount = 0
     // let updatedPrice = totalPriceChecked + shippingFee
 
     if (selectedCoupon && totalPriceChecked >= selectedCoupon.min_price) {
-      if (selectedCoupon.amount > 1) {
+      if (selectedCoupon.amount > 1 || selectedCoupon.amount === 0) {
         updatedDiscount = selectedCoupon.amount
-        updatedPrice = totalPriceChecked + shippingFee - selectedCoupon.amount
+        // updatedPrice = totalPriceChecked + shippingFee - selectedCoupon.amount
+        setDiscount(updatedDiscount)
+        // setPricePayable(updatedPrice)
       } else {
         updatedDiscount =
           totalPriceChecked - totalPriceChecked * selectedCoupon.amount
-        updatedPrice = totalPriceChecked * selectedCoupon.amount + shippingFee
+        // updatedPrice = totalPriceChecked * selectedCoupon.amount + shippingFee
+        setDiscount(updatedDiscount)
+        // setPricePayable(updatedPrice)
       }
     }
     // else {
@@ -46,9 +50,11 @@ export default function CheckoutCounter({ selectedCoupon }) {
     //   updatedPrice = totalPriceChecked + shippingFee
     // }
 
-    setDiscount(updatedDiscount)
-    setPricePayable(updatedPrice)
+    // setDiscount(updatedDiscount)
+    // setPricePayable(updatedPrice)
   }, [totalPriceChecked, shippingFee, selectedCoupon])
+
+  const pricePayable = totalPriceChecked + shippingFee - discount
 
   // const [discount, setDiscount] = useState(0)
   // let pricePayable = totalPriceChecked + shippingFee
@@ -102,10 +108,9 @@ export default function CheckoutCounter({ selectedCoupon }) {
   // }, [payable])
 
   // localStorage pricePayable
-  useEffect(() => {
-    window.localStorage.setItem('pricePayable', pricePayable)
-  })
-
+  // useEffect(() => {
+  //   window.localStorage.setItem('pricePayable', pricePayable)
+  // })
 
   // localStorage discount
   // useEffect(() => {
