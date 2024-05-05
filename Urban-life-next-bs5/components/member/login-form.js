@@ -14,6 +14,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({
     email: '',
     password: '',
+    loginError: '',
   })
   // 多欄位共用事件處理函式
   const handleFieldChange = (e) => {
@@ -28,6 +29,7 @@ export default function LoginForm() {
     const newErrors = {
       email: '',
       password: '',
+      loginError: '',
     }
     // 信號值，代表有出現錯誤，判斷是否要送出表單用
     let hasErrors = false
@@ -75,13 +77,19 @@ export default function LoginForm() {
           // storage.clear();
 
           // 登录成功，重定向到用户资料页面或其他页面
-          window.location.href = '/member/information'
+          if (data.user && data.user.identity_id === 3) {
+            window.location.href = '/member/information'; // 重定向到使用者資料頁面
+          } else if (data.user && data.user.identity_id === 2) {
+            window.location.href = '/member/lecture-management'; // 重定向到講座管理頁面
+          }
         } else {
           // 登录失败，显示错误消息
-          console.error('Login failed:', data.message)
+          
+          setErrors({ ...errors, loginError: '信箱或密碼錯誤' })
         }
       } catch (error) {
-        console.error('Error logging in:', error)
+        // console.error('Error logging in:', error)
+        setErrors({ ...errors, loginError: '登入失敗 信箱或密碼錯誤' })
       }
     }
   }
@@ -121,6 +129,7 @@ export default function LoginForm() {
                 onChange={handleFieldChange}
               />
               <span className="error my-1 text-start">{errors.password}</span>
+              <span className="error my-1 text-start">{errors.loginError}</span>
             </div>
           </div>
 
@@ -151,17 +160,37 @@ export default function LoginForm() {
               style={{ fontSize: '20px' }}
               onClick={() => {
                 setUser({
-                  email: 'bif105@test.com',
-                  password: '24823',
+                  email: 'nuc710@test.com',
+                  password: '63212',
                 })
                 // 清空错误状态
                 setErrors({
                   email: '',
                   password: '',
+                  loginError: '',
                 })
               }}
             >
-              一鍵填入
+              會員
+            </button>
+            <button
+              type="button"
+              className="btn btn-add-r"
+              style={{ fontSize: '20px' }}
+              onClick={() => {
+                setUser({
+                  email: 'jennie2024@gmail.com',
+                  password: '45234',
+                })
+                // 清空错误状态
+                setErrors({
+                  email: '',
+                  password: '',
+                  loginError: '',
+                })
+              }}
+            >
+              講師
             </button>
           </div>
 

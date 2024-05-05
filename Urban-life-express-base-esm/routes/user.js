@@ -74,11 +74,22 @@ router.post('', upload.none(), async (req, res) => {
         [email]
       )
       user = insertedUserRows[0]
+      // 成功更新使用者資訊
+      let token = jwt.sign(
+        {
+          id: user.id,
+          name: user.name,
+          identity_id: user.identity_id,
+        },
+        secretKey,
+        { expiresIn: '30m' }
+      )
 
       return res.status(201).json({
         status: 'success',
         message: 'User created successfully',
-        user: { email: user.email },
+        user: user, // 返回完整的使用者資訊，包括 ID
+        token,
       })
     }
   } catch (err) {
@@ -89,25 +100,28 @@ router.post('', upload.none(), async (req, res) => {
   }
 })
 
-router.put('/:id/', checkToken, upload.none(), async (req, res) => {
+router.put('/:id/', upload.none(), async (req, res) => {
   // res.send(`更新特定id使用者 ${req.params.id}`)
   // let user, error
   const id = req.params.id
   const { name, password, phone, img, birthday, address, gender } = req.body
-
+  const params = [name, password, phone, img, birthday, address, gender, id].map(param => param !== undefined ? param : null);
   const sqlUpdate =
     'UPDATE `user_teacher` SET `name` = ?, `password` = ?, `phone` = ?,`img` = ?, `birthday` = ?, `address` = ?, `gender` = ? WHERE `id` = ?'
   try {
-    const [result] = await db.execute(sqlUpdate, [
-      name,
-      password,
-      phone,
-      img,
-      birthday,
-      address,
+    const [result] = await db.execute(sqlUpdate,
+      // params
+       [
+      name ,
+      password ,
+      phone ,
+      img ,
+      birthday ,
+      address ,
       gender,
       id,
-    ])
+    ]
+  )
 
     if (result.affectedRows === 0) {
       // 沒有影響到任何記錄，意味著該 ID 不存在
@@ -117,10 +131,15 @@ router.put('/:id/', checkToken, upload.none(), async (req, res) => {
     }
 
     // 成功更新使用者資訊
-    const token = jwt.sign(
+    const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `id` = ?'
+    const [userInfoRows] = await db.execute(userInfoSql, [id])
+    const user = userInfoRows[0]
+
+    let token = jwt.sign(
       {
-        name: req.user.name,
-        head: req.user.head,
+        id: user.id,
+        name: user.name,
+        identity_id: user.identity_id,
       },
       secretKey,
       { expiresIn: '30m' }
@@ -129,7 +148,7 @@ router.put('/:id/', checkToken, upload.none(), async (req, res) => {
     res.status(200).json({
       status: 'success',
       message: 'User information updated successfully',
-      // token,
+      token,
     })
   } catch (err) {
     console.error(err)
@@ -161,10 +180,10 @@ router.post('/login', upload.none(), async (req, res) => {
       loginMessage = 'Member logged in'
     }
     // 在這裡直接查詢該使用者的資料，並將所有資料返回給前端
-    const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `email` = ?';
-    const [userInfoRows] = await db.execute(userInfoSql, [user.email]);
-    const userInfo = userInfoRows[0];
-    delete userInfo.password; // 移除密碼欄位
+    const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `email` = ?'
+    const [userInfoRows] = await db.execute(userInfoSql, [user.email])
+    const userInfo = userInfoRows[0]
+    delete userInfo.password // 移除密碼欄位
     let token = jwt.sign(
       {
         id: user.id,
