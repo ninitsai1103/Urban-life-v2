@@ -7,29 +7,37 @@ import { BiIdCard } from 'react-icons/bi'
 import { MdFavoriteBorder } from 'react-icons/md'
 import { RiCoupon2Line } from 'react-icons/ri'
 import { IoIosLogOut } from 'react-icons/io'
+import useMemberInfo from '@/hooks/use-member-info'
 import { useRouter } from 'next/router'
 export default function AsideAccount() {
   const router = useRouter()
 
-  const [name, setName] = useState('')
-  const [token, setToken] = useState('')
+  // hooks
+  const member = useMemberInfo()
 
-  useEffect(() => {
-    const storedMemberInfo = JSON.parse(localStorage.getItem('member-info'))
-    if (storedMemberInfo && storedMemberInfo.name) {
-      setName(storedMemberInfo.name)
-    }
-    if (storedMemberInfo && storedMemberInfo.token) {
-      setToken(storedMemberInfo.token)
-    }
-  }, [])
+  // 上傳大頭照
+  const [selectedFile, setSelectedFile] = useState(null)
+  // 處理圖標點擊事件
+  const handleIconClick = () => {
+  // 觸發文件選擇器點擊
+    document.getElementById('fileInput').click()
+  }
+  // 處理文件選擇器更改事件
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    // 更新所選文件
+    setSelectedFile(file)
+    // 此時你可以將文件上傳到後端或做其他處理
+  }
+
+  // 登出
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:3005/api/user/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // 替換為有效的 JWT
+          Authorization: `Bearer ${member.token}`, // 替換為有效的 JWT
         },
       })
       const data = await response.json()
@@ -68,20 +76,37 @@ export default function AsideAccount() {
               <div className="avatar">
                 <Image
                   src={
-                    'https://i.pinimg.com/564x/ea/43/c5/ea43c53109a0c0c2a045e85f39d062cb.jpg'
+                    member && member.img
+                      ? `/images/user_teacher/${member.img}`
+                      : '/images/user_teacher/default.jpg'
                   }
                   alt=""
                   width={80}
                   height={80}
                   style={{ borderRadius: '100px' }}
+                  priority
                 />
                 <div className="icon-box position-absolute d-flex justify-content-center">
-                  <MdOutlineAddAPhoto style={{ color: 'white' }} />
+                  {/* 點擊圖標後觸發 handleIconClick 事件 */}
+                  <MdOutlineAddAPhoto
+                    style={{ color: 'white', cursor: 'pointer' }}
+                    onClick={handleIconClick}
+                  />
+                  {/* 隱藏的文件選擇器 */}
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
                 </div>
               </div>
             </div>
             <div className="d-flex justify-content-center">
-              <div className="name text-center">{name}</div>
+              <div className="name text-center">
+                {member ? member.name : '姓名'}
+              </div>
             </div>
             <div className="d-flex justify-content-center">
               <button className="user-identify">
@@ -246,8 +271,8 @@ export default function AsideAccount() {
           margin-top: 140px;
         }
         a:hover {
-              cursor: pointer;
-            }
+          cursor: pointer;
+        }
         @media (max-width: 992px) {
           .aside_title {
             display: block !important;
@@ -262,10 +287,9 @@ export default function AsideAccount() {
             margin-top: 10px;
             padding: 0px;
           }
-         
+
           .signOut_text {
             padding: 0px;
-            
           }
         }
       `}</style>
