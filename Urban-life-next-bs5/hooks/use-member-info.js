@@ -3,15 +3,15 @@ import { useState, useEffect, useContext, createContext } from 'react'
 const MemberInfoContext = createContext(null)
 
 export function MemberInfoProvider({ children }) {
-  const [user, setUser] = useState(null)
+  const [member, setMember] = useState(null)
 
   useEffect(() => {
     const memberInfo = JSON.parse(localStorage.getItem('member-info'))
 
     if (!memberInfo) {
-      console.error('localStorage 中找不到使用者 ID，請先登入')
-      alert('請先登入')
-      window.location.href = '/member/login'
+      // console.error('localStorage 中找不到使用者 ID，請先登入')
+      // alert('請先登入')
+      // window.location.href = '/member/login'
       return
     }
     const userId = memberInfo.id
@@ -19,7 +19,7 @@ export function MemberInfoProvider({ children }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === 'success') {
-          setUser(data.user)
+          setMember(data.user);
         } else {
           console.error('無法取得使用者資料:', data.message)
         }
@@ -34,7 +34,7 @@ export function MemberInfoProvider({ children }) {
     <MemberInfoContext.Provider
       // 使用value屬性提供資料給提供者階層以下的所有後代元件
       value={{
-        user
+        member
       }}
     >
       {children}
