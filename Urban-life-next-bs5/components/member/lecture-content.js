@@ -23,8 +23,11 @@ export default function LectureContentTbody({
   const [previewURL3, setPreviewURL3] = useState('')
   const [previewURL4, setPreviewURL4] = useState('')
 
+  // 定義一個通用的處理文件變化的函數
   const handleFileChange = (e, fileNumber) => {
     const file = e.target.files[0] // 從事件中獲取上傳的文件
+    const setSelectedFile = `setSelectedFile${fileNumber}`
+    const setPreviewURL = `setPreviewURL${fileNumber}`
 
     if (file) {
       // 如果有文件被選擇
@@ -112,12 +115,15 @@ export default function LectureContentTbody({
     }
   }
 
+  // 定義選擇的日期狀態變數，初始值為 lecture_date 或空字串
   const [selectedDate, setSelectedDate] = useState(
     lecture && lecture.lecture_date ? lecture.lecture_date : ''
   )
+  // 定義選擇的報名開始日期時間狀態變數，初始值為 sign_up_starting 或空字串
   const [selectedStartingDateTime, setSelectedStartingDateTime] = useState(
     lecture && lecture.sign_up_starting ? lecture.sign_up_starting : ''
   )
+  // 定義選擇的報名截止日期時間狀態變數，初始值為 sign_up_deadline 或空字串
   const [selectedEndingDateTime, setSelectedEndingDateTime] = useState(
     lecture && lecture.sign_up_deadline ? lecture.sign_up_deadline : ''
   )
