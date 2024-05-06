@@ -7,32 +7,39 @@ import { TbStarFilled, TbStar, TbMessage } from 'react-icons/tb'
 import useArticles from '@/hooks/use-articles'
 
 export default function ArticleCard({ article }) {
+  console.log(article)
   return (
     <>
       {/* 列表1*/}
       <div className="card " key={article.id}>
         {/* 卡片上 */}
-        <div className="h-50"> <img
-          src={`/images/article/article_img/${article.img}`}
-          alt="..."
-          className="card-img-top  object-fit-cover "
-        /></div>
-       
+        <div className="h-50">
+          {' '}
+          <img
+            src={`/images/article/article_img/${article.img}`}
+            alt="..."
+            className="card-img-top  object-fit-cover "
+          />
+        </div>
+
         {/* 卡片下 */}
         <div className="card-body ">
           <div className="product-name ">
-            <span> {article.date}| 課程分享</span>
+            <span>
+              {' '}
+              {article.date}| {article.category_name}
+            </span>
             <h5 className="card-title fs-6">{article.title}</h5>
           </div>
           <span className="card-text text-overflow">{article.content}</span>
           <div className="card-end d-flex gap-3">
             <div>
               <FaRegHeart />
-              <p className="d-inline ms-1">20</p>
+              <p className="d-inline ms-1">{article.total_collections}</p>
             </div>
             <div>
               <TbMessage />
-              <p className="d-inline ms-1">20</p>
+              <p className="d-inline ms-1">{article.total_comments}</p>
             </div>
           </div>
         </div>
