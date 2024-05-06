@@ -42,6 +42,44 @@ export default function LectureDetail() {
         </section>
         <section className="section2">
           <h1 className="sectiontitle">集合地點</h1>
+          <div className="meetingpoint">
+            <div className="info">
+              <div className="name">
+                <div className="subtitle">集合地點</div>
+                <div className="subinfo">中壢火車站</div>
+              </div>
+              <div className="name">
+                <div className="subtitle">集合時間</div>
+                <div className="subinfo">請至少提前半小時到達集合地點</div>
+              </div>
+              <div className="name">
+                  <div className="subtitle">交通資訊</div>
+                  <div className="subinfo">
+                    1. 可以搭乘各級火車至中壢站下車
+                    <br />
+                    <br />
+                    2. 搭乘機場捷運於A22老街溪站下車 &nbsp;&nbsp;&nbsp;轉乘市內公車
+                    <br />
+                    <br />
+                    3. 自行開車者可於國道一號中壢交流 &nbsp;&nbsp;&nbsp;道下交流道後往市區方向行駛
+                  </div>
+              </div>
+              <div className="con">
+                ※有任何問題皆可撥打講師或辦公室連絡電話
+                <br /> &nbsp;&nbsp;&nbsp;講師：0987-654321
+                <br /> &nbsp;&nbsp;&nbsp;辦公室：03-4567890
+              </div>
+            </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17207.0092075364!2d121.21220967794753!3d24.954954783550026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34682248fcfa49d7%3A0x57e0b78df52b3c96!2z5Lit5aOi54Gr6LuK56uZ!5e0!3m2!1szh-TW!2stw!4v1714979692462!5m2!1szh-TW!2stw"
+                width={640}
+                height={555}
+                style={{ border: "1px solid black" }}
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+          </div>
         </section>
         <section className="section3">
           <h1 className="sectiontitle">一日課程內容</h1>
@@ -133,9 +171,9 @@ export default function LectureDetail() {
             align-self: stretch;
           }
 
-          .breadcrumb-item{
-            color: var(--grey-700, #6B6B6B);
-            font-family: "Zen Kaku Gothic New";
+          .breadcrumb-item {
+            color: var(--grey-700, #6b6b6b);
+            font-family: 'Zen Kaku Gothic New';
             font-size: 20px;
             font-style: normal;
             font-weight: 700;
@@ -151,7 +189,7 @@ export default function LectureDetail() {
             flex-wrap: wrap;
           }
 
-          .slider{
+          .slider {
             width: 752px;
           }
 
@@ -176,6 +214,61 @@ export default function LectureDetail() {
             align-self: stretch;
             flex-wrap: wrap;
             padding-top: 5px;
+          }
+
+          .meetingpoint {
+            display: flex;
+            padding: 30px;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 60px;
+            align-self: stretch;
+            border-radius: 8px;
+            background: var(--white, #fbfbfb);
+          }
+
+          .info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 32px;
+            max-width: 552px;
+          }
+
+          .name {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+          }
+
+          .subtitle {
+            color: var(--grey-700, #6b6b6b);
+            /* ZenKaku-h4 */
+            font-family: 'Zen Kaku Gothic New';
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
+
+          .subinfo {
+            color: var(--Text-Blue, #3e3e59);
+            font-family: 'Zen Kaku Gothic New';
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            width: 392px;
+          }
+
+          .con {
+            color: var(--primary-2, #849474);
+            /* ZenKaku-h5 */
+            font-family: 'Zen Kaku Gothic New';
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
           }
         `}
       </style>
