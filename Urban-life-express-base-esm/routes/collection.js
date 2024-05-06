@@ -11,6 +11,7 @@ const { Collection } = sequelize.models
 // 獲得某會員id的有加入到我的最愛清單中的商品id們
 // 此路由只有登入會員能使用
 router.get('/', authenticate, async (req, res) => {
+  console.log(req.decoded);
   const collections = await Collection.findAll({
     attributes: ['product_id', 'pdltat_id', 'article_id', 'valid'],
     where: {

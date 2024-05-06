@@ -8,11 +8,10 @@ const api = axios.create({
 
 // 請求攔截器
 api.interceptors.request.use((config) => {
-  // 從 localStorage 獲取 token
-  const token = localStorage.getItem('member-info.token');
-  if (token) {
-    // 如果 token 存在，則在請求頭部加入 Authorization
-    config.headers.Authorization = `Bearer ${token}`;
+  // 從 localStorage 獲取 member_info.token
+  const member_info = JSON.parse(localStorage.getItem('member-info'));
+  if (member_info && member_info.token) {
+    config.headers.Authorization = `Bearer ${member_info.token}`;
   }
   return config;
 }, (error) => {

@@ -1,7 +1,6 @@
-import jsonwebtoken from 'jsonwebtoken'
-
 // 存取`.env`設定檔案使用
 import 'dotenv/config.js'
+import jwt from 'jsonwebtoken'
 
 // 獲得加密用字串
 const accessTokenSecret = process.env.SECRET_KEY
@@ -9,12 +8,16 @@ const accessTokenSecret = process.env.SECRET_KEY
 // 中介軟體middleware，用於檢查授權(authenticate)
 export default function authenticate(req, res, next) {
   let token = req.get('Authorization')
-
+  console.log("token");
   if (token && token.indexOf('Bearer ') === 0) {
     token = token.slice(7)
-    if (blackListedToken.includes(token)) {
-      return res.status(401).json({ status: 'error', message: 'token已經過期' })
-    }
+
+    // 先註解掉，因為blackListedToken access不到
+    // blackListedToken 可以放進資料庫
+    // if (blackListedToken.includes(token)) {
+    //   return res.status(401).json({ status: 'error', message: 'token已經過期' })
+    // }
+
     jwt.verify(token, accessTokenSecret, (err, decoded) => {
       if (err) {
         return res

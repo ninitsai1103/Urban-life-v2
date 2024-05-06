@@ -1,19 +1,37 @@
-import React from 'react'
+import { useEffect, useState } from 'react'
 import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
 import ProductCard from '@/components/product/product-card'
-
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'
 import { BsCart3 } from 'react-icons/bs'
 import { GoHeart } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
+import useProducts from '@/hooks/product/useProducts'
+import { fetchProducts } from '@/services/product';
 
 
 export default function Detail() {
+const {products} = useProducts();
+const router = useRouter();
+const {pid} = router.query;
+const [product, setProduct] = useState(null)
+useEffect(() => {
+  // console.log("pid:", pid);
+  if (pid && products.length > 0) {
+  const fetchProduct = products.find(item => item.id === parseInt(pid))
+  // console.log("fetchProduct:", fetchProduct);
+  setProduct(fetchProduct);
+  }
+  // console.log(product);
+},[pid, products]) 
+
+
   return (
     <>
-      <div className="container ">
+        <div className="container " >
         <div className="row mt-5 mx-2">
           <div className="col-12">
             <Link className="text-decoration-none fs-5" href="">
@@ -41,25 +59,24 @@ export default function Detail() {
               </li>
             </ol>
           </nav>
-
+          
           <div className=" col col-lg-7 mb-3 mb-lg-0" style={{ top: '2rem' }}>
-            <Carousel />
+            <Carousel productId={pid} />
           </div>
-
+        
           <div className="col col-lg-5 set-font set-div-height d-flex flex-column justify-content-between">
-            <h4 className="mb-3 fs-4">初雪 ('EarliSnow')(大)</h4>
+            <h4 className="mb-3 fs-4">{product && (pid > 440 && pid <451 ? product.name : `${product.name}(${product.size})`)}</h4>
             <p className="product-desc set-height">
-              獨家！首個早熟品種。
-              在春季和秋季試驗中表現出色。比雪之冠更早熟、更一致、更可靠。中等大小的植株，包裹度平均。適應性廣泛。
+              {product && product.description}
             </p>
             <p className="mb-2 pb-2 set-border">
               ※請詳閱下方照料方式說明及購買須知
             </p>
             <div className="price d-flex align-items-center mt-1 mb-3 fs-18 fw-700">
               <p className="card-text mb-0 me-3 text-color2-nohover ">
-                NTD 300
+                NTD {product && product.price}
               </p>
-              <p className="card-text text-delete set-text-color3">NTD 400</p>
+              <p className="card-text text-delete set-text-color3">NTD { product && product.price + 200}</p>
             </div>
             <div className="star d-flex align-items-center mb-4">
               <p className="me-2 mb-0">評價</p>
@@ -67,7 +84,7 @@ export default function Detail() {
                 className=""
                 style={{ color: '#F6A404', fontSize: '20px' }}
               />
-              <p className="ms-1 mb-0 fs-17 padding">4.7</p>
+              <p className="ms-1 mb-0 fs-17 padding">{product && product.star}</p>
             </div>
             <div className="input-group mb-4 w-50">
               <button className="btn  btn-bg" type="button" id="button-minus">
@@ -119,13 +136,11 @@ export default function Detail() {
                 />
               </div>
               <p className="text-start mb-0 my-lg-5 font-weight-light col-lg-7 set-width">
-                「初雪」（EarliSnow）這款引人注目的早熟品種，是農民和園丁們的新寵。作為首個推出的早熟品種，初雪展現出令人驚艷的性能和品質，為您的種植計劃帶來了嶄新的選擇。
-                在春季和秋季的試驗中，初雪表現出色，展現出超越同類產品的優異特性。它比雪之冠更早熟，更一致，更可靠，為您提供了更加靈活的收成時間。這意味著您可以在早熟的品質和豐收的樂趣中，更好地計劃和安排您的生產週期。
-                初雪的植株中等大小，整齊而健康，易於管理。每株植株的果實包裹度均勻，確保了收成的穩定性和品質。無論您是在農場、菜園還是花園中種植，初雪都能夠適應不同的環境和種植方式。
-                其廣泛的適應性意味著初雪可以在各種氣候和土壤條件下生長茁壯，為您提供了更多的選擇和可能性。不論您是專業農民還是業餘園丁，初雪都將成為您不可或缺的良伴，為您帶來豐富的收成和令人滿意的種植體驗。選擇初雪，為您的種植計劃帶來早熟、穩定和可靠的新起點！
+                {product && product.content}
               </p>
             </div>
           </div>
+        
           <div className="col-12 mb-5">
             <h4 className="text-center mb-5">購買須知</h4>
             <div className="d-flex justify-content-center align-items-center bg-opacity py-4 p-lg-5 fw-400 border-rd">
@@ -144,6 +159,7 @@ export default function Detail() {
               </p>
             </div>
           </div>
+       
           <div className="col-12 mb-5">
             <h4 className="text-center mb-5">買家評價</h4>
             <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
@@ -237,13 +253,13 @@ export default function Detail() {
             <div id="carouselExampleControls" class="carousel slide">
               <div className="carousel-inner">
                 <div className="carousel-item active">
-                  <ProductCard />
+                  {/* <ProductCard product={product}/> */}
                 </div>
                 <div className="carousel-item">
-                  <ProductCard />
+                  {/* <ProductCard product={product} /> */}
                 </div>
-                {/* <!-- Additional carousel items --> */}
-              </div>
+                 {/* <!-- Additional carousel items -->  */}
+                </div>
               <button
                 className="carousel-control-prev d-none d-lg-block"
                 type="button"
@@ -271,7 +287,7 @@ export default function Detail() {
             </div>
           </div>
         </div>
-      </div>
+      </div>   
     </>
   )
 }
