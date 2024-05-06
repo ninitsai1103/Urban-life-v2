@@ -62,11 +62,11 @@ export default function LectureInfo() {
         
         <div>
           <div className={styles.btnarea}>
-            <button className="btn btn-add px-5">
+            <button className="btn btn-add px-5 py-2">
               <BsCart3 className="me-2 " style={{ fontSize: '20px' }} />
               加入購物車
             </button>
-            <button className="btn btn-add px-5">
+            <button className="btn btn-add px-5 py-2">
               <GoHeart className="me-2" style={{ fontSize: '20px' }} />
               加入收藏
             </button>

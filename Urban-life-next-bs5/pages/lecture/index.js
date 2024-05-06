@@ -3,17 +3,13 @@ import LectureMyCard from '@/components/lecture/card'
 import LectureMyCardNp from '@/components/lecture/card-np'
 import LectureWish from '@/components/lecture/wish'
 import Herosection from '@/components/lecture/herosection'
-
-// CALENDER
 import Calendar from '@/components/lecture/calender'
-
-// REACT BOOTSTRAP
 import { Container } from 'react-bootstrap'
 import Search from '@/components/lecture/search'
 import QAList from '@/components/lecture/qacard'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 
-export default function Home() {
+export default function LectureHome() {
   return (
     <>
       <section className="slider">
@@ -145,6 +141,7 @@ export default function Home() {
           </div>
         </section>
       </div>
+
       <style jsx>
         {`
           .section1 {
@@ -158,7 +155,7 @@ export default function Home() {
           .section2 {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 30px;
             justify-content: center;
             align-self: stretch;
             margin-top: 80px;
@@ -176,7 +173,7 @@ export default function Home() {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
+            gap: 30px;
             align-self: stretch;
             margin-top: 80px;
           }
@@ -185,7 +182,7 @@ export default function Home() {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
             flex: 1 0 0;
             align-self: stretch;
             margin-top: 80px;
@@ -197,7 +194,7 @@ export default function Home() {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
             align-self: stretch;
             margin-top: 80px;
             margin-bottom: 50px;
@@ -298,7 +295,7 @@ export default function Home() {
           .notice {
             display: flex;
             width: 408px;
-            height: 709px;
+            height: 636.8px;
             flex-direction: column;
             align-items: center;
             gap: 20px;
@@ -306,7 +303,6 @@ export default function Home() {
 
           .noticeinfo {
             display: flex;
-            height: 637px;
             padding: 26px 17px 36px 17px;
             justify-content: center;
             align-items: flex-start;
@@ -327,13 +323,6 @@ export default function Home() {
             line-height: normal;
             text-align: center;
             margin-top: 10px;
-          }
-
-          .teacher-card {
-            display: flex;
-            justify-content: center;
-            padding: 0;
-            margin: 10px 0;
           }
         `}
       </style>

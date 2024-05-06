@@ -10,7 +10,7 @@ export default function Search() {
             type="text"
             className="form-control"
             aria-label="Text input with button"
-            placeholder="搜尋/體驗"
+            placeholder="請輸入關鍵字"
           />
           <button className="btn p-1 " type="button" >
             <CiSearch style={{fontSize:'30px'}} />
