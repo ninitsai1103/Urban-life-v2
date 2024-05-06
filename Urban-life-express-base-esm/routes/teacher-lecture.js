@@ -34,4 +34,95 @@ router.get('/', async function(req, res){
   }
 });
 
+router.delete('/', async function (req, res) {
+ 
+  try {
+    console.log(req.body)
+    const lectureID = req.body.id
+    
+    
+    let deleteTeacherLecture = `UPDATE product_lecture
+    SET valid = 0
+    WHERE id = ? ;`
+    
+    const [rows, fields] = await db.query(deleteTeacherLecture,[lectureID])
+    return res.json({
+      status: 'success',
+      data: {
+        message: '老師的課程被刪除成功',
+      },
+    });
+  } catch (error) {
+    return res.json({
+      status: 'error',
+      data: {
+        error: error,
+      },
+    })
+  }
+})
+
+// 使用 PUT 方法來更新資源（完整替換）
+router.put('/', async function (req, res) {
+ 
+  try {
+    console.log(req.body)
+    // const lectureID = req.body.id 
+    // 從請求體中獲取要更新的課程資料
+    const {
+      id,
+      name,
+      lecture_date,
+      starting_time,
+      ending_time,
+      sign_up_starting,
+      sign_up_deadline,
+      price,
+      amount,
+      change_time,
+      cover,
+      lecture_img1,
+      lecture_img2,
+      lecture_img3
+    } = req.body;
+    
+    let updateTeacherLecture = `UPDATE product_lecture
+    SET name = ?, lecture_date = ?, starting_time = ?, ending_time = ?, sign_up_starting = ?, sign_up_deadline = ?, price = ?, amount = ?, change_time = ?, cover = ?, lecture_img1 = ?, lecture_img2 = ?, lecture_img3 = ?
+    WHERE id = ? ;`
+
+    // 執行 SQL 更新操作
+    const [rows, fields] = await db.query(updateTeacherLecture, [
+      name,
+      lecture_date,
+      starting_time,
+      ending_time,
+      sign_up_starting,
+      sign_up_deadline,
+      price,
+      amount,
+      change_time,
+      cover,
+      lecture_img1,
+      lecture_img2,
+      lecture_img3,
+      id // 確保 id 是最後一個參數，對應 WHERE 子句中的 id = ?
+    ]);
+    
+    // const [rows, fields] = await db.query(updateTeacherLecture,[lectureID])
+    return res.json({
+      status: 'success',
+      data: {
+        message: '課程更新成功',
+      },
+    });
+  } catch (error) {
+    return res.json({
+      status: 'error',
+      data: {
+        error: error,
+      },
+    })
+  }
+})
+
 export default router

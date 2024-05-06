@@ -57,7 +57,6 @@ export default function LectureManagement() {
     )
   }, [WindowLecturesCurrentPage, lectures])
 
-
   // 手機板lecture分頁
   const [PhoneLecturesList, setPhoneLecturesList] = useState([])
 
@@ -86,7 +85,6 @@ export default function LectureManagement() {
     )
   }, [PhoneLecturesCurrentPage, lectures])
 
-
   // 桌機板wish分頁
   const [WindowWishList, setWindowWishList] = useState([])
 
@@ -111,13 +109,9 @@ export default function LectureManagement() {
       filterWindowWish.length
     )
     setWindowWishList(
-      filterWindowWish.slice(
-        WindowWishStartIndex,
-        WindowWishEndIndex
-      )
+      filterWindowWish.slice(WindowWishStartIndex, WindowWishEndIndex)
     )
   }, [WindowWishCurrentPage, TeacherWish])
-
 
   // 手機板wish分頁
   const [PhoneWishList, setPhoneWishList] = useState([])
@@ -136,8 +130,7 @@ export default function LectureManagement() {
       filterPhoneWish.length / PhoneWishPerpages
     )
     setPhoneWishTotalPages(newPhoneWishTotalPages)
-    const PhoneWishStartIndex =
-      (PhoneWishCurrentPage - 1) * PhoneWishPerpages
+    const PhoneWishStartIndex = (PhoneWishCurrentPage - 1) * PhoneWishPerpages
     const PhoneWishEndIndex = Math.min(
       PhoneWishStartIndex + PhoneWishPerpages,
       filterPhoneWish.length
@@ -147,137 +140,188 @@ export default function LectureManagement() {
     )
   }, [PhoneWishCurrentPage, TeacherWish])
 
-
-
   // lecture排序
-  const [LectureSortOption, setLectureSortOption] = useState('LectureNewest'); // 初始排序方式：根據課程時間由新到舊
+  const [LectureSortOption, setLectureSortOption] = useState('LectureNewest') // 初始排序方式：根據課程時間由新到舊
   const handleLectureSortChange = (option) => {
-    setLectureSortOption(option);
-  };
+    setLectureSortOption(option)
+  }
 
   // lecture桌機板排序
   useEffect(() => {
-    let filteredLectures = lectures;
-  
-    // 根據排序選項重新排序
-    switch (LectureSortOption) {
-      case 'LectureNewest':
-        filteredLectures.sort((a, b) => new Date(b.lecture_date) - new Date(a.lecture_date));
-        break;
-      case 'LectureOldest':
-        filteredLectures.sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date));
-        break;
-      case 'LectureUpdatedNewest':
-        filteredLectures.sort((a, b) => new Date(b.change_time) - new Date(a.change_time));
-        break;
-      case 'LectureUpdatedOldest':
-        filteredLectures.sort((a, b) => new Date(a.change_time) - new Date(b.change_time));
-        break;
-      default:
-        break;
-    }
-  
-    // 更新課程列表
-    const WindowLecturesStartIndex = (WindowLecturesCurrentPage - 1) * WindowLecturesPerpages;
-    const WindowLecturesEndIndex = Math.min(WindowLecturesStartIndex + WindowLecturesPerpages, filteredLectures.length);
-    setWindowLecturesList(filteredLectures.slice(WindowLecturesStartIndex, WindowLecturesEndIndex));
-  
-    // 更新總頁數
-    const WindowLecturesTotalPages = Math.ceil(filteredLectures.length / WindowLecturesPerpages);
-    setWindowLecturesTotalPages(WindowLecturesTotalPages);
-  }, [WindowLecturesCurrentPage, lectures, LectureSortOption]);
+    let filteredLectures = lectures
 
-// lecture手機板排序
-  useEffect(() => {
-    let filteredLectures = lectures;
-  
     // 根據排序選項重新排序
     switch (LectureSortOption) {
       case 'LectureNewest':
-        filteredLectures.sort((a, b) => new Date(b.lecture_date) - new Date(a.lecture_date));
-        break;
+        filteredLectures.sort(
+          (a, b) => new Date(b.lecture_date) - new Date(a.lecture_date)
+        )
+        break
       case 'LectureOldest':
-        filteredLectures.sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date));
-        break;
+        filteredLectures.sort(
+          (a, b) => new Date(a.lecture_date) - new Date(b.lecture_date)
+        )
+        break
       case 'LectureUpdatedNewest':
-        filteredLectures.sort((a, b) => new Date(b.change_time) - new Date(a.change_time));
-        break;
+        filteredLectures.sort(
+          (a, b) => new Date(b.change_time) - new Date(a.change_time)
+        )
+        break
       case 'LectureUpdatedOldest':
-        filteredLectures.sort((a, b) => new Date(a.change_time) - new Date(b.change_time));
-        break;
+        filteredLectures.sort(
+          (a, b) => new Date(a.change_time) - new Date(b.change_time)
+        )
+        break
       default:
-        break;
+        break
     }
-  
+
     // 更新課程列表
-    const PhoneLecturesStartIndex = (PhoneLecturesCurrentPage - 1) * PhoneLecturesPerpages;
-    const PhoneLecturesEndIndex = Math.min(PhoneLecturesStartIndex + PhoneLecturesPerpages, filteredLectures.length);
-    setPhoneLecturesList(filteredLectures.slice(PhoneLecturesStartIndex, PhoneLecturesEndIndex));
-  
+    const WindowLecturesStartIndex =
+      (WindowLecturesCurrentPage - 1) * WindowLecturesPerpages
+    const WindowLecturesEndIndex = Math.min(
+      WindowLecturesStartIndex + WindowLecturesPerpages,
+      filteredLectures.length
+    )
+    setWindowLecturesList(
+      filteredLectures.slice(WindowLecturesStartIndex, WindowLecturesEndIndex)
+    )
+
     // 更新總頁數
-    const PhoneLecturesTotalPages = Math.ceil(filteredLectures.length / PhoneLecturesPerpages);
-    setPhoneLecturesTotalPages(PhoneLecturesTotalPages);
-  }, [PhoneLecturesCurrentPage, lectures, LectureSortOption]);
-  
-  
+    const WindowLecturesTotalPages = Math.ceil(
+      filteredLectures.length / WindowLecturesPerpages
+    )
+    setWindowLecturesTotalPages(WindowLecturesTotalPages)
+  }, [WindowLecturesCurrentPage, lectures, LectureSortOption])
+
+  // lecture手機板排序
+  useEffect(() => {
+    let filteredLectures = lectures
+
+    // 根據排序選項重新排序
+    switch (LectureSortOption) {
+      case 'LectureNewest':
+        filteredLectures.sort(
+          (a, b) => new Date(b.lecture_date) - new Date(a.lecture_date)
+        )
+        break
+      case 'LectureOldest':
+        filteredLectures.sort(
+          (a, b) => new Date(a.lecture_date) - new Date(b.lecture_date)
+        )
+        break
+      case 'LectureUpdatedNewest':
+        filteredLectures.sort(
+          (a, b) => new Date(b.change_time) - new Date(a.change_time)
+        )
+        break
+      case 'LectureUpdatedOldest':
+        filteredLectures.sort(
+          (a, b) => new Date(a.change_time) - new Date(b.change_time)
+        )
+        break
+      default:
+        break
+    }
+
+    // 更新課程列表
+    const PhoneLecturesStartIndex =
+      (PhoneLecturesCurrentPage - 1) * PhoneLecturesPerpages
+    const PhoneLecturesEndIndex = Math.min(
+      PhoneLecturesStartIndex + PhoneLecturesPerpages,
+      filteredLectures.length
+    )
+    setPhoneLecturesList(
+      filteredLectures.slice(PhoneLecturesStartIndex, PhoneLecturesEndIndex)
+    )
+
+    // 更新總頁數
+    const PhoneLecturesTotalPages = Math.ceil(
+      filteredLectures.length / PhoneLecturesPerpages
+    )
+    setPhoneLecturesTotalPages(PhoneLecturesTotalPages)
+  }, [PhoneLecturesCurrentPage, lectures, LectureSortOption])
+
   // wish排序
-  const [WishSortOption, setWishSortOption] = useState('WishNewest'); // 初始排序方式：根據課程時間由新到舊
+  const [WishSortOption, setWishSortOption] = useState('WishNewest') // 初始排序方式：根據課程時間由新到舊
   const handleWishSortChange = (option) => {
-    setWishSortOption(option);
-  };
+    setWishSortOption(option)
+  }
 
   // wish桌機板排序
   useEffect(() => {
-    let filteredWish = TeacherWish;
-  
+    let filteredWish = TeacherWish
+
     // 根據排序選項重新排序
     switch (WishSortOption) {
       case 'WishNewest':
-        filteredWish.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        break;
+        filteredWish.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )
+        break
       case 'WishOldest':
-        filteredWish.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-        break;
+        filteredWish.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        )
+        break
       default:
-        break;
+        break
     }
-  
+
     // 更新課程列表
-    const WindowWishStartIndex = (WindowWishCurrentPage - 1) * WindowWishPerpages;
-    const WindowWishEndIndex = Math.min(WindowWishStartIndex + WindowWishPerpages, filteredWish.length);
-    setWindowWishList(filteredWish.slice(WindowWishStartIndex, WindowWishEndIndex));
-  
+    const WindowWishStartIndex =
+      (WindowWishCurrentPage - 1) * WindowWishPerpages
+    const WindowWishEndIndex = Math.min(
+      WindowWishStartIndex + WindowWishPerpages,
+      filteredWish.length
+    )
+    setWindowWishList(
+      filteredWish.slice(WindowWishStartIndex, WindowWishEndIndex)
+    )
+
     // 更新總頁數
-    const WindowWishTotalPages = Math.ceil(filteredWish.length / WindowWishPerpages);
-    setWindowWishTotalPages(WindowWishTotalPages);
-  }, [WindowWishCurrentPage, TeacherWish, WishSortOption]);
+    const WindowWishTotalPages = Math.ceil(
+      filteredWish.length / WindowWishPerpages
+    )
+    setWindowWishTotalPages(WindowWishTotalPages)
+  }, [WindowWishCurrentPage, TeacherWish, WishSortOption])
 
   // wish手機板排序
   useEffect(() => {
-    let filteredWish = TeacherWish;
-  
+    let filteredWish = TeacherWish
+
     // 根據排序選項重新排序
     switch (WishSortOption) {
       case 'WishNewest':
-        filteredWish.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        break;
+        filteredWish.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )
+        break
       case 'WishOldest':
-        filteredWish.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-        break;
+        filteredWish.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        )
+        break
       default:
-        break;
+        break
     }
-  
-    // 更新課程列表
-    const PhoneWishStartIndex = (PhoneWishCurrentPage - 1) * PhoneWishPerpages;
-    const PhoneWishEndIndex = Math.min(PhoneWishStartIndex + PhoneWishPerpages, filteredWish.length);
-    setPhoneWishList(filteredWish.slice(PhoneWishStartIndex, PhoneWishEndIndex));
-  
-    // 更新總頁數
-    const PhoneWishTotalPages = Math.ceil(filteredWish.length / PhoneWishPerpages);
-    setPhoneWishTotalPages(PhoneWishTotalPages);
-  }, [PhoneWishCurrentPage, TeacherWish, WishSortOption]);
 
+    // 更新課程列表
+    const PhoneWishStartIndex = (PhoneWishCurrentPage - 1) * PhoneWishPerpages
+    const PhoneWishEndIndex = Math.min(
+      PhoneWishStartIndex + PhoneWishPerpages,
+      filteredWish.length
+    )
+    setPhoneWishList(filteredWish.slice(PhoneWishStartIndex, PhoneWishEndIndex))
+
+    // 更新總頁數
+    const PhoneWishTotalPages = Math.ceil(
+      filteredWish.length / PhoneWishPerpages
+    )
+    setPhoneWishTotalPages(PhoneWishTotalPages)
+  }, [PhoneWishCurrentPage, TeacherWish, WishSortOption])
+
+  // 刪除許願池清單code
   const deleteWish = async (wishID) => {
     const url = 'http://localhost:3005/api/teacher-wish'
 
@@ -302,8 +346,61 @@ export default function LectureManagement() {
       return <div></div>
     }
   }
-  
 
+  // 刪除課程清單code
+  const deleteLecture = async (lectureID) => {
+    const url = 'http://localhost:3005/api/teacher-lecture'
+
+    // fetch抓資料
+    try {
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: lectureID }),
+      })
+      const data = await res.json()
+      console.log(data)
+
+      // 在成功刪除優惠券後執行 getCoupon
+      // await getWishs()
+
+      return <div></div>
+    } catch (error) {
+      console.log(error)
+      return <div></div>
+    }
+  }
+
+  // 更新課程清單code
+  const updateLecture = async (lectureId, updatedFields) => {
+    const url = 'http://localhost:3005/api/teacher-lecture' // 請求的路由
+
+    try {
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: lectureId, // 要更新的課程 ID
+          ...updatedFields, // 包含要更新的字段的物件
+        }),
+      })
+
+      const data = await res.json()
+      console.log(data)
+
+      // 在成功更新課程後可以進行其他操作，例如重新加載頁面
+      
+
+      return data // 可根據需要返回特定的數據
+    } catch (error) {
+      console.log('Error updating lecture:', error)
+      throw error // 可以根據需要處理錯誤或返回其他數據
+    }
+  }
 
   return (
     <>
@@ -330,7 +427,6 @@ export default function LectureManagement() {
                 </button>
               </div>
             </div>
-
 
             {/* 浩雲的ul */}
             <ul className="nav nav-underline ul-margin">
@@ -361,7 +457,6 @@ export default function LectureManagement() {
             </ul>
 
             <div>
-
               {activeIndex === '我的課程' ? (
                 <div className="lecture_content">
                   {/* 我的課程排序 */}
@@ -380,22 +475,46 @@ export default function LectureManagement() {
                       aria-labelledby="lectureDropdown1"
                     >
                       <li>
-                        <a className="dropdown-item" href="#" onClick={() => handleLectureSortChange('LectureNewest')}>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleLectureSortChange('LectureNewest')
+                          }
+                        >
                           上課時間由新到舊
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#" onClick={() => handleLectureSortChange('LectureOldest')}>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleLectureSortChange('LectureOldest')
+                          }
+                        >
                           上課時間由舊到新
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#" onClick={() => handleLectureSortChange('LectureUpdatedNewest')}>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleLectureSortChange('LectureUpdatedNewest')
+                          }
+                        >
                           更新時間由新到舊
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#" onClick={() => handleLectureSortChange('LectureUpdatedOldest')}>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleLectureSortChange('LectureUpdatedOldest')
+                          }
+                        >
                           更新時間由舊到新
                         </a>
                       </li>
@@ -422,6 +541,8 @@ export default function LectureManagement() {
                           <LectureContentTbody
                             key={lecture.id}
                             lecture={lecture}
+                            deleteLecture={deleteLecture}
+                            updateLecture={updateLecture}
                           />
                         ))}
                       </table>
@@ -441,6 +562,7 @@ export default function LectureManagement() {
                         <LectureContentPhone
                           key={lecture.id}
                           lecture={lecture}
+                          deleteLecture={deleteLecture}
                         />
                       ))}
                     </div>
@@ -470,12 +592,20 @@ export default function LectureManagement() {
                       aria-labelledby="lectureDropdown1"
                     >
                       <li>
-                        <a className="dropdown-item" href="#" onClick={() => handleWishSortChange('WishNewest')}>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() => handleWishSortChange('WishNewest')}
+                        >
                           建立時間由新到舊
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#" onClick={() => handleWishSortChange('WishOldest')}>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() => handleWishSortChange('WishOldest')}
+                        >
                           建立時間由舊到新
                         </a>
                       </li>
@@ -508,10 +638,12 @@ export default function LectureManagement() {
                         ))}
                       </table>
                     </div>
-                    <Page totalPages={WindowWishTotalPages}
+                    <Page
+                      totalPages={WindowWishTotalPages}
                       currentPage={WindowWishCurrentPage}
                       perpages={WindowWishPerpages}
-                      onPageChange={handleWindowWishPageChange}/>
+                      onPageChange={handleWindowWishPageChange}
+                    />
                   </div>
 
                   {/* 手機板許願池頁面 */}
@@ -525,10 +657,12 @@ export default function LectureManagement() {
                         />
                       ))}
                     </div>
-                    <Page totalPages={PhoneWishTotalPages}
+                    <Page
+                      totalPages={PhoneWishTotalPages}
                       currentPage={PhoneWishCurrentPage}
                       perpages={PhoneWishPerpages}
-                      onPageChange={handlePhoneWishPageChange}/>
+                      onPageChange={handlePhoneWishPageChange}
+                    />
                   </div>
                 </div>
               )}
@@ -566,7 +700,6 @@ export default function LectureManagement() {
           margin-top: 50px;
           margin-bottom: 20px;
         }
-
 
          {
           /* 浩雲的active */
@@ -610,7 +743,6 @@ export default function LectureManagement() {
             margin-right: 0px;
           }
         }
-
 
          {
           /* lecture content 的css */
