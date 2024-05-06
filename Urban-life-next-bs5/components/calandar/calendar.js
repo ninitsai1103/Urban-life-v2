@@ -14,8 +14,6 @@ export default function Calendar() {
 
   return (
     <>
-      <h1>{'Calendar Demo'}</h1>
-
       <div className="container">
         <CalendarHeader setCalendarMain={setCalendarMain} />
         <CalendarBody calendarMain={calendarMain}/>
@@ -24,7 +22,7 @@ export default function Calendar() {
       <style jsx>{`
         .container {
           border: 1px solid black;
-          width: 800px;
+          
         }
       `}</style>
     </>
