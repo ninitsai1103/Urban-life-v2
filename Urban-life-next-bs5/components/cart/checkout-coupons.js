@@ -18,6 +18,14 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
     setSelectedCoupon(e)
     sendSelectedCoupon(e)
   }
+  const handleNoCouponSelected = () => {
+    // window.localStorage.setItem('discount', 0)
+    setSelectedCoupon([])
+    // sendSelectedCoupon([])
+    // setSelectedCoupon({"id":1,"user_id":43,"coupon_id":1,"valid":1,"name":"註冊優惠券","code":"VIP666","amount":0.1,"started_at":"2024-04-24","deadline":"2024-05-31","created_at":"2024-01-01 00:00:00","updated_at":"2024-01-19 00:00:00","status":"可使用","min_price":500,"condition":"資材"})
+    sendSelectedCoupon({"id":99,"user_id":43,"coupon_id":99,"valid":1,"name":"不選擇優券","code":"NOCOUPON","amount":Number(0),"started_at":"2024-04-24","deadline":"2024-05-31","created_at":"2024-01-01 00:00:00","updated_at":"2024-01-19 00:00:00","status":"可使用","min_price":0,"condition":"資材"})
+    // window.localStorage.setItem('coupon', JSON.stringify([]))
+  }
   // const [couponCanUse, setCouponCanUse] = useState(couponNotExpired)
 
   // useEffect(() => {
@@ -44,13 +52,29 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
 
   //localStorage
   //getItem
+  // useEffect(() => {
+  //   const data = window.localStorage.getItem('coupon')
+  //   if (data) {setSelectedCoupon(JSON.parse(data))}
+  // }, [])
+  // //setItem
+  // useEffect(() => {
+  //   if(selectedCoupon.length > 0) {
+  //     window.localStorage.setItem('coupon', JSON.stringify(selectedCoupon))
+  //   }
+  // }, [selectedCoupon])
+
+  // localStorage selectedCoupon
+  // useEffect(() => {
+  //   const data = window.localStorage.getItem('selectedCoupon')
+  //   if (data) {
+  //     setSelectedCoupon(JSON.parse(data))
+  //   }
+  // }, [])
   useEffect(() => {
-    const data = window.localStorage.getItem('coupon')
-    if (data !== null) setSelectedCoupon(JSON.parse(data))
-  }, [])
-  //setItem
-  useEffect(() => {
-    window.localStorage.setItem('coupon', JSON.stringify(selectedCoupon))
+    window.localStorage.setItem(
+      'selectedCoupon',
+      JSON.stringify(selectedCoupon)
+    )
   }, [selectedCoupon])
 
   return (
@@ -71,6 +95,21 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
           <p>沒有優惠卷</p>
         </div>
         {/* 只顯示未過期且還沒使用的優惠卷 */}
+        <div
+          className="form-check-label d-flex align-items-center col-3"
+          htmlFor="none"
+        >
+          <input
+            className="form-check-input"
+            type="radio"
+            name="couponRadios"
+            id="none"
+            value="none"
+            checked={selectedCoupon.length === 0}
+            onChange={handleNoCouponSelected}
+          />
+          <div className={styles.coupon_name}>不選擇優惠券</div>
+        </div>
         {couponNotExpired.map((v, i) => {
           return (
             <div className="row  py-2" key={i}>
@@ -94,7 +133,7 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
                 className={`col-3 ${styles.coupon_detail}`}
                 htmlFor={`coupon${i}`}
               >
-                {v.amount > 1 ? `${v.amount}元` : `${v.amount*10}折`}
+                {v.amount > 1 ? `${v.amount}元` : `${v.amount * 10}折`}
               </div>
               <div
                 className={`col-3 ${styles.coupon_detail}`}

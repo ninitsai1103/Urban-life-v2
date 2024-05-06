@@ -67,13 +67,13 @@ export default function CheckoutProductsTable() {
           <thead>
             <tr>
               <th>
-                <input
+                {/* <input
                   type="checkbox"
                   checked={checkAll}
                   onClick={(e) => {
                     handleToggleCheckedAll(e)
                   }}
-                />
+                /> */}
               </th>
               <th>課程</th>
               <th className={styles.d_td}>單價</th>

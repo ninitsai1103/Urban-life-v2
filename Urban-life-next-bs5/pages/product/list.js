@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import Search from '@/components/product/search'
 import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
+import UseSortDatas from '@/hooks/product/useSortDatas'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
+import { filter } from 'lodash'
 // import { totalItems } from '@/hooks/cart-reducer-state'
 
 export default function List() {
@@ -18,62 +20,229 @@ export default function List() {
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  // const totalItems = 450;
   const perpages = 48 //一頁幾筆資料
-  //
+
+  //分類狀態
+  const [selectCategory, setSelectCategory] = useState(null)
+
+  //分類後的產品
+  const secProducts = useMemo(() => {
+    return selectCategory
+      ? products.filter((product) => product.category === selectCategory)
+      : products
+  })
+
+  //排序狀態和邏輯(初始值代入分類後的產品)
+  const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
+
+  //篩選狀態與邏輯
+  const [filterCondition, setFilterCondition] = useState({
+    radio_price: {
+      minPrice: '',
+      maxPrice: '',
+    },
+    input_price: {
+      minPrice_text: '',
+      maxPrice_text: '',
+    },
+    size: '',
+    freeShipping: '0',
+    hrsExpress: '0',
+    location: '0',
+  })
+  const [selectedValue, setSelectedValue] = useState('') //金額radio
+  const [priceRange, setPriceRange] = useState({
+    //金額input
+    minPrice_text: '',
+    maxPrice_text: '',
+  })
+
+  const filteredProducts = useMemo(() => {
+    return sortDatas.filter((secProducts) => {
+      return (
+        (!filterCondition.radio_price.minPrice ||
+          secProducts.price >= Number(filterCondition.radio_price.minPrice)) &&
+        (!filterCondition.radio_price.maxPrice ||
+          secProducts.price <= Number(filterCondition.radio_price.maxPrice)) &&
+        (!filterCondition.input_price.minPrice_text ||
+          secProducts.price >=
+            Number(filterCondition.input_price.minPrice_text)) &&
+        (!filterCondition.input_price.maxPrice_text ||
+          secProducts.price <=
+            Number(filterCondition.input_price.maxPrice_text)) &&
+        (!filterCondition.size || secProducts.size === filterCondition.size) &&
+        (filterCondition.freeShipping === '0' ||
+          secProducts.freeShipping ===
+            (filterCondition.freeShipping === '1')) &&
+        (filterCondition.hrsExpress === '0' ||
+          secProducts.hrsExpress === (filterCondition.hrsExpress === '1')) &&
+        (filterCondition.location === '0' ||
+          secProducts.location === (filterCondition.location === '1'))
+      )
+    })
+  }, [sortDatas, filterCondition])
+
+  //分頁&分類&排序
+  useEffect(() => {
+    //更新分頁總數
+    const newTotalPages = Math.ceil(filteredProducts.length / perpages)
+    setTotalPages(newTotalPages)
+    //更新列表
+    const startIndex = (currentPage - 1) * perpages
+    const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
+    setList(filteredProducts.slice(startIndex, endIndex))
+    console.log(filterCondition)
+  }, [currentPage, perpages, filteredProducts])
+
+  //分頁控制
   const handlePageChange = (page) => {
     setCurrentPage(page)
   }
 
-  //分類
-  const [selectCategory, setSelectCategory] = useState(null)
+  //分類控制
   const handleCategory = (category) => {
     setSelectCategory(category)
     setCurrentPage(1) //重新設定為第一頁
   }
 
+  //排序控制
+  const changeSort = (key, order) => {
+    handleSortDatas(key, order)
+  }
 
+  //篩選控制
+  // const handleDataFilter = (newCondition) => {
+  //   //更新filterCondition狀態
+  //   setFilterCondition((prevCondition) => ({
+  //     ...prevCondition,
+  //     ...newCondition,
+  //   }))
+  // }
+  
+  const handleInputChange = (minPrice, maxPrice) => {
+    setSelectedValue('');
+    //如果輸入金額時=>清空並禁用radio
+    setFilterCondition(prevCondition => ({
+      ...prevCondition,
+      radio_price: {
+        minPrice: '',
+        maxPrice: '',
+      },
+      input_price:{
+        minPrice_text:minPrice,
+        maxPrice_text:maxPrice
+      }
+    }))
+    //清空radio選中的值
+    setSelectedValue('')
+  }
 
-  //分頁&分類
-  useEffect(() => {
-    let filterProducts = products
-    if (selectCategory) {
-      filterProducts = products.filter(
-        (product) => product.category === selectCategory
-      )
+  //金額輸入框控制
+const handleMinPrice = (e) => {
+  setPriceRange(prev => ({
+    ...prev,
+    minPrice_text:e.target.value
+  }))
+}
+
+const handleMaxPrice = (e => {
+  setPriceRange(prev => ({
+    ...prev,
+    maxPrice_text:e.target.value
+  }))
+})
+
+ //送出金額按鈕控制
+ const handleSubmit = (e) => {
+  //使用輸入的價格更新篩選條件
+  setFilterCondition(prevCondition => ({
+    ...prevCondition,
+    input_price:{
+      minPrice_text:priceRange.minPrice_text,
+      maxPrice_text:priceRange.maxPrice_text
     }
-    const newTotalPages = Math.ceil(filterProducts.length / perpages)
-    setTotalPages(newTotalPages)
-    const startIndex = (currentPage - 1) * perpages
-    const endIndex = Math.min(startIndex + perpages, filterProducts.length)
-    setList(filterProducts.slice(startIndex, endIndex))
-  }, [currentPage, products, selectCategory])
+  }))
+console.log(selectedValue, filterCondition);
+ }
+
+
+
+  //更新radio按鈕處理邏輯，同時清空篩選
+  const handleSelectedValue = (e, minPrice, maxPrice) => {
+    setSelectedValue(e.target.value);
+    setFilterCondition((prevCondition) => ({
+      ...prevCondition,
+      radio_price: {
+        minPrice:minPrice || '',
+        maxPrice:maxPrice || '',
+      },
+      input_price: {
+        minPrice_text: minPrice,
+        maxPrice_text: maxPrice,
+      },
+  })
+  )
+}
+
+  //清空篩選
+  const clearFilter = () => {
+    setFilterCondition({
+      radio_price: {
+        minPrice: '',
+        maxPrice: '',
+      },
+      input_price: {
+        minPrice_text: '',
+        maxPrice_text: '',
+      },
+      size: '',
+      freeShipping: '0',
+      hrsExpress: '0',
+      location: '0',
+    })
+    setSelectedValue('')
+  }
+  //清空金額input的值
+  const clearInputPrice = () => {
+    setFilterCondition((prevCondition => ({
+      ...prevCondition,
+      input_price: {
+        minPrice_text: '',
+        maxPrice_text: '',
+      },
+    })))
+    setPriceRange({minPrice_text:"",maxPrice_text:""})
+  }
+
+  //radio或text禁用
+
+  //
 
   // Toggle the side navigation
-  useEffect(() => {
-    // fix next issue
-    if (typeof window !== 'undefined') {
-      const sidebarToggle = document.body.querySelector('#sidebarToggle')
+  // useEffect(() => {
+  //   // fix next issue
+  //   if (typeof window !== 'undefined') {
+  //     const sidebarToggle = document.body.querySelector('#sidebarToggle')
 
-      if (sidebarToggle) {
-        // 在localStorage中儲存目前sidebar情況
-        if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-          document.body.classList.toggle('sb-sidenav-toggled')
-        }
+  //     if (sidebarToggle) {
+  //       // 在localStorage中儲存目前sidebar情況
+  //       if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+  //         document.body.classList.toggle('sb-sidenav-toggled')
+  //       }
 
-        sidebarToggle.addEventListener('click', (event) => {
-          event.preventDefault()
+  //       sidebarToggle.addEventListener('click', (event) => {
+  //         event.preventDefault()
 
-          document.body.classList.toggle('sb-sidenav-toggled')
+  //         document.body.classList.toggle('sb-sidenav-toggled')
 
-          localStorage.setItem(
-            'sb|sidebar-toggle',
-            document.body.classList.contains('sb-sidenav-toggled')
-          )
-        })
-      }
-    }
-  }, [])
+  //         localStorage.setItem(
+  //           'sb|sidebar-toggle',
+  //           document.body.classList.contains('sb-sidenav-toggled')
+  //         )
+  //       })
+  //     }
+  //   }
+  // }, [])
 
   return (
     <>
@@ -508,7 +677,15 @@ export default function List() {
                 篩選
               </h2>
               <div className="form-control set-text-color">
-                <Link href="" className="text-decoration-none" id="set-text">
+                <Link
+                  href=""
+                  className="text-decoration-none"
+                  id="set-text"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    clearFilter()
+                  }}
+                >
                   清除篩選
                 </Link>
                 <p className="mt-1 mb-0 set-fw700">金額</p>
@@ -518,7 +695,17 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios1"
-                    value="option1"
+                    value="<149"
+                    checked={selectedValue === '<149'}
+                    disabled={
+                      priceRange.minPrice_text || priceRange.maxPrice_text
+                    }
+                    onChange={(e) => {
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: '', maxPrice: 149 },
+                      // })
+                      handleSelectedValue(e,'',149)
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -533,13 +720,20 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios2"
-                    value="option2"
+                    value="150-299"
+                    checked={selectedValue === '150-299'}
+                    onChange={(e) => {
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 150, maxPrice: 299 },
+                      // })
+                      handleSelectedValue(e,'150','299')
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios2"
                   >
-                    NTD 151-300
+                    NTD 150-299
                   </label>
                 </div>
                 <div className="form-check">
@@ -548,13 +742,20 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios3"
-                    value="option3"
+                    value="300-499"
+                    checked={selectedValue === '300-499'}
+                    onChange={(e) => {
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 300, maxPrice: 499 },
+                      // })
+                      handleSelectedValue(e,'300','499')
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios3"
                   >
-                    NTD 301-500
+                    NTD 300-499
                   </label>
                 </div>
                 <div className="form-check">
@@ -563,13 +764,20 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios4"
-                    value="option4"
+                    value="500-999"
+                    checked={selectedValue === '500-999'}
+                    onChange={(e) => {
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 500, maxPrice: 999 },
+                      // })
+                      handleSelectedValue(e,'500','999')
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios4"
                   >
-                    NTD 501-1000
+                    NTD 500-999
                   </label>
                 </div>
                 <div className="form-check">
@@ -578,13 +786,20 @@ export default function List() {
                     type="radio"
                     name="exampleRadios"
                     id="exampleRadios5"
-                    value="option5"
+                    value=">1000"
+                    checked={selectedValue === '>1000'}
+                    onChange={(e) => {
+                      // handleDataFilter({
+                      //   radio_price: { minPrice: 1000, maxPrice: '' },
+                      // })
+                      handleSelectedValue(e,1000,'')
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios5"
                   >
-                    NTD 1001以上
+                    NTD 1000以上
                   </label>
                 </div>
 
@@ -596,18 +811,31 @@ export default function List() {
                     type="text"
                     className="form-control ms-1 p-1 set-fs12 set-size"
                     placeholder=""
-                    aria-label="lowPrice"
+                    aria-label="minPrice_text"
+                    value={priceRange.minPrice_text}
+                    disabled={selectedValue}
+                    onChange={(e) => {
+                     handleMinPrice(e);
+                    }}
                   />
                   <span className="input-group-text px-1 no-border-bg">-</span>
                   <input
                     type="text"
                     className="form-control me-2 p-1 set-fs12 set-size"
                     placeholder=""
-                    aria-label="highPrice"
+                    aria-label="maxPrice_text"
+                    value={priceRange.maxPrice_text}
+                    disabled={selectedValue}
+                    onChange={(e) => {
+                      handleMaxPrice(e);
+                    }}
                   />
                   <button
                     className="set-button-style d-flex align-items-center p-1 rounded"
-                    type="submit"
+                    type="button"
+                    onClick={(e) => {
+                      handleSubmit(e);
+                    }}
                   >
                     <MdKeyboardArrowRight className="text-white" />
                   </button>
@@ -615,6 +843,10 @@ export default function List() {
                 <Link
                   href=""
                   className="set-fs12 text-decoration-none set-text-color2"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    clearInputPrice()
+                  }}
                 >
                   清除輸入金額
                 </Link>
@@ -630,6 +862,9 @@ export default function List() {
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios6"
+                    onChange={(e) => {
+                      handleDataFilter({ size: '大' })
+                    }}
                   >
                     大
                   </label>
@@ -776,7 +1011,7 @@ export default function List() {
                   <div
                     className="offcanvas offcanvas-start "
                     data-bs-scroll="true"
-                    tabindex="-1"
+                    tabIndex="-1"
                     id="offcanvasWithBothOptions"
                     aria-labelledby="offcanvasWithBothOptionsLabel"
                   >
@@ -824,6 +1059,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(1)
+                                    }}
                                   >
                                     春季種子
                                   </Link>
@@ -832,6 +1071,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(2)
+                                    }}
                                   >
                                     夏季種子
                                   </Link>
@@ -840,6 +1083,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(3)
+                                    }}
                                   >
                                     秋季種子
                                   </Link>
@@ -848,6 +1095,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(4)
+                                    }}
                                   >
                                     冬季種子
                                   </Link>
@@ -881,6 +1132,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(5)
+                                    }}
                                   >
                                     春季種苗
                                   </Link>
@@ -889,6 +1144,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(6)
+                                    }}
                                   >
                                     夏季種苗
                                   </Link>
@@ -897,6 +1156,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(7)
+                                    }}
                                   >
                                     秋季種苗
                                   </Link>
@@ -905,6 +1168,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(8)
+                                    }}
                                   >
                                     冬季種苗
                                   </Link>
@@ -939,6 +1206,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(9)
+                                    }}
                                   >
                                     殺蟲劑
                                   </Link>
@@ -947,6 +1218,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(10)
+                                    }}
                                   >
                                     殺真菌劑
                                   </Link>
@@ -955,6 +1230,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(11)
+                                    }}
                                   >
                                     除草劑
                                   </Link>
@@ -989,6 +1268,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(12)
+                                    }}
                                   >
                                     花盆
                                   </Link>
@@ -998,6 +1281,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(13)
+                                    }}
                                   >
                                     工具
                                   </Link>
@@ -1006,6 +1293,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(14)
+                                    }}
                                   >
                                     介質
                                   </Link>
@@ -1015,6 +1306,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(15)
+                                    }}
                                   >
                                     其他
                                   </Link>
@@ -1048,6 +1343,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(16)
+                                    }}
                                   >
                                     成長期肥料
                                   </Link>
@@ -1056,6 +1355,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(17)
+                                    }}
                                   >
                                     開花期肥料
                                   </Link>
@@ -1065,6 +1368,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(18)
+                                    }}
                                   >
                                     結果期肥料
                                   </Link>
@@ -1098,6 +1405,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(19)
+                                    }}
                                   >
                                     圖鑑
                                   </Link>
@@ -1106,6 +1417,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(20)
+                                    }}
                                   >
                                     指南
                                   </Link>
@@ -1114,6 +1429,10 @@ export default function List() {
                                   <Link
                                     href=""
                                     className="text-decoration-none d-inline-block mb-2 set-fs12 sec-category"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      handleCategory(21)
+                                    }}
                                   >
                                     DIY
                                   </Link>
@@ -1363,33 +1682,49 @@ export default function List() {
                       aria-labelledby="dropdownMenuButton1"
                     >
                       <li>
-                        <a className="dropdown-item" href="#"
-                        onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('price', 'descending')
+                          }}
                         >
                           價格由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                        onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('price', 'ascending')
+                          }}
                         >
                           價格由低到高
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                         onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('star', 'descending')
+                          }}
                         >
                           評價由高到低
                         </a>
                       </li>
                       <li>
-                        <a className="dropdown-item" href="#"
-                         onClick={()=>{
-                        }}
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            changeSort('star', 'ascending')
+                          }}
                         >
                           評價由低到高
                         </a>

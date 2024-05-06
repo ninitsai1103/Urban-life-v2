@@ -23,7 +23,7 @@ export default function MyNavbar() {
                 <Link href="http://localhost:3000/product/list">商品總覽</Link>
               </li>
               <li>
-                <Link href="">課程</Link>
+                <Link href="http://localhost:3000/lecture">課程</Link>
               </li>
               <li>
                 <Link href="http://localhost:3000/article">文章分享</Link>
