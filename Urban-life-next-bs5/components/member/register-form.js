@@ -34,6 +34,7 @@ const handleSubmit = async (e) => {
     email: '',
     password: '',
     confirmPassword: '',
+    RegisterError: '',
   }
 
   // 信號值，代表是否有錯誤
@@ -74,19 +75,42 @@ const handleSubmit = async (e) => {
   // 表單檢查 --- END
 
   // 最後檢查完全沒問題才送到伺服器(ajax/fetch)
-  const res = await fetch('http://localhost:3000/member/information', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded', // 修改 Content-Type
-    },
-    body: new URLSearchParams(user), // 使用 URLSearchParams 格式
-  });
+  if (!hasErrors) {
+    try {
+      const response = await fetch('http://localhost:3005/api/user/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      })
+      const data = await response.json()// 建立一個包含使用者資訊的物件
+
+      // console.log(data);
+      const memberInfo = {
+        id: data.user.id,
+        identity_id: data.user.identity_id,
+        token:data.token
+      };
+      // 將 JSON 字串存儲到 localStorage 中
+          // 表單驗證通過後跳轉到目標連結
+      window.location.href = '/member/information'
+      if (response.ok) {
+        console.log('註冊成功')
+        localStorage.setItem('member-info', JSON.stringify(memberInfo));
+        // 登录成功，重定向到用户资料页面或其他页面
+        window.location.href = '/member/information'
+      } else {
+        // 登录失败，显示错误消息
+        console.error('Login failed:', data.message)
+        setErrors({ ...errors, RegisterError: "email已存在" })
+      }
+    } catch (error) {
+      setErrors({ ...errors, RegisterError: "email已存在" })
+    }
+  }
   
-  const data = await res.text(); // 取得回應的文字內容
-  
-  console.log(data)
-      // 表單驗證通過後跳轉到目標連結
-  window.location.href = '/member/information'
+ 
 }
   return (
     <>
@@ -130,7 +154,9 @@ const handleSubmit = async (e) => {
             onChange={handleFieldChange}
               />
               <span className="error my-1 text-start">{errors.password}</span>
+              <span className="error my-1 text-start">{errors.RegisterError}</span>
             </div>
+            
           </div>
       
             <div className="mb-3 d-flex justify-content-center align-items-center">

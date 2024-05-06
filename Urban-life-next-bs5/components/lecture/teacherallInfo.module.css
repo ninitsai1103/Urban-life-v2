@@ -1,0 +1,74 @@
+.card {
+    display: flex;
+    display: flex;
+    align-items: flex-start;
+    gap: 67px;
+    flex: 1 0 0;
+    align-self: stretch;
+}
+
+.cardBody {
+    display: flex;
+    width: 900px;
+    height: 313px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: auto;
+    flex: 1 0 0;
+}
+
+.cardBodyArea {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+}
+
+.email {
+    color: #000;
+
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.phone {
+    color: #000;
+
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.teachername {
+    color: #000;
+
+    font-family: Roboto;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.teacherinfo {
+    width: 900px;
+    color: #000;
+
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    line-height: 24px;
+}
+
+.img {
+    width: 313px;
+    height: 313px;
+}

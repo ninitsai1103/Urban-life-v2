@@ -105,7 +105,7 @@ export default function AsideAccount() {
             </div>
             <div className="d-flex justify-content-center">
               <div className="name text-center">
-                {member ? member.name : '姓名'}
+              {member && member.name ? member.name : '姓名'}
               </div>
             </div>
             <div className="d-flex justify-content-center">

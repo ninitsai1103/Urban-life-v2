@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { countries, townships, postcodes } from './data-townships'
+import useMemberInfo from '@/hooks/use-member-info'
 
 export default function TWZipCode({
   initPostcode = '',
@@ -13,6 +14,9 @@ export default function TWZipCode({
 
   // 郵遞區號使用字串(數字字串)
   const [postcode, setPostcode] = useState('')
+
+  // hooks
+const member = useMemberInfo()    
 
   // 利用傳入時的initPostcode初始化用
   useEffect(() => {
@@ -52,9 +56,7 @@ export default function TWZipCode({
   return (
     <>
     
-      <label htmlFor="exampleInputAddress" className="form-label fonts">
-        地址 *
-      </label>
+      
       <div className="col-md-4">
         <select
           className="form-control"
@@ -67,6 +69,7 @@ export default function TWZipCode({
             // 重置postcode的值
             setPostcode('')
           }}
+          required
         >
           <option value="-1">選擇縣市</option>
           {countries.map((value, index) => (
@@ -84,6 +87,7 @@ export default function TWZipCode({
             // 將字串轉成數字
             setTownshipIndex(+e.target.value)
           }}
+          
         >
           <option value="-1">選擇區域</option>
           {countryIndex > -1 &&
@@ -95,7 +99,9 @@ export default function TWZipCode({
         </select>
       </div>
       <div className="col-md-4 mt-3 mt-md-0 ">
-        <input type="text" className="form-control" placeholder="請輸入地址" />
+        <input type="text" className="form-control" 
+        required 
+        placeholder="請輸入地址" />
       </div>
      
       {/* <h3>郵遞區號:{postcode}</h3> */}

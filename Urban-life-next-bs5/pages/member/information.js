@@ -11,31 +11,105 @@ const InputDatePicker = dynamic(
 )
 
 export default function Information() {
+  // 用物件狀態對應整個表單欄位
+  const [user, setUser] = useState({
+    name: '',
+    phone: '',
+    birthday: '',
+    gender: "",
+    address: "",
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
+  })
+  // 錯誤訊息狀態
+  const [errors, setErrors] = useState(null)
   //生日
   const [showDatepicker, setShowDatepicker] = useState(false)
   const [date, setDate] = useState('')
-  const [userId, setUserId] = useState(null)
 
- // hooks
-  const user = useMemberInfo();
-  // useEffect(() => {
-  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
-  //   if (memberInfo) {
-  //     const userId = memberInfo.id
-  //     setUserId(userId)
-  //   }
-  // }, []) // 確保這個 useEffect 只運行一次
+  // 多欄位共用事件處理函式
+  const handleFieldChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value })
+  }
+  // hooks
+  const member = useMemberInfo()
 
-  //檢查localStorage登入資訊
-  // if (typeof window !== 'undefined') {
-  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
-  //   const userId = memberInfo.id
-  //   if (userId) {
-  //     console.log(userId) // 這裡是使用者的 id
-  //   } else {
-  //     console.error('沒有登入資訊')
-  //   }
-  // }
+  //表單送出(更新)
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // 整理要送到伺服器的資料
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    const userId = memberInfo.id
+
+    // 信號值，代表有出現錯誤，判斷是否要送出表單用
+    let hasErrors = false
+    // 如果檢查有發生錯誤時
+    if (user.password) {
+      // 如果有密碼
+      if (!newPassword) {
+        setErrors('新密碼為必填')
+        hasErrors = true
+      }
+      if (!confirmPassword) {
+        setErrors('確認密碼為必填')
+        hasErrors = true
+      }
+    }
+    if (!hasErrors) {
+      if (user.password && newPassword !== confirmPassword) {
+        setErrors('新密碼和確認密碼不匹配')
+        hasErrors = true
+      }
+    }
+    if (!hasErrors) {
+      //更新
+
+      // 檢查並設置空欄位為 null
+      // const updatedUser = { ...user }
+      // for (const key in updatedUser) {
+      //   if (updatedUser[key] === '') {
+      //     updatedUser[key] = null
+      //   }
+      // }
+      try {
+        // 檢查欄位
+        const response = await fetch(
+          `http://localhost:3005/api/user/${userId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+          }
+        )
+        const data = await response.json() // 建立一個包含使用者資訊的物件
+
+        console.log(data)
+        const memberInfo = {
+          id: data.user.id,
+          name: data.user.name,
+          identity_id: data.user.identity_id,
+          token: data.token,
+        }
+
+        // 將 JSON 字串存儲到 localStorage 中
+
+        if (response.ok) {
+          console.log('更新成功')
+          console.log('使用者資訊：', data.user) // 這裡是使用者的所有資訊
+          localStorage.setItem('member-info', JSON.stringify(memberInfo))
+          // storage.clear();
+        } else {
+          // 登录失败，显示错误消息
+          console.error('Login failed:', data.message)
+        }
+      } catch (error) {
+        console.error('Error logging in:', error)
+      }
+    }
+  }
 
   return (
     <>
@@ -52,7 +126,7 @@ export default function Information() {
               <div className="title">個人資料</div>
             </div>
             <div className="form">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-3 section-font text-primary2">帳戶資訊</div>
                 <div className="mb-3">
                   <label
@@ -65,7 +139,11 @@ export default function Information() {
                     type="name"
                     className="form-control"
                     id="exampleInputName"
-                    placeholder={user ? user.name : "姓名"}
+                    name="name"
+                    value={user.name}
+                    onChange={handleFieldChange}
+                    {...(member && !member.name && { required: true })}
+                    placeholder={member && member.name ? member.name : '姓名'}
                   />
                 </div>
                 <div className="mb-3">
@@ -73,13 +151,32 @@ export default function Information() {
                     htmlFor="exampleInputEmail"
                     className="form-label fonts"
                   >
+                    電子信箱
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="exampleInputEmail"
+                    readOnly={true}
+                    placeholder={member ? member.email : 'email'}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputPhone"
+                    className="form-label fonts"
+                    name="phone"
+                    onChange={handleFieldChange}
+                    value={user.phone}
+                  >
                     手機號碼 *
                   </label>
                   <input
                     type="phone"
                     className="form-control"
                     id="exampleInputPhone"
-                    placeholder={user ? user.phone: "09"}
+                    placeholder={member && member.phone? member.phone : '09'}
+                    {...(member && !member.phone && { required: true })}
                   />
                 </div>
                 <div className="mb-3">
@@ -99,7 +196,15 @@ export default function Information() {
                       style={{
                         borderRadius: 2.8,
                       }}
-                      placeholder={user ? user.birthday : "出生年月日"}
+                      placeholder={
+                        member && member.birthday
+                          ? member.birthday
+                          : '出生年月日'
+                      }
+                      name="birthday"
+                      defaultValue={user.birthday}
+                      onChange={handleFieldChange}
+                      {...(member && !member.birthday && { required: true })}
                     />
                     <i
                       className="bi bi-calendar4 position-absolute"
@@ -109,15 +214,17 @@ export default function Information() {
                     ></i>
                   </div>
                 </div>
-                <div className="row mb-3">
+                {/* <div className="row mb-3">
                   <div className="btn-group">
                     <input
                       type="radio"
                       className="btn-check"
-                      name="sex"
+                      name="gender"
+                      value={user.gender}
+                      onChange={handleFieldChange}
                       id="option1"
                       autoComplete="off"
-                      checked={user && user.gender === "男"}
+                      checked={member && member.gender === '男'}
                     />
                     <label
                       className="btn btn-outline-primary"
@@ -128,10 +235,12 @@ export default function Information() {
                     <input
                       type="radio"
                       className="btn-check"
-                      name="sex"
+                      name="gender"
+                      value={user.gender}
+                      onChange={handleFieldChange}
                       id="option2"
                       autoComplete="off"
-                      checked={user && user.gender === "女"}
+                      checked={member && member.gender === '女'}
                     />
                     <label
                       className="btn btn-outline-primary"
@@ -140,11 +249,32 @@ export default function Information() {
                       女
                     </label>
                   </div>
-                </div>
-                <div className="mb-3 row">
-                  <TWZipCode />
-                </div>
+                </div> */}
 
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputAddress"
+                    className="form-label fonts"
+                    name="Address"
+                    // onChange={handleFieldChange}
+                    // value={user.address}
+                  >
+                    地址 *
+                  </label>
+                  {member && member.address ? (
+                    <input
+                      type="address"
+                      className="form-control"
+                      id="exampleInputAddress"
+                      placeholder={member.address}
+                      readOnly={true}
+                    />
+                  ) : (
+                    <div className="mb-3 row">
+                      <TWZipCode />
+                    </div>
+                  )}
+                </div>
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
                 <div className="mb-3">
                   <label
@@ -158,6 +288,9 @@ export default function Information() {
                     className="form-control"
                     id="exampleInputPassword1"
                     placeholder="請輸入原密碼"
+                    name="password"
+                    value={user.password}
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="mb-3">
@@ -172,6 +305,9 @@ export default function Information() {
                     className="form-control"
                     id="exampleInputPassword2"
                     placeholder="請輸入新密碼"
+                    name="newPassword"
+                    value={user.newPassword}
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="mb-3">
@@ -186,6 +322,9 @@ export default function Information() {
                     className="form-control"
                     id="exampleInputPassword3"
                     placeholder="請輸入新密碼"
+                    name="confirmPassword"
+                    value={user.confirmPassword}
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="text-center pt-3 mb-3">
