@@ -6,8 +6,8 @@ import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 
-export default function ProductCard({ product }) {
-
+export default function ProductCard({ product, isCollected }) {
+// console.log(isCollected)
   const [isFavorited, setIsFavorite] = useState([false]);
 
   const toggleFavorite = () => {

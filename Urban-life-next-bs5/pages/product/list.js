@@ -46,6 +46,9 @@ export default function List() {
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
 
+  //收藏
+  const [collections, setCollections] = useState([]);
+
   //分類後的產品(如果沒有點選分類就返回原本的產品列表)
   const secProducts = useMemo(() => {
     return selectCategory
@@ -134,7 +137,7 @@ export default function List() {
             newCondition.location = !newCondition.location
           }
         }
-        console.log(newCondition);
+        // console.log(newCondition);
         return newCondition;
       })
 
@@ -163,14 +166,16 @@ export default function List() {
   //獲得登入會員的收藏資料
   api.get('/collection')
   .then(response => {
-    const productCollction = response.data.data.map(item => item.product_id  );
-    console.log(productCollction);
+    const productCollection = response.data.data.collections.map(item => item.product_id && item.pdltat_id===1);
+    // console.log(productCollection);
+    setCollections(productCollection);
  
 
   })
   .catch(error => {
     console.error('Error:', error);
   });
+
   // Toggle the side navigation
   // useEffect(() => {
   //   // fix next issue
@@ -1689,7 +1694,7 @@ export default function List() {
               <div className="row row-cols-2 row-cols-lg-4 g-4">
                 {list.map((product) => (
                   <Link key={product.id} href={`/product/${product.id}`}>
-                  <ProductCard key={product.id} product={product}/>
+                  <ProductCard key={product.id} product={product} isCollected={collections.includes(product.id)}/>
                    </Link>
                 ))}
               </div>
