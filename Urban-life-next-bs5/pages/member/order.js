@@ -17,7 +17,7 @@ export default function OrderMainPage() {
       const data = await res.json()
 
       const orders = data.data.order
-      console.log(orders)
+      // console.log(orders)
       // 將相同order_id的東西儲存成一個物件
       // 新增一個key專門儲存product的資料
       const mergedOrders = orders.reduce((acc, order) => {
@@ -65,7 +65,7 @@ export default function OrderMainPage() {
         return acc
       }, [])
 
-      console.log(mergedOrders)
+      // console.log(mergedOrders)
       setOrders(mergedOrders)
     } catch (error) {
       console.log(error)

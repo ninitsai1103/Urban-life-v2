@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { TfiMenu } from 'react-icons/tfi'
 import { FaUser } from 'react-icons/fa'
 import { FaShoppingCart } from 'react-icons/fa'
 import Link from 'next/link'
 export default function MyNavbar() {
+  const [phoneNav, setPhoneNav] = useState(false)
+
+  const handlePhoneNav = () => {
+    setPhoneNav(!phoneNav)
+  }
   return (
     <>
       <div className="header">
         <div className="container d-flex m-3">
-          <div className="nav-phone-left ">
+          <div
+            className="nav-phone-left "
+            onClick={() => {
+              handlePhoneNav()
+            }}
+          >
             <TfiMenu style={{ color: 'white', fontSize: '24px' }} />
           </div>
           <div className="nav-left logo">
@@ -49,27 +59,29 @@ export default function MyNavbar() {
           </div>
         </div>
       </div>
-      <div className="header-phone-nav">
-        <div className="container-fluid header-phone-nav-container">
-          <div className="nav-down">
-            <p>首頁</p>
-          </div>
-          <div className="nav-down">
-            <p>商品總覽</p>
-          </div>
-          <div className="nav-down">
-            <p>課程</p>
-          </div>
-          <div className="nav-down">
-            <p>文章分享</p>
-          </div>
-          <div className="nav-down">
-            <p>講師陣容</p>
+      {!phoneNav ? (
+        <></>
+      ) : (
+        <div className="header-phone-nav">
+          <div className="container-fluid header-phone-nav-container">
+            <div className="nav-down">
+              <p>首頁</p>
+            </div>
+            <div className="nav-down">
+              <p>商品總覽</p>
+            </div>
+            <div className="nav-down">
+              <p>課程</p>
+            </div>
+            <div className="nav-down">
+              <p>文章分享</p>
+            </div>
+            <div className="nav-down">
+              <p>講師陣容</p>
+            </div>
           </div>
         </div>
-      </div>
-
-    
+      )}
 
       <style jsx>{`
         .header {
@@ -180,9 +192,6 @@ export default function MyNavbar() {
           }
         }
 
-        .header-phone-nav {
-          display: none;
-        }
         @media (max-width: 1200px) {
           .header-phone-nav {
             display: block;
@@ -203,6 +212,7 @@ export default function MyNavbar() {
             margin: 0px;
           }
         }
+
         .nav-down p:hover {
           color: #f3b454;
           border-bottom: 1px solid #f3b454;

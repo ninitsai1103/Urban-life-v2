@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react'
 import styles from './star.module.css'
 
 import Image from 'next/image'
-import useProducts from '@/hooks/product/useProducts'
-import { ClientPageRoot } from 'next/dist/client/components/client-page'
+
+// 評價的MODAL
+import ProductRating from './product-rating-modal'
+import LectureRating from './lecture-rating-modal'
 
 export default function Order({ order }) {
   const {
@@ -23,35 +25,57 @@ export default function Order({ order }) {
     pay,
   } = order
 
-  // 點按時的評分，一開始是0分代表沒有評分
-  const [productRating, setProductRating] = useState(0)
-  // 點按時的評分，一開始是0分代表沒有評分
-  const [lectureRating, setLectureRating] = useState(0)
-  // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
-  const [hoverRating, setHoverRating] = useState(0)
-  // 商品評論的狀態
-  const [productComment, setProductComment] = useState('')
-  // 課程評論的狀態
-  const [lectureComment, setLectureComment] = useState('')
+  // // 點按時的評分，一開始是0分代表沒有評分
+  // const [productRating, setProductRating] = useState(0)
+  // // 點按時的評分，一開始是0分代表沒有評分
+  // const [lectureRating, setLectureRating] = useState(0)
+  // // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
+  // const [hoverRating, setHoverRating] = useState(0)
+  // // 商品評論的狀態
+  // const [productComment, setProductComment] = useState('')
+  // // 課程評論的狀態
+  // const [lectureComment, setLectureComment] = useState('')
 
-  const handleProductTextAreaChange = (e) => {
-    setProductComment(e.target.value)
+  // const handleProductTextAreaChange = (e) => {
+  //   setProductComment(e.target.value)
+  // }
+  // const handleLectureTextAreaChange = (e) => {
+  //   setLectureComment(e.target.value)
+  // }
+
+  // 每個商品與課程都有獨立的評分狀態
+  const [productRatings, setProductRatings] = useState({})
+  const [lectureRatings, setLectureRatings] = useState({})
+  const [productComments, setProductComments] = useState({})
+  const [lectureComments, setLectureComments] = useState({})
+
+  const handleProductRatingChange = (itemName, rating) => {
+    setProductRatings({ ...productRatings, [itemName]: rating })
   }
-  const handleLectureTextAreaChange = (e) => {
-    setLectureComment(e.target.value)
+
+  const handleLectureRatingChange = (itemName, rating) => {
+    setLectureRatings({ ...lectureRatings, [itemName]: rating })
+  }
+
+  const handleProductCommentChange = (itemName, comment) => {
+    setProductComments({ ...productComments, [itemName]: comment })
+  }
+
+  const handleLectureCommentChange = (itemName, comment) => {
+    setLectureComments({ ...lectureComments, [itemName]: comment })
   }
 
   // 獲取商品資料
-  const { products } = useProducts()
+  // const { products } = useProducts()
 
   const totalAmount = items.reduce((acc, item) => {
     return acc + 1
   }, 0)
 
-  useEffect(() => {
-    // 狀態更新後執行的操作
-    console.log('Product rating updated:', productRating);
-  }, [productRating]); 
+  // useEffect(() => {
+  //   // 狀態更新後執行的操作
+  //   console.log('Product rating updated:', productRating)
+  // }, [productRating])
 
   return (
     <>
@@ -106,7 +130,7 @@ export default function Order({ order }) {
               {/*訂單資訊 */}
               <table className="table">
                 <thead>
-                  <tr className='border-bottom border-black'>
+                  <tr className="border-bottom border-black">
                     <th className="p-0 px-2">商品</th>
                     <th className=" p-0 px-2">單價</th>
                     <th className=" p-0 px-2">數量</th>
@@ -145,14 +169,22 @@ export default function Order({ order }) {
                             NTD {item.price * item.amount}
                           </td>
                           <td>
-                            <button
+                            {/* <button
                               className="btn btn-main"
                               type="button"
                               data-bs-toggle="modal"
                               data-bs-target="#ProductRate"
                             >
                               商品評價
-                            </button>
+                            </button> */}
+                            <ProductRating
+                              itemId={item.id}
+                              itemName={item.name}
+                              rating={productRatings[item.name] || 0}
+                              comment={productComments[item.name] || ''}
+                              onRatingChange={handleProductRatingChange}
+                              onCommentChange={handleProductCommentChange}
+                            ></ProductRating>
                           </td>
                         </tr>
                       </tbody>
@@ -162,7 +194,7 @@ export default function Order({ order }) {
               </table>
               <table className="table">
                 <thead>
-                  <tr className='border-bottom border-black'>
+                  <tr className="border-bottom border-black">
                     <th className="font-weight-bold p-0 px-2">課程</th>
                     <th className="font-weight-bold p-0 px-2">單價</th>
                     <th className="font-weight-bold p-0 px-2">數量</th>
@@ -194,22 +226,29 @@ export default function Order({ order }) {
                           <td className="text-center">
                             <div>NTD {item.price}</div>
                           </td>
-                          <td  className="text-center">
+                          <td className="text-center">
                             <span> {item.amount} </span>
                           </td>
                           <td className="text-center">
                             NTD {item.price * item.amount}
                           </td>
                           <td>
-                            {' '}
-                            <button
+                            {/* <button
                               className="btn btn-main"
                               type="button"
                               data-bs-toggle="modal"
                               data-bs-target="#LectureRate"
                             >
                               課程評價
-                            </button>
+                            </button> */}
+                            <LectureRating
+                              itemId={item.id}
+                              itemName={item.name}
+                              rating={lectureRatings[item.name] || 0}
+                              comment={lectureComments[item.name] || ''}
+                              onRatingChange={handleLectureRatingChange}
+                              onCommentChange={handleLectureCommentChange}
+                            ></LectureRating>
                           </td>
                         </tr>
                       </tbody>
@@ -277,161 +316,7 @@ export default function Order({ order }) {
           </div>
         </div>
       </div>
-      {/* 商品評價Modal */}
-      <div
-        className="modal fade"
-        id="ProductRate"
-        tabIndex={-1}
-        aria-labelledby="RateLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg modal-dialog-centered ">
-          <div className="modal-content modal-content-padding">
-            <div className="modal-header border-0">
-              <div className="header-title">商品名稱-評價</div>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
-            </div>
-            <div className="modal-body">
-              <div className="rate-star">
-                <div className="body-title">評價</div>
-                <div className="">
-                  {/* STAR RATING */}
-                  {Array(5)
-                    .fill(1)
-                    .map((v, i) => {
-                      // 每個按鈕的分數，相當於索引+1
-                      const score = i + 1
-
-                      return (
-                        <button
-                          key={i}
-                          className={styles['star-btn']}
-                          onClick={() => {
-                            // 點按後設定分數
-                            setProductRating(score)
-                          }}
-                          onMouseEnter={() => {
-                            setHoverRating(score)
-                          }}
-                          onMouseLeave={() => {
-                            setHoverRating(0)
-                          }}
-                        >
-                          <span
-                            className={
-                              score <= productRating || score <= hoverRating
-                                ? styles['on']
-                                : styles['off']
-                            }
-                          >
-                            &#9733;
-                          </span>
-                        </button>
-                      )
-                    })}
-                </div>
-              </div>
-              <div>
-                <div className="body-title">詳細評價</div>
-                <textarea
-                  className="form-control"
-                  rows="4"
-                  value={productComment}
-                  onChange={handleProductTextAreaChange}
-                ></textarea>
-              </div>
-            </div>
-            <div className="modal-footer d-flex justify-content-center border-0">
-              <button type="button" className="btn btn-main">
-                送出評價
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* 課程評價Modal */}
-      <div
-        className="modal fade"
-        id="LectureRate"
-        tabIndex={-1}
-        aria-labelledby="RateLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-lg modal-dialog-centered ">
-          <div className="modal-content modal-content-padding">
-            <div className="modal-header border-0">
-              <div className="header-title">課程名稱-評價</div>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              />
-            </div>
-            <div className="modal-body">
-              <div className="rate-star">
-                <div className="body-title">評價</div>
-                <div className="">
-                  {/* STAR RATING */}
-                  {Array(5)
-                    .fill(1)
-                    .map((v, i) => {
-                      // 每個按鈕的分數，相當於索引+1
-                      const score = i + 1
-
-                      return (
-                        <button
-                          key={i}
-                          className={styles['star-btn']}
-                          onClick={() => {
-                            // 點按後設定分數
-                            setLectureRating(score)
-                          }}
-                          onMouseEnter={() => {
-                            setHoverRating(score)
-                          }}
-                          onMouseLeave={() => {
-                            setHoverRating(0)
-                          }}
-                        >
-                          <span
-                            className={
-                              score <= lectureRating || score <= hoverRating
-                                ? styles['on']
-                                : styles['off']
-                            }
-                          >
-                            &#9733;
-                          </span>
-                        </button>
-                      )
-                    })}
-                </div>
-              </div>
-              <div>
-                <div className="body-title">詳細評價</div>
-                {/* 課程評論的欄位 */}
-                <textarea
-                  className="form-control"
-                  rows="4"
-                  value={lectureComment}
-                  onChange={handleLectureTextAreaChange}
-                ></textarea>
-              </div>
-            </div>
-            <div className="modal-footer d-flex justify-content-center border-0">
-              <button type="button" className="btn btn-main">
-                送出評價
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
       <style jsx>{`
         .img {
