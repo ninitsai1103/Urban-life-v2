@@ -154,9 +154,19 @@ export default function List() {
     setCurrentPage(1);
   }
 
+
+  //渲染有收藏的商品
+  const renderCollection = (productCollction) => {
+    
+  }
+
+  //獲得登入會員的收藏資料
   api.get('/collection')
   .then(response => {
-    console.log('Data:', response.data);
+    const productCollction = response.data.data.map(item => item.product_id  );
+    console.log(productCollction);
+ 
+
   })
   .catch(error => {
     console.error('Error:', error);

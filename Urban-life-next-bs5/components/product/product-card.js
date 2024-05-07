@@ -65,9 +65,16 @@ export default function ProductCard({ product }) {
               />
               {!isFavorited ?
                 (<FaHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
-                  onClick={toggleFavorite} />) :
+                  onClick={e => {
+                    e.preventDefault();
+                    toggleFavorite();
+                  }}
+                     />) :
                 (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer' }}
-                  onClick={toggleFavorite} />)
+                onClick={e => {
+                  e.preventDefault();
+                  toggleFavorite();
+                }} />)
               }
             </div>
             <div className="star d-flex">
