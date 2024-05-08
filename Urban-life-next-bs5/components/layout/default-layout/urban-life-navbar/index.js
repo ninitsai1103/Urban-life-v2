@@ -18,9 +18,9 @@ export default function MyNavbar() {
     if (memberInfo) {
       const { identity_id } = memberInfo;
       if (identity_id == 2) {
-        setUser("article-management");
+        setUser("/article-management");
       } else {
-        setUser("information");
+        setUser("/information");
       }
     }
   }, []); 
@@ -57,7 +57,7 @@ export default function MyNavbar() {
                 <Link href="">講師陣容</Link>
               </li>
               <li>
-              <Link href={`http://localhost:3000/member/${user}`}>會員專區</Link>
+              <Link href={`http://localhost:3000/member${user}`}>會員專區</Link>
               </li>
             </ul>
           </div>

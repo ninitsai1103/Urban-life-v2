@@ -1,11 +1,30 @@
-import React from 'react'
+//乾淨版
+import { useEffect, useState } from 'react'
 import Comment from '@/components/article/comment'
 import { SlArrowLeft } from 'react-icons/sl'
 import { FaRegHeart } from 'react-icons/fa'
 import useArticles from '@/hooks/use-articles'
+import { useRouter } from 'next/router';
 
 export default function Detail() {
   // const { article } = useArticles()
+  const { articles } = useArticles()
+  
+  
+  const router = useRouter(); // 取得路由器實例用於導航和參數取得
+  const {aid} = router.query; // 從URL取得文章ID
+  const [article, setArticle] = useState(null); // 狀態：當前顯示的文章
+
+  useEffect(() => {
+    // 當aid或articles更新時觸發
+    if (aid && articles.length > 0) {
+        const fetchArticle = articles.find(item => item.id === parseInt(aid)); // 依照ID尋找文章
+        setArticle(fetchArticle); // 設定當前文章狀態
+        
+    }
+},[aid, articles]); // 依賴列表：僅當aid或articles變更時執行
+
+console.log(article);
   return (
     <>
       <div className="container " >
@@ -27,8 +46,8 @@ export default function Detail() {
           <div className="col-sm-12 black-bottom-border">
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-center mt-3">
-                <h1>2023帶狀課程圓滿結束</h1>
-                <button className="btn btn-add ms-3">課程分享</button>
+                <h1>{article && article.title}</h1>
+                <button className="btn btn-add ms-3">{article && article.category_name}</button>
               </div>
 
               <button className="btn btn-like mt-3">
@@ -36,8 +55,8 @@ export default function Detail() {
               </button>
             </div>
             <div className="d-flex align-items-center mt-3">
-              <h6 className="me-3">2020-12-08 13:22:49</h6>
-              <h6>作者:小名</h6>
+              <h6 className="me-3">{article && article.created_at}</h6>
+              <h6>作者:{article && article.author_name}</h6>
             </div>
           </div>
           {/* article content */}
@@ -49,14 +68,12 @@ export default function Detail() {
 
           <div className="col" >
             <img
-              src="/images/article/article_img/1.jpg"
+              src={`/images/article/article_img/${article &&  article.img}`}
               className="my-3 h-50"
               alt="..."
             />
             <p className="">
-              時光飛逝，2023年快到尾聲，這一期的帶狀課程也要結束了。同學們學會做瓶中花園，老師也學會怎麼做出好吃的磅蛋糕。
-              感謝同學百忙中抽空來上課，連續10個禮拜真的不容易，在匆匆進門時能聽到“來喝杯茶，吃個蛋糕”，洗滌一身疲憊，是真心的接待。
-              訶梨勒是藥師佛手持藥草，象徵無比的祝福。訶梨勒藥草茶來自喜馬拉雅山2000公尺的高度，也是珍稀無比的存在。藥草的愛全程陪伴我們上完這一期的課程，帶入植物的樂趣。
+            {article && article.content}
             </p>
           </div>
         </div>

@@ -23,9 +23,7 @@ router.use(upload.single('avatar')).post(async (req, res) => {
   try {
     const userId = req.body.userId;
     const img = req.file.filename;
-    
     const sqlUpdate = 'UPDATE `user_teacher` SET `img` = ? WHERE `id` = ?';
-    
     // 更新数据库
     
     db.execute(sqlUpdate, [img, userId]) 
