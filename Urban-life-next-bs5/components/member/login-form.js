@@ -77,11 +77,7 @@ export default function LoginForm() {
           // storage.clear();
 
           // 登录成功，重定向到用户资料页面或其他页面
-          if (data.user && data.user.identity_id === 3) {
-            window.location.href = '/member/information'; // 重定向到使用者資料頁面
-          } else if (data.user && data.user.identity_id === 2) {
-            window.location.href = '/member/lecture-management'; // 重定向到講座管理頁面
-          }
+          window.location.href = '/';
         } else {
           // 登录失败，显示错误消息
           
