@@ -10,36 +10,39 @@ export default function useColloections() {
     api
       .get('/collection')
       .then((response) => {
-        const productCollection = response.data.data.collections.map(
-          (item) => item.product_id  
-        )
-        console.log(productCollection);
-        setCollections(productCollection)
+        // const productCollection = response.data.data.collections.map(
+        //   (item) => {'product_id': item.product_id, 'valid': item.valid}
+        // )
+        // console.log(productCollection);
+        setCollections(response.data.data.collections)
       })
       .catch((error) => {
         console.error('Error:', error)
       })
   },[]);
 
+  //新增收藏
+  const addCollection = (productId) => {
+    api.get(`/collection/add/${productId}`)
+    .then(response => {
+      console.log(response);
+      setCollections(prev=>[...prev, productId]);
+    })
+    .catch(error => {
+      console.log('Error adding collection:', error);
+    })
 
-  useEffect(() => {
-    // 从 localStorage 獲取用戶資料
-    const memberInfo = JSON.parse(localStorage.getItem('member-info'));
-    const userId = memberInfo ? memberInfo.id : null;
-    
-    // 检查 userId 是否存在
-    if (userId) {
-      
-      api.get(`/add/${userId}`) 
-      .then((response) => {
-        console.log(response);
-        setCollections(response.data); 
-      })
-      .catch(err => {
-        console.error('Error:', err);
-      });
-    }
-  }, []); 
-   
-  return { collections }
+  }
+
+//移除收藏
+const removeCollection = (productId) => {
+  api.get(`/collection/remove/${productId}`)
+  .then(response => {
+    console.log(response);
+    setCollections(prev => prev.filter(item=>item.id !== productId))
+  })
+
+}
+
+  return { collections, addCollection, removeCollection }
 };

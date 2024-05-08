@@ -13,13 +13,13 @@ const useProducts = () => {
             const data = await res.json();
            
             if (Array.isArray(products)) {
-              const products = data.data.products.map(product => ({
+              const res_products = data.data.products.map(product => ({
                 ...product,
                 hrs_express:Boolean(product.hrs_express),
                 location_id:Boolean(product.location_id)
               }))
-              setProducts(products)
-              console.log(products);
+              setProducts(res_products)
+              console.log(res_products);
             } else {
               console.log('伺服器回傳資料類型錯誤，無法設定到狀態中');
             }

@@ -5,20 +5,27 @@ import toast, { Toaster } from 'react-hot-toast'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
-import useProducts from '@/hooks/product/useProducts'
+// import useProducts from '@/hooks/product/useProducts'
 import useColloections from '@/hooks/product/useCollections'
 
-export default function ProductCard({ product}) {
+export default function ProductCard({ product, collections}) {
 const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
-const {products} = useProducts();
-const {collections} =useColloections();
+// const {products} = useProducts();
+const {addCollection, removeCollection} =useColloections();
 
-// const [isFavorited, setIsFavorite] = useState(false); //收藏按鈕狀態
 
+
+// const collections=[]
+// console.log(collections);
 
 useEffect(() => {
+  if (product.id==2) {
+    console.log(collections);
+    console.log(collections.find(item => item.product_id == product.id && item.valid == 1));
+    
+  }
   // 檢查當前商品是否在收藏列表中
-setIsCollected(collections.includes(product.id))
+setIsCollected(collections.find(item => item.product_id == product.id && item.valid == 1))
 // console.log(isCollected);
 },[collections, product.id])
 
@@ -71,12 +78,14 @@ setIsCollected(collections.includes(product.id))
                   onClick={e => {
                     e.preventDefault();
                     toggleCollection();
+                    removeCollection(product.id);
                   }}
                      />) :
                 (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer' }}
                 onClick={e => {
                   e.preventDefault();
                   toggleCollection();
+                  addCollection(product.id);
                 }} />)
               }
             </div>
