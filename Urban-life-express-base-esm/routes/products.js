@@ -55,19 +55,19 @@ router.get('/get-collection', async function(req, res){
     });
   }
 
-  return new Promise((resolve, reject) => {
-    db.execute(sql, [id], (err, results) => {
-      if (err) {
-        reject({ status: 'error', message: '資料庫錯誤：' + err.message }); // 提供詳細的錯誤訊息
-      } else {
-        if (results.length > 0) {
-          resolve(results[0]); // 成功取得資料時使用 resolve 回傳結果
-        } else {
-          reject(new Error('找不到使用者'));
-        }
-      }
-    })
-  })
+  // return new Promise((resolve, reject) => {
+  //   db.execute(sql, [id], (err, results) => {
+  //     if (err) {
+  //       reject({ status: 'error', message: '資料庫錯誤：' + err.message }); // 提供詳細的錯誤訊息
+  //     } else {
+  //       if (results.length > 0) {
+  //         resolve(results[0]); // 成功取得資料時使用 resolve 回傳結果
+  //       } else {
+  //         reject(new Error('找不到使用者'));
+  //       }
+  //     }
+  //   })
+  // })
   // let sqlProducts = 'SELECT * FROM product_lecture WHERE pdlt_id = 1 AND valid = 1';
 
   // try {

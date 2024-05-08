@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function LectureWishContent({ TeacherWish, deleteWish }) {
+export default function LectureWishContent({ identityId, TeacherWish, deleteWish }) {
   
 
   const handleDelete = async (id) => {

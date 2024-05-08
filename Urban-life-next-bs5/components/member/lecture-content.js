@@ -2,6 +2,7 @@ import { React, useState, useEffect } from 'react'
 
 export default function LectureContentTbody({
   lecture,
+  identityId,
   deleteLecture,
   updateLecture,
 }) {
@@ -148,14 +149,26 @@ export default function LectureContentTbody({
   const handleNameChange = (e) => {
     setName(e.target.value)
   }
+  const [locationId, setLocationId] = useState(lecture.location_id)
+  const handleLocationIdChange = (e) => {
+    const selectedLocationId = e.target.value
+    setLocationId(selectedLocationId) // 更新 locationId 狀態
+  }
   const [price, setPrice] = useState(lecture.price) // 初始值設定為 lecture 的名稱
   const handlePriceChange = (e) => {
     setPrice(e.target.value)
   }
-
   const [amount, setAmount] = useState(lecture.amount) // 初始值設定為 lecture 的名稱
   const handleAmountChange = (e) => {
     setAmount(e.target.value)
+  }
+  const [description, setDescription] = useState(lecture.description) // 初始值設定為 lecture 的名稱
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value)
+  }
+  const [content, setContent] = useState(lecture.content) // 初始值設定為 lecture 的名稱
+  const handleContentChange = (e) => {
+    setContent(e.target.value)
   }
 
   // 刪除課程
@@ -174,7 +187,7 @@ export default function LectureContentTbody({
   const handleUpdate = async () => {
     try {
       const now = new Date() // 獲取當前時間
-      const formattedNow = now.toISOString().slice(0, 19).replace('T', ' ') // 格式化當前時間為 'yyyy-mm-dd hh:mm:ss'
+      // const formattedNow = now.toISOString().slice(0, 19).replace('T', ' ') // 格式化當前時間為 'yyyy-mm-dd hh:mm:ss'
       // // 檢查結束時間是否早於開始時間
       // if (endingTime < startingTime) {
       //   // 若結束時間早於開始時間，顯示提醒並返回
@@ -183,6 +196,9 @@ export default function LectureContentTbody({
       // }
       const updatedFields = {
         name,
+        description,
+        content,
+        location_id: locationId,
         lecture_date: selectedDate,
         starting_time: startingTime,
         ending_time: endingTime,
@@ -190,7 +206,7 @@ export default function LectureContentTbody({
         sign_up_deadline: selectedEndingDateTime,
         price,
         amount,
-        change_time: formattedNow,
+        change_time: now,
         cover: selectedFile1 ? selectedFile1.name : lecture.cover,
         lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
         lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
@@ -201,13 +217,6 @@ export default function LectureContentTbody({
       await updateLecture(lecture.id, updatedFields)
 
       // 可以在這裡添加更新頁面或重新加載數據的邏輯
-      if (res.ok) {
-        // 如果更新成功，觸發頁面重整或重新加載
-        window.location.reload() // 重新加載當前頁面
-      } else {
-        console.log('Update failed:', data)
-        // 如果更新失敗，可以進行錯誤處理或其他操作
-      }
     } catch (error) {
       console.log('Error updating lecture:', error)
     }
@@ -272,6 +281,10 @@ export default function LectureContentTbody({
                           <td>{lecture.name}</td>
                         </tr>
                         <tr>
+                          <th>課程地點：</th>
+                          <td>{lecture.location_name}</td>
+                        </tr>
+                        <tr>
                           <th>上課日期：</th>
                           <td>{lecture.lecture_date}</td>
                         </tr>
@@ -307,6 +320,14 @@ export default function LectureContentTbody({
                           <td>
                             許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
                           </td>
+                        </tr>
+                        <tr>
+                          <th>簡短介紹：</th>
+                          <td>{lecture.description}</td>
+                        </tr>
+                        <tr>
+                          <th>詳細介紹：</th>
+                          <td>{lecture.content}</td>
                         </tr>
                         <tr>
                           <th>課程圖片：</th>
@@ -408,6 +429,39 @@ export default function LectureContentTbody({
                           </td>
                         </tr>
                         <tr>
+                          <th>上課地點：</th>
+                          <td>
+                            <select
+                              className="form-control"
+                              // name="name"
+                              value={locationId}
+                              onChange={handleLocationIdChange}
+                            >
+                              <option value="">請選擇上課地點</option>
+                              <option value="1">臺北市</option>
+                              <option value="2">新北市</option>
+                              <option value="3">基隆市</option>
+                              <option value="4">桃園市</option>
+                              <option value="5">新竹縣</option>
+                              <option value="6">苗里縣</option>
+                              <option value="7">臺中市</option>
+                              <option value="8">彰化縣</option>
+                              <option value="9">南投縣</option>
+                              <option value="10">雲林縣</option>
+                              <option value="11">嘉義縣</option>
+                              <option value="12">臺南市</option>
+                              <option value="13">高雄市</option>
+                              <option value="14">屏東縣</option>
+                              <option value="15">臺東縣</option>
+                              <option value="16">花蓮縣</option>
+                              <option value="17">宜蘭縣</option>
+                              <option value="18">澎湖縣</option>
+                              <option value="19">金門縣</option>
+                              <option value="20">連江縣</option>
+                            </select>
+                          </td>
+                        </tr>
+                        <tr>
                           <th>上課日期：</th>
                           <td>
                             <input
@@ -487,6 +541,30 @@ export default function LectureContentTbody({
                               name="name"
                               value={amount}
                               onChange={handleAmountChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>簡短介紹：</th>
+                          <td>
+                            <textarea
+                              // type="text"
+                              className="form-control"
+                              name="name"
+                              value={description}
+                              onChange={handleDescriptionChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>詳細介紹：</th>
+                          <td>
+                            <textarea
+                              // type="text"
+                              className="form-control"
+                              name="name"
+                              value={content}
+                              onChange={handleContentChange}
                             />
                           </td>
                         </tr>
@@ -681,6 +759,14 @@ export default function LectureContentTbody({
           text-overflow: ellipsis; /* 顯示省略號 */
         }
 
+        .form-control {
+          appearance: auto;
+          width: 100%;
+        }
+        select {
+          width: 80%;
+        }
+
         .modal-table {
           th {
             border: 1px solid #ccc;
@@ -695,7 +781,7 @@ export default function LectureContentTbody({
           }
           input {
             margin: 3px;
-            width: 80%;
+            width: 100%;
           }
           .displayOriginImg {
             width: 45%;

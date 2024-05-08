@@ -4,7 +4,9 @@ import { FaUser } from 'react-icons/fa'
 import { FaShoppingCart } from 'react-icons/fa'
 import Link from 'next/link'
 import { identity } from 'lodash'
+import { useCheckout } from '@/hooks/use-checkout'
 export default function MyNavbar() {
+  const { totalItems } = useCheckout()
   const [phoneNav, setPhoneNav] = useState(false)
 
   const handlePhoneNav = () => {

@@ -5,15 +5,29 @@ import toast, { Toaster } from 'react-hot-toast'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
+import useProducts from '@/hooks/product/useProducts'
+import useColloections from '@/hooks/product/useCollections'
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product}) {
+const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
+const {products} = useProducts();
+const {collections} =useColloections();
 
-  const [isFavorited, setIsFavorite] = useState([false]);
+// const [isFavorited, setIsFavorite] = useState(false); //收藏按鈕狀態
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorited);
-    if (!isFavorited) {
-      toast.success('商品已取消收藏!', {
+
+useEffect(() => {
+  // 檢查當前商品是否在收藏列表中
+setIsCollected(collections.includes(product.id))
+// console.log(isCollected);
+},[collections, product.id])
+
+
+//切換商品的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected);
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+      toast.success(message, {
         style: {
           border: '1px solid #713200',
           padding: '16px',
@@ -24,22 +38,10 @@ export default function ProductCard({ product }) {
           secondary: '#FFFAEE',
         }
       })
-    } else {
-      toast.success('商品已加入收藏!', {
-        style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: '#713200',
-        },
-        iconTheme: {
-          primary: '#713200',
-          secondary: '#FFFAEE',
-        },
-      })
     }
-
-  }
-
+    //更新后端的收藏状态或更新 collections 状态
+  
+// renderCollection();
   return (
     <>
       {/* 桌機版*/}
@@ -63,11 +65,19 @@ export default function ProductCard({ product }) {
                 position="top-center"
                 reverseOrder={false}
               />
-              {!isFavorited ?
+             
+              {isCollected ?
                 (<FaHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
-                  onClick={toggleFavorite} />) :
+                  onClick={e => {
+                    e.preventDefault();
+                    toggleCollection();
+                  }}
+                     />) :
                 (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer' }}
-                  onClick={toggleFavorite} />)
+                onClick={e => {
+                  e.preventDefault();
+                  toggleCollection();
+                }} />)
               }
             </div>
             <div className="star d-flex">

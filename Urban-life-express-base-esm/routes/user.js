@@ -58,7 +58,7 @@ router.post('', upload.none(), async (req, res) => {
   const sqlCheckEmail =
     'SELECT COUNT(*) AS count FROM `user_teacher` WHERE `email` = ?'
   const sqlInsertUser =
-    'INSERT INTO `user_teacher` (`email`, `password`, `identity_id`, `valid`) VALUES (?, ?, 3, 1)'
+    'INSERT INTO `user_teacher` (`name`, `email`, `password`, `identity_id`, `img`, `birthday`, `address`, `gender`, `valid`) VALUES (NULL, ?, ?, 3,"default.jpg", NULL , NULL , NULL , 1)'
   try {
     const [rows] = await db.execute(sqlCheckEmail, [email])
     const count = rows[0].count
@@ -99,32 +99,20 @@ router.post('', upload.none(), async (req, res) => {
       .json({ status: 'error', message: 'Internal server error' })
   }
 })
-// router.post("/upload",upload.single("myFile") ,(req, res) => {
-//   // res.send("處理檔案上傳")
-//   let timestamp=Date.now();
-  
-//   let newName=`${timestamp}${extname(req.file.originalname)}`
-//   renameSync(req.file.path,resolve(__dirname,"public","avatar", newName))
-//   req.body.myFile=newName;
-//   // res.json({body:req.body,file:req.file})
-//   res.json({body:req.body})
-// })
-router.put('/:id/', upload.none(), async (req, res) => {
+
+router.put('/:id', upload.none(), async (req, res) => {
   // res.send(`更新特定id使用者 ${req.params.id}`)
   // let user, error
   const id = req.params.id
-  const { name, password, phone, img, birthday, address, gender } = req.body
-  const params = [name, password, phone, img, birthday, address, gender, id].map(param => param !== undefined ? param : null);
+  const { name = null, phone = null, birthday = null, address = null, gender = null } = req.body
+
   const sqlUpdate =
-    'UPDATE `user_teacher` SET `name` = ?, `password` = ?, `phone` = ?,`img` = ?, `birthday` = ?, `address` = ?, `gender` = ? WHERE `id` = ?'
+    'UPDATE `user_teacher` SET `name` = ?, `phone` = ?, `birthday` = ?, `address` = ?, `gender` = ? WHERE `id` = ?'
   try {
     const [result] = await db.execute(sqlUpdate,
-      // params
        [
       name ,
-      password ,
       phone ,
-      img ,
       birthday ,
       address ,
       gender,
@@ -167,7 +155,7 @@ router.put('/:id/', upload.none(), async (req, res) => {
 })
 
 
-router.delete('/:id/', (req, res) => {
+router.delete('/:id', (req, res) => {
   res.send(`刪除特定id使用者 ${req.params.id}`)
 })
 router.post('/login', upload.none(), async (req, res) => {
@@ -184,12 +172,6 @@ router.post('/login', upload.none(), async (req, res) => {
     }
 
     const user = rows[0]
-    let loginMessage = 'Login successful'
-    if (user.identity_id === 2) {
-      loginMessage = 'Teacher logged in'
-    } else if (user.identity_id === 3) {
-      loginMessage = 'Member logged in'
-    }
     // 在這裡直接查詢該使用者的資料，並將所有資料返回給前端
     const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `email` = ?'
     const [userInfoRows] = await db.execute(userInfoSql, [user.email])
@@ -207,7 +189,7 @@ router.post('/login', upload.none(), async (req, res) => {
 
     return res.status(200).json({
       status: 'success',
-      message: loginMessage,
+      message: "Login successful",
       user: userInfo,
       token,
     })
@@ -238,46 +220,7 @@ router.post('/logout', checkToken, (req, res) => {
   })
 })
 
-function userLogin(req) {
-  return new Promise((resolve, reject) => {
-    const { email, password } = req.body
-    db.execute(
-      'SELECT * FROM `user_teacher` WHERE `email` = ? AND `password` = ?',
-      [email, password],
-      (err, results) => {
-        if (err) {
-          reject(err)
-          return false
-        }
-        resolve(results)
-      }
-    )
-  })
-}
-function getUser(req) {
-  const id = req.params.id
-  const sql = `SELECT * FROM user_teacher WHERE id = ?`
-  return new Promise((resolve, reject) => {
-    db.execute(sql, [id], (err, results) => {
-      if (err) {
-        reject({ status: 'error', message: 'Internal server error' })
-      } else {
-        reject(new Error('找不到使用者'))
-      }
-    })
-  })
-}
-function getUserAll() {
-  return new Promise((resolve, reject) => {
-    db.execute('SELECT * FROM `user_teacher`', (err, results) => {
-      if (err) {
-        reject(err)
-        return false
-      }
-      resolve(results)
-    })
-  })
-}
+
 function checkToken(req, res, next) {
   let token = req.get('Authorization')
 

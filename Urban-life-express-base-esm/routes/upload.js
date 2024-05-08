@@ -19,27 +19,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-
 router.use(upload.single('avatar')).post(async (req, res) => {
   try {
     const userId = req.body.userId;
     const img = req.file.filename;
-    // console.log(userId);
     const sqlUpdate = 'UPDATE `user_teacher` SET `img` = ? WHERE `id` = ?';
+    // 更新数据库
     
-
-    await db.query(sqlUpdate, [img, userId], (error, results) => {
-      if (error) {
-        console.error('更新失敗:', error);
-        res.status(500).json({ message: '更新失敗' });
-      } else {
-        console.log('更新成功:', results);
-        res.status(200).json({ message: '檔案上傳成功' });
-      }
-    });
+    db.execute(sqlUpdate, [img, userId]) 
+    res.status(200).json({ message: "檔案上傳成功!!!" });
 
   } catch (error) {
-    console.error('操作失败:', error);
     res.status(500).json({ message: '操作失败' });
   }
 });

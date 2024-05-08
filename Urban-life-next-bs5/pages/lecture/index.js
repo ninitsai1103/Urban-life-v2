@@ -36,7 +36,7 @@ export default function LectureHome() {
             <div className="lecnum">共 8 門課程</div>
             <div className="dropdown">
               <button
-                className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center btn-color sort-btn-size2"
+                className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center sort-btn-size"
                 type="button"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown"

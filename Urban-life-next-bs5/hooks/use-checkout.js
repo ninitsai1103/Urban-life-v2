@@ -8,6 +8,16 @@ const CartContext = createContext(null)
 // 提供給最上層元件使用(_app.js)，共享狀態要在這裡統一集中管理
 // 這裡的children是指所有被包覆在ThemeProvider元件中的子元件
 export function CartProvider({ children }) {
+  // useEffect(() => {
+    // const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+
+    // if (!memberInfo) {
+    //   console.error('localStorage 中找不到使用者 ID，請先登入')
+    //   alert('請先登入')
+    //   window.location.href = '/member/login'
+    //   return
+    // }
+  // }, [])
   // 共享狀態
   // 加到購物車的商品項目狀態
   const [items, setItems] = useState([])

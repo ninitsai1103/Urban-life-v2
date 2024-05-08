@@ -19,7 +19,7 @@ export default function InfoPayPage() {
   // const memberInfo = JSON.parse(window.localStorage.getItem('member-info'))
   //如果有取得localStorage的會員資訊中的id，就從後端取得會員的名字、電話、地址、電子信箱
   // let url = `http://localhost:3000/api/member/${memberInfo.id}`
-  const {user} = useMemberInfo()
+  const {member} = useMemberInfo()
 
   return (
     <>
@@ -29,19 +29,19 @@ export default function InfoPayPage() {
         <tbody>
           <tr>
             <th className="text-end">姓名：</th>
-            <td className={styles.info_pay_td}>{user?.name}</td>
+            <td className={styles.info_pay_td}>{member?.name}</td>
           </tr>
           <tr>
             <th className="text-end">電話：</th>
-            <td className={styles.info_pay_td}>{user?.phone}</td>
+            <td className={styles.info_pay_td}>{member?.phone}</td>
           </tr>
           <tr>
             <th className="text-end">地址：</th>
-            <td className={styles.info_pay_td}>{user?.address}</td>
+            <td className={styles.info_pay_td}>{member?.address}</td>
           </tr>
           <tr>
             <th className="text-end">電子信箱：</th>
-            <td className={styles.info_pay_td}>{user?.email}</td>
+            <td className={styles.info_pay_td}>{member?.email}</td>
           </tr>
         </tbody>
       </table>
@@ -57,10 +57,10 @@ export default function InfoPayPage() {
           onChange={() => {
             setSame(true)
             setUserInfo({
-              name: user?.name,
-              phone: user?.phone,
-              address: user?.address,
-              email: user?.email,
+              name: member?.name,
+              phone: member?.phone,
+              address: member?.address,
+              email: member?.email,
             })
             }}
         />
@@ -90,9 +90,9 @@ export default function InfoPayPage() {
               <input
                 className="form-control"
                 type="text"
-                name="name"
+                name="receiverName"
                 id="name"
-                value={same ? user?.name : ''}
+                value={same ? member?.name : ''}
                 placeholder="請輸入收件人姓名"
                 autoFocus
                 disabled={same}
@@ -106,9 +106,9 @@ export default function InfoPayPage() {
               <input
                 className="form-control"
                 type="text"
-                name="phone"
+                name="receiverPhone"
                 id="phone"
-                value={same ? user?.phone : ''}
+                value={same ? member?.phone : ''}
                 placeholder="請輸入收件人電話"
                 disabled={same}
                 onChange={handleFieldChange}
@@ -121,9 +121,9 @@ export default function InfoPayPage() {
               <input
                 className="form-control"
                 type="text"
-                name="address"
+                name="receiverAddress"
                 id="address"
-                value={same ? user?.address : ''}
+                value={same ? member?.address : ''}
                 placeholder="請輸入收件人地址"
                 disabled={same}
                 onChange={handleFieldChange}
@@ -136,9 +136,9 @@ export default function InfoPayPage() {
               <input
                 className="form-control"
                 type="email"
-                name="email"
+                name="receiverEmail"
                 id="email"
-                value={same ? user?.email : ''}
+                value={same ? member?.email : ''}
                 placeholder="請輸入收件人電子信箱"
                 disabled={same}
                 onChange={handleFieldChange}

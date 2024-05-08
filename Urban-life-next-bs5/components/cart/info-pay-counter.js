@@ -22,9 +22,9 @@ export default function InfoPayCounter() {
 
   useEffect(() => {
     const data = window.localStorage.getItem('selectedCoupon')
-    console.log("data",data);
+    console.log('data', data)
     const couponDiscount = JSON.parse(data).amount
-    console.log("couponDiscount",couponDiscount);
+    console.log('couponDiscount', couponDiscount)
     setcouponDiscount(couponDiscount)
     // let discount
     // if (couponDiscount>1 || couponDiscount === 0) {
@@ -39,18 +39,23 @@ export default function InfoPayCounter() {
   }, [])
 
   let discount
-    if (couponDiscount>1 || couponDiscount === 0) {
-      discount = couponDiscount
-      console.log('final discount:', discount)
-    }else{
-      discount = totalPriceChecked-totalPriceChecked*couponDiscount
-      console.log('final discount:', discount)
-    }
+  if (couponDiscount > 1 || couponDiscount === 0) {
+    discount = couponDiscount
+    console.log('final discount:', discount)
+  } else {
+    discount = totalPriceChecked - totalPriceChecked * couponDiscount
+    console.log('final discount:', discount)
+  }
 
   const pricePayable = totalPriceChecked + shippingFee - discount
 
+  useEffect(() => {
+    window.localStorage.setItem('pricePayable', pricePayable)
+  }, [pricePayable])
+
   return (
     <>
+      <h4 className="text-light bg-primary4 p-2 mt-2">實付金額</h4>
       <div>共 {totalItemsChecked} 件</div>
       <div className="text-end">
         <div>小計： {totalPriceChecked}元</div>
@@ -58,7 +63,7 @@ export default function InfoPayCounter() {
         <div>運費： {shippingFee}元</div>
         <div>優惠券折扣： - {discount}元</div>
         <hr />
-        <div>總金額：{pricePayable}元</div>
+        <div id="pricePayable">總金額：{pricePayable}元</div>
       </div>
     </>
   )

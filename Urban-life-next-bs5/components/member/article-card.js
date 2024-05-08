@@ -2,14 +2,19 @@ import React from 'react'
 import { CiHeart } from 'react-icons/ci'
 import { FaCommentDots, FaArrowRight } from 'react-icons/fa6'
 
-export default function ArticleCard({ article }) {
+export default function ArticleCard({ article,identityId }) {
+  // 檢查是否符合條件，只顯示符合 identityId 的文章
+  // if (article.user_id !== identityId) {
+  //   return null; // 不符合條件，不顯示該文章
+  // }
+
   return (
     <>
       <div className="article_card_styles w-100 d-flex" key={article.id}>
         <img alt='' src={`/images/article/article_img/${article.img}`}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
-            <div className="article_card_text_time_time">{article.date}</div>
+            <div className="article_card_text_time_time">{article.created_at}</div>
             <div className="article_card_text_time_author">
               {article.author_name}
             </div>

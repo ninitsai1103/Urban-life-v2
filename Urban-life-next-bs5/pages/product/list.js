@@ -5,7 +5,7 @@ import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
 import UseSortDatas from '@/hooks/product/useSortDatas'
-
+import useColloections from '@/hooks/product/useCollections'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
@@ -37,7 +37,7 @@ export default function List() {
 
   const [list, setList] = useState([])
   const { products } = useProducts()
-
+  const {collections} = useColloections()
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -134,7 +134,7 @@ export default function List() {
             newCondition.location = !newCondition.location
           }
         }
-        console.log(newCondition);
+        // console.log(newCondition);
         return newCondition;
       })
 
@@ -154,13 +154,22 @@ export default function List() {
     setCurrentPage(1);
   }
 
-  api.get('/collection')
-  .then(response => {
-    console.log('Data:', response.data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+
+  
+
+  //獲得登入會員的收藏資料
+  // api.get('/collection')
+  // .then(response => {
+  //   const userOfProductCollection = response.data.data.collections.map(item => item.product_id && item.pdltat_id===1);
+  //   // console.log(userOfProductCollection);
+  //   setCollections(userOfProductCollection);
+ 
+
+  // })
+  // .catch(error => {
+  //   console.error('Error:', error);
+  // });
+
   // Toggle the side navigation
   // useEffect(() => {
   //   // fix next issue
@@ -1679,7 +1688,7 @@ export default function List() {
               <div className="row row-cols-2 row-cols-lg-4 g-4">
                 {list.map((product) => (
                   <Link key={product.id} href={`/product/${product.id}`}>
-                  <ProductCard key={product.id} product={product}/>
+                  <ProductCard key={product.id} product={product} />
                    </Link>
                 ))}
               </div>

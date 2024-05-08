@@ -12,8 +12,8 @@ export default function Search() {
             aria-label="Text input with button"
             placeholder="請輸入關鍵字"
           />
-          <button className="btn p-1 " type="button" >
-            <CiSearch style={{fontSize:'30px'}} />
+          <button className="btn p-1 " type="button">
+            <CiSearch style={{ fontSize: '30px' }} />
           </button>
           <br />
         </div>

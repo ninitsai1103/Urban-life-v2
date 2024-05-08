@@ -13,7 +13,7 @@ export default function Feedback() {
                   <p className="mt-3">共 5 則評論</p>
                   <div className="dropdown">
                     <button
-                      className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center btn-color sort-btn-size2"
+                      className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center btn-color sort-btn-size"
                       type="button"
                       id="dropdownMenuButton1"
                       data-bs-toggle="dropdown"
