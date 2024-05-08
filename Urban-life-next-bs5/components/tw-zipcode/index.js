@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { countries, townships, postcodes } from './data-townships'
-import useMemberInfo from '@/hooks/use-member-info'
+import {useMemberInfo} from '@/hooks/use-member-info'
 
 export default function TWZipCode({
   initPostcode = '',
@@ -16,7 +16,7 @@ export default function TWZipCode({
   const [postcode, setPostcode] = useState('')
 
   // hooks
-const member = useMemberInfo()    
+const {member} = useMemberInfo()    
 
   // 利用傳入時的initPostcode初始化用
   useEffect(() => {
