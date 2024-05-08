@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { TfiMenu } from 'react-icons/tfi'
 import { FaUser } from 'react-icons/fa'
 import { FaShoppingCart } from 'react-icons/fa'
@@ -11,19 +11,41 @@ export default function MyNavbar() {
     setPhoneNav(!phoneNav)
   }
 
-  const [user, setUser] = useState('')
+  // 判斷現在的user是誰
+  const [user, setUser] = useState('登入')
+
+  // 會員網址
+  const [memberUrl, setMemberUrl] = useState('')
+
+  // 渲染以後才能拿到localStorage
   useEffect(() => {
-    // 仅在客户端环境中运行
-    const memberInfo = JSON.parse(localStorage.getItem('member-info'));
+    // 把localStorage裡的member-info拉出來
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+
     if (memberInfo) {
-      const { identity_id } = memberInfo;
-      if (identity_id == 2) {
-        setUser("article-management");
-      } else {
-        setUser("information");
+      // member-info是物件需要解構下
+      const { name, identity_id } = memberInfo
+      const newUser = name
+
+      switch (identity_id) {
+        case 1:
+          setUser(newUser)
+          setMemberUrl('official-account')
+          break
+        case 2:
+          setUser(newUser)
+          setMemberUrl('article-management')
+          break
+        case 3:
+          setUser(newUser)
+          setMemberUrl('information')
+          break
+        case '':
+          setMemberUrl('login')
+          break
       }
     }
-  }, []); 
+  }, [])
   return (
     <>
       <div className="header">
@@ -57,17 +79,19 @@ export default function MyNavbar() {
                 <Link href="">講師陣容</Link>
               </li>
               <li>
-              <Link href={`http://localhost:3000/member/${user}`}>會員專區</Link>
+                <Link href={`http://localhost:3000/member/${memberUrl}`}>
+                  會員專區
+                </Link>
               </li>
             </ul>
           </div>
           <div className="nav-right">
-            <div className="user ">
-              <p className="mx-2">小明</p>
+            <div className="user">
+              <p className="mx-2">{user}</p>
               <FaUser style={{ color: 'white', fontSize: '24px' }} />
             </div>
             <div className="cart">
-              <FaShoppingCart style={{ color: 'white', fontSize: '24px' }} />
+              <FaShoppingCart style={{ color: 'white', fontSize: '28px' }} />
               <a href="" />
               <span>2</span>
             </div>

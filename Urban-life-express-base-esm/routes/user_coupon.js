@@ -13,12 +13,15 @@ import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
+
+  const user_id = req.query.user_id;
+
   const sqlUserCoupons = `SELECT * FROM user_coupon 
   JOIN coupon ON user_coupon.coupon_id =coupon.id 
-  WHERE user_coupon.valid = 1
+  WHERE user_coupon.valid = 1 AND user_id=?
   `
   try {
-    const [rows, fields] = await db.query(sqlUserCoupons)
+    const [rows, fields] = await db.query(sqlUserCoupons, [user_id])
 
     // 標準回傳JSON
     return res.json({
@@ -32,14 +35,12 @@ router.get('/', async function (req, res) {
   }
 })
 
-
 router.post('/', async function (req, res) {
- 
   try {
     console.log(req.body)
-    const couponID = req.body.id
-    let userID = 43
-    
+    const couponID = req.body.newCoupon.id
+    let userID = req.body.user_id
+
     let addtoUserCoupon = `INSERT INTO user_coupon (user_id,coupon_id,valid)VALUES(?,?,1)`
     const values = [userID, couponID]
     const [rows, fields] = await db.query(addtoUserCoupon, values)
@@ -60,23 +61,21 @@ router.post('/', async function (req, res) {
 })
 
 router.delete('/', async function (req, res) {
- 
   try {
     console.log(req.body)
     const couponID = req.body.id
-    
-    
+
     let addtoUserCoupon = `UPDATE user_coupon
     SET valid = 0
     WHERE coupon_id = ? ;`
-    
-    const [rows, fields] = await db.query(addtoUserCoupon,[couponID])
+
+    const [rows, fields] = await db.query(addtoUserCoupon, [couponID])
     return res.json({
       status: 'success',
       data: {
         message: '使用者的coupon被刪除成功',
       },
-    });
+    })
   } catch (error) {
     return res.json({
       status: 'error',

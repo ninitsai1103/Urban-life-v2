@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-// 連至user_coupon資料庫的useHook
-import { useUserCoupon } from '@/hooks/use-usercoupon'
+// 取用localStorage裡的member-info
+import { useMemberInfo } from '@/hooks/use-member-info'
 
 // REACT ICON
 import { MdCancel } from 'react-icons/md'
@@ -21,6 +21,8 @@ export default function CouponCard({
   condition,
   deleteCoupon,
 }) {
+  // 利用use-member-info的hooks抓取localStorage的會員資訊
+  const { member } = useMemberInfo()
   return (
     <>
       <div
@@ -50,7 +52,9 @@ export default function CouponCard({
                       ? 'btn btn-cantusecoupon'
                       : 'btn btn-delete'
                   }
-                  onClick={() => (status === '已過期' ? deleteCoupon(id) : {})}
+                  onClick={() =>
+                    status === '已過期' ? deleteCoupon(id, member.id) : {}
+                  }
                 >
                   {status === '已使用' ? '無法使用' : '刪除優惠券'}
                 </button>

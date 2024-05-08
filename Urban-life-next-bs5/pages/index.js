@@ -12,6 +12,7 @@ import LectureCard2 from '@/components/home-page/lecture-card2'
 import TeacherCard from '@/components/home-page/teacher-card'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 
+
 // CALENDER
 // import Calendar from '@/components/calandar/calendar'
 
@@ -26,35 +27,11 @@ import { Container } from 'react-bootstrap'
 export default function Home() {
   return (
     <>
-      {/* <section className="slider">
-        <Carousel
-          interval={2000}
-          style={{ maxWidth: '100%', width: '100%' }}
-          className="carousel"
-        >
-          <Carousel.Item className="carousel">
-            <img
-              className="d-block w-100"
-              src="/images/test/slider1.jpg"
-              alt="First slide"
-            />
-          </Carousel.Item>
-          <Carousel.Item className="carousel">
-            <img
-              className="d-block w-100"
-              src="/images/test/slider2.jpg"
-              alt="Second slide"
-            />
-          </Carousel.Item>
-          <Carousel.Item className="carousel">
-            <img
-              className="d-block w-100"
-              src="/images/test/slider3.jpg"
-              alt="Third slide"
-            />
-          </Carousel.Item>
-        </Carousel>
-      </section> */}
+      <section className="slider">
+       
+        
+      </section>
+
       <section className="本月主打">
         <Container>
           <h1 className="text-center">本月主打!</h1>
@@ -169,13 +146,13 @@ export default function Home() {
               <TeacherCardInfo />
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-            <TeacherCardInfo />
+              <TeacherCardInfo />
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-            <TeacherCardInfo />
+              <TeacherCardInfo />
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-            <TeacherCardInfo />
+              <TeacherCardInfo />
             </div>
           </div>
 
@@ -195,7 +172,8 @@ export default function Home() {
           }
 
           .slider {
-            margin-top: 0px;
+            margin: 0;
+            padding: 0;
           }
 
           .carousel {
@@ -204,7 +182,7 @@ export default function Home() {
 
           .carousel-control-prev,
           .carousel-control-next {
-            width:1000px
+            width: 1000px;
           }
 
           .product-card,
@@ -214,6 +192,13 @@ export default function Home() {
             justify-content: center;
             padding: 0;
             margin: 10px 0;
+          }
+
+          @media (max-width: 768px) {
+            .carousel-control-prev,
+            .carousel-control-next {
+              display: none;
+            }
           }
         `}
       </style>

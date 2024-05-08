@@ -35,6 +35,9 @@ export default function MyApp({ Component, pageProps }) {
   const getLayout =
     Component.getLayout || ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
+
+    
+
   return (
     <LoaderProvider close={2} CustomLoader={CatLoader}>
       <MemberInfoProvider>

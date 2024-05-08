@@ -7,12 +7,8 @@ import { getIdParam } from '#db-helpers/db-tool.js'
 // 資料庫使用
 import sequelize from '#configs/db.js'
 
-
 // 一般sql
 import db from '#configs/mysql.js'
-
-
-
 
 router.get('/', async function (req, res) {
   // coupon資料庫 SQL
@@ -26,11 +22,9 @@ router.get('/', async function (req, res) {
         coupons: rows,
       },
     })
-  } catch (err) {
+  } catch (error) {
     console.log(error)
   }
 })
-
-
 
 export default router

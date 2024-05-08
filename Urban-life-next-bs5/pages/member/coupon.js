@@ -6,7 +6,12 @@ import CouponAdd from '@/components/member/coupon-add'
 import CouponCard from '@/components/member/coupon-card'
 
 import Swal from 'sweetalert2'
+
+// 引入HOOKS
+// 連結user_coupon資料表
 import { useUserCoupon } from '@/hooks/use-usercoupon'
+// 取用localStorage裡的member-info
+import { useMemberInfo } from '@/hooks/use-member-info'
 
 // 假資料測試
 // import Coupons from '@/data/coupon.json'
@@ -14,8 +19,53 @@ import { useUserCoupon } from '@/hooks/use-usercoupon'
 import ReactDOM from 'react-dom'
 
 export default function CouponMainPage() {
+  // 利用use-member-info的hooks抓取localStorage的會員資訊
+  const { member } = useMemberInfo()
+
+  // 20240508先暫時不去用use-usercoupon的鉤子
+  // 因為自訂鉤子之間要使用參數有點麻煩
+  //use-usercoupon要使用use-member-info抓取member(localStorage的會員資訊)
   // 利用use-usercoupon的hooks把要的東西拉過來
-  const { userCoupons, setUserCoupons, getCoupons } = useUserCoupon()
+  // const { userCoupons, setUserCoupons, getCoupons } = useUserCoupon()
+
+  //把use-usercoupon的hooks把要的東西拉過來
+  // user_coupons資料的狀態，加進去需要用到
+  const [userCoupons, setUserCoupons] = useState([])
+  // 從user_coupon抓資料近來
+  const getCoupons = async (id) => {
+    // 後端網址
+
+    // fetch抓資料
+    try {
+      const url = `http://localhost:3005/api/user_coupon?user_id=${id}`
+      const res = await fetch(url)
+      const data = await res.json()
+      // 所有此user擁有的coupon
+      const userCoupon = data.data.user_coupon
+
+      // 成功獲取資料就把資料設定到coupons狀態裡面
+      if (Array.isArray(userCoupon)) {
+        setUserCoupons(userCoupon)
+      } else {
+        alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // 連線伺服器後，才將coupon資料抓下來渲染頁面
+  // 渲染完後才能使用localStorge的東西
+  // 再use-usercoupon裡面member這個變數原本是null
+  // 渲染完頁面以後她才會從localStorage取得member的資訊
+  // 所以要使用member去控制她
+  // 如果它存在的才執行getCoupons()
+  useEffect(() => {
+    if (member) {
+      getCoupons(member.id)
+    }
+  }, [member])
+
   // sweetalert跳出的框框
   const notifyAddSuccess = (couponName) => {
     Swal.fire({
@@ -56,47 +106,11 @@ export default function CouponMainPage() {
   // 接收coupon-add狀態的回調function
   const [couponAdd, setCouponAdd] = useState('')
 
-  // 從前端寫接口將後端把user_coupon裡的資料拿過來
-
-  // const getCoupons = async () => {
-  //   // 後端網址
-  //   const url = 'http://localhost:3005/api/user_coupon'
-
-  //   // fetch抓資料
-  //   try {
-  //     const res = await fetch(url)
-  //     const data = await res.json()
-  //     // 所有此user擁有的coupon
-  //     const userCoupon = data.data.user_coupon
-  //     // 先顯示"可使用"的coupon
-  //     // const couponstatus = []
-  //     // userCoupons.map((coupon) => {
-  //     //   couponstatus
-  //     //   if(coupon.status === '可使用'){
-  //     //     couponstatus.push(coupon)
-  //     //   }
-  //     // })
-
-  //     // 成功獲取資料就把資料設定到coupons狀態裡面
-  //     if (Array.isArray(userCoupon)) {
-  //       setUserCoupons(userCoupon)
-  //     } else {
-  //       alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-  // 連線伺服器後，才將coupon資料抓下來渲染頁面
-  useEffect(() => {
-    getCoupons()
-  }, [])
-
   // 新增優惠券要從coupon資料庫找是否有這張
   // 再跟user_coupon資料庫比對是否有相同的
 
-  const checkCoupon = async (couponCode) => {
-    const url = 'http://localhost:3005/api/user_coupon'
+  const checkCoupon = async (couponCode, id) => {
+    const url = `http://localhost:3005/api/user_coupon?user_id=${id}`
 
     // fetch抓資料
     try {
@@ -114,11 +128,11 @@ export default function CouponMainPage() {
       console.log(error)
     }
   }
-  const addCoupon = async () => {
+  const addCoupon = async (id) => {
     const url = `http://localhost:3005/api/coupons`
 
     const res = await fetch(url)
-    
+
     const data = await res.json()
     const coupons = data.data.coupons
 
@@ -131,10 +145,10 @@ export default function CouponMainPage() {
     if (couponsCode.includes(couponAdd)) {
       console.log(`${couponAdd} 優惠券存在`)
       newCoupon = coupons.find((coupon) => coupon.code === couponAdd)
-      // console.log(newCoupon)
+      console.log(newCoupon)
 
       // 判斷user是不是有這張優惠券
-      if ((await checkCoupon(newCoupon.code)) === false) {
+      if ((await checkCoupon(newCoupon.code, id)) === false) {
         console.log('可以進行新增的動作')
         if (new Date(newCoupon.deadline) < new Date()) {
           notifyAddExpired(couponAdd)
@@ -144,13 +158,15 @@ export default function CouponMainPage() {
           try {
             // 新增此coupon到user_coupon資料庫裏面
             const url = `http://localhost:3005/api/user_coupon`
+
             // 不處理UPDATE從後端丟回來的東西，只是做叫後端更新資料的動作
+
             const res = await fetch(url, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(newCoupon),
+              body: JSON.stringify({ user_id: id, newCoupon: newCoupon }),
             })
             // 增加優惠券成功
             notifyAddSuccess(newCoupon.name)
@@ -177,8 +193,8 @@ export default function CouponMainPage() {
     }
   }
 
-  const deleteCoupon = async (couponID) => {
-    const url = 'http://localhost:3005/api/user_coupon'
+  const deleteCoupon = async (couponID,id) => {
+    const url = `http://localhost:3005/api/user_coupon?user_id=${id}`
 
     // fetch抓資料
     try {
@@ -194,7 +210,7 @@ export default function CouponMainPage() {
 
       // 在成功刪除優惠券後執行 getCoupon
       await getCoupons()
-      
+
       return <div></div>
     } catch (error) {
       console.log(error)
@@ -205,14 +221,28 @@ export default function CouponMainPage() {
   // 新增完後再渲染一次
   useEffect(() => {
     const fetchData = async () => {
-      if (couponAdd !== '') {
-        await addCoupon()
-        await getCoupons()
+      if (member) {
+        if (couponAdd !== '') {
+          await addCoupon(member.id)
+          await getCoupons(member.id)
+        }
       }
     }
     fetchData()
-  }, [couponAdd])
+  }, [couponAdd, member])
 
+  // // 讓頁面知道他是哪個user
+  // useEffect(() => {
+  //   // 把localStorage裡的member-info拉出來
+  //   const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+
+  //   if (memberInfo) {
+  //     // member-info是物件需要解構下
+  //     const { id } = memberInfo
+  //     const userID = id
+  //     console.log(userID)
+  //   }
+  // }, [])
   return (
     <>
       <div className="container coupon-management-body">

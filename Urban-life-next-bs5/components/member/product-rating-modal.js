@@ -19,7 +19,7 @@ function ProductRating({
 
   const handleSubmit = async () => {
     let url = 'http://localhost:3005/api/product_lecture_comment'
-    
+
     const res = await fetch(url, {
       method: 'POST',
       headers: {
@@ -30,13 +30,10 @@ function ProductRating({
         comment: comment,
         star: rating,
         product_lecture_id: itemId,
-        
-      })
+      }),
     })
 
     const data = await res.json()
-    
-    
   }
 
   // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
@@ -92,7 +89,7 @@ function ProductRating({
                 className="form-control"
                 rows="4"
                 value={comment}
-                onChange={(e, { itemName }) => {
+                onChange={(e) => {
                   onCommentChange(itemName, e.target.value)
                 }}
               ></textarea>
