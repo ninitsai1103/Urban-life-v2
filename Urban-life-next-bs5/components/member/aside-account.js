@@ -93,9 +93,7 @@ export default function AsideAccount() {
               <div className="avatar">
                 <Image
                   src={
-                    member?.img
-                      ? `http://localhost:3005/avatar/${member?.img}`
-                      : 'http://localhost:3005/avatar/default.jpg'
+                    `http://localhost:3005/avatar/${member?.img}`
                   }
                   alt=""
                   width={80}
