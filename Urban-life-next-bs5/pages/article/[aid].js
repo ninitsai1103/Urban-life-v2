@@ -2,12 +2,14 @@ import React from 'react'
 import Comment from '@/components/article/comment'
 import { SlArrowLeft } from 'react-icons/sl'
 import { FaRegHeart } from 'react-icons/fa'
+import useArticles from '@/hooks/use-articles'
 
 export default function Detail() {
+  // const { article } = useArticles()
   return (
     <>
-      <div className="container ">
-        <div className="row mt-2 mx-2">
+      <div className="container " >
+        <div className="row mt-2 mx-2 " >
           {/* breadcrumb */}
           <div className="col-sm-12">
             <SlArrowLeft />
@@ -45,9 +47,9 @@ export default function Detail() {
             <button className="btn btn-main my-3">編輯文章</button>
           </div>
 
-          <div className="col">
+          <div className="col" >
             <img
-              src="/images/article/article_phone_card_image.png"
+              src="/images/article/article_img/1.jpg"
               className="my-3 h-50"
               alt="..."
             />

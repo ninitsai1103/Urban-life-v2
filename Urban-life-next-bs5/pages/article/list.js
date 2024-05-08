@@ -2,72 +2,76 @@ import { useState, useEffect } from 'react'
 import Page from '@/components/product/pagination'
 import Search from '@/components/product/search'
 import ArticleCard from '@/components/article/articlecard'
+import Sidebar from '@/components/article/sidenav'
 import { FaFilter } from 'react-icons/fa'
+import { IoAdd } from 'react-icons/io5'
+
 // 使用自定義 Hook 來獲取文章資料
 import useArticles from '@/hooks/use-articles'
+// import fi from '@/node_modules 2/moment/dist/locale/fi'
 
 export default function List() {
   // 從自定義 Hook useArticles 獲取文章數據，並使用 useState 來管理和更新這些數據的顯示狀態。在組件的其他部分，ArticleList 可用於顯示文章列表，而從 useArticles 獲取的 articles 數據可能會用於初始化或更新 ArticleList。
   const [list, setList] = useState([])
   const { articles } = useArticles()
+  console.log(articles)
+  const [filter, setFilter] = useState('ALL')
+  const [sort, setSort] = useState('')
 
+  //分頁
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  // const totalItems = 40;
+  const perpages = 12 //一頁幾筆資料
+  //
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  const handleSortChange = (e) => {
+    console.log(e.target.value)
+    setSort(e.target.value)
+  }
   useEffect(() => {
-    setList(articles)
-    console.log(articles)
-  }, [articles])
+    const filteredArticles = articles.filter((article) => {
+      if (filter == 'ALL') {
+        return true
+      } else {
+        return article.category_name == filter
+      }
+    })
+    const sortedArticles = filteredArticles.sort((a, b) => {
+      if (sort === '4') {
+        // Sort by date
+        return new Date(a.date) - new Date(b.date)
+      } else if (sort === '3') {
+        // Sort by date
+        return -(new Date(a.date) - new Date(b.date))
+      } else if (sort === '2') {
+        // Sort by total comments
+        return b.total_comments - a.total_comments
+      } else if (sort === '1') {
+        // Sort by total collections
+        return b.total_collections - a.total_collections
+      } else return true
+    })
+    const totalPages = Math.ceil(sortedArticles.length / perpages)
+    setTotalPages(totalPages)
+    //更新列表
+    const startIndex = (currentPage - 1) * perpages
+    const endIndex = Math.min(startIndex + perpages, sortedArticles.length)
+
+    setList(sortedArticles.slice(startIndex, endIndex))
+    console.log(articles, totalPages)
+  }, [currentPage, articles, filter, sort])
+  console.log('39', list)
   return (
     <>
       <div className="container bg-color g-3 mt-5 my-2">
         <div className="row d-flex">
           {/*   類別按鈕列表  */}
           <div className="col-2 d-none d-lg-block d-md-none">
-            <div className="sidenav ">
-              <div className="list-group">
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action active"
-                  aria-current="true"
-                >
-                  文章分類
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action active"
-                >
-                  課程分享
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  植栽照顧
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  植物分享
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  資材
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  肥料
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  書籍
-                </button>
-              </div>
-            </div>
+            <Sidebar filter={filter} setFilter={setFilter} />
           </div>
           {/* 搜尋與文章列表  */}
 
@@ -81,8 +85,20 @@ export default function List() {
                 <div className="">
                   <div className="d-flex justify-content-between my-3">
                     <div className="breadcrumb-amount-bar mt-3">
-                      <h6>文章列表/課程分享</h6>
-                      <h6>共 5 篇文章</h6>
+                      <h6>文章列表/{filter}</h6>
+                      <h6>
+                        共{' '}
+                        {
+                          articles.filter((article) => {
+                            if (filter == 'ALL') {
+                              return true
+                            } else {
+                              return article.category_name == filter
+                            }
+                          }).length
+                        }{' '}
+                        篇文章
+                      </h6>
                     </div>
                     <div className="d-flex ">
                       <button
@@ -96,30 +112,51 @@ export default function List() {
                         <select
                           className="form-select"
                           aria-label="Default select example"
+                          // onClick={handleFilter}
+                          onChange={handleSortChange}
                         >
                           <option selected="">排序依據</option>
                           <option value={1}>最多收藏</option>
                           <option value={2}>最多留言</option>
                           <option value={3}>最新文章</option>
-                          <option value={3}>最舊文章</option>
+                          <option value={4}>最舊文章</option>
                         </select>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <div className="mx-2 ">
+                <button className="btn btn-main">
+                  <IoAdd />
+                  新增文章
+                </button>
+              </div>
 
               {/* 文章卡片 */}
               <div className="d-flex flex-wrap ">
-                {articles.map((article) => (
-                  <div className="col-md-3 p-2">
-                    <ArticleCard key={article.id} article={article} />
-                  </div>
-                ))}
+                {list
+                  .filter((article) => {
+                    if (filter == 'ALL') {
+                      return true
+                    } else {
+                      return article.category_name == filter
+                    }
+                  })
+                  .map((article) => (
+                    <div className="col-md-3 p-2">
+                      <ArticleCard key={article.id} article={article} />
+                    </div>
+                  ))}
               </div>
 
               {/* 分頁 */}
-              <Page />
+              <Page
+                perpages={perpages}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         </div>

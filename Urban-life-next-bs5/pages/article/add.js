@@ -1,67 +1,132 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Myeditor from '@/components/article/Myeditor'
 
 export default function Add() {
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  const [article, setArticle] = useState({
+    title: '',
+    content: '',
+    categoryId: '',
+  })
+  const [errors, setErrors] = useState({
+    title: '',
+    content: '',
+    categoryId: '',
+  })
+
+  useEffect(() => {
+    setEditorLoaded(true)
+  }, [])
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setArticle({ ...article, [name]: value })
+  }
+
+  const handleContentChange = (content) => {
+    setArticle({ ...article, content: content })
+  }
+
+  const validateForm = () => {
+    const newErrors = {}
+    if (!article.title) newErrors.title = '標題不能為空'
+    if (!article.categoryId) newErrors.categoryId = '請選擇一個分類'
+    if (!article.content) newErrors.content = '內容不能為空'
+    return newErrors
+  }
+
+  const testAdd = () => {
+    const formErrors = validateForm()
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors)
+      return
+    }
+
+    // 沒有錯誤，繼續提交
+    fetch('http://localhost:3005/api/articleUpload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...article, userId: 1 }), // 假設的用戶 ID
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('成功:', data)
+      })
+      .catch((error) => {
+        console.error('錯誤:', error)
+      })
+  }
+
   return (
     <>
       <div className="container">
         <div className="row">
-          {/* breadcrumb */}
           <div className="container bg-color g-3 mt-5 my-2">
             <Link href="/add-article" className="text-decoration-none">
-              新增文章
+              文章分享
             </Link>
             <Link href="/add-article" className="text-decoration-none">
               /新增文章
             </Link>
           </div>
-          {/* article-add-content */}
           <div className="">
             <div className="add-title my-3 ">
               <p className="col-md-6 d-inline">標題</p>
-              <div class="col-md-6">
+              <div className="col-md-6">
                 <input
                   type="text"
                   className="form-control"
                   placeholder="請輸入標題"
+                  name="title"
+                  value={article.title}
+                  onChange={handleInputChange}
                 />
+                {errors.title && <div className="error">{errors.title}</div>}
               </div>
             </div>
-
             <div className="add-category my-3">
               <p>分類</p>
-              <select name="" id="" className="form-select">
-                <option value="">官方發布</option>
-                <option value="">課程體驗</option>
-                <option value="">環境與植物</option>
-                <option value="">植栽知識</option>
-                <option value="">生活應用分享</option>
-                <option value="">其他</option>
-
+              <select
+                name="categoryId"
+                className="form-select"
+                value={article.categoryId}
+                onChange={handleInputChange}
+              >
+                <option value="">選擇分類</option>
+                <option value="1">官方發布</option>
+                <option value="2">課程體驗</option>
+                <option value="3">環境與植物</option>
+                <option value="4">植栽知識</option>
+                <option value="5">生活應用分享</option>
+                <option value="6">其他</option>
               </select>
+              {errors.categoryId && (
+                <div className="error">{errors.categoryId}</div>
+              )}
             </div>
-
             <div className="add-content my-3">
-              <p> 上傳相片</p>
-              <input type="file" className="form-control" />
-              <p className="mt-3">內容</p>
-              <textarea
-                name=""
-                id=""
-                cols="30"
-                rows="10"
-                className="form-control"
-              ></textarea>
+              <p>內容</p>
+              <div style={{ height: '300px' }}>
+                <Myeditor
+                  name="content"
+                  onChange={handleContentChange}
+                  editorLoaded={editorLoaded}
+                />
+                {errors.content && (
+                  <div className="error">{errors.content}</div>
+                )}
+              </div>
             </div>
           </div>
           <div className="d-flex justify-content-center my-3">
-           <button className="btn btn-detail me-3">取消</button>
-
-           <button className='btn btn-main'>
-            確認新增
-          </button>
+            <button className="btn btn-detail me-3">取消</button>
+            <button className="btn btn-main" onClick={testAdd}>
+              確認新增
+            </button>
           </div>
-          
         </div>
       </div>
     </>
