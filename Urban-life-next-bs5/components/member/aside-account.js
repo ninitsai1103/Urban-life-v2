@@ -13,10 +13,10 @@ export default function AsideAccount() {
   const router = useRouter()
 
   // hooks
-  const {member} = useMemberInfo()
+  const { member } = useMemberInfo()
 
   // 上傳大頭照
-  const [selectedFile, setSelectedFile] = useState(null)
+  const [selectedFile, setSelectedFile] = useState('')
   // 處理圖標點擊事件
   const handleIconClick = () => {
     // 觸發文件選擇器點擊
@@ -34,27 +34,19 @@ export default function AsideAccount() {
     const userId = memberInfo.id
 
     formData.append('userId', userId)
-
     try {
       const response = await fetch('http://localhost:3005/api/upload', {
         method: 'POST',
         body: formData,
-        // 不設置'Content-Type'頭部，讓瀏覽器自動設置
       })
-
-      if (!response.ok) {
-        throw new Error('文件上傳失敗！')
-      }
-
-      const data = await response.json()
-      alert(`${data.message}`)
-      console.log(data) // 可以在這裡處理回傳的數據
+      // 上传成功后提示上传成功
+      alert('檔案上傳成功')
+      window.location.reload();
     } catch (error) {
       console.error('上傳錯誤：', error)
       alert(error.message)
     }
   }
-
   // 登出
   const handleLogout = async () => {
     try {
@@ -130,7 +122,7 @@ export default function AsideAccount() {
             </div>
             <div className="d-flex justify-content-center">
               <div className="name text-center">
-              {member?.name}
+                {member?.name ? member?.name : '姓名'}
               </div>
             </div>
             <div className="d-flex justify-content-center">
@@ -146,11 +138,9 @@ export default function AsideAccount() {
             className="form-select phone-select d-lg-none "
             aria-label="Default select example"
             value={
-              // 網址待修
               currentPath === '/member/information'
                 ? '1'
-                : // 網址待修
-                currentPath === '/member/order'
+                : currentPath === '/member/order'
                 ? '2'
                 : currentPath === '/member/coupon'
                 ? '3'
@@ -167,7 +157,6 @@ export default function AsideAccount() {
           </select>
 
           <ul className="list-unstyled window_menu d-none d-lg-block">
-            {/* 網址待修 */}
             <li>
               <a
                 className={
@@ -178,7 +167,7 @@ export default function AsideAccount() {
                 <BiIdCard /> 個人資料
               </a>
             </li>
-            {/* 網址待修 */}
+
             <li>
               <a
                 className={currentPath === '/member/order' ? 'active' : ''}

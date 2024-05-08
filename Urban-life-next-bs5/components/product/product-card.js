@@ -1,12 +1,44 @@
 import { useState, useEffect } from 'react'
 // import LoadingImageSvg from './loading-image-svg'
 // import useProducts from '@/hooks/product/useProducts'
+import toast, { Toaster } from 'react-hot-toast'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 
 export default function ProductCard({ product }) {
-  // const{products} = useProducts();
+
+  const [isFavorited, setIsFavorite] = useState([false]);
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorited);
+    if (!isFavorited) {
+      toast.success('商品已取消收藏!', {
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        }
+      })
+    } else {
+      toast.success('商品已加入收藏!', {
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        },
+      })
+    }
+
+  }
 
   return (
     <>
@@ -27,7 +59,16 @@ export default function ProductCard({ product }) {
                   ? product.name
                   : `${product.name}(${product.size})`}
               </h5>
-              <FaRegHeart style={{ fontSize: '25px', cursor: 'pointer' }} />
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+              />
+              {!isFavorited ?
+                (<FaHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
+                  onClick={toggleFavorite} />) :
+                (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer' }}
+                  onClick={toggleFavorite} />)
+              }
             </div>
             <div className="star d-flex">
               <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />

@@ -563,6 +563,7 @@ export default function LectureManagement() {
                           key={lecture.id}
                           lecture={lecture}
                           deleteLecture={deleteLecture}
+                          updateLecture={updateLecture}
                         />
                       ))}
                     </div>

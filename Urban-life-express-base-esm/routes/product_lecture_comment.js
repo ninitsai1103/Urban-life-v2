@@ -25,7 +25,7 @@ router.get('/', async function (req, res) {
       },
     })
   } catch (err) {
-    console.log(error)
+    console.log(err)
   }
 })
 
