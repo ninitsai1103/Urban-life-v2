@@ -5,7 +5,7 @@ import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
 import UseSortDatas from '@/hooks/product/useSortDatas'
-
+import useColloections from '@/hooks/product/useCollections'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
@@ -37,7 +37,7 @@ export default function List() {
 
   const [list, setList] = useState([])
   const { products } = useProducts()
-
+  const {collections} = useColloections()
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -45,9 +45,6 @@ export default function List() {
 
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
-
-  //收藏
-  const [collections, setCollections] = useState([]);
 
   //分類後的產品(如果沒有點選分類就返回原本的產品列表)
   const secProducts = useMemo(() => {
@@ -158,23 +155,20 @@ export default function List() {
   }
 
 
-  //渲染有收藏的商品
-  const renderCollection = (productCollction) => {
-    
-  }
+  
 
   //獲得登入會員的收藏資料
-  api.get('/collection')
-  .then(response => {
-    const productCollection = response.data.data.collections.map(item => item.product_id && item.pdltat_id===1);
-    // console.log(productCollection);
-    setCollections(productCollection);
+  // api.get('/collection')
+  // .then(response => {
+  //   const userOfProductCollection = response.data.data.collections.map(item => item.product_id && item.pdltat_id===1);
+  //   // console.log(userOfProductCollection);
+  //   setCollections(userOfProductCollection);
  
 
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+  // })
+  // .catch(error => {
+  //   console.error('Error:', error);
+  // });
 
   // Toggle the side navigation
   // useEffect(() => {
@@ -1694,7 +1688,7 @@ export default function List() {
               <div className="row row-cols-2 row-cols-lg-4 g-4">
                 {list.map((product) => (
                   <Link key={product.id} href={`/product/${product.id}`}>
-                  <ProductCard key={product.id} product={product} isCollected={collections.includes(product.id)}/>
+                  <ProductCard key={product.id} product={product} />
                    </Link>
                 ))}
               </div>

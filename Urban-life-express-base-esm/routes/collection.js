@@ -30,7 +30,7 @@ router.get('/', authenticate, async (req, res) => {
 router.get('/add/:product_id', authenticate, async (req, res) => {
   const userId = req.decoded.id //從解碼JWT中取得用戶ID
   const { productId } = parseInt(req.params.product_id, 10) // 從路由參數中取得商品ID
-  // const userId = req.body.userid //從解碼JWT中取得用戶ID
+  // const userId = req.body.userId //從解碼JWT中取得用戶ID
   // const  productId  = parseInt(req.params.product_id, 10) // 從路由參數中取得商品ID
   console.log("!!!!!!!!!!!!!!");
   console.log(req.body);
@@ -70,39 +70,39 @@ router.get('/add/:product_id', authenticate, async (req, res) => {
   }
 
   //取消收藏
-  router.put('/remote/:product_id', authenticate, async (req, res) => {
-    const userId = req.decoded.id //從解碼JWT中取得用戶ID
-    const { productId } = req.params // 從路由參數中取得商品ID
-    console.log(userId, productId)
-    try {
-      //檢查是否有收藏該商品
-      const result = await Collection.update({valid:0},{
-        where: {
-          user_id: userId,
-          product_id: productId,
-          valid:1  // 確保只更新有效的收藏項目
-        },
-      })
+  // router.put('/remote/:product_id', authenticate, async (req, res) => {
+  //   const userId = req.decoded.id //從解碼JWT中取得用戶ID
+  //   const { productId } = req.params // 從路由參數中取得商品ID
+  //   console.log(userId, productId)
+  //   try {
+  //     //檢查是否有收藏該商品
+  //     const result = await Collection.update({valid:0},{
+  //       where: {
+  //         user_id: userId,
+  //         product_id: productId,
+  //         valid:1  // 確保只更新有效的收藏項目
+  //       },
+  //     })
 
-      if (result[0] === 0) {
-        return res
-          .status(404)
-          .json({ status: 'fail', message: 'Product not found in collection or already removed.' })
-      }
+  //     if (result[0] === 0) {
+  //       return res
+  //         .status(404)
+  //         .json({ status: 'fail', message: 'Product not found in collection or already removed.' })
+  //     }
 
-      // 從數據庫中移除該收藏
-      await existingCollection.destroy()
-      res.json({ status: 'success', message: '移除收藏成功' })
-    } catch {
-      console.error('Failed to remove collection:', error)
-      res
-        .status(500)
-        .json({
-          status: 'error',
-          message: 'Error removing product from collection.',
-        })
-    }
-  })
+  //     // 從數據庫中移除該收藏
+  //     await existingCollection.destroy()
+  //     res.json({ status: 'success', message: '移除收藏成功' })
+  //   } catch {
+  //     console.error('Failed to remove collection:', error)
+  //     res
+  //       .status(500)
+  //       .json({
+  //         status: 'error',
+  //         message: 'Error removing product from collection.',
+  //       })
+  //   }
+  // })
 
   
 })
