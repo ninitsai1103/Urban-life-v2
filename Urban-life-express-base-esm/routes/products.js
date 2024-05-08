@@ -34,6 +34,60 @@ router.get('/', async function(req, res){
   }
 });
 
+router.get('/get-collection', async function(req, res){
+  const id = req.params.id
+  const sqlUser = `SELECT * FROM user_teacher WHERE id = ?`
+
+  try {
+    const [rows, fields] = await db.query(sqlUser); // 將 sqlProducts 作為參數傳遞給 db.query()
+    return res.json({
+      status: 'success',
+      data:{
+        user:rows
+      },
+  })
+  } catch (error) {
+    // 錯誤處理
+    console.error( error);
+    return res.status(500).json({
+      status:'error',
+      message:'Internal Server Error'
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    db.execute(sql, [id], (err, results) => {
+      if (err) {
+        reject({ status: 'error', message: '資料庫錯誤：' + err.message }); // 提供詳細的錯誤訊息
+      } else {
+        if (results.length > 0) {
+          resolve(results[0]); // 成功取得資料時使用 resolve 回傳結果
+        } else {
+          reject(new Error('找不到使用者'));
+        }
+      }
+    })
+  })
+  // let sqlProducts = 'SELECT * FROM product_lecture WHERE pdlt_id = 1 AND valid = 1';
+
+  // try {
+  //   const [rows, fields] = await db.query(sqlProducts); // 將 sqlProducts 作為參數傳遞給 db.query()
+  //   return res.json({
+  //     status: 'success',
+  //     data:{
+  //       products:rows
+  //     },
+  // })
+  // } catch (error) {
+  //   // 錯誤處理
+  //   console.error( error);
+  //   return res.status(500).json({
+  //     status:'error',
+  //     message:'Internal Server Error'
+  //   });
+  // }
+});
+
   //  獲取query參數值
   // const {
   //   name_like = '', // string, 對應 name 欄位, `name LIKE '%name_like%'`

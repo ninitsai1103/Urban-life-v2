@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import CheckoutProductsTable from '@/components/cart/checkout-products-table'
 import CheckoutLecturesTable from '@/components/cart/checkout-lectures-table'
 import Step from '@/components/cart/step'
@@ -7,12 +7,24 @@ import CheckoutCounter from '@/components/cart/checkout-counter'
 import styles from '@/components/cart/cart.module.css'
 import Link from 'next/link'
 import AddProducts from '@/components/cart/add-products'
-import coupons from '@/data/coupon.json'
+// import coupons from '@/data/coupon.json'
+import { useUserCoupon } from '@/hooks/use-usercoupon'
 
 export default function CheckoutPage() {
   // 使用 useState hook 創建 couponSelected 狀態，初始值為空陣列
   const [couponSelected, setCouponSelected] = useState([])
- 
+  //抓取會員所有的優惠券
+  const { userCoupons, setUserCoupons, getCoupons } = useUserCoupon()
+
+  useEffect(()=>{
+    getCoupons()
+    console.log(userCoupons);
+
+  },[])
+  const coupons =userCoupons
+
+  
+
   // 傳遞勾選的商品陣列物件
   // const [selectedProductsToPay, setSelectedProductsToPay] = useState([])
   // 傳遞勾選的課程陣列物件
@@ -51,28 +63,28 @@ export default function CheckoutPage() {
         </div>
         <CheckoutProductsTable
         // setSelectedProductsToPay={setSelectedProductsToPay}
-
-         />
-        <CheckoutLecturesTable 
+        />
+        <CheckoutLecturesTable
         //setSelectedLecturesToPay={setSelectedLecturesToPay}
         />
         <section className="d-sm-flex justify-content-between mb-3">
           <div className="flex-fill me-sm-3">
-            <h4 className="text-light bg-primary4 p-2 mt-2">
-              選擇優惠券
-            </h4>
-            <CheckoutCouponsSelect coupons={coupons} sendSelectedCoupon={setCouponSelected}/>
+            <h4 className="text-light bg-primary4 p-2 mt-2">選擇優惠券</h4>
+            <CheckoutCouponsSelect
+              coupons={coupons}
+              sendSelectedCoupon={setCouponSelected}
+            />
           </div>
           <div className="flex-fill">
             <h4 className="text-light bg-primary4 p-2 mt-2">訂單資訊</h4>
-            <CheckoutCounter 
-            selectedCoupon={couponSelected}
-            //selectedToPay={selectedToPay}
+            <CheckoutCounter
+              selectedCoupon={couponSelected}
+              //selectedToPay={selectedToPay}
             />
             <div className="text-end mt-3">
-              <button className="btn btn-main" type="button" onClick={() => {}}>
+              <Link type="button" className="btn btn-main" href="./cart/info-pay">
                 結帳去
-              </button>
+              </Link>
             </div>
           </div>
         </section>

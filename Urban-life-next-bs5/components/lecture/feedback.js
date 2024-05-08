@@ -6,9 +6,8 @@ export default function Feedback() {
     return (
       <>
         <div className="container">
-          <div className="row mt-5 mx-2">
-            <div className="col-12 mb-5">
-              <h4 className="text-center mb-5">學員評價</h4>
+          <div className="row">
+            <div className="col-12">
               <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="mt-3">共 5 則評論</p>

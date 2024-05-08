@@ -2,7 +2,7 @@ import React from 'react'
 import { MdArrowForwardIos, MdArrowBackIos } from 'react-icons/md'
 
 
-export default function Page({ totalPages, currentPage, onPageChange }) {
+export default function Page({ totalPages, currentPage,  onPageChange}) {
   //須設定props=>  totalPages:總頁數,currentPage:當前所在頁數
   //函式可到list.js參考
   

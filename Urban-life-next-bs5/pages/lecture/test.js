@@ -11,7 +11,7 @@ import LectureInfo from '@/components/lecture/lectureinfo'
 import Herosection from '@/components/lecture/herosection'
 import Feedback from '@/components/lecture/feedback'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
-
+import TeacherAllInfo from '@/components/lecture/teacherallInfo'
 
 export default function LectureMain() {
   return (
@@ -32,6 +32,7 @@ export default function LectureMain() {
         <Herosection />
         <Feedback />
         <TeacherCardInfo />
+        <TeacherAllInfo />
       </div>
     </>
   )

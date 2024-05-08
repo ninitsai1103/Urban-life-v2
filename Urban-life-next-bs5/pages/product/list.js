@@ -4,59 +4,163 @@ import Search from '@/components/product/search'
 import ProductCard from '@/components/product/product-card'
 import Page from '@/components/product/pagination'
 import useProducts from '@/hooks/product/useProducts'
-import UseSortData from '@/hooks/product/useSortData'
+import UseSortDatas from '@/hooks/product/useSortDatas'
+
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { LuSettings2 } from 'react-icons/lu'
 import { RiFilter2Fill } from 'react-icons/ri'
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
 import { filter } from 'lodash'
+import api  from '@/services/axios-with-token'
 // import { totalItems } from '@/hooks/cart-reducer-state'
 
 export default function List() {
+  //設定篩選狀態
+  const [filterCondition, setFilterCondition] = useState({
+    minPrice: 0,
+    maxPrice: 0,
+    size: 0,
+    priceOver1000: false,
+    hrsExpress: false,
+    location: false,
+  })
+  
+  const [minPriceValue, setMinPriceValue] = useState('');
+  const handleMinPriceValue = (e) => {
+    setMinPriceValue(()=>e.target.value)
+  };
+  const [maxPriceValue, setMaxPriceValue] = useState('');
+  const handleMaxPriceValue = (e) => {
+    setMaxPriceValue(()=>e.target.value)
+  };
+
   const [list, setList] = useState([])
   const { products } = useProducts()
 
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  // const totalItems = 450;
   const perpages = 48 //一頁幾筆資料
-  //
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-  }
 
-  //分類
+  //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
-  const handleCategory = (category) => {
-    setSelectCategory(category)
-    setCurrentPage(1) //重新設定為第一頁
-  }
-  const filterProducts = useMemo(() => {
+
+  //分類後的產品(如果沒有點選分類就返回原本的產品列表)
+  const secProducts = useMemo(() => {
     return selectCategory
       ? products.filter((product) => product.category === selectCategory)
       : products
   })
 
-  //排序
+  //排序狀態和邏輯(初始值代入分類後的產品)
+  const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
 
-  const { sortData, handleSortData } = UseSortData(filterProducts)
-  const changeSort = (key, order) => {
-    handleSortData(key, order);
-  }
+  const filteredProducts = useMemo(() => { //設定篩選的產品
+    return sortDatas.filter((secProducts) => {
+      return (
+        (!filterCondition.minPrice ||
+          secProducts.price >= Number(filterCondition.minPrice)) &&
+        (!filterCondition.maxPrice ||
+          secProducts.price <= Number(filterCondition.maxPrice)) &&
+        (!filterCondition.size || secProducts.size === filterCondition.size) &&
+        (!filterCondition.priceOver1000 || secProducts.price > 1000) &&  
+        (filterCondition.hrsExpress === false ||
+          secProducts.hrs_express === (filterCondition.hrsExpress === true)) &&
+        (filterCondition.location === false ||
+          secProducts.location_id === (filterCondition.location === true))
+      )
+    })
+  }, [filterCondition, sortDatas])
+
 
   //分頁&分類&排序
   useEffect(() => {
     //更新分頁總數
-    const newTotalPages = Math.ceil(sortData.length / perpages)
-    setTotalPages(newTotalPages)
+    const newTotalPages = Math.ceil(filteredProducts.length / perpages)
+    if (totalPages !== newTotalPages) {
+      setTotalPages(newTotalPages);
+    }
     //更新列表
     const startIndex = (currentPage - 1) * perpages
-    const endIndex = Math.min(startIndex + perpages, sortData.length)
-    setList(sortData.slice(startIndex, endIndex))
-  }, [currentPage, sortData])
+    const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
+    const newList = filteredProducts.slice(startIndex, endIndex);
+    if (JSON.stringify(list) !== JSON.stringify(newList)) {
+      setList(newList);
+    }
+  }, [currentPage, perpages, filteredProducts])
 
+  //分頁控制
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  //分類控制
+  const handleCategory = (category) => {
+    setSelectCategory(category)
+    setCurrentPage(1) //重新設定為第一頁
+  }
+
+  //排序控制
+  const changeSort = (key, order) => {
+    handleSortDatas(key, order)
+  }
+
+  const get_input_range = () => {
+    return {'minPrice': minPriceValue, 'maxPrice': maxPriceValue}
+  }
+
+  //更新按鈕處理邏輯
+  const handleSelectedValue = (e, name, obj) => {
+    setFilterCondition(prevCondition => {
+        const newCondition = {...prevCondition}
+        if(name == "price") {
+          newCondition.minPrice = obj.minPrice
+          newCondition.maxPrice = obj.maxPrice
+        }
+
+        if(name == "size") {
+          newCondition.size = obj.value
+        }
+
+        if(name == "service") {
+          if(obj.service_name == "免運") {
+            newCondition.priceOver1000 = !newCondition.priceOver1000
+          }
+          if(obj.service_name == "快速到貨") {
+            newCondition.hrsExpress = !newCondition.hrsExpress
+          }
+          if(obj.service_name == "離島") {
+            newCondition.location = !newCondition.location
+          }
+        }
+        console.log(newCondition);
+        return newCondition;
+      })
+
+    };
+
+
+  //清空篩選
+  const clearFilter = () => {
+    setFilterCondition({
+      minPrice: 0,
+      maxPrice: 0,
+      size: 0,
+      priceOver1000: false,
+      hrsExpress: false,
+      location: false,
+    })
+    setCurrentPage(1);
+  }
+
+  api.get('/collection')
+  .then(response => {
+    console.log('Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
   // Toggle the side navigation
   // useEffect(() => {
   //   // fix next issue
@@ -510,13 +614,21 @@ export default function List() {
               </div>
             </div>
             {/* 篩選 */}
-            <div className="">
+            <div className="mb-5">
               <h2 className="fs-6 text-white header-color m-0 p-2 rounded-top">
                 <LuSettings2 />
                 篩選
               </h2>
               <div className="form-control set-text-color">
-                <Link href="" className="text-decoration-none" id="set-text">
+                <Link
+                  href=""
+                  className="text-decoration-none"
+                  id="set-text"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    clearFilter()
+                  }}
+                >
                   清除篩選
                 </Link>
                 <p className="mt-1 mb-0 set-fw700">金額</p>
@@ -524,9 +636,13 @@ export default function List() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="price"
                     id="exampleRadios1"
-                    value="option1"
+                    value="<149"
+                    checked={filterCondition.minPrice === 0 && filterCondition.maxPrice === 149 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':0, 'maxPrice':149})
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -539,60 +655,76 @@ export default function List() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="price"
                     id="exampleRadios2"
-                    value="option2"
+                    value="150-299"
+                    checked={filterCondition.minPrice === 150 && filterCondition.maxPrice === 299 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':150, 'maxPrice':299})
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios2"
                   >
-                    NTD 151-300
+                    NTD 150-299
                   </label>
                 </div>
                 <div className="form-check">
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="price"
                     id="exampleRadios3"
-                    value="option3"
+                    value="300-499"
+                    checked={filterCondition.minPrice === 300 && filterCondition.maxPrice === 499 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':300, 'maxPrice':499})
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios3"
                   >
-                    NTD 301-500
+                    NTD 300-499
                   </label>
                 </div>
                 <div className="form-check">
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="price"
                     id="exampleRadios4"
-                    value="option4"
+                    value="500-999"
+                    checked={filterCondition.minPrice === 500 && filterCondition.maxPrice === 799 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':500, 'maxPrice':799})
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios4"
                   >
-                    NTD 501-1000
+                    NTD 500-799
                   </label>
                 </div>
                 <div className="form-check">
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="price"
                     id="exampleRadios5"
-                    value="option5"
+                    checked={filterCondition.minPrice === 800 && filterCondition.maxPrice === 9999999 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':800, 'maxPrice':9999999})
+                      // handleFreeShipping(true)
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
                     htmlFor="exampleRadios5"
                   >
-                    NTD 1001以上
+                    NTD 800以上
                   </label>
                 </div>
 
@@ -604,36 +736,46 @@ export default function List() {
                     type="text"
                     className="form-control ms-1 p-1 set-fs12 set-size"
                     placeholder=""
-                    aria-label="lowPrice"
+                    aria-label="minPrice"
+                    value={minPriceValue}
+                    onChange={(e) => {
+                      handleMinPriceValue(e);
+                    }}
                   />
                   <span className="input-group-text px-1 no-border-bg">-</span>
                   <input
+                    id="maxPrice-text"
                     type="text"
                     className="form-control me-2 p-1 set-fs12 set-size"
                     placeholder=""
-                    aria-label="highPrice"
+                    aria-label="maxPrice"
+                    value={maxPriceValue}
+                    onChange={(e) => {
+                      handleMaxPriceValue(e);
+                    }}
                   />
                   <button
                     className="set-button-style d-flex align-items-center p-1 rounded"
-                    type="submit"
+                    type="button"
+                    onClick={(e) => {
+                      handleSelectedValue(e, "price", get_input_range()) 
+                    }}
                   >
                     <MdKeyboardArrowRight className="text-white" />
                   </button>
                 </div>
-                <Link
-                  href=""
-                  className="set-fs12 text-decoration-none set-text-color2"
-                >
-                  清除輸入金額
-                </Link>
                 <p className="set-fw700 mt-1 mb-0">商品尺寸</p>
                 <div className="form-check">
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="size"
                     id="exampleRadios6"
-                    value="option6"
+                    value="大"
+                    checked={filterCondition.size === '大'}
+                    onChange={(e) => {
+                      handleSelectedValue(e, "size", {'value':'大'}) 
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -646,9 +788,13 @@ export default function List() {
                   <input
                     className="form-check-input"
                     type="radio"
-                    name="exampleRadios"
+                    name="size"
                     id="exampleRadios7"
-                    value="option7"
+                    value="小"
+                    checked={filterCondition.size === '小'}
+                    onChange={(e) => {
+                      handleSelectedValue(e, "size", {'value':'小'}) 
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
@@ -662,12 +808,16 @@ export default function List() {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
+                    name='freeShipping'
+                    id="freeShipping"
+                    checked={filterCondition.priceOver1000}
+                    onChange={(e)=>{
+                      handleSelectedValue(e, "service", {'service_name':'免運', 'service_state':filterCondition.priceOver1000}) 
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
-                    htmlFor="flexCheckDefault"
+                    htmlFor="freeShipping"
                   >
                     一件即達免運
                   </label>
@@ -677,52 +827,40 @@ export default function List() {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
-                    id="flexCheckDefault"
+                    value="rhsExpress"
+                    name='rhsExpress'
+                    id="rhsExpress"
+                    checked={filterCondition.hrsExpress}
+                    onChange={(e)=>{
+                      handleSelectedValue(e, "service", {'service_name':'快速到貨', 'service_state':filterCondition.hrsExpress}) 
+                    }}
                   />
                   <label
                     className="form-check-label set-fs12"
-                    htmlFor="flexCheckDefault"
+                    htmlFor="rhsExpress"
                   >
-                    只顯示可快速到貨的商品
+                    可快速到貨的商品
                   </label>
                 </div>
-                <p className="set-fw700 mt-1 mb-0">可寄往</p>
-                <div className="dropdown d-flex justify-content-center">
-                  <button
-                    className="btn dropdown-toggle set-fs12 set-dropdown-size"
-                    type="button"
-                    id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                <p className="set-fw700 mt-1 mb-0">可寄往離島</p>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value="location"
+                    name='name'
+                    id="location"
+                    checked={filterCondition.location}
+                    onChange={(e)=>{
+                      handleSelectedValue(e, "service", {'service_name':'離島', 'service_state':filterCondition.location}) 
+                    }}
+                  />
+                  <label
+                    className="form-check-label set-fs12"
+                    htmlFor="location"
                   >
-                    地點
-                  </button>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton1"
-                  >
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        本島
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        澎湖縣
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        金門縣
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        連江縣
-                      </a>
-                    </li>
-                  </ul>
+                    可配送離島的商品(馬祖、金門、澎湖)
+                  </label>
                 </div>
               </div>
             </div>
@@ -743,7 +881,7 @@ export default function List() {
                     aria-current="page"
                     href="/product/list"
                   >
-                    <Link className="text-decoration-none" href="#">
+                    <Link className="text-decoration-none" href="/product/list">
                       商品總覽
                     </Link>
                   </li>
@@ -752,7 +890,7 @@ export default function List() {
               {/* 搜尋、排序 */}
               <div className="amount&sort d-flex justify-content-between align-items-center">
                 <p className="mb-0 text-color2-nohover">
-                  共 {products.length} 筆商品
+                  共 {sortDatas.length} 筆商品
                 </p>
                 <div className="d-flex align-items-center">
                   <CiViewTable
@@ -1227,6 +1365,10 @@ export default function List() {
                           href=""
                           className="text-decoration-none"
                           id="set-text"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            clearFilter()
+                          }}
                         >
                           清除篩選
                         </Link>
@@ -1238,7 +1380,11 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios1"
                             value="option1"
-                          />
+                            checked={filterCondition.minPrice === 0 && filterCondition.maxPrice === 149 }
+                            onChange={(e) => {
+                              handleSelectedValue(e, "price", {'minPrice':0, 'maxPrice':149})
+                            }}/>
+                            
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="exampleRadios1"
@@ -1253,12 +1399,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios2"
                             value="option2"
+                            checked={filterCondition.minPrice === 150 && filterCondition.maxPrice === 299 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':150, 'maxPrice':299})
+                    }}
                           />
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="exampleRadios2"
                           >
-                            NTD 150-300
+                            NTD 150-299
                           </label>
                         </div>
                         <div className="form-check">
@@ -1268,12 +1418,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios3"
                             value="option3"
+                            checked={filterCondition.minPrice === 300 && filterCondition.maxPrice === 499 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':300, 'maxPrice':499})
+                    }}
                           />
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="exampleRadios3"
                           >
-                            NTD 300-500
+                            NTD 300-499
                           </label>
                         </div>
                         <div className="form-check">
@@ -1283,12 +1437,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios4"
                             value="option4"
+                            checked={filterCondition.minPrice === 500 && filterCondition.maxPrice === 799 }
+                    onChange={(e) => {
+                      handleSelectedValue(e, "price", {'minPrice':500, 'maxPrice':799})
+                    }}
                           />
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="exampleRadios4"
                           >
-                            NTD 500-1000
+                            NTD 500-799
                           </label>
                         </div>
                         <div className="form-check">
@@ -1298,12 +1456,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios5"
                             value="option5"
+                            onChange={(e) => {
+                              handleSelectedValue(e, "price", {'minPrice':800, 'maxPrice':9999999})
+                              // handleFreeShipping(true)
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="exampleRadios5"
                           >
-                            NTD 1000以上
+                            NTD 800以上
                           </label>
                         </div>
 
@@ -1315,7 +1477,11 @@ export default function List() {
                             type="text"
                             className="form-control ms-1 p-1 set-fs12 set-size"
                             placeholder=""
-                            aria-label="lowPrice"
+                            aria-label="minPrice"
+                            value={minPriceValue}
+                            onChange={(e) => {
+                              handleMinPriceValue(e);
+                            }}
                           />
                           <span className="input-group-text px-1 no-border-bg">
                             -
@@ -1324,21 +1490,22 @@ export default function List() {
                             type="text"
                             className="form-control me-2 p-1 set-fs12 set-size"
                             placeholder=""
-                            aria-label="highPrice"
+                            aria-label="maxPrice"
+                            value={maxPriceValue}
+                    onChange={(e) => {
+                      handleMaxPriceValue(e);
+                    }}
                           />
                           <button
                             className="set-button-style d-flex align-items-center p-1 rounded"
-                            type="submit"
+                            type="button"
+                            onClick={(e) => {
+                              handleSelectedValue(e, "price", get_input_range()) 
+                            }}
                           >
                             <MdKeyboardArrowRight className="text-white" />
                           </button>
                         </div>
-                        <Link
-                          href=""
-                          className="set-fs12 text-decoration-none set-text-color2"
-                        >
-                          清除輸入金額
-                        </Link>
                         <p className="set-fw700 mt-1 mb-0">商品尺寸</p>
                         <div className="form-check">
                           <input
@@ -1346,7 +1513,11 @@ export default function List() {
                             type="radio"
                             name="exampleRadios"
                             id="exampleRadios6"
-                            value="option6"
+                            value="大"
+                            checked={filterCondition.size === '大'}
+                            onChange={(e) => {
+                              handleSelectedValue(e, "size", {'value':'大'}) 
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1361,7 +1532,11 @@ export default function List() {
                             type="radio"
                             name="exampleRadios"
                             id="exampleRadios7"
-                            value="option7"
+                            value="小"
+                            checked={filterCondition.size === '小'}
+                            onChange={(e) => {
+                              handleSelectedValue(e, "size", {'value':'小'}) 
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1375,8 +1550,12 @@ export default function List() {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            value=""
-                            id="flexCheckDefault"
+                            name='freeShipping'
+                    id="freeShipping"
+                    checked={filterCondition.priceOver1000}
+                    onChange={(e)=>{
+                      handleSelectedValue(e, "service", {'service_name':'免運', 'service_state':filterCondition.priceOver1000}) 
+                    }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1390,53 +1569,41 @@ export default function List() {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            value=""
-                            id="flexCheckDefault"
+                            value="rhsExpress"
+                    name='rhsExpress'
+                    id="rhsExpress"
+                    checked={filterCondition.hrsExpress}
+                    onChange={(e)=>{
+                      handleSelectedValue(e, "service", {'service_name':'快速到貨', 'service_state':filterCondition.hrsExpress}) 
+                    }}
                           />
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="flexCheckDefault"
                           >
-                            只顯示可快速到貨的商品
+                            可快速到貨的商品
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">可寄往</p>
-                        <div className="dropdown d-flex justify-content-center">
-                          <button
-                            className="btn dropdown-toggle set-fs12 set-dropdown-size"
-                            type="button"
-                            id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                          >
-                            地點
-                          </button>
-                          <ul
-                            className="dropdown-menu"
-                            aria-labelledby="dropdownMenuButton1"
-                          >
-                            <li>
-                              <a className="dropdown-item" href="#">
-                                本島
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="#">
-                                澎湖縣
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="#">
-                                金門縣
-                              </a>
-                            </li>
-                            <li>
-                              <a className="dropdown-item" href="#">
-                                連江縣
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
+                        <p className="set-fw700 mt-1 mb-0">可寄往離島</p>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value="location"
+                    name='name'
+                    id="location"
+                    checked={filterCondition.location}
+                    onChange={(e)=>{
+                      handleSelectedValue(e, "service", {'service_name':'離島', 'service_state':filterCondition.location}) 
+                    }}
+                  />
+                  <label
+                    className="form-check-label set-fs12"
+                    htmlFor="flexCheckDefault"
+                  >
+                    可配送離島的商品(馬祖、金門、澎湖)
+                  </label>
+                </div>
                       </div>
                     </div>
                   </div>
@@ -1458,7 +1625,6 @@ export default function List() {
                         <a
                           className="dropdown-item"
                           href="#"
-                          // filterProducts={filterProducts}
                           onClick={(e) => {
                             e.preventDefault()
                             changeSort('price', 'descending')
@@ -1512,7 +1678,9 @@ export default function List() {
             <div div className="container ">
               <div className="row row-cols-2 row-cols-lg-4 g-4">
                 {list.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <Link key={product.id} href={`/product/${product.id}`}>
+                  <ProductCard key={product.id} product={product}/>
+                   </Link>
                 ))}
               </div>
             </div>

@@ -29,14 +29,6 @@ export default function TeacherCard() {
         img {
           border-radius: 8px 8px 0 0;
         }
-
-        {/* .card-body {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
-        } */}
       `}</style>
     </>
   )

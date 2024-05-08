@@ -1,47 +1,52 @@
 import React from 'react'
 
-export default function LectureWishContentPhone({ TeacherWish }) {
+export default function LectureWishContentPhone({ TeacherWish, deleteWish }) {
+  const handleDelete = async (id) => {
+    try {
+      // 在這裡調用 deleteWish 函數並傳遞
+      await deleteWish(id)
+
+      // 可以在這裡添加更新頁面或重新加載數據的邏輯
+    } catch (error) {
+      console.error('Error deleting wish:', error)
+    }
+  }
   return (
     <>
       {/* 手機板 */}
-        <div className="lectureWish_phone_card p-3" key={TeacherWish.id}>
-          <table className="w-100">
-            <tbody className="w-100">
-              {/* <tr>
-                <th>期望課程名稱：</th>
-                <td>想要上課</td>
-              </tr> */}
-              <tr>
-                <th>期望上課時間：</th>
-                <td>{TeacherWish.date}月</td>
-              </tr>
-              <tr className="w-100">
-                <th className="w-50">課程內容：</th>
-                <td className="w-50 wish_phone_content_overflow">
+      <div className="lectureWish_phone_card p-3" key={TeacherWish.id}>
+        <table className="w-100">
+          <tbody className="w-100">
+            <tr>
+              <th>期望上課時間：</th>
+              <td>{TeacherWish.date}月</td>
+            </tr>
+            <tr className="w-100">
+              <th className="w-50">課程內容：</th>
+              <td className="w-50 wish_phone_content_overflow">
                 {TeacherWish.content}
-                </td>
-              </tr>
-              <tr>
-                <th>期望價錢：</th>
-                <td>${TeacherWish.price}</td>
-              </tr>
-              {/* <tr>
-                <th>建立時間：</th>
-                <td>2024-12-04 12:00:00</td>
-              </tr> */}
-            </tbody>
-          </table>
-          <div className="phone-lectureWish-detail w-100 d-flex">
-            <button
-              className="btn btn-detail"
-              data-bs-toggle="modal"
-              data-bs-target={`#wishPhoneDetailModal-${TeacherWish.id}`}
-            >
-              檢視
-            </button>
-          </div>
+              </td>
+            </tr>
+            <tr>
+              <th>期望價錢：</th>
+              <td>${TeacherWish.price}</td>
+            </tr>
+            <tr>
+              <th>建立時間：</th>
+              <td>{TeacherWish.created_at}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="phone-lectureWish-detail w-100 d-flex">
+          <button
+            className="btn btn-detail"
+            data-bs-toggle="modal"
+            data-bs-target={`#wishPhoneDetailModal-${TeacherWish.id}`}
+          >
+            檢視
+          </button>
         </div>
-      
+      </div>
 
       {/* 檢視modal */}
       <div
@@ -55,9 +60,6 @@ export default function LectureWishContentPhone({ TeacherWish }) {
           <div className="modal-content">
             <form>
               <div className="modal-header">
-                {/* <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
-                </h1> */}
                 <button
                   type="button"
                   className="btn-close"
@@ -70,28 +72,22 @@ export default function LectureWishContentPhone({ TeacherWish }) {
                   <div className="col-12">
                     <table className="table modal-table">
                       <tbody>
-                        {/* <tr>
-                          <th>期望課程名稱：</th>
-                          <td>想要上課</td>
-                        </tr> */}
                         <tr>
                           <th>期望上課時間：</th>
                           <td>{TeacherWish.date}月</td>
                         </tr>
                         <tr>
                           <th>期望課程內容：</th>
-                          <td>
-                          {TeacherWish.content}
-                          </td>
+                          <td>{TeacherWish.content}</td>
                         </tr>
                         <tr>
                           <th>期望價錢：</th>
                           <td>${TeacherWish.price}</td>
                         </tr>
-                        {/* <tr>
+                        <tr>
                           <th>建立時間：</th>
-                          <td>2024-12-04 12:00:00</td>
-                        </tr> */}
+                          <td>{TeacherWish.created_at}</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
@@ -151,7 +147,7 @@ export default function LectureWishContentPhone({ TeacherWish }) {
               >
                 取消
               </button>
-              <a type="button" href="" className="btn btn-delete" role="button">
+              <a type="button" href="" className="btn btn-delete" role="button" onClick={() => handleDelete(TeacherWish.id)}>
                 確認
               </a>
             </div>
@@ -193,27 +189,13 @@ export default function LectureWishContentPhone({ TeacherWish }) {
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 150px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center;  */
-            }
           }
-          {/* input {
-            margin: 3px;
-          } */}
         }
-        
       `}</style>
     </>
   )
