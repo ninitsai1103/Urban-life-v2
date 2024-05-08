@@ -35,7 +35,7 @@ export default function InfoPayOrder() {
                   <div className={styles.name}>{item.name} ({item.size})</div>
                   <div className={styles.d_cell_price}>單價：NTD {item.price}</div>
                   <div className={styles.d_cell_amount}>
-                    <span> {item.qty} </span>
+                    <span>數量 {item.qty} </span>
                   </div>
                 </div>
               </div>
@@ -77,7 +77,7 @@ export default function InfoPayOrder() {
                   <div className={styles.name}>{item.name} ({item.starting_date})</div>
                   <div className={styles.d_cell_price}>單價：NTD {item.price}</div>
                   <div className={styles.d_cell_amount}>
-                    <span> {item.qty} </span>
+                    <span>數量 {item.qty} </span>
                   </div>
                 </div>
               </div>
