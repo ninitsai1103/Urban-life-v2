@@ -6,7 +6,7 @@ export default function LectureAddModal() {
   const [selectedFile2, setSelectedFile2] = useState(null)
   const [selectedFile3, setSelectedFile3] = useState(null)
   const [selectedFile4, setSelectedFile4] = useState(null)
-  
+
   // 預覽圖片的網址(呼叫URL.createObjectURL得到的網址)
   const [previewURL1, setPreviewURL1] = useState('')
   const [previewURL2, setPreviewURL2] = useState('')
@@ -29,7 +29,32 @@ export default function LectureAddModal() {
       eval(`${setPreviewURL}('')`) // 清空預覽URL
     }
   }
-  
+
+  const [lectureDate, setLectureDate] = useState('')
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
+  const [signUpStart, setSignUpStart] = useState('')
+  const [signUpEnd, setSignUpEnd] = useState('')
+
+  const handleDateChange = (e) => {
+    setLectureDate(e.target.value)
+  }
+
+  const handleStartTimeChange = (e) => {
+    setStartTime(e.target.value)
+  }
+
+  const handleEndTimeChange = (e) => {
+    setEndTime(e.target.value)
+  }
+
+  const handleSignUpStartChange = (e) => {
+    setSignUpStart(e.target.value)
+  }
+
+  const handleSignUpEndChange = (e) => {
+    setSignUpEnd(e.target.value)
+  }
 
   return (
     <>
@@ -72,13 +97,33 @@ export default function LectureAddModal() {
                           </td>
                         </tr>
                         <tr>
+                          <th>上課日期：</th>
+                          <td>
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="name"
+                              value={lectureDate}
+                              onChange={handleDateChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
                           <th>上課時間：</th>
                           <td>
                             <input
-                              type="text"
+                              type="time"
                               className="form-control"
                               name="name"
-                              value=""
+                              value={startTime}
+                              onChange={handleStartTimeChange}
+                            />
+                            <input
+                              type="time"
+                              className="form-control"
+                              name="name"
+                              value={endTime}
+                              onChange={handleEndTimeChange}
                             />
                           </td>
                         </tr>
@@ -86,10 +131,12 @@ export default function LectureAddModal() {
                           <th>報名開始時間：</th>
                           <td>
                             <input
-                              type="text"
+                              type="datetime-local"
                               className="form-control"
                               name="name"
-                              value=""
+                              value={signUpStart}
+                              onChange={handleSignUpStartChange}
+                              step="600" // 步長設置為 600 秒（10 分鐘）
                             />
                           </td>
                         </tr>
@@ -97,10 +144,12 @@ export default function LectureAddModal() {
                           <th>報名截止時間：</th>
                           <td>
                             <input
-                              type="text"
+                              type="datetime-local"
                               className="form-control"
                               name="name"
-                              value=""
+                              value={signUpEnd}
+                              onChange={handleSignUpEndChange}
+                              step="600" // 步長設置為 600 秒（10 分鐘）
                             />
                           </td>
                         </tr>

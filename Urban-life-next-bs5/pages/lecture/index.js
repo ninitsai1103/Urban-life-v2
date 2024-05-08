@@ -3,7 +3,11 @@ import LectureMyCard from '@/components/lecture/card'
 import LectureMyCardNp from '@/components/lecture/card-np'
 import LectureWish from '@/components/lecture/wish'
 import Herosection from '@/components/lecture/herosection'
-import Calendar from '@/components/lecture/calender'
+
+// CALENDER
+import Calendar from '@/components/calandar/calendar'
+
+// REACT BOOTSTRAP
 import { Container } from 'react-bootstrap'
 import Search from '@/components/lecture/search'
 import QAList from '@/components/lecture/qacard'

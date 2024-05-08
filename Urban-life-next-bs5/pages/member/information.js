@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
 import TWZipCode from '@/components/tw-zipcode'
 import dynamic from 'next/dynamic'
-import useMemberInfo from '@/hooks/use-member-info'
+import { useMemberInfo } from '@/hooks/use-member-info'
 const InputDatePicker = dynamic(
   () => import('@/components/common/input-date-picker'),
   {
@@ -33,7 +33,7 @@ export default function Information() {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
   // hooks
-  const member = useMemberInfo()
+  const {member} = useMemberInfo()
 
   //表單送出(更新)
   const handleSubmit = async (e) => {
@@ -142,8 +142,8 @@ export default function Information() {
                     name="name"
                     value={user.name}
                     onChange={handleFieldChange}
-                    {...(member && !member.name && { required: true })}
-                    placeholder={member && member.name ? member.name : '姓名'}
+                    {...(member?.name && { required: true })}
+                    placeholder={member?.name}
                   />
                 </div>
                 <div className="mb-3">
@@ -158,7 +158,7 @@ export default function Information() {
                     className="form-control"
                     id="exampleInputEmail"
                     readOnly={true}
-                    placeholder={member ? member.email : 'email'}
+                    placeholder={member?.email}
                   />
                 </div>
                 <div className="mb-3">
@@ -166,8 +166,9 @@ export default function Information() {
                     htmlFor="exampleInputPhone"
                     className="form-label fonts"
                     name="phone"
+                    pattern="^09\d{2}-\d{3}-\d{3}$"
                     onChange={handleFieldChange}
-                    value={user.phone}
+                    value={member?.phone}
                   >
                     手機號碼 *
                   </label>
@@ -175,7 +176,7 @@ export default function Information() {
                     type="phone"
                     className="form-control"
                     id="exampleInputPhone"
-                    placeholder={member && member.phone? member.phone : '09'}
+                    placeholder={member?.phone? member.phone : '09'}
                     {...(member && !member.phone && { required: true })}
                   />
                 </div>
@@ -214,42 +215,7 @@ export default function Information() {
                     ></i>
                   </div>
                 </div>
-                {/* <div className="row mb-3">
-                  <div className="btn-group">
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="gender"
-                      value={user.gender}
-                      onChange={handleFieldChange}
-                      id="option1"
-                      autoComplete="off"
-                      checked={member && member.gender === '男'}
-                    />
-                    <label
-                      className="btn btn-outline-primary"
-                      htmlFor="option1"
-                    >
-                      男
-                    </label>
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="gender"
-                      value={user.gender}
-                      onChange={handleFieldChange}
-                      id="option2"
-                      autoComplete="off"
-                      checked={member && member.gender === '女'}
-                    />
-                    <label
-                      className="btn btn-outline-primary"
-                      htmlFor="option2"
-                    >
-                      女
-                    </label>
-                  </div>
-                </div> */}
+          
 
                 <div className="mb-3">
                   <label
@@ -261,19 +227,19 @@ export default function Information() {
                   >
                     地址 *
                   </label>
-                  {member && member.address ? (
+                  {/* {member?.address ? (
                     <input
                       type="address"
                       className="form-control"
                       id="exampleInputAddress"
-                      placeholder={member.address}
+                      // placeholder={member?.address}
                       readOnly={true}
                     />
                   ) : (
                     <div className="mb-3 row">
                       <TWZipCode />
                     </div>
-                  )}
+                  )} */}
                 </div>
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
                 <div className="mb-3">

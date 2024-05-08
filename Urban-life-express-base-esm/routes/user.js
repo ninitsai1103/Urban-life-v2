@@ -13,7 +13,7 @@ let blackListedToken = []
 dotenv.config()
 const secretKey = process.env.SECRET_KEY
 const upload = multer()
-
+const __dirname = import.meta.dirname;
 router.get('/', async (req, res) => {
   // res.send("獲取所有使用者");
   // getUserAll
@@ -99,7 +99,16 @@ router.post('', upload.none(), async (req, res) => {
       .json({ status: 'error', message: 'Internal server error' })
   }
 })
-
+// router.post("/upload",upload.single("myFile") ,(req, res) => {
+//   // res.send("處理檔案上傳")
+//   let timestamp=Date.now();
+  
+//   let newName=`${timestamp}${extname(req.file.originalname)}`
+//   renameSync(req.file.path,resolve(__dirname,"public","avatar", newName))
+//   req.body.myFile=newName;
+//   // res.json({body:req.body,file:req.file})
+//   res.json({body:req.body})
+// })
 router.put('/:id/', upload.none(), async (req, res) => {
   // res.send(`更新特定id使用者 ${req.params.id}`)
   // let user, error
@@ -156,6 +165,8 @@ router.put('/:id/', upload.none(), async (req, res) => {
     res.status(500).json({ status: 'error', message })
   }
 })
+
+
 router.delete('/:id/', (req, res) => {
   res.send(`刪除特定id使用者 ${req.params.id}`)
 })

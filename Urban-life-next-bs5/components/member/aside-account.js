@@ -7,27 +7,52 @@ import { BiIdCard } from 'react-icons/bi'
 import { MdFavoriteBorder } from 'react-icons/md'
 import { RiCoupon2Line } from 'react-icons/ri'
 import { IoIosLogOut } from 'react-icons/io'
-import useMemberInfo from '@/hooks/use-member-info'
+import { useMemberInfo } from '@/hooks/use-member-info'
 import { useRouter } from 'next/router'
 export default function AsideAccount() {
   const router = useRouter()
 
   // hooks
-  const member = useMemberInfo()
+  const {member} = useMemberInfo()
 
   // 上傳大頭照
   const [selectedFile, setSelectedFile] = useState(null)
   // 處理圖標點擊事件
   const handleIconClick = () => {
-  // 觸發文件選擇器點擊
+    // 觸發文件選擇器點擊
     document.getElementById('fileInput').click()
   }
   // 處理文件選擇器更改事件
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0]
-    // 更新所選文件
-    setSelectedFile(file)
-    // 此時你可以將文件上傳到後端或做其他處理
+    setSelectedFile(file) // 更新所選文件
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    //抓到userId
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    const userId = memberInfo.id
+
+    formData.append('userId', userId)
+
+    try {
+      const response = await fetch('http://localhost:3005/api/upload', {
+        method: 'POST',
+        body: formData,
+        // 不設置'Content-Type'頭部，讓瀏覽器自動設置
+      })
+
+      if (!response.ok) {
+        throw new Error('文件上傳失敗！')
+      }
+
+      const data = await response.json()
+      alert(`${data.message}`)
+      console.log(data) // 可以在這裡處理回傳的數據
+    } catch (error) {
+      console.error('上傳錯誤：', error)
+      alert(error.message)
+    }
   }
 
   // 登出
@@ -37,7 +62,7 @@ export default function AsideAccount() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${member.token}`, // 替換為有效的 JWT
+          Authorization: `Bearer ${member?.token}`, // 替換為有效的 JWT
         },
       })
       const data = await response.json()
@@ -76,9 +101,9 @@ export default function AsideAccount() {
               <div className="avatar">
                 <Image
                   src={
-                    member && member.img
-                      ? `/images/user_teacher/${member.img}`
-                      : '/images/user_teacher/default.jpg'
+                    member?.img
+                      ? `http://localhost:3005/avatar/${member?.img}`
+                      : 'http://localhost:3005/avatar/default.jpg'
                   }
                   alt=""
                   width={80}
@@ -96,7 +121,7 @@ export default function AsideAccount() {
                   <input
                     id="fileInput"
                     type="file"
-                    accept="image/*"
+                    name="avatar"
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
                   />
@@ -105,7 +130,7 @@ export default function AsideAccount() {
             </div>
             <div className="d-flex justify-content-center">
               <div className="name text-center">
-              {member && member.name ? member.name : '姓名'}
+              {member?.name}
               </div>
             </div>
             <div className="d-flex justify-content-center">
