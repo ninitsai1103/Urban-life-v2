@@ -16,7 +16,7 @@ export default function TWZipCode({
   const [postcode, setPostcode] = useState('')
 
   // hooks
-const member = useMemberInfo()    
+  const member = useMemberInfo()
 
   // 利用傳入時的initPostcode初始化用
   useEffect(() => {
@@ -55,8 +55,6 @@ const member = useMemberInfo()
 
   return (
     <>
-    
-      
       <div className="col-md-4">
         <select
           className="form-control"
@@ -87,7 +85,6 @@ const member = useMemberInfo()
             // 將字串轉成數字
             setTownshipIndex(+e.target.value)
           }}
-          
         >
           <option value="-1">選擇區域</option>
           {countryIndex > -1 &&
@@ -99,11 +96,14 @@ const member = useMemberInfo()
         </select>
       </div>
       <div className="col-md-4 mt-3 mt-md-0 ">
-        <input type="text" className="form-control" 
-        required 
-        placeholder="請輸入地址" />
+        <input
+          type="text"
+          className="form-control"
+          required
+          placeholder="請輸入地址"
+        />
       </div>
-     
+
       {/* <h3>郵遞區號:{postcode}</h3> */}
     </>
   )

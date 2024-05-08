@@ -1,14 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import { TfiMenu } from 'react-icons/tfi'
 import { FaUser } from 'react-icons/fa'
 import { FaShoppingCart } from 'react-icons/fa'
 import Link from 'next/link'
+import { identity } from 'lodash'
 export default function MyNavbar() {
   const [phoneNav, setPhoneNav] = useState(false)
 
   const handlePhoneNav = () => {
     setPhoneNav(!phoneNav)
   }
+
+  const [user, setUser] = useState('')
+  useEffect(() => {
+    // 仅在客户端环境中运行
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'));
+    if (memberInfo) {
+      const { identity_id } = memberInfo;
+      if (identity_id == 2) {
+        setUser("article-management");
+      } else {
+        setUser("information");
+      }
+    }
+  }, []); 
   return (
     <>
       <div className="header">
@@ -42,7 +57,7 @@ export default function MyNavbar() {
                 <Link href="">講師陣容</Link>
               </li>
               <li>
-                <Link href="http://localhost:3000/member">會員專區</Link>
+              <Link href={`http://localhost:3000/member/${user}`}>會員專區</Link>
               </li>
             </ul>
           </div>

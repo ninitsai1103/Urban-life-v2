@@ -13,7 +13,7 @@ import TeacherCard from '@/components/home-page/teacher-card'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 
 // CALENDER
-import Calendar from '@/components/calandar/calendar'
+// import Calendar from '@/components/calandar/calendar'
 
 // REACT ICON
 import { IoIosArrowForward } from 'react-icons/io'
