@@ -60,7 +60,7 @@ export default function AsideAccount() {
       const data = await response.json()
       console.log(data)
       localStorage.removeItem('member-info')
-      window.location.href = '/product/list'
+      window.location.href = '/'
     } catch (error) {
       console.error('登出失敗:', error)
     }
