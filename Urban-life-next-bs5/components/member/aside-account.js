@@ -41,14 +41,12 @@ export default function AsideAccount() {
       })
       // 上传成功后提示上传成功
       alert('檔案上傳成功')
+      window.location.reload();
     } catch (error) {
       console.error('上傳錯誤：', error)
       alert(error.message)
     }
   }
-  useEffect(() => {
-    handleFileChange
-  }, [selectedFile])
   // 登出
   const handleLogout = async () => {
     try {
