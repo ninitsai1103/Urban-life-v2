@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from './member.module.css'
@@ -9,9 +9,64 @@ import { MdFavoriteBorder } from 'react-icons/md'
 import { GoBook } from 'react-icons/go'
 import { IoIosLogOut } from 'react-icons/io'
 import { useRouter } from 'next/router'
+import { useMemberInfo } from '@/hooks/use-member-info'
 
 export default function TeacherAsideAccount() {
   const router = useRouter()
+
+  // hooks
+  const { member } = useMemberInfo()
+
+  // 上傳大頭照
+  const [selectedFile, setSelectedFile] = useState('')
+  // 處理圖標點擊事件
+  const handleIconClick = () => {
+    // 觸發文件選擇器點擊
+    document.getElementById('fileInput').click()
+  }
+  // 處理文件選擇器更改事件
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0]
+    setSelectedFile(file) // 更新所選文件
+    const formData = new FormData()
+    formData.append('avatar', file)
+
+    //抓到userId
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    const userId = memberInfo.id
+
+    formData.append('userId', userId)
+    try {
+      const response = await fetch('http://localhost:3005/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      // 上传成功后提示上传成功
+      alert('檔案上傳成功')
+      window.location.reload()
+    } catch (error) {
+      console.error('上傳錯誤：', error)
+      alert(error.message)
+    }
+  }
+  // 登出
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('http://localhost:3005/api/user/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${member?.token}`, // 替換為有效的 JWT
+        },
+      })
+      const data = await response.json()
+      console.log(data)
+      localStorage.removeItem('member-info')
+      window.location.href = '/'
+    } catch (error) {
+      console.error('登出失敗:', error)
+    }
+  }
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value
@@ -40,20 +95,34 @@ export default function TeacherAsideAccount() {
               <div className="avatar">
                 <Image
                   src={
-                    'https://i.pinimg.com/564x/ea/43/c5/ea43c53109a0c0c2a045e85f39d062cb.jpg'
-                  }
+                    `http://localhost:3005/avatar/${member?.img}`}
                   alt=""
                   width={80}
                   height={80}
                   style={{ borderRadius: '100px' }}
                 />
                 <div className="icon-box position-absolute d-flex justify-content-center">
-                  <MdOutlineAddAPhoto style={{ color: 'white' }} />
+                  {/* 點擊圖標後觸發 handleIconClick 事件 */}
+                  <MdOutlineAddAPhoto
+                    style={{ color: 'white' }}
+                    onClick={handleIconClick}
+                  />
+                  {/* 隱藏的文件選擇器 */}
+                  <input
+                    id="fileInput"
+                    type="file"
+                    name="avatar"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
                 </div>
               </div>
             </div>
             <div className="d-flex justify-content-center">
-              <div className="name text-center">jenny</div>
+              <div className="name text-center">
+                {' '}
+                {member?.name ? member?.name : '姓名'}
+              </div>
             </div>
             <div className="d-flex justify-content-center">
               <button className="user-identify">
@@ -71,8 +140,8 @@ export default function TeacherAsideAccount() {
               // 網址待修
               currentPath === '/member/index'
                 ? '1'
-                // 網址待修
-                : currentPath === '/favorites'
+                : // 網址待修
+                currentPath === '/favorites'
                 ? '2'
                 : currentPath === '/member/article-management'
                 ? '3'
@@ -91,23 +160,39 @@ export default function TeacherAsideAccount() {
           <ul className="list-unstyled window_menu d-none d-lg-block">
             {/* 網址待修 */}
             <li>
-              <a className={currentPath === '/member/index' ? 'active' : ''} href="/member/...">
+              <a
+                className={currentPath === '/member/index' ? 'active' : ''}
+                href="/member/..."
+              >
                 <BiIdCard /> 個人資料
               </a>
             </li>
             {/* 網址待修 */}
             <li>
-              <a className={currentPath === '/favorites' ? 'active' : ''} href="/member/...">
+              <a
+                className={currentPath === '/favorites' ? 'active' : ''}
+                href="/member/..."
+              >
                 <MdFavoriteBorder /> 我的收藏
               </a>
             </li>
             <li>
-              <a className={currentPath === '/member/article-management' ? 'active' : ''} href="/member/article-management">
+              <a
+                className={
+                  currentPath === '/member/article-management' ? 'active' : ''
+                }
+                href="/member/article-management"
+              >
                 <PiFilesThin /> 文章管理
               </a>
             </li>
             <li>
-              <a className={currentPath === '/member/lecture-management' ? 'active' : ''} href="/member/lecture-management">
+              <a
+                className={
+                  currentPath === '/member/lecture-management' ? 'active' : ''
+                }
+                href="/member/lecture-management"
+              >
                 <GoBook /> 課程管理
               </a>
             </li>
@@ -117,7 +202,7 @@ export default function TeacherAsideAccount() {
               <a
                 className="d-block py-2 px-2 text-decoration-none d-flex align-items-center signOut_text"
                 style={{ color: '#849474' }}
-                href=""
+                onClick={handleLogout}
               >
                 登出
                 <IoIosLogOut />
@@ -128,12 +213,14 @@ export default function TeacherAsideAccount() {
       </aside>
 
       <style jsx>{`
-      .teacher_aside_title{
-        margin: 0px 0px 20px 0px;
-        font-size: 48px;
-        font-weight: bold;
-        {/* color: #2F4715; */}
-      }
+        .teacher_aside_title {
+          margin: 0px 0px 20px 0px;
+          font-size: 48px;
+          font-weight: bold;
+           {
+            /* color: #2F4715; */
+          }
+        }
         aside {
           width: 100%;
 
@@ -202,9 +289,12 @@ export default function TeacherAsideAccount() {
         .signOut {
           margin-top: 140px;
         }
+        a:hover {
+          cursor: pointer;
+        }
 
         @media (max-width: 992px) {
-          .teacher_aside_title{
+          .teacher_aside_title {
             display: block !important;
           }
           .phone-select {

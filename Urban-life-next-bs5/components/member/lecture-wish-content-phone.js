@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function LectureWishContentPhone({ TeacherWish, deleteWish }) {
+export default function LectureWishContentPhone({ identityId, TeacherWish, deleteWish }) {
   const handleDelete = async (id) => {
     try {
       // 在這裡調用 deleteWish 函數並傳遞

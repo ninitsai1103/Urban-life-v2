@@ -1,6 +1,6 @@
 import { React, useState } from 'react'
 
-export default function LectureAddModal() {
+export default function LectureAddModal({ identityId, addLecture }) {
   // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
   const [selectedFile1, setSelectedFile1] = useState(null)
   const [selectedFile2, setSelectedFile2] = useState(null)
@@ -16,27 +16,60 @@ export default function LectureAddModal() {
   // 定義一個通用的處理文件變化的函數
   const handleFileChange = (e, fileNumber) => {
     const file = e.target.files[0]
-    const setSelectedFile = `setSelectedFile${fileNumber}`
-    const setPreviewURL = `setPreviewURL${fileNumber}`
 
-    if (file) {
-      // 設定到狀態中
-      eval(`${setSelectedFile}(file)`) // 設置選中的文件狀態
-      // 產生預覽網址
-      eval(`${setPreviewURL}(URL.createObjectURL(file))`) // 設置預覽URL
-    } else {
-      eval(`${setSelectedFile}(null)`) // 清空選中的文件狀態
-      eval(`${setPreviewURL}('')`) // 清空預覽URL
+    // 根據 fileNumber 調用相應的狀態更新函數
+    switch (fileNumber) {
+      case 1:
+        setSelectedFile1(file)
+        setPreviewURL1(file ? URL.createObjectURL(file) : '')
+        break
+      case 2:
+        setSelectedFile2(file)
+        setPreviewURL2(file ? URL.createObjectURL(file) : '')
+        break
+      case 3:
+        setSelectedFile3(file)
+        setPreviewURL3(file ? URL.createObjectURL(file) : '')
+        break
+      case 4:
+        setSelectedFile4(file)
+        setPreviewURL4(file ? URL.createObjectURL(file) : '')
+        break
+      default:
+        break
     }
   }
 
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [content, setContent] = useState('')
+  const [locationId, setLocationId] = useState('')
   const [lectureDate, setLectureDate] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [signUpStart, setSignUpStart] = useState('')
   const [signUpEnd, setSignUpEnd] = useState('')
+  const [price, setPrice] = useState('')
+  const [amount, setAmount] = useState('')
 
-  const handleDateChange = (e) => {
+  const handleNameChange = (e) => {
+    setName(e.target.value)
+  }
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value)
+  }
+
+  const handleContentChange = (e) => {
+    setContent(e.target.value)
+  }
+
+  const handleLocationIdChange = (e) => {
+    const selectedLocationId = e.target.value
+    setLocationId(selectedLocationId) // 更新 locationId 狀態
+  }
+
+  const handleLectureDateChange = (e) => {
     setLectureDate(e.target.value)
   }
 
@@ -54,6 +87,50 @@ export default function LectureAddModal() {
 
   const handleSignUpEndChange = (e) => {
     setSignUpEnd(e.target.value)
+  }
+
+  const handlePriceChange = (e) => {
+    setPrice(e.target.value)
+  }
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value)
+  }
+
+  // 更新課程內容
+  const handleAdd = async () => {
+    try {
+      const now = new Date() // 獲取當前時間
+      const addFields = {
+        name,
+        description,
+        content,
+        location_id: locationId,
+        lecture_date: lectureDate,
+        starting_time: startTime,
+        ending_time: endTime,
+        sign_up_starting: signUpStart,
+        sign_up_deadline: signUpEnd,
+        price,
+        amount,
+        change_time: now,
+        teacher_id: identityId,
+        cover: ' selectedFile1 ? selectedFile1.name : lecture.cover',
+        lecture_img1:
+          'selectedFile2 ? selectedFile2.name : lecture.lecture_img1',
+        lecture_img2:
+          'selectedFile3 ? selectedFile3.name : lecture.lecture_img2',
+        lecture_img3:
+          'selectedFile4 ? selectedFile4.name : lecture.lecture_img3',
+      }
+
+      // 調用 updateLecture 函數，傳遞課程 ID 和更新的欄位物件
+      await addLecture(addFields)
+
+      // 可以在這裡添加更新頁面或重新加載數據的邏輯
+    } catch (error) {
+      console.log('Error adding lecture:', error)
+    }
   }
 
   return (
@@ -91,9 +168,43 @@ export default function LectureAddModal() {
                             <input
                               type="text"
                               className="form-control"
-                              name="name"
-                              value=""
+                              // name="name"
+                              value={name}
+                              onChange={handleNameChange}
                             />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>上課地點：</th>
+                          <td>
+                            <select
+                              className="form-control"
+                              // name="name"
+                              value={locationId}
+                              onChange={handleLocationIdChange}
+                            >
+                              <option value="">請選擇上課地點</option>
+                              <option value="1">臺北市</option>
+                              <option value="2">新北市</option>
+                              <option value="3">基隆市</option>
+                              <option value="4">桃園市</option>
+                              <option value="5">新竹縣</option>
+                              <option value="6">苗里縣</option>
+                              <option value="7">臺中市</option>
+                              <option value="8">彰化縣</option>
+                              <option value="9">南投縣</option>
+                              <option value="10">雲林縣</option>
+                              <option value="11">嘉義縣</option>
+                              <option value="12">臺南市</option>
+                              <option value="13">高雄市</option>
+                              <option value="14">屏東縣</option>
+                              <option value="15">臺東縣</option>
+                              <option value="16">花蓮縣</option>
+                              <option value="17">宜蘭縣</option>
+                              <option value="18">澎湖縣</option>
+                              <option value="19">金門縣</option>
+                              <option value="20">連江縣</option>
+                            </select>
                           </td>
                         </tr>
                         <tr>
@@ -102,9 +213,9 @@ export default function LectureAddModal() {
                             <input
                               type="date"
                               className="form-control"
-                              name="name"
+                              // name="name"
                               value={lectureDate}
-                              onChange={handleDateChange}
+                              onChange={handleLectureDateChange}
                             />
                           </td>
                         </tr>
@@ -114,14 +225,14 @@ export default function LectureAddModal() {
                             <input
                               type="time"
                               className="form-control"
-                              name="name"
+                              // name="name"
                               value={startTime}
                               onChange={handleStartTimeChange}
                             />
                             <input
                               type="time"
                               className="form-control"
-                              name="name"
+                              // name="name"
                               value={endTime}
                               onChange={handleEndTimeChange}
                             />
@@ -133,7 +244,7 @@ export default function LectureAddModal() {
                             <input
                               type="datetime-local"
                               className="form-control"
-                              name="name"
+                              // name="name"
                               value={signUpStart}
                               onChange={handleSignUpStartChange}
                               step="600" // 步長設置為 600 秒（10 分鐘）
@@ -146,7 +257,7 @@ export default function LectureAddModal() {
                             <input
                               type="datetime-local"
                               className="form-control"
-                              name="name"
+                              // name="name"
                               value={signUpEnd}
                               onChange={handleSignUpEndChange}
                               step="600" // 步長設置為 600 秒（10 分鐘）
@@ -159,8 +270,9 @@ export default function LectureAddModal() {
                             <input
                               type="text"
                               className="form-control"
-                              name="name"
-                              value=""
+                              // name="name"
+                              value={price}
+                              onChange={handlePriceChange}
                             />
                           </td>
                         </tr>
@@ -170,8 +282,33 @@ export default function LectureAddModal() {
                             <input
                               type="text"
                               className="form-control"
-                              name="name"
-                              value=""
+                              // name="name"
+                              value={amount}
+                              onChange={handleAmountChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>簡短介紹：</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              // name="name"
+                              value={description}
+                              onChange={handleDescriptionChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>詳細介紹：</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              // name="name"
+                              value={content}
+                              onChange={handleContentChange}
                             />
                           </td>
                         </tr>
@@ -266,8 +403,9 @@ export default function LectureAddModal() {
                 <button
                   type="submit"
                   className="btn btn-main"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addModal"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#addModal"
+                  onClick={() => handleAdd()}
                 >
                   確認新增
                 </button>
@@ -278,6 +416,14 @@ export default function LectureAddModal() {
       </div>
 
       <style jsx>{`
+        .form-control {
+          appearance: auto;
+          width: 100%;
+        }
+        select {
+          width: 80%;
+        }
+
         .modal-table {
           th {
             border: 1px solid #ccc;
@@ -302,7 +448,7 @@ export default function LectureAddModal() {
           }
           input {
             margin: 3px;
-            width: 80%;
+            width: 100%;
           }
           .updateImg {
             width: 50%;
