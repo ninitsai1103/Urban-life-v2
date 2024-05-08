@@ -60,7 +60,7 @@ export default function AsideAccount() {
       const data = await response.json()
       console.log(data)
       localStorage.removeItem('member-info')
-      window.location.href = '/product/list'
+      window.location.href = '/'
     } catch (error) {
       console.error('登出失敗:', error)
     }
@@ -93,9 +93,7 @@ export default function AsideAccount() {
               <div className="avatar">
                 <Image
                   src={
-                    member?.img
-                      ? `http://localhost:3005/avatar/${member?.img}`
-                      : 'http://localhost:3005/avatar/default.jpg'
+                    `http://localhost:3005/avatar/${member?.img}`
                   }
                   alt=""
                   width={80}

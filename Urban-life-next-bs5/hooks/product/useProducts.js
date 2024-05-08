@@ -19,6 +19,7 @@ const useProducts = () => {
                 location_id:Boolean(product.location_id)
               }))
               setProducts(products)
+              console.log(products);
             } else {
               console.log('伺服器回傳資料類型錯誤，無法設定到狀態中');
             }
