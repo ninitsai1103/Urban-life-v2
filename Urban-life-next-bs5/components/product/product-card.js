@@ -19,11 +19,6 @@ const {addCollection, removeCollection} =useColloections();
 // console.log(collections);
 
 useEffect(() => {
-  if (product.id==2) {
-    console.log(collections);
-    console.log(collections.find(item => item.product_id == product.id && item.valid == 1));
-    
-  }
   // 檢查當前商品是否在收藏列表中
 setIsCollected(collections.find(item => item.product_id == product.id && item.valid == 1))
 // console.log(isCollected);
