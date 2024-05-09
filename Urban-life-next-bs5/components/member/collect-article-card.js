@@ -2,23 +2,23 @@ import React from 'react';
 import { CiHeart } from 'react-icons/ci';
 import { FaCommentDots, FaArrowRight } from 'react-icons/fa6';
 
-export default function CollectArticleCard() {
+export default function CollectArticleCard({ collect }) {
   return (
     <>
       <div className="article_card_styles w-100 d-flex">
-        <img src="https://media.istockphoto.com/id/1040315976/photo/woman-looking-at-view-from-a-cave-of-matera-basilicata-italy.jpg?s=612x612&w=0&k=20&c=rLjzj7eR0b5gQjfU3rDoQ6ivlJsh4ZGTXYSgwMc-NQE="></img>
+      <img alt='' src={`/images/article/article_img/${collect.article_image}`}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
             <div className="article_card_text_time_time">
-              2024-03-12 22:50:54
+              {collect.article_date}
             </div>
-            <div className="article_card_text_time_author">小明</div>
+            <div className="article_card_text_time_author">{collect.article_author}</div>
           </div>
           <div className="article_card_title article_card_margin_bottom">
-            植物真好重 我根本不知道打甚麼
+          {collect.article_title}
           </div>
           <div className="article_card_content article_card_margin_bottom">
-            我是內容，我是內容，我是內容，沒有甚麼好寫的...
+          {collect.article_content}
           </div>
           <div className="article_card_bottom d-flex justify-content-between w-100">
             <div className="article_card_left_bottom d-flex">
@@ -38,7 +38,8 @@ export default function CollectArticleCard() {
           </div>
         </div>
       </div>
-
+     
+  
       <style jsx>{`
         .article_card_styles {
           border: 1px solid #ccc;
@@ -79,6 +80,8 @@ export default function CollectArticleCard() {
         .article_card_content {
           height: 30px;
           font-size: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .article_card_left_bottom {
           font-size: 14px;

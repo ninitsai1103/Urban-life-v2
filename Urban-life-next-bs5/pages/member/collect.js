@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import AsideAccount from '@/components/member/aside-account'
 import TopNavItemCollect from '@/components/member/top-nav-item-collect'
-import CollectLectures from '@/components/member/collect-lectures'
 import CollectArticleCard from '@/components/member/collect-article-card'
+import CollectProducts from '@/components/member/collect-products'
 import { useMemberInfo } from '@/hooks/use-member-info'
 
 
@@ -22,8 +22,12 @@ export default function Collect({
       const res = await fetch(url)
       const data = await res.json()
       // 所有此user擁有的collect
-      const userCollect = data.data.id
-
+      const userCollect = data.collects
+      data.collects.forEach(item => {
+        const pdltat_id = item.pdltat_id;
+        // console.log(pdltat_id);
+    });
+      console.log(data.collects);
       if (Array.isArray(userCollect)) {
         setUserCollects(userCollect)
       } else {
@@ -53,10 +57,26 @@ export default function Collect({
               <div className="title">我的收藏</div>
             </div>
             <TopNavItemCollect setCollectFilter={setCollectFilter} />
-            {collectFilter === '收藏商品' && <CollectLectures />
-            }
-            {collectFilter === '收藏課程' && <CollectLectures />}
-            {/* {collectFilter === '收藏文章' && <CollectArticleCard key={article.id} article={article}/>} */}
+            {userCollects.map(collect => {
+              const { id, pdltat_id } = collect;
+              switch (pdltat_id) {
+                case 1:
+                  if (collectFilter === '收藏商品') {
+                    return <CollectProducts key={id} collect={collect} />;
+                  }
+                  break;
+                case 2:
+                  if (collectFilter === '收藏課程') {
+                    return <CollectProducts key={id} collect={collect} />;
+                  }
+                  break;
+                case 3:
+                  if (collectFilter === '收藏文章') {
+                    return <CollectArticleCard key={id} collect={collect} />;
+                  }
+                  break;
+              }
+            })}
            
             
           </div>
