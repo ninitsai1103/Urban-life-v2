@@ -184,16 +184,9 @@ export default function LectureContentTbody({
   }
 
   // 更新課程內容
-  const handleUpdate = async () => {
+  const handleUpdate = async (lectureId) => {
     try {
-      // const now = new Date() // 獲取當前時間
-      // const formattedNow = now.toISOString().slice(0, 19).replace('T', ' ') // 格式化當前時間為 'yyyy-mm-dd hh:mm:ss'
-      // // 檢查結束時間是否早於開始時間
-      // if (endingTime < startingTime) {
-      //   // 若結束時間早於開始時間，顯示提醒並返回
-      //   alert('結束時間不能早於開始時間')
-      //   return;
-      // }
+      // 定義更新課程相關字段
       const updatedFields = {
         name,
         description,
@@ -211,12 +204,92 @@ export default function LectureContentTbody({
         // lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
         // lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
         // lecture_img3: selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
-      }
+      };
 
-      // 調用 updateLecture 函數，傳遞課程 ID 和更新的欄位物件
-      await updateLecture(lecture.id, updatedFields)
+      // 檢查每個圖片文件是否有選擇，沒有選擇則設置為空值
+    // const selectedFiles1 = selectedFile1 ? selectedFile1 : '';
+    // const selectedFiles2 = selectedFile2 ? selectedFile2 : '';
+    // const selectedFiles3 = selectedFile3 ? selectedFile3 : '';
+    // const selectedFiles4 = selectedFile4 ? selectedFile4 : '';
 
-      // 可以在這裡添加更新頁面或重新加載數據的邏輯
+      // 創建一個新的 FormData 物件
+    const formData = new FormData();
+    formData.append('id', lectureId); // 將課程 ID 加入 FormData
+
+    // 加入課程欄位資訊到 FormData
+    Object.entries(updatedFields).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    // 加入圖片檔案到 FormData
+    // formData.append('selectedFiles1', selectedFiles1);
+    // formData.append('selectedFiles2', selectedFiles2);
+    // formData.append('selectedFiles3', selectedFiles3);
+    // formData.append('selectedFiles4', selectedFiles4);
+    // 檢查每個圖片文件是否有選擇，有選擇才加入到 FormData 中
+    // if (selectedFile1) {
+    //   formData.append('selectedFiles1', selectedFile1);
+    // } else {
+    //   formData.append('selectedFiles1', ''); // 將空值加入 FormData，保持原本的值
+    // }
+    // if (selectedFile2) {
+    //   formData.append('selectedFiles2', selectedFile2);
+    // } else {
+    //   formData.append('selectedFiles2', ''); // 將空值加入 FormData，保持原本的值
+    // }
+    // if (selectedFile3) {
+    //   formData.append('selectedFiles3', selectedFile3);
+    // } else {
+    //   formData.append('selectedFiles3', ''); // 將空值加入 FormData，保持原本的值
+    // }
+    // if (selectedFile4) {
+    //   formData.append('selectedFiles4', selectedFile4);
+    // } else {
+    //   formData.append('selectedFiles4', ''); // 將空值加入 FormData，保持原本的值
+    // }
+
+    // 加入圖片檔案到 FormData，只加入有選擇的新檔案
+    if (selectedFile1) {
+      formData.append('selectedFiles1', selectedFile1);
+    }
+    if (selectedFile2) {
+      formData.append('selectedFiles2', selectedFile2);
+    }
+    if (selectedFile3) {
+      formData.append('selectedFiles3', selectedFile3);
+    }
+    if (selectedFile4) {
+      formData.append('selectedFiles4', selectedFile4);
+    }
+
+
+    // 加入圖片檔案到 FormData，檢查每個文件是否已選擇
+    // if (selectedFile1) {
+    //   formData.append('selectedFiles1', selectedFile1);
+    // }
+    // if (selectedFile2) {
+    //   formData.append('selectedFiles2', selectedFile2);
+    // }
+    // if (selectedFile3) {
+    //   formData.append('selectedFiles3', selectedFile3);
+    // }
+    // if (selectedFile4) {
+    //   formData.append('selectedFiles4', selectedFile4);
+    // }
+
+    // 發送請求到後端，處理課程資料和圖片的更新
+    const response = await fetch(`http://localhost:3005/api/teacher-lecture`, {
+      method: 'PUT',
+      body: formData,
+    });
+
+    if (response.ok) {
+      console.log('課程和圖片更新成功');
+      window.location.reload(); // 重新加載當前頁面或進行其他相關操作
+    } else {
+      const responseData = await response.json();
+      console.error('更新失敗:', responseData);
+    }
     } catch (error) {
       console.log('Error updating lecture:', error)
     }
@@ -578,7 +651,7 @@ export default function LectureContentTbody({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 1)}
+                                onChange={(e) => handleFileChange(e, 1)} name="selectedFiles1"
                               />
                               {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
                                 <>
@@ -599,7 +672,7 @@ export default function LectureContentTbody({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 2)}
+                                onChange={(e) => handleFileChange(e, 2)} name="selectedFiles2"
                               />
                               {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
                                 <>
@@ -620,7 +693,7 @@ export default function LectureContentTbody({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 3)}
+                                onChange={(e) => handleFileChange(e, 3)} name="selectedFiles3"
                               />
                               {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
                                 <>
@@ -641,7 +714,7 @@ export default function LectureContentTbody({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 4)}
+                                onChange={(e) => handleFileChange(e, 4)} name="selectedFiles4"
                               />
                               {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
                                 <>

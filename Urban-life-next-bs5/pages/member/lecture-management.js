@@ -184,20 +184,6 @@ export default function LectureManagement() {
     setPhoneWishList(
       filterPhoneWish.slice(PhoneWishStartIndex, PhoneWishEndIndex)
     )
-
-    // let filterPhoneWish = TeacherWish
-    // const newPhoneWishTotalPages = Math.ceil(
-    //   filterPhoneWish.length / PhoneWishPerpages
-    // )
-    // setPhoneWishTotalPages(newPhoneWishTotalPages)
-    // const PhoneWishStartIndex = (PhoneWishCurrentPage - 1) * PhoneWishPerpages
-    // const PhoneWishEndIndex = Math.min(
-    //   PhoneWishStartIndex + PhoneWishPerpages,
-    //   filterPhoneWish.length
-    // )
-    // setPhoneWishList(
-    //   filterPhoneWish.slice(PhoneWishStartIndex, PhoneWishEndIndex)
-    // )
   }, [PhoneWishCurrentPage, TeacherWish, identityId])
 
   const handlePhoneWishPageChange = (PhoneWishPage) => {
@@ -446,110 +432,53 @@ export default function LectureManagement() {
   }
 
   // 更新課程清單code
-  const updateLecture = async (lectureId, updatedFields) => {
+  const updateLecture = async (lectureId, lectureFields, pictureFields) => {
     const url = 'http://localhost:3005/api/teacher-lecture' // 請求的路由
 
     try {
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          id: lectureId, // 要更新的課程 ID
-          ...updatedFields, // 包含要更新的字段的物件
-        }),
-      })
+      // 創建 FormData 來包含課程字段和圖片文件
+    const formData = new FormData();
+    formData.append('id', lectureId); // 確保包含課程ID用於更新操作
 
-      const data = await res.json()
-      console.log(data)
+    // 加入課程欄位資訊到 FormData
+    Object.keys(lectureFields).forEach(key => {
+      formData.append(key, lectureFields[key]);
+    });
 
-      // 在成功更新課程後可以進行其他操作，例如重新加載頁面
-      if (res.ok) {
-        // 如果更新成功，觸發頁面重整或重新加載
-        window.location.reload() // 重新加載當前頁面
-      } else {
-        console.log('Update failed:', data)
-        // 如果更新失敗，可以進行錯誤處理或其他操作
+    // 加入圖片文件到 FormData
+    Object.keys(pictureFields).forEach(key => {
+      if (pictureFields[key] instanceof File) { // 確保只處理文件類型
+        formData.append(key, pictureFields[key]);
       }
+    });
 
-      return data // 可根據需要返回特定的數據
+    // 發送包含課程和圖片的請求
+    const response = await fetch(url, {
+      method: 'PUT',
+      body: formData,
+    });
+
+    const responseData = await response.json();
+    console.log('Update lecture with picture response:', responseData);
+
+
+      // 檢查請求是否成功，根據需要進行後續操作
+    if (response.ok) {
+      console.log('課程更新成功');
+      window.location.reload(); // 重新加載當前頁面
+      return responseData; // 返回成功的數據
+    } else {
+      console.error('Update failed:', responseData);
+      // 處理失敗情況
+    }
     } catch (error) {
       console.log('Error updating lecture:', error)
       throw error // 可以根據需要處理錯誤或返回其他數據
     }
   }
 
-  // // 新增課程
-  // const addLecture = async (addFields) => {
-  //   const url = 'http://localhost:3005/api/teacher-lecture' // 請求的路由
-
-  //   try {
-  //     const res = await fetch(url, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         // id: lectureId, // 要更新的課程 ID
-  //         ...addFields, // 包含要更新的字段的物件
-  //       }),
-  //     })
-
-  //     const data = await res.json()
-  //     console.log(data)
-
-  //     // 在成功新增課程後可以進行其他操作，例如重新加載頁面
-  //     if (res.ok) {
-  //       // 如果新增成功，觸發頁面重整或重新加載
-  //       // window.location.reload() // 重新加載當前頁面
-  //     } else {
-  //       console.log('Add failed:', data)
-  //       // 如果新增失敗，可以進行錯誤處理或其他操作
-  //     }
-
-  //     return data // 可根據需要返回特定的數據
-  //   } catch (error) {
-  //     console.log('Error adding lecture:', error)
-  //     throw error // 可以根據需要處理錯誤或返回其他數據
-  //   }
-  // }
-
-  // // 新增課程的圖片
-  // const addLecturePicture = async (addFields) => {
-  //   const url = 'http://localhost:3005/api/lecture-upload' // 請求的路由
-
-  //   try {
-  //     const res = await fetch(url, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         // id: lectureId, // 要更新的課程 ID
-  //         ...addFields, // 包含要更新的字段的物件
-  //       }),
-  //     })
-
-  //     const data = await res.json()
-  //     console.log(data)
-
-  //     // 在成功更新課程後可以進行其他操作，例如重新加載頁面
-  //     if (res.ok) {
-  //       // 如果更新成功，觸發頁面重整或重新加載
-  //       window.location.reload() // 重新加載當前頁面
-  //     } else {
-  //       console.log('Add failed:', data)
-  //       // 如果更新失敗，可以進行錯誤處理或其他操作
-  //     }
-
-  //     return data // 可根據需要返回特定的數據
-  //   } catch (error) {
-  //     console.log('Error adding lecture:', error)
-  //     throw error // 可以根據需要處理錯誤或返回其他數據
-  //   }
-  // }
-
+  
+  // 新增課程與圖片
   const addLectureWithPicture = async (lectureFields, pictureFields) => {
     const lectureUrl = 'http://localhost:3005/api/teacher-lecture';
 
@@ -568,7 +497,7 @@ export default function LectureManagement() {
       });
 
       // 發送包含課程和圖片的請求
-      const response = await fetch(url, {
+      const response = await fetch(lectureUrl, {
         method: 'POST',
         body: formData,
       });
@@ -732,6 +661,7 @@ export default function LectureManagement() {
                             identityId={identityId}
                             deleteLecture={deleteLecture}
                             updateLecture={updateLecture}
+                            addLectureWithPicture={addLectureWithPicture}
                           />
                         ))}
                       </table>
@@ -754,6 +684,7 @@ export default function LectureManagement() {
                           identityId={identityId}
                           deleteLecture={deleteLecture}
                           updateLecture={updateLecture}
+                          addLectureWithPicture={addLectureWithPicture}
                         />
                       ))}
                     </div>

@@ -102,61 +102,7 @@ export default function LectureAddModal({
     setAmount(e.target.value)
   }
 
-  // 新增課程內容
-  const handleAdd = async () => {
-    try {
-      // const now = new Date() // 獲取當前時間
-      const addFields = {
-        name,
-        description,
-        content,
-        location_id: locationId,
-        lecture_date: lectureDate,
-        starting_time: startTime,
-        ending_time: endTime,
-        sign_up_starting: signUpStart,
-        sign_up_deadline: signUpEnd,
-        price,
-        amount,
-        // change_time: now,
-        teacher_id: identityId,
-        // cover:  selectedFile1 ? selectedFile1.name : lecture.cover,
-        // lecture_img1:
-        //   selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
-        // lecture_img2:
-        //   selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
-        // lecture_img3:
-        //   selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
-      }
-
-      // 調用 addLecture 函數，傳遞課程新增的欄位物件
-      await addLecture(addFields)
-
-      // 可以在這裡添加更新頁面或重新加載數據的邏輯
-    } catch (error) {
-      console.log('Error adding lecture:', error)
-    }
-  }
-
-  // 新增課程圖片
-  const handleAddPicture = async () => {
-    try {
-      const addFields = {
-        cover: selectedFile1 ? selectedFile1.name : lecture.cover,
-        lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
-        lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
-        lecture_img3: selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
-      }
-
-      // 調用 addLecturePicture 函數，傳遞課程 ID 和更新的欄位物件
-      await addLecturePicture(addFields)
-
-      // 可以在這裡添加更新頁面或重新加載數據的邏輯
-    } catch (error) {
-      console.log('Error adding lecture picture:', error)
-    }
-  }
-
+  // 新增課程內容與圖片
   const handleAddLectureWithPicture = async () => {
     try {
       // 定義課程相關字段
