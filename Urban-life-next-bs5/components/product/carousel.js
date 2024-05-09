@@ -21,18 +21,18 @@ export default function Carousel({ productId }) {
   const [img, setImg] = useState([])
   const [cover, setCover] = useState(null)
   useEffect(() => {
-    console.log("products:", products);
-    console.log("pid:", productId);
+    // console.log("products:", products);
+    // console.log("pid:", productId);
     if (productId && products.length > 0) {
       const fetchProduct = products.find(item => item.id === parseInt(productId));
-      console.log("fetchProduct:", fetchProduct);
+      // console.log("fetchProduct:", fetchProduct);
       if (fetchProduct && fetchProduct.cover) {
         setCover(fetchProduct.cover);
       }
       if (fetchProduct && fetchProduct.img) {
         setImg(fetchProduct.img.split(';'));
       }
-      console.log(img);
+      // console.log(img);
     }
 
   }, [productId, products])
