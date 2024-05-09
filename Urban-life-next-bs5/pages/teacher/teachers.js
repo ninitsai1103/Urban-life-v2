@@ -5,12 +5,15 @@ import { Container } from 'react-bootstrap'
 import Search from '@/components/lecture/search'
 import TeachersCard from '@/components/lecture/teacherscard'
 import Page from '@/components/product/pagination'
+import TeacherInfoProvider from '@/hooks/use-teacher'
 
 export default function LectureHome() {
+  const [list, setList] = useState([])
+  // const { teacher } = TeacherInfoProvider()
 
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const perpages = 12
+  const perpages = 16
 
   const handlePageChange = (page) => {
     setCurrentPage(page)
@@ -29,22 +32,14 @@ export default function LectureHome() {
             <Search />
           </div>
           <div className="cardgrp">
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
+            {/* {list.map((teacher) => (
+                  <Link key={teacher.id} href={`/teacher/${teacher.id}`}>
+                  <TeachersCard key={teacher.id} teacher={teacher} />
+                   </Link>
+                ))} */}
+            {/* <Link> */}
+              <TeachersCard/>
+            {/* </Link> */}
           </div>
         </section>
         <div className="container ">
@@ -55,7 +50,6 @@ export default function LectureHome() {
             onPageChange={handlePageChange}
           />
         </div>
-
       </div>
 
       <style jsx>

@@ -19,7 +19,7 @@ export function MemberInfoProvider({ children }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === 'success') {
-          setMember(data.user);
+          setMember(data.user)
         } else {
           console.error('無法取得使用者資料:', data.message)
         }
@@ -34,7 +34,7 @@ export function MemberInfoProvider({ children }) {
     <MemberInfoContext.Provider
       // 使用value屬性提供資料給提供者階層以下的所有後代元件
       value={{
-        member
+        member,
       }}
     >
       {children}
