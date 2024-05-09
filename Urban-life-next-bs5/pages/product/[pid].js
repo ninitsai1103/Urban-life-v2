@@ -10,14 +10,20 @@ import { BsCart3 } from 'react-icons/bs'
 import { GoHeart } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import useProducts from '@/hooks/product/useProducts'
-import { fetchProducts } from '@/services/product';
+import useColloections from '@/hooks/product/useCollections'
+// const {product} = useProducts();
+
 
 
 export default function Detail() {
 const {products} = useProducts();
+const {collections} = useColloections();
 const router = useRouter();
 const {pid} = router.query;
 const [product, setProduct] = useState(null)
+const [isCollected, setIsCollected] =useState(null) //商品是否有被收藏
+
+//pid動態路由
 useEffect(() => {
   // console.log("pid:", pid);
   if (pid && products.length > 0) {
@@ -25,8 +31,38 @@ useEffect(() => {
   // console.log("fetchProduct:", fetchProduct);
   setProduct(fetchProduct);
   }
-  // console.log(product);
 },[pid, products]) 
+
+// 收藏
+useEffect(() => {
+  // 檢查當前商品是否在收藏列表中
+  if(product){
+    const foundCollection = collections.find(item => item.product_id == product.id && item.valid == 1)
+setIsCollected(foundCollection !== undefined);
+console.log(foundCollection);
+
+console.log(product);
+}
+},[collections, product])
+
+
+//切換商品的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected);
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+      toast.success(message, {
+        style: {
+          border: '1px solid #713200',
+          padding: '16px',
+          color: '#713200',
+        },
+        iconTheme: {
+          primary: '#713200',
+          secondary: '#FFFAEE',
+        }
+      })
+    }
+    
 
 
   return (

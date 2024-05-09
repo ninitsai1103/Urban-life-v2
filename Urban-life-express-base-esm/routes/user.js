@@ -82,7 +82,7 @@ router.post('', upload.none(), async (req, res) => {
           identity_id: user.identity_id,
         },
         secretKey,
-        { expiresIn: '30m' }
+        { expiresIn: '30d' }
       )
 
       return res.status(201).json({
@@ -139,7 +139,7 @@ router.put('/:id', upload.none(), async (req, res) => {
         identity_id: user.identity_id,
       },
       secretKey,
-      { expiresIn: '30m' }
+      { expiresIn: '30d' }
     )
 
     res.status(200).json({

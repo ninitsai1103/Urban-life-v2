@@ -41,9 +41,9 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
         }
       })
     }
-    //更新后端的收藏状态或更新 collections 状态
+    
   
-// renderCollection();
+
   return (
     <>
       {/* 桌機版*/}
@@ -137,7 +137,21 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
                 <TbStarFilled style={{ color: '#F6A404', fontSize: '19px' }} />
                 <p className="ms-1 mb-0 fs-15">{product.star}</p>
               </div>
-              <FaRegHeart style={{ fontSize: '25px' }} />
+              {isCollected ?
+              (<FaHeart style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136' }} 
+                onClick={e => {
+                    e.preventDefault();
+                    toggleCollection();
+                    removeCollection(product.id);
+                  }}
+              />):
+              (<FaRegHeart style={{ fontSize: '20px', cursor: 'pointer' }}
+              onClick={e => {
+                  e.preventDefault();
+                  toggleCollection();
+                  addCollection(product.id);
+                }} />)
+              }
             </div>
           </div>
         </div>

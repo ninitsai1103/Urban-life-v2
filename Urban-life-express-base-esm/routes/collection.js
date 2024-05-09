@@ -8,7 +8,7 @@ import authenticate from '#middlewares/authenticate.js'
 import sequelize from '#configs/db.js'
 const { Collection } = sequelize.models
 
-// 獲得某會員id的有加入到我的最愛清單中的商品id們
+// 獲得某會員id的有加入到我的最愛清單中的id們
 // 此路由只有登入會員能使用
 router.get('/', authenticate, async (req, res) => {
   const userId = req.decoded.id
@@ -26,7 +26,7 @@ router.get('/', authenticate, async (req, res) => {
   res.json({ status: 'success', data: { collections } })
 })
 
-//增加收藏
+//增加商品收藏
 router.get('/add/:product_id', authenticate, async (req, res) => {
   const userId = req.decoded.id //從解碼JWT中取得用戶ID
   const  productId  = parseInt(req.params.product_id, 10) // 從路由參數中取得商品ID
@@ -79,7 +79,7 @@ router.get('/add/:product_id', authenticate, async (req, res) => {
   }
 })
 
-//取消收藏
+//取消商品收藏
 router.get('/remove/:product_id', authenticate, async (req, res) => {
   const userId = req.decoded.id //從解碼JWT中取得用戶ID
   const  productId  = parseInt(req.params.product_id, 10) // 從路由參數中取得商品ID
