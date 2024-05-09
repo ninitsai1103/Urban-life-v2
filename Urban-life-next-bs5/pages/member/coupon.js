@@ -209,12 +209,12 @@ export default function CouponMainPage() {
       console.log(data)
 
       // 在成功刪除優惠券後執行 getCoupon
-      await getCoupons()
+      await getCoupons(id)
 
-      return <div></div>
+      
     } catch (error) {
       console.log(error)
-      return <div></div>
+     
     }
   }
 

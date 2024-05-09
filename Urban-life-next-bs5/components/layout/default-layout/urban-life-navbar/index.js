@@ -32,22 +32,22 @@ export default function MyNavbar() {
       switch (identity_id) {
         case 1:
           setUser(newUser)
-          setMemberUrl('official-account')
+          setMemberUrl('/official-account')
           break
         case 2:
           setUser(newUser)
-          setMemberUrl('article-management')
+          setMemberUrl('/article-management')
           break
         case 3:
           setUser(newUser)
-          setMemberUrl('information')
+          setMemberUrl('/information')
           break
         case '':
-          setMemberUrl('login')
+          setMemberUrl('/login')
           break
       }
     }
-  }, [])
+  }, [user])
   return (
     <>
       <div className="header">
@@ -81,7 +81,7 @@ export default function MyNavbar() {
                 <Link href="">講師陣容</Link>
               </li>
               <li>
-                <Link href={`http://localhost:3000/member/${memberUrl}`}>
+                <Link href={`http://localhost:3000/member${memberUrl}`}>
                   會員專區
                 </Link>
               </li>

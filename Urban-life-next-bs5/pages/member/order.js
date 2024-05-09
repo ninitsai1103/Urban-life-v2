@@ -15,6 +15,7 @@ export default function OrderMainPage() {
     try {
       const res = await fetch(url)
       const data = await res.json()
+      console.log(data);
 
       const orders = data.data.order
       // console.log(orders)
@@ -41,7 +42,7 @@ export default function OrderMainPage() {
             order_id: order.order_id,
             user_id: order.user_id,
             pay: order.pay,
-            order_code: order.order_code,
+            // order_code: order.order_code,
             name: order.name,
             phone: order.phone,
             address: order.address,
@@ -65,7 +66,7 @@ export default function OrderMainPage() {
         return acc
       }, [])
 
-      // console.log(mergedOrders)
+      console.log(mergedOrders)
       setOrders(mergedOrders)
     } catch (error) {
       console.log(error)
@@ -104,7 +105,7 @@ export default function OrderMainPage() {
                       </tr>
                     </thead>
                     {orders.map((order) => {
-                      return <OrderList order={order} key={order.order_code} />
+                      return <OrderList order={order} key={order.order_id} />
                     })}
                   </table>
                 </div>

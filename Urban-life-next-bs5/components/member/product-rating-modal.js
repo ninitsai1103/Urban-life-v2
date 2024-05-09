@@ -85,14 +85,14 @@ function ProductRating({
             </div>
             <div>
               <div className="body-title">詳細評價</div>
-              <textarea
-                className="form-control"
-                rows="4"
-                value={comment}
-                onChange={(e) => {
-                  onCommentChange(itemName, e.target.value)
-                }}
-              ></textarea>
+              <input
+                // className="form-control"
+                // rows="4"
+                defaultValue={comment}
+                // onChange={(e) => {
+                //   onCommentChange(itemName, e.target.value)
+                // }}
+              ></input>
             </div>
           </div>
         </Modal.Body>
@@ -102,6 +102,11 @@ function ProductRating({
           </Button>
         </Modal.Footer>
       </Modal>
+      <style jsx>{`
+        input {
+          z-index: 5;
+        }
+      `}</style>
     </>
   )
 }

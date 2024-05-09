@@ -81,7 +81,7 @@ export default function Order({ order }) {
     <>
       <tbody>
         <tr className="align-middle tab">
-          <td>{order_code}</td>
+          <td>{order_id}</td>
           <td>{new Date(date).toISOString().slice(0, 19).replace('T', ' ')}</td>
           <td>{total}</td>
           <td>
@@ -112,7 +112,7 @@ export default function Order({ order }) {
             <div className="modal-header border-0 p-0 px-3">
               <div className="modal-title fs-5" id="Detail">
                 <p className="m-0" style={{ fontSize: '36px' }}>
-                  {order_code}
+                  {order_id}
                 </p>
                 <p style={{ fontSize: '14px' }}>
                   {new Date(date).toISOString().slice(0, 19).replace('T', ' ')}
