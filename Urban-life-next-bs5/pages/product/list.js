@@ -158,18 +158,7 @@ export default function List() {
 
   
 
-  //獲得登入會員的收藏資料
-  // api.get('/collection')
-  // .then(response => {
-  //   const userOfProductCollection = response.data.data.collections.map(item => item.product_id && item.pdltat_id===1);
-  //   // console.log(userOfProductCollection);
-  //   setCollections(userOfProductCollection);
  
-
-  // })
-  // .catch(error => {
-  //   console.error('Error:', error);
-  // });
 
   // Toggle the side navigation
   // useEffect(() => {
