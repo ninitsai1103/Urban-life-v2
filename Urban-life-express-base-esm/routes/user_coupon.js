@@ -13,8 +13,10 @@ import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
-
-  const user_id = req.query.user_id;
+  // DEMO
+   const user_id = 42
+  // 實際要連線登入者的ID
+  // const user_id = req.query.user_id
 
   const sqlUserCoupons = `SELECT * FROM user_coupon 
   JOIN coupon ON user_coupon.coupon_id =coupon.id 
