@@ -3,13 +3,30 @@ import { RxCross2 } from 'react-icons/rx';
 import Image from 'next/image';
 
 export default function CollectProducts({ collect }) {
+    // 移除
+    const handleDelete = async () => {
+      try {
+        console.log(collect.id);
+        const response = await fetch(`http://localhost:3005/api/collection1/${collect.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        const data = await response.json()
+        alert("刪除成功")
+        window.location.reload();
+      } catch (error) {
+        console.error('移除失敗:', error)
+      }
+    }
   return (
     <>
       <table className="table ">
         <tbody className="table-group-divider border-top-0">
           <tr className="align-middle">
-            <td>
-              <RxCross2 />
+            <td className='delete-btn'>
+              <RxCross2  onClick={handleDelete} />
             </td>
             <td>
               <div className="d-flex align-items-center">
@@ -63,11 +80,15 @@ export default function CollectProducts({ collect }) {
 
         .product-name {
           width: 150px; /* 固定產品名稱的最大寬度 */
-          overflow: hidden;
+          white-space: nowrap;
+          {/* overflow: hidden; */}
         }
 
         .price-container {
           width: 100px; /* 固定價格欄位的寬度 */
+        }
+        .delete-btn{
+          cursor:pointer;
         }
         @media (max-width: 768px) {
           .product-name{
