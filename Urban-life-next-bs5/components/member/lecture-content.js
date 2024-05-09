@@ -186,7 +186,7 @@ export default function LectureContentTbody({
   // 更新課程內容
   const handleUpdate = async () => {
     try {
-      const now = new Date() // 獲取當前時間
+      // const now = new Date() // 獲取當前時間
       // const formattedNow = now.toISOString().slice(0, 19).replace('T', ' ') // 格式化當前時間為 'yyyy-mm-dd hh:mm:ss'
       // // 檢查結束時間是否早於開始時間
       // if (endingTime < startingTime) {
@@ -206,11 +206,11 @@ export default function LectureContentTbody({
         sign_up_deadline: selectedEndingDateTime,
         price,
         amount,
-        change_time: now,
-        cover: selectedFile1 ? selectedFile1.name : lecture.cover,
-        lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
-        lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
-        lecture_img3: selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
+        // change_time: now,
+        // cover: selectedFile1 ? selectedFile1.name : lecture.cover,
+        // lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
+        // lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
+        // lecture_img3: selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
       }
 
       // 調用 updateLecture 函數，傳遞課程 ID 和更新的欄位物件
@@ -251,7 +251,7 @@ export default function LectureContentTbody({
 
       {/* 檢視modal */}
       <div
-        className="modal fade"
+        className="modal fade modal_width"
         id={`detailModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
@@ -333,20 +333,19 @@ export default function LectureContentTbody({
                           <th>課程圖片：</th>
                           <td>
                             <img
-                              className="displayOriginImg"
-                              src={`/images/lecture/lecture_img/${lecture.cover}`}
+                              className="displayOriginImg" src={`http://localhost:3005/lecture_img/${lecture.cover}`}
                             ></img>
                             <img
                               className="displayOriginImg"
-                              src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
                             ></img>
                             <img
                               className="displayOriginImg"
-                              src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
                             ></img>
                             <img
                               className="displayOriginImg"
-                              src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
                             ></img>
                           </td>
                         </tr>
@@ -574,7 +573,7 @@ export default function LectureContentTbody({
                             <div>*第一章圖為封面圖</div>
                             <img
                               className="originImg"
-                              src={`/images/lecture/lecture_img/${lecture.cover}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.cover}`}
                             ></img>
                             <div>
                               <input
@@ -595,7 +594,7 @@ export default function LectureContentTbody({
 
                             <img
                               className="originImg mt-4"
-                              src={`/images/lecture/lecture_img/${lecture.lecture_img1}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
                             ></img>
                             <div>
                               <input
@@ -616,7 +615,7 @@ export default function LectureContentTbody({
 
                             <img
                               className="originImg mt-4"
-                              src={`/images/lecture/lecture_img/${lecture.lecture_img2}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
                             ></img>
                             <div>
                               <input
@@ -637,7 +636,7 @@ export default function LectureContentTbody({
 
                             <img
                               className="originImg mt-4"
-                              src={`/images/lecture/lecture_img/${lecture.lecture_img3}`}
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
                             ></img>
                             <div>
                               <input
@@ -765,6 +764,10 @@ export default function LectureContentTbody({
         }
         select {
           width: 80%;
+          margin: 3px;
+        }
+        textarea{
+          height: 100px;
         }
 
         .modal-table {

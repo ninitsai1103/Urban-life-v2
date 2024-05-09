@@ -24,7 +24,7 @@ export default function LectureManagement() {
   // 判斷user是誰
   const [identityId, setUserIdentityId] = useState()
   useEffect(() => {
-    const { identity_id, name, id} = JSON.parse(
+    const { identity_id, name, id } = JSON.parse(
       localStorage.getItem('member-info')
     )
     setUserIdentityId(id)
@@ -49,19 +49,32 @@ export default function LectureManagement() {
   const WindowLecturesPerpages = 10
 
   useEffect(() => {
-    if (!identityId) return; // 等待 identityId 設置後再執行
+    if (!identityId) return // 等待 identityId 設置後再執行
 
     // 過濾符合條件的課程
-    const filterWindowLectures = lectures.filter(lecture => lecture.teacher_id === identityId);
+    const filterWindowLectures = lectures.filter(
+      (lecture) => lecture.teacher_id === identityId
+    )
 
     // 更新分頁資訊
-    const newWindowLecturesTotalPages = Math.ceil(filterWindowLectures.length / WindowLecturesPerpages);
-    setWindowLecturesTotalPages(newWindowLecturesTotalPages);
+    const newWindowLecturesTotalPages = Math.ceil(
+      filterWindowLectures.length / WindowLecturesPerpages
+    )
+    setWindowLecturesTotalPages(newWindowLecturesTotalPages)
 
     // 根據當前頁數更新展示的課程列表
-    const WindowLecturesStartIndex = (WindowLecturesCurrentPage - 1) * WindowLecturesPerpages;
-    const WindowLecturesEndIndex = Math.min(WindowLecturesStartIndex + WindowLecturesPerpages, filterWindowLectures.length);
-    setWindowLecturesList(filterWindowLectures.slice(WindowLecturesStartIndex, WindowLecturesEndIndex));
+    const WindowLecturesStartIndex =
+      (WindowLecturesCurrentPage - 1) * WindowLecturesPerpages
+    const WindowLecturesEndIndex = Math.min(
+      WindowLecturesStartIndex + WindowLecturesPerpages,
+      filterWindowLectures.length
+    )
+    setWindowLecturesList(
+      filterWindowLectures.slice(
+        WindowLecturesStartIndex,
+        WindowLecturesEndIndex
+      )
+    )
   }, [WindowLecturesCurrentPage, lectures, identityId])
 
   const handleWindowLecturesPageChange = (WindowLecturesPage) => {
@@ -76,26 +89,33 @@ export default function LectureManagement() {
   const PhoneLecturesPerpages = 6
 
   useEffect(() => {
-    if (!identityId) return; // 等待 identityId 設置後再執行
+    if (!identityId) return // 等待 identityId 設置後再執行
 
     // 過濾符合條件的課程
-    const filterPhoneLectures = lectures.filter(lecture => lecture.teacher_id === identityId);
+    const filterPhoneLectures = lectures.filter(
+      (lecture) => lecture.teacher_id === identityId
+    )
 
     // 更新分頁資訊
-    const newPhoneLecturesTotalPages = Math.ceil(filterPhoneLectures.length / PhoneLecturesPerpages);
-    setPhoneLecturesTotalPages(newPhoneLecturesTotalPages);
+    const newPhoneLecturesTotalPages = Math.ceil(
+      filterPhoneLectures.length / PhoneLecturesPerpages
+    )
+    setPhoneLecturesTotalPages(newPhoneLecturesTotalPages)
 
     // 根據當前頁數更新展示的課程列表
-    const PhoneLecturesStartIndex = (PhoneLecturesCurrentPage - 1) * PhoneLecturesPerpages;
-    const PhoneLecturesEndIndex = Math.min(PhoneLecturesStartIndex + PhoneLecturesPerpages, filterPhoneLectures.length);
-    setPhoneLecturesList(filterPhoneLectures.slice(PhoneLecturesStartIndex, PhoneLecturesEndIndex));
-
+    const PhoneLecturesStartIndex =
+      (PhoneLecturesCurrentPage - 1) * PhoneLecturesPerpages
+    const PhoneLecturesEndIndex = Math.min(
+      PhoneLecturesStartIndex + PhoneLecturesPerpages,
+      filterPhoneLectures.length
+    )
+    setPhoneLecturesList(
+      filterPhoneLectures.slice(PhoneLecturesStartIndex, PhoneLecturesEndIndex)
+    )
   }, [PhoneLecturesCurrentPage, lectures, identityId])
   const handlePhoneLecturesPageChange = (PhoneLecturesPage) => {
     setPhoneLecturesCurrentPage(PhoneLecturesPage)
   }
-
-
 
   // 桌機板wish分頁
   const [WindowWishList, setWindowWishList] = useState([])
@@ -105,19 +125,29 @@ export default function LectureManagement() {
   const WindowWishPerpages = 10
 
   useEffect(() => {
-    if (!identityId) return; // 等待 identityId 設置後再執行
+    if (!identityId) return // 等待 identityId 設置後再執行
 
     // 過濾符合條件的許願清單
-    const filterWindowWish = TeacherWish.filter(Wish => Wish.teacher_id === identityId);
+    const filterWindowWish = TeacherWish.filter(
+      (Wish) => Wish.teacher_id === identityId
+    )
 
     // 更新分頁資訊
-    const newWindowWishTotalPages = Math.ceil(filterWindowWish.length / WindowWishPerpages);
-    setWindowWishTotalPages(newWindowWishTotalPages);
+    const newWindowWishTotalPages = Math.ceil(
+      filterWindowWish.length / WindowWishPerpages
+    )
+    setWindowWishTotalPages(newWindowWishTotalPages)
 
     // 根據當前頁數更新展示的許願清單列表
-    const WindowWishStartIndex = (WindowWishCurrentPage - 1) * WindowWishPerpages;
-    const WindowWishEndIndex = Math.min(WindowWishStartIndex + WindowWishPerpages, filterWindowWish.length);
-    setWindowWishList(filterWindowWish.slice(WindowWishStartIndex, WindowWishEndIndex));
+    const WindowWishStartIndex =
+      (WindowWishCurrentPage - 1) * WindowWishPerpages
+    const WindowWishEndIndex = Math.min(
+      WindowWishStartIndex + WindowWishPerpages,
+      filterWindowWish.length
+    )
+    setWindowWishList(
+      filterWindowWish.slice(WindowWishStartIndex, WindowWishEndIndex)
+    )
   }, [WindowWishCurrentPage, TeacherWish, identityId])
 
   const handleWindowWishPageChange = (WindowWishPage) => {
@@ -132,19 +162,28 @@ export default function LectureManagement() {
   const PhoneWishPerpages = 6
 
   useEffect(() => {
-    if (!identityId) return; // 等待 identityId 設置後再執行
+    if (!identityId) return // 等待 identityId 設置後再執行
 
     // 過濾符合條件的許願清單
-    const filterPhoneWish = TeacherWish.filter(Wish => Wish.teacher_id === identityId);
+    const filterPhoneWish = TeacherWish.filter(
+      (Wish) => Wish.teacher_id === identityId
+    )
 
     // 更新分頁資訊
-    const newPhoneWishTotalPages = Math.ceil(filterPhoneWish.length / PhoneWishPerpages);
-    setPhoneWishTotalPages(newPhoneWishTotalPages);
+    const newPhoneWishTotalPages = Math.ceil(
+      filterPhoneWish.length / PhoneWishPerpages
+    )
+    setPhoneWishTotalPages(newPhoneWishTotalPages)
 
     // 根據當前頁數更新展示的許願清單列表
-    const PhoneWishStartIndex = (PhoneWishCurrentPage - 1) * PhoneWishPerpages;
-    const PhoneWishEndIndex = Math.min(PhoneWishStartIndex + PhoneWishPerpages, filterPhoneWish.length);
-    setPhoneWishList(filterPhoneWish.slice(PhoneWishStartIndex, PhoneWishEndIndex));
+    const PhoneWishStartIndex = (PhoneWishCurrentPage - 1) * PhoneWishPerpages
+    const PhoneWishEndIndex = Math.min(
+      PhoneWishStartIndex + PhoneWishPerpages,
+      filterPhoneWish.length
+    )
+    setPhoneWishList(
+      filterPhoneWish.slice(PhoneWishStartIndex, PhoneWishEndIndex)
+    )
 
     // let filterPhoneWish = TeacherWish
     // const newPhoneWishTotalPages = Math.ceil(
@@ -173,7 +212,9 @@ export default function LectureManagement() {
 
   // lecture桌機板排序
   useEffect(() => {
-    let filteredLectures = lectures.filter(lecture => lecture.teacher_id === identityId);
+    let filteredLectures = lectures.filter(
+      (lecture) => lecture.teacher_id === identityId
+    )
 
     // 根據排序選項重新排序
     switch (LectureSortOption) {
@@ -221,7 +262,9 @@ export default function LectureManagement() {
 
   // lecture手機板排序
   useEffect(() => {
-    let filteredLectures = lectures.filter(lecture => lecture.teacher_id === identityId);
+    let filteredLectures = lectures.filter(
+      (lecture) => lecture.teacher_id === identityId
+    )
 
     // 根據排序選項重新排序
     switch (LectureSortOption) {
@@ -275,7 +318,9 @@ export default function LectureManagement() {
 
   // wish桌機板排序
   useEffect(() => {
-    let filteredWish = TeacherWish.filter(TeacherWish => TeacherWish.teacher_id === identityId);
+    let filteredWish = TeacherWish.filter(
+      (TeacherWish) => TeacherWish.teacher_id === identityId
+    )
 
     // 根據排序選項重新排序
     switch (WishSortOption) {
@@ -313,7 +358,9 @@ export default function LectureManagement() {
 
   // wish手機板排序
   useEffect(() => {
-    let filteredWish = TeacherWish.filter(TeacherWish => TeacherWish.teacher_id === identityId);
+    let filteredWish = TeacherWish.filter(
+      (TeacherWish) => TeacherWish.teacher_id === identityId
+    )
 
     // 根據排序選項重新排序
     switch (WishSortOption) {
@@ -433,38 +480,113 @@ export default function LectureManagement() {
     }
   }
 
-  // 新增課程
-  const addLecture = async (addFields) => {
-    const url = 'http://localhost:3005/api/teacher-lecture' // 請求的路由
+  // // 新增課程
+  // const addLecture = async (addFields) => {
+  //   const url = 'http://localhost:3005/api/teacher-lecture' // 請求的路由
+
+  //   try {
+  //     const res = await fetch(url, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         // id: lectureId, // 要更新的課程 ID
+  //         ...addFields, // 包含要更新的字段的物件
+  //       }),
+  //     })
+
+  //     const data = await res.json()
+  //     console.log(data)
+
+  //     // 在成功新增課程後可以進行其他操作，例如重新加載頁面
+  //     if (res.ok) {
+  //       // 如果新增成功，觸發頁面重整或重新加載
+  //       // window.location.reload() // 重新加載當前頁面
+  //     } else {
+  //       console.log('Add failed:', data)
+  //       // 如果新增失敗，可以進行錯誤處理或其他操作
+  //     }
+
+  //     return data // 可根據需要返回特定的數據
+  //   } catch (error) {
+  //     console.log('Error adding lecture:', error)
+  //     throw error // 可以根據需要處理錯誤或返回其他數據
+  //   }
+  // }
+
+  // // 新增課程的圖片
+  // const addLecturePicture = async (addFields) => {
+  //   const url = 'http://localhost:3005/api/lecture-upload' // 請求的路由
+
+  //   try {
+  //     const res = await fetch(url, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         // id: lectureId, // 要更新的課程 ID
+  //         ...addFields, // 包含要更新的字段的物件
+  //       }),
+  //     })
+
+  //     const data = await res.json()
+  //     console.log(data)
+
+  //     // 在成功更新課程後可以進行其他操作，例如重新加載頁面
+  //     if (res.ok) {
+  //       // 如果更新成功，觸發頁面重整或重新加載
+  //       window.location.reload() // 重新加載當前頁面
+  //     } else {
+  //       console.log('Add failed:', data)
+  //       // 如果更新失敗，可以進行錯誤處理或其他操作
+  //     }
+
+  //     return data // 可根據需要返回特定的數據
+  //   } catch (error) {
+  //     console.log('Error adding lecture:', error)
+  //     throw error // 可以根據需要處理錯誤或返回其他數據
+  //   }
+  // }
+
+  const addLectureWithPicture = async (lectureFields, pictureFields) => {
+    const lectureUrl = 'http://localhost:3005/api/teacher-lecture';
 
     try {
-      const res = await fetch(url, {
+      // 創建 FormData 來包含課程字段和圖片文件
+      const formData = new FormData();
+      // 加入課程欄位資訊到 FormData
+      Object.keys(lectureFields).forEach(key => {
+        formData.append(key, lectureFields[key]);
+      });
+      // 加入圖片文件到 FormData
+      Object.keys(pictureFields).forEach(key => {
+        if (pictureFields[key] instanceof File) { // 確保只處理文件類型
+          formData.append(key, pictureFields[key]);
+        }
+      });
+
+      // 發送包含課程和圖片的請求
+      const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // id: lectureId, // 要更新的課程 ID
-          ...addFields, // 包含要更新的字段的物件
-        }),
-      })
+        body: formData,
+      });
 
-      const data = await res.json()
-      console.log(data)
+      const responseData = await response.json();
+      console.log('Add lecture with picture response:', responseData);
 
-      // 在成功更新課程後可以進行其他操作，例如重新加載頁面
-      if (res.ok) {
-        // 如果更新成功，觸發頁面重整或重新加載
-        window.location.reload() // 重新加載當前頁面
+      // 檢查請求是否成功，根據需要進行後續操作
+      if (response.ok) {
+        window.location.reload(); // 重新加載當前頁面
+        return responseData; // 返回成功的數據
       } else {
-        console.log('Add failed:', data)
-        // 如果更新失敗，可以進行錯誤處理或其他操作
+        console.error('Add failed:', responseData);
+        // 處理失敗情況
       }
-
-      return data // 可根據需要返回特定的數據
     } catch (error) {
-      console.log('Error adding lecture:', error)
-      throw error // 可以根據需要處理錯誤或返回其他數據
+      console.error('Error adding lecture with picture:', error);
+      throw error; // 可以根據需要處理錯誤或返回其他數據
     }
   }
 
@@ -743,7 +865,12 @@ export default function LectureManagement() {
       </div>
 
       {/* 新增課程Modal導入 */}
-      <LectureAddModal addLecture={addLecture} identityId={identityId} />
+      <LectureAddModal
+        addLectureWithPicture={addLectureWithPicture}
+        // addLecture={addLecture}
+        identityId={identityId}
+        // addLecturePicture={addLecturePicture}
+      />
 
       <style jsx>{`
         .teacher-lecture-management {

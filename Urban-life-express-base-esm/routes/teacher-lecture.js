@@ -1,4 +1,8 @@
 import express from 'express'
+import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+
 const router = express.Router()
 
 // 檢查空物件, 轉換req.params為數字
@@ -10,6 +14,26 @@ const { Article, UserTeacher } = sequelize.models
 import { QueryTypes, Op } from 'sequelize'
 
 import db from '#configs/mysql.js'
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/lecture_img');
+  },
+  filename: function (req, file, cb) {
+    const fileExt = path.extname(file.originalname);
+    const filename = uuidv4() + fileExt;
+    cb(null, filename);
+  },
+});
+
+const upload = multer({ storage: storage });
+const uploadFields = upload.fields([
+  { name: 'selectedFiles1', maxCount: 1 },
+  { name: 'selectedFiles2', maxCount: 1 },
+  { name: 'selectedFiles3', maxCount: 1 },
+  { name: 'selectedFiles4', maxCount: 1 }
+]);
+
 
 router.get('/', async function (req, res) {
   // 使用 SQL 查詢關聯 lecture 表格
@@ -91,15 +115,17 @@ router.put('/', async function (req, res) {
       sign_up_deadline,
       price,
       amount,
-      change_time,
-      cover,
-      lecture_img1,
-      lecture_img2,
-      lecture_img3,
+      // change_time,
+      // cover,
+      // lecture_img1,
+      // lecture_img2,
+      // lecture_img3,
     } = req.body
 
+    let date = new Date()
+
     let updateTeacherLecture = `UPDATE product_lecture
-    SET name = ?, description = ?, content = ?,location_id = ?,  lecture_date = ?, starting_time = ?, ending_time = ?, sign_up_starting = ?, sign_up_deadline = ?, price = ?, amount = ?, change_time = ?, cover = ?, lecture_img1 = ?, lecture_img2 = ?, lecture_img3 = ?
+    SET name = ?, description = ?, content = ?,location_id = ?,  lecture_date = ?, starting_time = ?, ending_time = ?, sign_up_starting = ?, sign_up_deadline = ?, price = ?, amount = ?, change_time = ?
     WHERE id = ? ;`
 
     // 執行 SQL 更新操作
@@ -115,11 +141,11 @@ router.put('/', async function (req, res) {
       sign_up_deadline,
       price,
       amount,
-      change_time,
-      cover,
-      lecture_img1,
-      lecture_img2,
-      lecture_img3,
+      date,
+      // cover,
+      // lecture_img1,
+      // lecture_img2,
+      // lecture_img3,
       id, // 確保 id 是最後一個參數，對應 WHERE 子句中的 id = ?
     ])
 
@@ -140,8 +166,8 @@ router.put('/', async function (req, res) {
   }
 })
 
-// 使用 POST 方法來更新資源（完整替換）
-router.post('/', async function (req, res) {
+// 使用 POST 方法來新增課程（完整替換）
+router.post('/', uploadFields,async function (req, res) {
   try {
     console.log(req.body)
     // const lectureID = req.body.id
@@ -158,13 +184,21 @@ router.post('/', async function (req, res) {
       sign_up_deadline,
       price,
       amount,
-      change_time,
+      // change_time,
       teacher_id,
-      cover,
-      lecture_img1,
-      lecture_img2,
-      lecture_img3,
+      // cover,
+      // lecture_img1,
+      // lecture_img2,
+      // lecture_img3,
     } = req.body
+
+    const files = req.files;
+    const cover = files.selectedFiles1 ? `${files.selectedFiles1[0].filename}` : null;
+    const lecture_img1 = files.selectedFiles2 ? `${files.selectedFiles2[0].filename}` : null;
+    const lecture_img2 = files.selectedFiles3 ? `${files.selectedFiles3[0].filename}` : null;
+    const lecture_img3 = files.selectedFiles4 ? `${files.selectedFiles4[0].filename}` : null;
+
+    let date = new Date()
 
     let addTeacherLecture = `INSERT INTO product_lecture (name, description, content, location_id, lecture_date, starting_time, ending_time, sign_up_starting, sign_up_deadline, price, amount, change_time, teacher_id, cover, lecture_img1, lecture_img2, lecture_img3, pdlt_id, valid)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,2,1);`
 
@@ -181,7 +215,7 @@ router.post('/', async function (req, res) {
       sign_up_deadline,
       price,
       amount,
-      change_time,
+      date,
       teacher_id,
       cover,
       lecture_img1,

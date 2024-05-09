@@ -1,6 +1,11 @@
 import { React, useState } from 'react'
 
-export default function LectureAddModal({ identityId, addLecture }) {
+export default function LectureAddModal({
+  identityId,
+  addLecture,
+  addLecturePicture,
+  addLectureWithPicture,
+}) {
   // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
   const [selectedFile1, setSelectedFile1] = useState(null)
   const [selectedFile2, setSelectedFile2] = useState(null)
@@ -97,10 +102,10 @@ export default function LectureAddModal({ identityId, addLecture }) {
     setAmount(e.target.value)
   }
 
-  // 更新課程內容
+  // 新增課程內容
   const handleAdd = async () => {
     try {
-      const now = new Date() // 獲取當前時間
+      // const now = new Date() // 獲取當前時間
       const addFields = {
         name,
         description,
@@ -113,23 +118,100 @@ export default function LectureAddModal({ identityId, addLecture }) {
         sign_up_deadline: signUpEnd,
         price,
         amount,
-        change_time: now,
+        // change_time: now,
         teacher_id: identityId,
-        cover: ' selectedFile1 ? selectedFile1.name : lecture.cover',
-        lecture_img1:
-          'selectedFile2 ? selectedFile2.name : lecture.lecture_img1',
-        lecture_img2:
-          'selectedFile3 ? selectedFile3.name : lecture.lecture_img2',
-        lecture_img3:
-          'selectedFile4 ? selectedFile4.name : lecture.lecture_img3',
+        // cover:  selectedFile1 ? selectedFile1.name : lecture.cover,
+        // lecture_img1:
+        //   selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
+        // lecture_img2:
+        //   selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
+        // lecture_img3:
+        //   selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
       }
 
-      // 調用 updateLecture 函數，傳遞課程 ID 和更新的欄位物件
+      // 調用 addLecture 函數，傳遞課程新增的欄位物件
       await addLecture(addFields)
 
       // 可以在這裡添加更新頁面或重新加載數據的邏輯
     } catch (error) {
       console.log('Error adding lecture:', error)
+    }
+  }
+
+  // 新增課程圖片
+  const handleAddPicture = async () => {
+    try {
+      const addFields = {
+        cover: selectedFile1 ? selectedFile1.name : lecture.cover,
+        lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
+        lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
+        lecture_img3: selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
+      }
+
+      // 調用 addLecturePicture 函數，傳遞課程 ID 和更新的欄位物件
+      await addLecturePicture(addFields)
+
+      // 可以在這裡添加更新頁面或重新加載數據的邏輯
+    } catch (error) {
+      console.log('Error adding lecture picture:', error)
+    }
+  }
+
+  const handleAddLectureWithPicture = async () => {
+    try {
+      // 定義課程相關字段
+      const lectureFields = {
+        name,
+        description,
+        content,
+        location_id: locationId,
+        lecture_date: lectureDate,
+        starting_time: startTime,
+        ending_time: endTime,
+        sign_up_starting: signUpStart,
+        sign_up_deadline: signUpEnd,
+        price,
+        amount,
+        teacher_id: identityId,
+      };
+  
+      // 創建一個新的 FormData 物件
+      const formData = new FormData();
+  
+      // 加入課程欄位資訊到 FormData
+      Object.keys(lectureFields).forEach((key) => {
+        formData.append(key, lectureFields[key]);
+      });
+  
+      // 加入圖片檔案到 FormData，檢查每個文件是否已選擇
+      if (selectedFile1) {
+        formData.append('selectedFiles1', selectedFile1);
+      }
+      if (selectedFile2) {
+        formData.append('selectedFiles2', selectedFile2);
+      }
+      if (selectedFile3) {
+        formData.append('selectedFiles3', selectedFile3);
+      }
+      if (selectedFile4) {
+        formData.append('selectedFiles4', selectedFile4);
+      }
+  
+      // 發送請求到後端，處理課程資料和圖片的新增
+      const response = await fetch('http://localhost:3005/api/teacher-lecture', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (response.ok) {
+        console.log('課程和圖片新增成功');
+        window.location.reload(); // 重新加載當前頁面或進行其他相關操作
+      } else {
+        const responseData = await response.json();
+        console.log('新增失敗:', responseData);
+      }
+    } catch (error) {
+      console.log('Error handling adding lecture with picture:', error);
     }
   }
 
@@ -319,7 +401,7 @@ export default function LectureAddModal({ identityId, addLecture }) {
                               <div>*第一章圖為封面圖</div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 1)}
+                                onChange={(e) => handleFileChange(e, 1)} name="selectedFiles1"
                               />
                               {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
                                 <>
@@ -336,7 +418,7 @@ export default function LectureAddModal({ identityId, addLecture }) {
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 2)}
+                                onChange={(e) => handleFileChange(e, 2)} name="selectedFiles2"
                               />
                               {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
                                 <>
@@ -353,7 +435,7 @@ export default function LectureAddModal({ identityId, addLecture }) {
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 3)}
+                                onChange={(e) => handleFileChange(e, 3)} name="selectedFiles3"
                               />
                               {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
                                 <>
@@ -371,7 +453,7 @@ export default function LectureAddModal({ identityId, addLecture }) {
                               <input
                                 type="file"
                                 onChange={(e) => handleFileChange(e, 4)}
-                                multiple
+                                name="selectedFiles4"
                               />
                               {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
                                 <>
@@ -405,7 +487,11 @@ export default function LectureAddModal({ identityId, addLecture }) {
                   className="btn btn-main"
                   // data-bs-toggle="modal"
                   // data-bs-target="#addModal"
-                  onClick={() => handleAdd()}
+                  // onClick={async () => {
+                  //   await handleAdd() // 等待 handleAdd() 完成
+                  //   await handleAddPicture() // 等待 handleAddPicture() 完成
+                  // }}
+                  onClick={() => handleAddLectureWithPicture()}
                 >
                   確認新增
                 </button>
@@ -422,6 +508,7 @@ export default function LectureAddModal({ identityId, addLecture }) {
         }
         select {
           width: 80%;
+          margin: 3px;
         }
 
         .modal-table {
