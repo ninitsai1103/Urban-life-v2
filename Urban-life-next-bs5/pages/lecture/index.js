@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import LectureMyCard from '@/components/lecture/card'
 import LectureMyCardNp from '@/components/lecture/card-np'
 import LectureWish from '@/components/lecture/wish'
@@ -13,7 +13,21 @@ import Search from '@/components/lecture/search'
 import QAList from '@/components/lecture/qacard'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 
+// 引入課程hooks
+import useTeacherLectures from '@/hooks/use- teacherlectures'
+
 export default function LectureHome() {
+  // 把lecture資料拿出來
+  const { lectures } = useTeacherLectures()
+  // console.log(lectures)
+
+  // 從calandar接到時間
+  const [nowTime, setNowTime] = useState(new Date())
+  console.log(nowTime)
+
+  // 從課程卡片拿出來的資料
+  const [cardData, setCardData] = useState({})
+
   return (
     <>
       <section className="slider">
@@ -82,21 +96,40 @@ export default function LectureHome() {
             <LectureMyCard />
           </div>
         </section>
+        {/* 行事曆 */}
         <section className="section2">
           <h1 className="sectiontitle">開課日程</h1>
           <div className="calendercard">
             <div className="calender">
-              <Calendar />
+              <Calendar setNowTime={setNowTime} cardData={cardData} />
             </div>
             <div className="cardgrpnp">
-              <LectureMyCardNp />
-              <LectureMyCardNp />
-              <LectureMyCardNp />
-              <LectureMyCardNp />
-              <LectureMyCardNp />
-              <LectureMyCardNp />
-              <LectureMyCardNp />
-              <LectureMyCardNp />
+              {lectures
+                .filter((lecture) => {
+                  // 取得講座報名截止日期的年份和月份
+                  const deadlineYear = new Date(
+                    lecture.sign_up_deadline
+                  ).getFullYear()
+                  const deadlineMonth = new Date(
+                    lecture.sign_up_deadline
+                  ).getMonth()
+
+                  // 取得當前日期的年份和月份
+                  const nowYear = nowTime.getFullYear()
+                  const nowMonth = nowTime.getMonth()
+
+                  // 檢查講座報名截止日期的年份和月份是否與當前日期的年份和月份相同
+                  return deadlineYear === nowYear && deadlineMonth === nowMonth
+                })
+                .map((lecture) => {
+                  return (
+                    <LectureMyCardNp
+                      key={lecture.id}
+                      lecture={lecture}
+                      setCardData={setCardData}
+                    />
+                  )
+                })}
             </div>
           </div>
         </section>
