@@ -6,7 +6,7 @@ export default function CollectArticleCard({ collect }) {
   return (
     <>
       <div className="article_card_styles w-100 d-flex">
-      <img alt='' src={`/images/article/article_img/${collect.article_image}`}></img>
+      <img alt='' src={`http://localhost:3005/images/article/${collect.article_image}`}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
             <div className="article_card_text_time_time">
@@ -111,7 +111,7 @@ export default function CollectArticleCard({ collect }) {
 
 
 
-        {/* 576???? */}
+       
         @media(max-width: 768px){
           .article_card_styles{
             display: flex;
@@ -122,6 +122,7 @@ export default function CollectArticleCard({ collect }) {
           img{
             border-radius: 8px;
             width: 100%;
+            max-height: 200px;
           } 
         }
 
