@@ -16,7 +16,7 @@ export default function ArticleCard({ article }) {
         <div className="h-50">
           {' '}
           <img
-            src={`/images/article/article_img/${article.img}`}
+            src={`http://localhost:3005/images/article/${article.img}`}
             alt="..."
             className="card-img-top  object-fit-cover "
           />
