@@ -15,7 +15,7 @@ export default function CollectProducts({ collect }) {
               <div className="d-flex align-items-center">
                 <div className="img me-3">
                 {collect.pdltat_id === 1 && (
-                  <div className="img me-3">
+                  <div className="img me-3 ">
                     <Image
                       src={`/images/product/product_cover/${collect.product_image}`}
                       width={30}
@@ -28,7 +28,7 @@ export default function CollectProducts({ collect }) {
                 {collect.pdltat_id === 2 && (
                   <div className="img me-3">
                     <Image
-                      src={`/images/lecture/lecture_img/${collect.product_image}`}
+                      src={`http://localhost:3005/lecture_img/${collect.product_image}`}
                       width={30}
                       height={30}
                       property="true"
@@ -63,11 +63,16 @@ export default function CollectProducts({ collect }) {
 
         .product-name {
           width: 150px; /* 固定產品名稱的最大寬度 */
-          white-space: nowrap;
+          overflow: hidden;
         }
 
         .price-container {
           width: 100px; /* 固定價格欄位的寬度 */
+        }
+        @media (max-width: 768px) {
+          .product-name{
+            display: none
+          }
         }
       `}</style>
     </>

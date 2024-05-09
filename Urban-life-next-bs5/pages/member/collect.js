@@ -4,18 +4,14 @@ import TopNavItemCollect from '@/components/member/top-nav-item-collect'
 import CollectArticleCard from '@/components/member/collect-article-card'
 import CollectProducts from '@/components/member/collect-products'
 import { useMemberInfo } from '@/hooks/use-member-info'
+import Page from '@/components/product/pagination'
 
-
-export default function Collect({
-
-}) {
+export default function Collect({}) {
   const { member } = useMemberInfo()
 
   const [userCollects, setUserCollects] = useState([])
   // collect資料表
   const getCollects = async (id) => {
-    // 後端網址
-
     // fetch抓資料
     try {
       const url = `http://localhost:3005/api/collection1?user_id=${id}`
@@ -23,11 +19,11 @@ export default function Collect({
       const data = await res.json()
       // 所有此user擁有的collect
       const userCollect = data.collects
-      data.collects.forEach(item => {
-        const pdltat_id = item.pdltat_id;
+      data.collects.forEach((item) => {
+        const pdltat_id = item.pdltat_id
         // console.log(pdltat_id);
-    });
-      console.log(data.collects);
+      })
+      console.log(data.collects)
       if (Array.isArray(userCollect)) {
         setUserCollects(userCollect)
       } else {
@@ -45,6 +41,11 @@ export default function Collect({
 
   // top-nav-item 篩選資料的狀態: 收藏商品、收藏課程、收藏文章
   const [collectFilter, setCollectFilter] = useState('收藏商品')
+
+  //分頁
+  const perpages = 5
+  useEffect(() => {})
+
   return (
     <>
       <div className="container">
@@ -57,28 +58,32 @@ export default function Collect({
               <div className="title">我的收藏</div>
             </div>
             <TopNavItemCollect setCollectFilter={setCollectFilter} />
-            {userCollects.map(collect => {
-              const { id, pdltat_id } = collect;
+            {userCollects.map((collect) => {
+              const { id, pdltat_id } = collect
               switch (pdltat_id) {
                 case 1:
                   if (collectFilter === '收藏商品') {
-                    return <CollectProducts key={id} collect={collect} />;
+                    return <CollectProducts key={id} collect={collect} />
                   }
-                  break;
+                  break
                 case 2:
                   if (collectFilter === '收藏課程') {
-                    return <CollectProducts key={id} collect={collect} />;
+                    return <CollectProducts key={id} collect={collect} />
                   }
-                  break;
+                  break
                 case 3:
                   if (collectFilter === '收藏文章') {
-                    return <CollectArticleCard key={id} collect={collect} />;
+                    return <CollectArticleCard key={id} collect={collect} />
                   }
-                  break;
+                  break
               }
             })}
-           
-            
+          </div>
+          <div>
+            <Page 
+            // onPageChange={handleArticlePageChange} 
+
+            />
           </div>
         </div>
       </div>
