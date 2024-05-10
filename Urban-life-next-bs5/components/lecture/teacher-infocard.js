@@ -1,6 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import TeacherInfoProvider from '@/hooks/use-teacher'
 
 export default function TeacherCardInfo() {
+  // // 使用自訂 hook 取得教師資訊
+  // const { teacher, fetchUserTeacher } = TeacherInfoProvider()
+
+  // useEffect(() => {
+  //   fetchUserTeacher()
+  //   console.log(teacher);
+  // }, [])
+
   return (
     <>
       <div className="card">
@@ -13,10 +22,16 @@ export default function TeacherCardInfo() {
         </div>
 
         <div className="card-body">
-          <h5 className="name">黃湘苗 講師</h5>
-          <p className="teacherinfo">
-            黃湘苗擁有超過25年的農業種植經驗，專精於有機農業和可持續發展。畢業於國際知名的農業科學院，在土壤管理、作物輪作及自然農法方面有深入研究。致力於推廣環保農業，黃教授經常舉辦工作坊，並在多個國際會議上發表論文。
-          </p>
+          {/* 將教師的名字和簡介渲染到組件中 */}
+          {/* {teacher &&
+            teacher.map((teacherData, index) => {
+              return (
+                <div key={index}>
+                  <h5 className="name">{teacherData.name} 講師</h5>
+                  <p className="teacherinfo">{teacherData.intro}</p>
+                </div>
+              )
+            })} */}
         </div>
       </div>
 
