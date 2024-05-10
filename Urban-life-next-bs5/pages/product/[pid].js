@@ -1,49 +1,41 @@
 import { useEffect, useState } from 'react'
 import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
-import ProductCard from '@/components/product/product-card'
-import { useParams } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router';
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'
 import { BsCart3 } from 'react-icons/bs'
-import { GoHeart } from 'react-icons/go'
+import { GoHeart, GoHeartFill } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import useProducts from '@/hooks/product/useProducts'
 import useColloections from '@/hooks/product/useCollections'
-// const {product} = useProducts();
+
 
 
 
 export default function Detail() {
 const {products} = useProducts();
-const {collections} = useColloections();
+const {collections, addCollection, removeCollection} = useColloections();
 const router = useRouter();
 const {pid} = router.query;
 const [product, setProduct] = useState(null)
 const [isCollected, setIsCollected] =useState(null) //商品是否有被收藏
+const [amount, setAmount] = useState(1)
 
 //pid動態路由
 useEffect(() => {
-  // console.log("pid:", pid);
   if (pid && products.length > 0) {
   const fetchProduct = products.find(item => item.id === parseInt(pid))
-  // console.log("fetchProduct:", fetchProduct);
   setProduct(fetchProduct);
   }
-},[pid, products]) 
 
 // 收藏
-useEffect(() => {
-  // 檢查當前商品是否在收藏列表中
-  if(product){
-    const foundCollection = collections.find(item => item.product_id == product.id && item.valid == 1)
-setIsCollected(foundCollection !== undefined);
-console.log(foundCollection);
+ // 檢查當前商品是否在收藏列表中
+ const isFound = collections.find(item => item.product_id === pid && item.valid === 1)
+ setIsCollected(Boolean(isFound))
+},[pid, products, collections]) 
 
-console.log(product);
-}
-},[collections, product])
 
 
 //切換商品的收藏狀態
@@ -51,18 +43,21 @@ console.log(product);
     setIsCollected(!isCollected);
     const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
       toast.success(message, {
-        style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: '#713200',
-        },
-        iconTheme: {
-          primary: '#713200',
-          secondary: '#FFFAEE',
-        }
       })
     }
     
+//增加商品數量
+const addAmount = () => {
+  const maxAmount = product.amount;
+  console.log(maxAmount);
+  setAmount(prevAmount =>  Math.min(maxAmount, prevAmount + 1));
+  
+}
+
+//減少商品數量
+const reduceAmount = () => {
+  setAmount(prevAmount => Math.max(0, prevAmount - 1))
+}
 
 
   return (
@@ -123,19 +118,21 @@ console.log(product);
               <p className="ms-1 mb-0 fs-17 padding">{product && product.star}</p>
             </div>
             <div className="input-group mb-4 w-50">
-              <button className="btn  btn-bg" type="button" id="button-minus">
+              <button className="btn  btn-bg" type="button" id="button-minus"
+              onClick={reduceAmount}>
                 -
               </button>
               <input
                 type="text"
                 className="form-control text-center"
-                value="1"
+                value={amount}
                 id="number-input"
               />
               <button
                 className="btn d-flex justify-content-center btn-bg"
                 type="button"
                 id="button-plus"
+                onClick={addAmount}
               >
                 +
               </button>
@@ -149,14 +146,37 @@ console.log(product);
                 立即購買
               </button>
               <div className="d-flex justify-content-between">
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+              />
                 <button className="btn btn-add btn-hover2  ">
                   <BsCart3 className="me-1 mb-1" style={{ fontSize: '17px' }} />
                   加入購物車
                 </button>
-                <button className="btn btn-add btn-hover2  ">
+                { isCollected ? 
+                  (<button className="btn btn-add btn-hover2"
+                onClick={e => {
+                    e.preventDefault();
+                    toggleCollection();
+                    removeCollection(product.id);
+                  }}>
+                  <GoHeartFill className="me-1 mb-1"  style={{ fontSize: '19px', color: '#ff4136' }}/>
+                  取消收藏
+                  </button>
+                )
+               :
+               (<button className="btn btn-add btn-hover2"
+                 onClick={e => {
+                  e.preventDefault();
+                  toggleCollection();
+                  addCollection(product.id);
+                }}>
                   <GoHeart className="me-1 mb-1" style={{ fontSize: '19px' }} />
                   加入收藏
-                </button>
+                </button>)
+               
+              }
               </div>
             </div>
           </div>

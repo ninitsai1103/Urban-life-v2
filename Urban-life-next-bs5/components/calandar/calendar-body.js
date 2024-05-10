@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import getWeeksInMonth from './utils'
 
-export default function CalendarBody({ calendarMain }) {
+export default function CalendarBody({ calendarMain, cardData }) {
   let weekContentList = getWeeksInMonth(calendarMain)
   const WeekDayNameList = ['Sun', 'Mon', 'Tue', 'Wen', 'Thr', 'Fri', 'Sat']
   let result = []
@@ -11,6 +11,23 @@ export default function CalendarBody({ calendarMain }) {
   const handleDateClick = (day) => {
     const clickedDate = moment(calendarMain).date(day)
     console.log('Clicked Date:', clickedDate.format('YYYY-MM-DD'))
+  }
+
+  // 檢查傳過來的訊息
+  // console.log(cardData);
+  // 接收到cardData存在後就加進行事曆裡面
+  const lectureAdd = () => {
+    if (cardData) {
+      return
+      ;<>
+        <div key={index}>
+          <h3>{cardData.lecture_name}</h3>
+          <p>{cardData.start_date}</p>
+        </div>
+      </>
+    } else {
+      return null // 如果 cardData 不存在，返回 null 或其他你想要顯示的內容
+    }
   }
 
   return (

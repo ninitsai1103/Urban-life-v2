@@ -30,15 +30,6 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
     setIsCollected(!isCollected);
     const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
       toast.success(message, {
-        style: {
-          border: '1px solid #713200',
-          padding: '16px',
-          color: '#713200',
-        },
-        iconTheme: {
-          primary: '#713200',
-          secondary: '#FFFAEE',
-        }
       })
     }
     
@@ -76,7 +67,7 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
                     removeCollection(product.id);
                   }}
                      />) :
-                (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer' }}
+                (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
                 onClick={e => {
                   e.preventDefault();
                   toggleCollection();

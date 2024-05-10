@@ -11,7 +11,7 @@ export default function useColloections() {
     api
       .get('/collection')
       .then((response) => {
-        console.log(response.data.data.collections);
+        // console.log(response.data.data.collections);
        
         setCollections(response.data.data.collections)
         
