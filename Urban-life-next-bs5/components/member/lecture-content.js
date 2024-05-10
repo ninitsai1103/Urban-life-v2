@@ -581,7 +581,7 @@ export default function LectureContentTbody({
                           <td>
                             <textarea
                               // type="text"
-                              className="form-control"
+                              className="form-control textarea1"
                               name="name"
                               value={description}
                               onChange={handleDescriptionChange}
@@ -593,7 +593,7 @@ export default function LectureContentTbody({
                           <td>
                             <textarea
                               // type="text"
-                              className="form-control"
+                              className="form-control textarea2"
                               name="name"
                               value={content}
                               onChange={handleContentChange}
@@ -799,8 +799,12 @@ export default function LectureContentTbody({
           width: 80%;
           margin: 3px;
         }
-        textarea{
+        .textarea1{
           height: 100px;
+        }
+
+        .textarea2{
+          height: 200px;
         }
 
         .modal-table {
