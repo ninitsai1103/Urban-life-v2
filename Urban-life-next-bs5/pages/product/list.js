@@ -1677,7 +1677,7 @@ export default function List() {
             <div div className="container ">
               <div className="row row-cols-2 row-cols-lg-4 g-4">
                 {list.map((product) => (
-                  <Link key={product.id} href={`/product/${product.id}`}>
+                  <Link className='text-decoration-none' key={product.id} href={`/product/${product.id}`}>
                   <ProductCard key={product.id} product={product} collections={collections} />
                    </Link>
                 ))}

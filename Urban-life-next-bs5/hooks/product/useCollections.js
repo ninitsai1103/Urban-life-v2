@@ -28,8 +28,10 @@ export default function useColloections() {
       .then((response) => {
         console.log(response)
         setCollections((prev) => [...prev, productId])
+        // toggleCollection();
       })
       .catch((error) => {
+        // alert('請登入會員再進行收藏功能')
         console.log('Error adding collection:', error)
       })
   }
@@ -44,3 +46,11 @@ export default function useColloections() {
 
   return { collections, addCollection, removeCollection }
 }
+
+// const toggleCollection = () => {
+//   setIsCollected(!isCollected);
+//   const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+//     toast.success(message, {
+//     })
+// }
+
