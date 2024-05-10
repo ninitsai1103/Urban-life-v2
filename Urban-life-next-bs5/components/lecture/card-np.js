@@ -46,7 +46,7 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
         </div>
         <div className={styles.cardBodyArea}>
           <div className={styles.lectureText}>{teacher_name}</div>
-          <div className={styles.lectureText}>{sign_up_deadline}</div>
+          <div className={styles.lectureText}>{lecture_date}</div>
         </div>
         <div className={styles.cardBodyArea}>
           <div className="flex gap-2.5 font-medium">

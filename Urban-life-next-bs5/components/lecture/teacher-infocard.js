@@ -1,39 +1,29 @@
 import React, { useEffect } from 'react'
-import TeacherInfoProvider from '@/hooks/use-teacher'
+import { UseTeacherInfo } from '@/hooks/use-teacher'
 
 export default function TeacherCardInfo() {
-  // // 使用自訂 hook 取得教師資訊
-  // const { teacher, fetchUserTeacher } = TeacherInfoProvider()
-
-  // useEffect(() => {
-  //   fetchUserTeacher()
-  //   console.log(teacher);
-  // }, [])
+  const { teachers } = UseTeacherInfo()
 
   return (
     <>
-      <div className="card">
-        <div className="card-top">
-          <img
-            className="card-img"
-            src="/images/teacher/T1706078211.jpg"
-            alt="Card image cap"
-          />
-        </div>
+      {teachers.map((teachers) => {
+        return (
+          <div className="card" key={teachers.id}>
+            <div className="card-top">
+              <img
+                className="card-img"
+                src={`/images/teacher/${teachers.img}`}
+                alt="Card image cap"
+              />
+            </div>
 
-        <div className="card-body">
-          {/* 將教師的名字和簡介渲染到組件中 */}
-          {/* {teacher &&
-            teacher.map((teacherData, index) => {
-              return (
-                <div key={index}>
-                  <h5 className="name">{teacherData.name} 講師</h5>
-                  <p className="teacherinfo">{teacherData.intro}</p>
-                </div>
-              )
-            })} */}
-        </div>
-      </div>
+            <div className="card-body">
+              <h5 className="name">{teachers.name} 講師</h5>
+              <p className="teacherinfo">{teachers.intro}</p>
+            </div>
+          </div>
+        )
+      })}
 
       <style jsx>{`
         .card {
@@ -47,6 +37,7 @@ export default function TeacherCardInfo() {
           border-radius: 8px;
           width: 309px;
           height: 422px;
+          min-width: 309px;
         }
 
         img {

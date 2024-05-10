@@ -78,7 +78,7 @@ export default function MyNavbar() {
                 <Link href="http://localhost:3000/article">文章分享</Link>
               </li>
               <li>
-                <Link href="">講師陣容</Link>
+                <Link href="http://localhost:3000/teacher">講師陣容</Link>
               </li>
               <li>
                 <Link href={`http://localhost:3000/member${memberUrl}`}>

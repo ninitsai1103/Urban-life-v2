@@ -45,11 +45,13 @@ export default function MyApp({ Component, pageProps }) {
     <LoaderProvider close={2} CustomLoader={CatLoader}>
       <MemberInfoProvider>
         <LectureProvider>
-          <UserCouponProvider>
-            <CartProvider>
-              {getLayout(<Component {...pageProps} />)}
-            </CartProvider>
-          </UserCouponProvider>
+          <TeacherInfoProvider>
+            <UserCouponProvider>
+              <CartProvider>
+                {getLayout(<Component {...pageProps} />)}
+              </CartProvider>
+            </UserCouponProvider>
+          </TeacherInfoProvider>
         </LectureProvider>
       </MemberInfoProvider>
     </LoaderProvider>

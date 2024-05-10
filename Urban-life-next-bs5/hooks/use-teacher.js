@@ -2,40 +2,40 @@ import React, { useState, useEffect, useContext, createContext } from 'react'
 
 const TeacherInfoContext = createContext(null)
 
-export const TeacherInfoProvider = ({ children }) => {
-  const [teacher, setTeacher] = useState([])
+export function TeacherInfoProvider({ children }) {
+  const [teachers, setTeachers] = useState([])
 
-  // useEffect(() => {
-  const fetchUserTeacher = async () => {
-    try {
-      const url = 'http://localhost:3005/api/user_teacher'
-      const res = await fetch(url)
-      const data = await res.json()
-      console.log(data)
-      const userTeacher = data.data.user_teacher
-     
-      if (Array.isArray(userTeacher)) {
-        setTeacher(userTeacher)
-      } else {
-        console.log(
-          'Server returned incorrect data type, cannot set into state'
-        )
+  useEffect(() => {
+    const fetchTeacher = async () => {
+      try {
+        const url = 'http://localhost:3005/api/teacher'
+        const res = await fetch(url)
+        const data = await res.json()
+        console.log(data)
+        const teachers = data.data.teachers
+
+        if (Array.isArray(teachers)) {
+          setTeachers(teachers)
+        } else {
+          console.log(
+            'Server returned incorrect data type, cannot set into state'
+          )
+        }
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.log(error)
     }
-  }
 
-  // fetchUserTeacher()
-  // }, [])
+    fetchTeacher()
+  }, [])
 
   return (
     <TeacherInfoContext.Provider
-      value={{ teacher, setTeacher, fetchUserTeacher }}
+      value={{ teachers, setTeachers }}
     >
       {children}
     </TeacherInfoContext.Provider>
   )
 }
 
-export const useUserTeacher = () => useContext(TeacherInfoContext)
+export const UseTeacherInfo = () => useContext(TeacherInfoContext)
