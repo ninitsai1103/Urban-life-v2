@@ -182,7 +182,7 @@ export default function Information() {
                     生日 *
                   </label>
                   <div className="input-group position-relative d-inline-flex align-items-center">
-                    {/* <InputDatePicker
+                    <InputDatePicker
                       showDatepicker={showDatepicker}
                       setFormat="yyyy-mm-dd"
                       showFormat="yyyy/mm/dd"
@@ -208,7 +208,7 @@ export default function Information() {
                       role="presentation"
                       style={{ right: 10, cursor: 'pointer', zIndex: 100 }}
                       onClick={() => setShowDatepicker(!showDatepicker)}
-                    ></i> */}
+                    ></i>
                   </div>
                 </div>
 

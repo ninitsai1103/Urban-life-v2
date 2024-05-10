@@ -199,18 +199,7 @@ export default function LectureContentTbody({
         sign_up_deadline: selectedEndingDateTime,
         price,
         amount,
-        // change_time: now,
-        // cover: selectedFile1 ? selectedFile1.name : lecture.cover,
-        // lecture_img1: selectedFile2 ? selectedFile2.name : lecture.lecture_img1,
-        // lecture_img2: selectedFile3 ? selectedFile3.name : lecture.lecture_img2,
-        // lecture_img3: selectedFile4 ? selectedFile4.name : lecture.lecture_img3,
       };
-
-      // 檢查每個圖片文件是否有選擇，沒有選擇則設置為空值
-    // const selectedFiles1 = selectedFile1 ? selectedFile1 : '';
-    // const selectedFiles2 = selectedFile2 ? selectedFile2 : '';
-    // const selectedFiles3 = selectedFile3 ? selectedFile3 : '';
-    // const selectedFiles4 = selectedFile4 ? selectedFile4 : '';
 
       // 創建一個新的 FormData 物件
     const formData = new FormData();
@@ -221,34 +210,7 @@ export default function LectureContentTbody({
       formData.append(key, value);
     });
 
-    // 加入圖片檔案到 FormData
-    // formData.append('selectedFiles1', selectedFiles1);
-    // formData.append('selectedFiles2', selectedFiles2);
-    // formData.append('selectedFiles3', selectedFiles3);
-    // formData.append('selectedFiles4', selectedFiles4);
-    // 檢查每個圖片文件是否有選擇，有選擇才加入到 FormData 中
-    // if (selectedFile1) {
-    //   formData.append('selectedFiles1', selectedFile1);
-    // } else {
-    //   formData.append('selectedFiles1', ''); // 將空值加入 FormData，保持原本的值
-    // }
-    // if (selectedFile2) {
-    //   formData.append('selectedFiles2', selectedFile2);
-    // } else {
-    //   formData.append('selectedFiles2', ''); // 將空值加入 FormData，保持原本的值
-    // }
-    // if (selectedFile3) {
-    //   formData.append('selectedFiles3', selectedFile3);
-    // } else {
-    //   formData.append('selectedFiles3', ''); // 將空值加入 FormData，保持原本的值
-    // }
-    // if (selectedFile4) {
-    //   formData.append('selectedFiles4', selectedFile4);
-    // } else {
-    //   formData.append('selectedFiles4', ''); // 將空值加入 FormData，保持原本的值
-    // }
-
-    // 加入圖片檔案到 FormData，只加入有選擇的新檔案
+    // 加入圖片檔案到 FormData，只加入有選擇的新檔案，或者加入原有的檔案名稱
     if (selectedFile1) {
       formData.append('selectedFiles1', selectedFile1);
     }
@@ -261,21 +223,19 @@ export default function LectureContentTbody({
     if (selectedFile4) {
       formData.append('selectedFiles4', selectedFile4);
     }
+    // if (selectedFile1 || existingFile1) {
+    //   formData.append('selectedFiles1', selectedFile1 || existingFile1);
+    // }
+    // if (selectedFile2 || existingFile2) {
+    //   formData.append('selectedFiles2', selectedFile2 || existingFile2);
+    // }
+    // if (selectedFile3 || existingFile3) {
+    //   formData.append('selectedFiles3', selectedFile3 || existingFile3);
+    // }
+    // if (selectedFile4 || existingFile4) {
+    //   formData.append('selectedFiles4', selectedFile4 || existingFile4);
+    // }
 
-
-    // 加入圖片檔案到 FormData，檢查每個文件是否已選擇
-    // if (selectedFile1) {
-    //   formData.append('selectedFiles1', selectedFile1);
-    // }
-    // if (selectedFile2) {
-    //   formData.append('selectedFiles2', selectedFile2);
-    // }
-    // if (selectedFile3) {
-    //   formData.append('selectedFiles3', selectedFile3);
-    // }
-    // if (selectedFile4) {
-    //   formData.append('selectedFiles4', selectedFile4);
-    // }
 
     // 發送請求到後端，處理課程資料和圖片的更新
     const response = await fetch(`http://localhost:3005/api/teacher-lecture`, {
@@ -621,7 +581,7 @@ export default function LectureContentTbody({
                           <td>
                             <textarea
                               // type="text"
-                              className="form-control"
+                              className="form-control textarea1"
                               name="name"
                               value={description}
                               onChange={handleDescriptionChange}
@@ -633,7 +593,7 @@ export default function LectureContentTbody({
                           <td>
                             <textarea
                               // type="text"
-                              className="form-control"
+                              className="form-control textarea2"
                               name="name"
                               value={content}
                               onChange={handleContentChange}
@@ -839,8 +799,12 @@ export default function LectureContentTbody({
           width: 80%;
           margin: 3px;
         }
-        textarea{
+        .textarea1{
           height: 100px;
+        }
+
+        .textarea2{
+          height: 200px;
         }
 
         .modal-table {

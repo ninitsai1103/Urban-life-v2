@@ -10,7 +10,9 @@ import { GoHeart, GoHeartFill } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import useProducts from '@/hooks/product/useProducts'
 import useColloections from '@/hooks/product/useCollections'
-
+import { useCheckout } from '@/hooks/use-checkout';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 
 
@@ -21,44 +23,61 @@ const router = useRouter();
 const {pid} = router.query;
 const [product, setProduct] = useState(null)
 const [isCollected, setIsCollected] =useState(null) //商品是否有被收藏
-const [amount, setAmount] = useState(1)
-
+// const [amount, setAmount] = useState(1)
+const { addItem } = useCheckout()
+const MySwal = withReactContent(Swal)
+// console.log(collections);
 //pid動態路由
 useEffect(() => {
   if (pid && products.length > 0) {
-  const fetchProduct = products.find(item => item.id === parseInt(pid))
+  const fetchProduct = products.find(item => item.id === parseInt(pid,10))
   setProduct(fetchProduct);
   }
 
 // 收藏
  // 檢查當前商品是否在收藏列表中
- const isFound = collections.find(item => item.product_id === pid && item.valid === 1)
+ const isFound = collections.find(item => item.product_id === parseInt(pid,10) && item.valid === 1)
  setIsCollected(Boolean(isFound))
+//  console.log(isFound);
 },[pid, products, collections]) 
 
 
 
 //切換商品的收藏狀態
   const toggleCollection = () => {
-    setIsCollected(!isCollected);
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-      toast.success(message, {
-      })
+    setIsCollected(prevIsCollected => {
+      const newIsCollected = !prevIsCollected;
+      const message = newIsCollected ? '商品已加入收藏!' : '商品已取消收藏!';
+      toast.success(message);
+      return newIsCollected;
+    });
     }
     
 //增加商品數量
-const addAmount = () => {
-  const maxAmount = product.amount;
-  console.log(maxAmount);
-  setAmount(prevAmount =>  Math.min(maxAmount, prevAmount + 1));
+// const addAmount = () => {
+//   const maxAmount = product.amount;
+//   console.log(maxAmount);
+//   setAmount(prevAmount =>  Math.min(maxAmount, prevAmount + 1));
   
+// }
+
+// //減少商品數量
+// const reduceAmount = () => {
+//   setAmount(prevAmount => Math.max(1, prevAmount - 1))
+// }
+
+const notifySA = (product) => {
+  MySwal.fire({
+    title: '成功加入',
+    text: product.name + '已成功加入購物車!',
+    icon: 'success',
+  })
 }
 
-//減少商品數量
-const reduceAmount = () => {
-  setAmount(prevAmount => Math.max(0, prevAmount - 1))
+//將商品資料傳入localstorage
+const productLS = () => {
+  localStorage.setItem('prouduct',)
 }
-
 
   return (
     <>
@@ -117,7 +136,7 @@ const reduceAmount = () => {
               />
               <p className="ms-1 mb-0 fs-17 padding">{product && product.star}</p>
             </div>
-            <div className="input-group mb-4 w-50">
+            {/* <div className="input-group mb-4 w-50">
               <button className="btn  btn-bg" type="button" id="button-minus"
               onClick={reduceAmount}>
                 -
@@ -136,21 +155,34 @@ const reduceAmount = () => {
               >
                 +
               </button>
-            </div>
+            </div> */}
             <div>
-              <button className="btn btn-main btn-hover w-100 mb-3">
+              <Link className="btn btn-main btn-hover w-100 mb-3" href='/cart'
+              // onClick={
+                // addItem(product)
+              // }
+              >
                 <AiOutlineShopping
                   className="me-1 mb-1"
                   style={{ fontSize: '21px' }}
                 />
                 立即購買
-              </button>
+              </Link>
               <div className="d-flex justify-content-between">
               <Toaster
                 position="top-center"
                 reverseOrder={false}
               />
-                <button className="btn btn-add btn-hover2  ">
+                <button className="btn btn-add btn-hover2 "
+                  onClick={() => {
+                    // 呈現訊息
+                    notifySA(product)
+                    // notify(v.name)
+
+                    // 加入購物車狀態
+                    // addItem(product)
+                  }}
+                >
                   <BsCart3 className="me-1 mb-1" style={{ fontSize: '17px' }} />
                   加入購物車
                 </button>
