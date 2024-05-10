@@ -21,9 +21,9 @@ export default function LectureHome() {
   const { lectures } = useTeacherLectures()
   // console.log(lectures)
 
-  // 從calandar接到時間
+  // 從calandar接到時間 (因為是最後的日期貼上去所以是接到這個月的月底時間)
   const [nowTime, setNowTime] = useState(new Date())
-  console.log(nowTime)
+  // console.log(nowTime)
 
   // 從課程卡片拿出來的資料
   const [cardData, setCardData] = useState({})
@@ -108,10 +108,10 @@ export default function LectureHome() {
                 .filter((lecture) => {
                   // 取得講座報名截止日期的年份和月份
                   const deadlineYear = new Date(
-                    lecture.sign_up_deadline
+                    lecture.lecture_date
                   ).getFullYear()
                   const deadlineMonth = new Date(
-                    lecture.sign_up_deadline
+                    lecture.lecture_date
                   ).getMonth()
 
                   // 取得當前日期的年份和月份

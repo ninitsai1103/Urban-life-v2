@@ -30,6 +30,9 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
       lecturename: name,
       start_date: sign_up_starting,
       ending_date: sign_up_deadline,
+      lecture_date: lecture_date,
+      starting_time: starting_time,
+      ending_time: ending_time,
     }
     // console.log(lectureData)
     setCardData(lectureData)
@@ -46,7 +49,7 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
         </div>
         <div className={styles.cardBodyArea}>
           <div className={styles.lectureText}>{teacher_name}</div>
-          <div className={styles.lectureText}>{sign_up_deadline}</div>
+          <div className={styles.lectureText}>{lecture_date}</div>
         </div>
         <div className={styles.cardBodyArea}>
           <div className="flex gap-2.5 font-medium">
