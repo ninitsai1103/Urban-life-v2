@@ -93,9 +93,10 @@ export default function MyNavbar() {
               <FaUser style={{ color: 'white', fontSize: '24px' }} />
             </div>
             <div className="cart">
-              <FaShoppingCart style={{ color: 'white', fontSize: '28px' }} />
-              <a href="" />
-              <span>2</span>
+              <Link href="http://localhost:3000/cart">
+                <FaShoppingCart style={{ color: 'white', fontSize: '24px' }} />
+                <span>{totalItems}</span>
+              </Link>
             </div>
           </div>
         </div>
