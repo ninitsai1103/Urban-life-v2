@@ -1,6 +1,7 @@
 import React from 'react';
 import { CiHeart } from 'react-icons/ci';
 import { FaCommentDots, FaArrowRight } from 'react-icons/fa6';
+import Link from 'next/link';
 
 export default function CollectArticleCard({ collect }) {
   return (
@@ -32,7 +33,7 @@ export default function CollectArticleCard({ collect }) {
               </div>
             </div>
             <div className="button">
-            <a className="btn btn-icon">查看更多</a>
+            <Link className="btn btn-icon" href={`/article/${collect.article_id}`}>查看更多</Link>
 
           </div>
           </div>
