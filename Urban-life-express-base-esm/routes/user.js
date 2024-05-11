@@ -40,7 +40,7 @@ router.get('/:id', async (req, res) => {
   db.execute(sql, [id])
     .then(([rows, fields]) => {
       user = rows[0]
-      delete user.password // 移除密碼欄位
+      // delete user.password // 移除密碼欄位
       res.status(200).json({ status: 'success', user })
     })
     .catch((err) => {
@@ -100,35 +100,101 @@ router.post('', upload.none(), async (req, res) => {
   }
 })
 
-router.put('/:id', upload.none(), async (req, res) => {
-  // res.send(`更新特定id使用者 ${req.params.id}`)
-  // let user, error
-  const id = req.params.id
-  const { name = null, phone = null, birthday = null, address = null, gender = null } = req.body
+// router.put('/:id', upload.none(), async (req, res) => {
+//   const id = req.params.id
+//   const { name = null, phone = null, birthday = null, address = null, gender = null } = req.body
 
-  const sqlUpdate =
-    'UPDATE `user_teacher` SET `name` = ?, `phone` = ?, `birthday` = ?, `address` = ?, `gender` = ? WHERE `id` = ?'
+//   const sqlUpdate =
+//     'UPDATE `user_teacher` SET `name` = ?, `phone` = ?, `birthday` = ?, `address` = ?, `gender` = ? WHERE `id` = ?'
+//   try {
+//     const [result] = await db.execute(sqlUpdate,
+//        [
+//       name,
+//       phone,
+//       birthday,
+//       address,
+//       gender,
+//       id,
+//     ]
+//   )
+
+//     if (result.affectedRows === 0) {
+//       return res
+//         .status(404)
+//         .json({ status: 'error', message: 'User not found' })
+//     }
+
+//     // 成功更新使用者資訊
+//     const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `id` = ?'
+//     const [userInfoRows] = await db.execute(userInfoSql, [id])
+//     const user = userInfoRows[0]
+
+//     let token = jwt.sign(
+//       {
+//         id: user.id,
+//         name: user.name,
+//         identity_id: user.identity_id,
+//       },
+//       secretKey,
+//       { expiresIn: '30d' }
+//     )
+
+//     res.status(200).json({
+//       status: 'success',
+//       message: 'User information updated successfully',
+//       token,
+//     })
+//   } catch (err) {
+//     console.error(err)
+//     const message = err.message || 'Failed to update user information'
+//     res.status(500).json({ status: 'error', message })
+//   }
+// })
+router.put('/:id', upload.none(), async (req, res) => {
+  const id = req.params.id
+  const { name, phone, birthday, address, gender } = req.body
+
+  const updateValues = [] // 用於存儲要更新的欄位和值的陣列
+  const sqlParams = [] // 用於存儲 SQL 語句中的參數值的陣列
+
+  // 檢查每個欄位，如果有值，則將其添加到 updateValues 和 sqlParams 中
+  if (name) {
+    updateValues.push('name = ?')
+    sqlParams.push(name)
+  }
+  if (phone) {
+    updateValues.push('phone = ?')
+    sqlParams.push(phone)
+  }
+  if (birthday) {
+    updateValues.push('birthday = ?')
+    sqlParams.push(birthday)
+  }
+  if (address) {
+    updateValues.push('address = ?')
+    sqlParams.push(address)
+  }
+  if (gender) {
+    updateValues.push('gender = ?')
+    sqlParams.push(gender)
+  }
+
+  // 構建 SQL 更新語句
+  const sqlUpdate = `UPDATE user_teacher SET ${updateValues.join(', ')} WHERE id = ?`
+  sqlParams.push(id) // 添加 ID 參數
+
   try {
-    const [result] = await db.execute(sqlUpdate,
-       [
-      name ,
-      phone ,
-      birthday ,
-      address ,
-      gender,
-      id,
-    ]
-  )
+    // 執行更新
+    const [result] = await db.execute(sqlUpdate, sqlParams)
 
     if (result.affectedRows === 0) {
-      // 沒有影響到任何記錄，意味著該 ID 不存在
       return res
         .status(404)
         .json({ status: 'error', message: 'User not found' })
     }
 
     // 成功更新使用者資訊
-    const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `id` = ?'
+    const userInfoSql = 'SELECT * FROM user_teacher WHERE id = ?'
     const [userInfoRows] = await db.execute(userInfoSql, [id])
     const user = userInfoRows[0]
 
@@ -153,6 +219,7 @@ router.put('/:id', upload.none(), async (req, res) => {
     res.status(500).json({ status: 'error', message })
   }
 })
+
 
 
 router.delete('/:id', (req, res) => {

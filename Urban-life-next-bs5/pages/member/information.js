@@ -13,96 +13,81 @@ export default function Information() {
     birthday: '',
     gender: '',
     address: '',
-    // password: "",
-    // newPassword: "",
-    // confirmPassword: "",
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
   })
   // 錯誤訊息狀態
   const [errors, setErrors] = useState(null)
 
-  const [address, setAddress] = useState('')
 
   // 多欄位共用事件處理函式
   const handleFieldChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
 
-  // Address
-  const handleAddressChange = (value) => {
-    setAddress(value); // 更新地址字段
-  }
-
-
-
   //表單送出(更新)
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // 整理要送到伺服器的資料
-    
-    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
-    const userId = memberInfo.id
-    if (!memberInfo) {
-      console.error('Error: Member info not found in localStorage')
-      return
-    }
+  
+    // 檢查密碼相關欄位是否有值，並且只有在使用者填寫了密碼時才檢查密碼相符性
     let hasErrors = false
-    // 如果檢查有發生錯誤時
-    // if (user.password) {
-    //   // 如果有密碼
-    //   if (!newPassword) {
-    //     setErrors('新密碼為必填')
-    //     hasErrors = true
-    //   }
-    //   if (!confirmPassword) {
-    //     setErrors('確認密碼為必填')
-    //     hasErrors = true
-    //   }
-    // }
-    // if (!hasErrors) {
-    //   if (user.password && newPassword !== confirmPassword) {
-    //     setErrors('新密碼和確認密碼不匹配')
-    //     hasErrors = true
-    //   }
-    // }
+    if (user.password && (!user.newPassword || !user.confirmPassword)) {
+      setErrors('新密碼和確認密碼為必填')
+      hasErrors = true
+    } else if (user.newPassword !== user.confirmPassword) {
+      setErrors('新密碼和確認密碼不匹配')
+      hasErrors = true
+    }
+  
     if (!hasErrors) {
       try {
-        // 檢查欄位
-        const response = await fetch(
-          `http://localhost:3005/api/user/${userId}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
+        // 建立新的使用者物件，僅包含有值的屬性
+        const updatedUser = {}
+        Object.keys(user).forEach((key) => {
+          if (user[key] !== '') {
+            updatedUser[key] = user[key]
           }
-        )
-        const data = await response.json() // 建立一個包含使用者資訊的物件
-
-        console.log(data)
-        // const memberInfo = {
-        //   id: data.user.id,
-        //   name: data.user.name,
-        //   identity_id: data.user.identity_id,
-        //   token: data.token,
-        // }
-
-        // 將 JSON 字串存儲到 localStorage 中
-
+        })
+  
+        // 檢查是否有要更新的資料
+        if (Object.keys(updatedUser).length === 0) {
+          setErrors('沒有要更新的資料')
+          return
+        }
+  
+        const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+        const userId = memberInfo.id
+        if (!memberInfo) {
+          console.error('Error: Member info not found in localStorage')
+          return
+        }
+  
+        // 更新使用者資訊
+        const response = await fetch(`http://localhost:3005/api/user/${userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedUser),
+        })
+  
+        const data = await response.json()
+  
         if (response.ok) {
           console.log('更新成功')
-          console.log('使用者資訊：', data.user) // 這裡是使用者的所有資訊
+          console.log('使用者資訊：', data.user)
           alert('更新成功')
           window.location.reload()
         } else {
-          // 登录失败，显示错误消息
-          console.error('Login failed:', data.message)
+          console.error('更新失敗:', data.message)
         }
       } catch (error) {
-        console.error('Error logging in:', error)
+        console.error('更新失敗:', error)
       }
     }
   }
+  
 
   return (
     <>
@@ -166,7 +151,8 @@ export default function Information() {
                     className="form-control"
                     name="phone"
                     id="exampleInputPhone"
-                    pattern="/^09\d{8}$/"
+                    pattern="09\d{8}"
+                    title="例如：0911222333" // 提供格式提示
                     placeholder={member?.phone ? member.phone : '09'}
                     value={user.phone}
                     readOnly={!!member?.phone}
@@ -187,7 +173,7 @@ export default function Information() {
                       name="birthday"
                       id="exampleInputDate"
                       value={member?.birthday}
-                      // readOnly={!!member?.birthday}
+                      readOnly={!!member?.birthday}
                       onChange={handleFieldChange}
                     />
                   </div>
@@ -209,18 +195,19 @@ export default function Information() {
                       readOnly={true}
                     />
                   ) : (
-                   
-                    <ZipCode onAddressChange={(fullAddress) => setUser({ ...user, address: fullAddress })} />
-
-                    
+                    <ZipCode
+                      onAddressChange={(fullAddress) =>
+                        setUser({ ...user, address: fullAddress })
+                      }
+                    />
                   )}
                 </div>
-                <div className="text-center pt-3 mb-3">
+                {/* <div className="text-center pt-3 mb-3">
                   <button type="submit" className="btn btn-add">
                     確認修改
                   </button>
-                </div>
-              </form>
+                </div> */}
+              {/* </form> */}
               <div className="mb-3 section-font text-primary2 ">密碼變更</div>
               <div className="mb-3">
                 <label
@@ -278,7 +265,7 @@ export default function Information() {
                   確認修改
                 </button>
               </div>
-              {/* </form> */}
+              </form>
             </div>
           </div>
         </div>
