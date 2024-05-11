@@ -10,6 +10,8 @@ export default function Collect({}) {
   const { member } = useMemberInfo()
 
   const [userCollects, setUserCollects] = useState([])
+
+
   // collect資料表
   const getCollects = async (id) => {
     // fetch抓資料
@@ -42,10 +44,7 @@ export default function Collect({}) {
   // top-nav-item 篩選資料的狀態: 收藏商品、收藏課程、收藏文章
   const [collectFilter, setCollectFilter] = useState('收藏商品')
 
-  //分頁
-  const perpages = 5
-  useEffect(() => {})
-
+ 
   return (
     <>
       <div className="container">
@@ -78,12 +77,7 @@ export default function Collect({}) {
                   break
               }
             })}
-          </div>
-          <div>
-            <Page 
-            // onPageChange={handleArticlePageChange} 
-
-            />
+        
           </div>
         </div>
       </div>

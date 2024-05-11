@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
-import TWZipCode from '@/components/tw-zipcode'
-import dynamic from 'next/dynamic'
+import ZipCode from '@/components/member/zip-code'
 import { useMemberInfo } from '@/hooks/use-member-info'
-const InputDatePicker = dynamic(
-  () => import('@/components/common/input-date-picker'),
-  {
-    ssr: false,
-  }
-)
 
 export default function Information() {
+  // hooks
+  const { member } = useMemberInfo()
   // 用物件狀態對應整個表單欄位
   const [user, setUser] = useState({
     name: '',
@@ -24,26 +19,31 @@ export default function Information() {
   })
   // 錯誤訊息狀態
   const [errors, setErrors] = useState(null)
-  //生日
-  const [showDatepicker, setShowDatepicker] = useState(false)
-  const [date, setDate] = useState('')
+
+  const [address, setAddress] = useState('')
 
   // 多欄位共用事件處理函式
   const handleFieldChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
-  // hooks
-  const { member } = useMemberInfo()
+
+  // Address
+  const handleAddressChange = (value) => {
+    setAddress(value); // 更新地址字段
+  }
+
+
 
   //表單送出(更新)
   const handleSubmit = async (e) => {
     e.preventDefault()
     // 整理要送到伺服器的資料
+    
     const memberInfo = JSON.parse(localStorage.getItem('member-info'))
     const userId = memberInfo.id
     if (!memberInfo) {
-      console.error('Error: Member info not found in localStorage');
-      return;
+      console.error('Error: Member info not found in localStorage')
+      return
     }
     let hasErrors = false
     // 如果檢查有發生錯誤時
@@ -92,9 +92,8 @@ export default function Information() {
         if (response.ok) {
           console.log('更新成功')
           console.log('使用者資訊：', data.user) // 這裡是使用者的所有資訊
-          // localStorage.setItem('member-info', JSON.stringify(memberInfo))
           alert('更新成功')
-          window.location.reload();
+          window.location.reload()
         } else {
           // 登录失败，显示错误消息
           console.error('Login failed:', data.message)
@@ -163,14 +162,14 @@ export default function Information() {
                     手機號碼 *
                   </label>
                   <input
-                    type="phone"
+                    type="text"
                     className="form-control"
                     name="phone"
                     id="exampleInputPhone"
-                    // pattern="/^09\d{8}$/"
+                    pattern="/^09\d{8}$/"
                     placeholder={member?.phone ? member.phone : '09'}
                     value={user.phone}
-                    readOnly={!!member?.phone} 
+                    readOnly={!!member?.phone}
                     onChange={handleFieldChange}
                   />
                 </div>
@@ -182,33 +181,15 @@ export default function Information() {
                     生日 *
                   </label>
                   <div className="input-group position-relative d-inline-flex align-items-center">
-                    <InputDatePicker
-                      showDatepicker={showDatepicker}
-                      setFormat="yyyy-mm-dd"
-                      showFormat="yyyy/mm/dd"
-                      setDate={setDate}
-                      className="form-control w-100"
-                      style={{
-                        borderRadius: 2.8,
-                      }}
-                      onChange={(date) => {
-                        setUser({ ...user, birthday: date })
-                        setShowDatepicker(false)
-                      }}
-                      readOnly={!!member?.birthday} 
-                      placeholder={
-                        member?.birthday ? member?.birthday : '出生年月日'
-                      }
+                    <input
+                      type="date"
+                      className="form-control"
                       name="birthday"
-                      defaultValue={user.birthday} // 使用defaultValue属性
+                      id="exampleInputDate"
+                      value={member?.birthday}
+                      // readOnly={!!member?.birthday}
+                      onChange={handleFieldChange}
                     />
-
-                    <i
-                      className="bi bi-calendar4 position-absolute"
-                      role="presentation"
-                      style={{ right: 10, cursor: 'pointer', zIndex: 100 }}
-                      onClick={() => setShowDatepicker(!showDatepicker)}
-                    ></i>
                   </div>
                 </div>
 
@@ -219,19 +200,7 @@ export default function Information() {
                   >
                     地址 *
                   </label>
-                  <input
-                    type="address"
-                    className="form-control"
-                    id="exampleInputAddress"
-                    placeholder={
-                      member?.address ? member?.address : '請輸入地址'
-                    }
-                    name="address"
-                    value={user.address}
-                    readOnly={!!member?.address} 
-                    onChange={handleFieldChange}
-                  />
-                  {/* {member?.address ? (
+                  {member?.address ? (
                     <input
                       type="address"
                       className="form-control"
@@ -240,10 +209,11 @@ export default function Information() {
                       readOnly={true}
                     />
                   ) : (
-                    <div className="mb-3 row">
-                      <TWZipCode />
-                    </div>
-                  )} */}
+                   
+                    <ZipCode onAddressChange={(fullAddress) => setUser({ ...user, address: fullAddress })} />
+
+                    
+                  )}
                 </div>
                 <div className="text-center pt-3 mb-3">
                   <button type="submit" className="btn btn-add">
