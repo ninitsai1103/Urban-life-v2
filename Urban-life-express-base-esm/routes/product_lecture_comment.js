@@ -12,20 +12,32 @@ import sequelize from '#configs/db.js'
 // 一般sql
 import db from '#configs/mysql.js'
 
-// 獲取商品或課程評價的路由
+// 獲取商品或課程評價以及評價會員的路由
 router.get('/', async function (req, res) {
-  let commentSQL = 'SELECT * FROM product_lecture_comment'
+  let commentSQL = 'SELECT pc.*, ut.email, ut.img FROM product_lecture_comment pc JOIN user_teacher ut ON pc.user_id = ut.id'
   try {
-    const [rows, fields] = await db.query(sqlCoupons)
+    const [rows, fields] = await db.query(commentSQL)
+    const userOfComments = rows.map(comment =>{
+      return {
+        ...comment,
+        email:formatEmail(comment.email)
+      }
+    })
     // 標準回傳JSON
     return res.json({
       status: 'success',
       data: {
-        comments: rows,
+        comments: userOfComments
       },
     })
   } catch (err) {
     console.log(err)
+  }
+  //取email@前面的帳號
+  function formatEmail(email){
+    const atIndex = email.indexOf('@');
+    const account = email.substring(0, atIndex);
+    return account
   }
 })
 

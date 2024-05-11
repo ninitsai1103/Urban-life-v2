@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import { useNavigate} from 'react-router-dom';
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'
 import { BsCart3 } from 'react-icons/bs'
@@ -10,6 +11,7 @@ import { GoHeart, GoHeartFill } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import useProducts from '@/hooks/product/useProducts'
 import useColloections from '@/hooks/product/useCollections'
+import useCommment from '@/hooks/product/useCommment'
 import { useCheckout } from '@/hooks/use-checkout'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -17,6 +19,7 @@ import withReactContent from 'sweetalert2-react-content'
 export default function Detail() {
   const { products } = useProducts()
   const { collections, addCollection, removeCollection } = useColloections()
+  const { comments } = useCommment()
 
   // use to get product id by url
   const router = useRouter()
@@ -24,10 +27,18 @@ export default function Detail() {
 
   const [product, setProduct] = useState(null)
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const [comment, setComment] = useState(null)
 
   //加入購物車
   const { addItem } = useCheckout()
   const MySwal = withReactContent(Swal)
+
+  //顯示評論
+  const [visibleComments, setVisibleComments] = useState(2)
+  const [showAll, setShowAll] = useState(false)
+
+  //返回上一頁
+  // const navigate = useNavigate();
 
   useEffect(() => {
     //根據pid動態路由對應商品資料
@@ -37,7 +48,7 @@ export default function Detail() {
       )
       setProduct(fetchProduct)
     }
-  }, [products])
+  }, [products, pid])
 
   // init IsCollected by collection -> valid
   useEffect(() => {
@@ -66,38 +77,81 @@ export default function Detail() {
     })
   }
 
-  // //將商品資料傳入localstorage
-  // const productLS = () => {
-  //   localStorage.setItem('prouduct',)
+  useEffect(() => {
+    //根據pid動態路由對應商品評論
+    if (pid && comments.length > 0) {
+      const fetchComment = comments
+        .filter((item) => item.product_lecture_id === parseInt(pid, 10))
+        .map((comment) => ({
+          ...comment,
+          date: commentDate(comment.created_at),
+        }))
+      setComment(fetchComment)
+    }
+  }, [comments, pid])
+
+  //擷取日期
+  const commentDate = (datetime) => {
+    const datePart = datetime.split(' ')[0]
+    return datePart
+  }
+
+  //查看更多評論
+  const moreComment = (comment) => {
+    if (showAll) {
+      setVisibleComments(2)
+      setShowAll(false)
+    } else {
+      setVisibleComments(comment.length)
+      setShowAll(true)
+    }
+  }
+  
+
+  //返回上一頁
+  // function handleBack() {
+  //   navigate(-1);  
   // }
+
+  useEffect(() => {
+    console.log(comment)
+  }, [comment])
 
   return (
     <>
       <div className="container ">
         <div className="row mt-5 mx-2">
-          <div className="col-12">
-            <Link className="text-decoration-none fs-5" href="">
+          {/* <div className="col-12">
+            <button className="text-decoration-none fs-5" href="#"
+            onClick={handleBack}
+            >
               <MdArrowBackIosNew
                 className="me-1 mb-1"
                 style={{ fontSize: '18px' }}
               />
               返回上一頁
-            </Link>
-          </div>
+            </button>
+          </div> */}
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mt-3">
               <li className="breadcrumb-item">
+                <Link className="text-decoration-none" href="/">
+                  首頁
+                </Link>
+              </li>
+              <li className="breadcrumb-item " aria-current="page">
                 <Link className="text-decoration-none" href="/product/list">
                   商品總覽
                 </Link>
               </li>
-              <li className="breadcrumb-item " aria-current="page">
-                <Link className="text-decoration-none" href="">
-                  商品主分類
-                </Link>
-              </li>
               <li className="breadcrumb-item active" aria-current="page">
-                商品次分類
+              {product ? (
+                <Link className="text-decoration-none" href={`/product/${pid}`}>
+                  {product.name}
+                </Link>
+              ) : (
+                <span>商品細節頁</span>)
+              }
               </li>
             </ol>
           </nav>
@@ -137,26 +191,6 @@ export default function Detail() {
                 {product && product.star}
               </p>
             </div>
-            {/* <div className="input-group mb-4 w-50">
-              <button className="btn  btn-bg" type="button" id="button-minus"
-              onClick={reduceAmount}>
-                -
-              </button>
-              <input
-                type="text"
-                className="form-control text-center"
-                value={amount}
-                id="number-input"
-              />
-              <button
-                className="btn d-flex justify-content-center btn-bg"
-                type="button"
-                id="button-plus"
-                onClick={addAmount}
-              >
-                +
-              </button>
-            </div> */}
             <div>
               <Link
                 className="btn btn-main btn-hover w-100 mb-3"
@@ -257,95 +291,61 @@ export default function Detail() {
               </div>
             </div>
           </div>
+          {comment && comment.length > 0 ? (
+            <div className="col-12 mb-5">
+              <h4 className="text-center mb-5">買家評價</h4>
+              <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="mt-3">共 {comment.length} 則評論</p>
+                </div>
 
-          <div className="col-12 mb-5">
-            <h4 className="text-center mb-5">買家評價</h4>
-            <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="mt-3">共 5 則評論</p>
-                <div className="dropdown">
-                  <button
-                    className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center btn-color sort-btn-size2"
-                    type="button"
-                    id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                {comment.slice(0, visibleComments).map((item) => (
+                  <Fragment key={item.id}>
+                    <hr />
+                    <div>
+                      <div className="d-flex justify-content-start align-items-center mb-3">
+                        <img
+                          className="rounded-circle set-size2 me-3"
+                          src={`http://localhost:3005/avatar/${item.img}`}
+                        />
+                        <p className="me-5 mb-0">{item.email}</p>
+                        <p className="mb-0 grey">{item.date}</p>
+                      </div>
+                      <div className="star d-flex align-items-center mb-1">
+                        <p className="me-2 mb-0">評價</p>
+                        <TbStarFilled
+                          className="padding"
+                          style={{ color: '#F6A404', fontSize: '20px' }}
+                        />
+                        <p className="ms-1 mb-0 fs-15 ">{item.star}</p>
+                      </div>
+                      <p>{item.comment}</p>
+                    </div>
+                  </Fragment>
+                ))}
+                <hr />
+                {comment.length > 2 && (
+                  <Link
+                    className="text-decoration-none grey-hover"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      moreComment(comment)
+                    }}
                   >
-                    排序
-                  </button>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton1"
-                  >
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由新到舊
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由舊到新
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由高到低
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由低到高
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                    {showAll ? '收起更多評論' : '查看更多評論'}
+                  </Link>
+                )}
               </div>
-              <hr />
-              <div>
-                <div className="d-flex justify-content-start align-items-center mb-3">
-                  <img
-                    className="rounded-circle set-size2 me-3"
-                    src="https://images.pexels.com/photos/2023384/pexels-photo-2023384.jpeg"
-                  />
-                  <p className="me-5 mb-0">yd***</p>
-                  <p className="mb-0 grey">3天前</p>
-                </div>
-                <div className="star d-flex align-items-center mb-1">
-                  <p className="me-2 mb-0">評價</p>
-                  <TbStarFilled
-                    className="padding"
-                    style={{ color: '#F6A404', fontSize: '20px' }}
-                  />
-                  <p className="ms-1 mb-0 fs-15 ">4.7</p>
-                </div>
-                <p>非常喜歡，品質很好~</p>
-              </div>
-              <hr />
-              <div>
-                <div className="d-flex justify-content-start align-items-center mb-3">
-                  <img
-                    className="rounded-circle set-size2 me-3"
-                    src="https://images.pexels.com/photos/57416/cat-sweet-kitty-animals-57416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  />
-                  <p className="me-5 mb-0">rr***</p>
-                  <p className="mb-0 grey">5天前</p>
-                </div>
-                <div className="star d-flex align-items-center mb-1">
-                  <p className="me-2 mb-0">評價</p>
-                  <TbStarFilled
-                    className="padding"
-                    style={{ color: '#F6A404', fontSize: '20px' }}
-                  />
-                  <p className="ms-1 mb-0 fs-15 ">4.5</p>
-                </div>
-                <p>推薦用心的賣家</p>
-              </div>
-              <hr />
-              <Link className="text-decoration-none grey-hover" href="">
-                查看更多評價
-              </Link>
             </div>
-          </div>
+          ) : (
+            <div className="col-12 mb-5">
+              <h4 className="text-center mb-5">買家評價</h4>
+              <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+                目前尚未有買家評價該商品
+              </div>
+            </div>
+          )}
           <div className="col-12 mb-5  position-relative px-0">
             <h4 className="text-center mb-5">推薦商品</h4>
             <div id="carouselExampleControls" className="carousel slide">
