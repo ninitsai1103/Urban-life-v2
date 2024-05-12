@@ -15,6 +15,8 @@ import useCommment from '@/hooks/product/useCommment'
 import { useCheckout } from '@/hooks/use-checkout'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Recommend from '@/components/product/recommend'
+// import ProductCard from '@/components/product/product-card'
 
 export default function Detail() {
   const { products } = useProducts()
@@ -39,6 +41,9 @@ export default function Detail() {
 
   //返回上一頁
   // const navigate = useNavigate();
+
+  const [recommended, setRecommended] = useState([])
+
 
   useEffect(() => {
     //根據pid動態路由對應商品資料
@@ -106,6 +111,14 @@ export default function Detail() {
       setShowAll(true)
     }
   }
+
+  useEffect(() => {
+    if (products.length > 0) {
+      const filteredProducts = products.filter(product => product.id < 442 || product.id > 450);
+      const shuffled = filteredProducts.sort(() => 0.5 - Math.random())
+      setRecommended(shuffled.slice(0, 4)) // 隨機從products選取四個商品
+    }
+  }, [products])
   
 
   //返回上一頁
@@ -242,8 +255,17 @@ export default function Detail() {
                     className="btn btn-add btn-hover2"
                     onClick={(e) => {
                       e.preventDefault()
-                      toggleCollection()
                       addCollection(pid)
+                      .then(updatedData => {
+                        toggleCollection();
+                        console.log('Collection added:', updatedData);
+                      })
+                      .catch(error => {
+                        alert("請先登入會員在使用收藏功能")
+                        window.location.href = "/member/login";
+                        console.error('Failed to add collection:', error.message);
+                        // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
+                      });
                     }}
                   >
                     <GoHeart
@@ -346,44 +368,24 @@ export default function Detail() {
               </div>
             </div>
           )}
-          <div className="col-12 mb-5  position-relative px-0">
-            <h4 className="text-center mb-5">推薦商品</h4>
-            <div id="carouselExampleControls" className="carousel slide">
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  {/* <ProductCard product={product}/> */}
-                </div>
-                <div className="carousel-item">
-                  {/* <ProductCard product={product} /> */}
-                </div>
-                {/* <!-- Additional carousel items -->  */}
+          <div div className="container mb-5">
+          <h4 className="text-center mb-5">推薦商品</h4>
+              <div className="row row-cols-2 row-cols-lg-4 g-4">
+                {recommended.map((product) => (
+                  <Link
+                    className="text-decoration-none"
+                    key={product.id}
+                    href={`/product/${product.id}`}
+                  >
+                    <Recommend
+                      key={product.id}
+                      product={product}
+                      collections={collections}
+                    />
+                  </Link>
+                ))}
               </div>
-              <button
-                className="carousel-control-prev d-none d-lg-block"
-                type="button"
-                data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev"
-              >
-                <span
-                  className="carousel-control-prev-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="visually-hidden">Previous</span>
-              </button>
-              <button
-                className="carousel-control-next d-none d-lg-block"
-                type="button"
-                data-bs-target="#carouselExampleControls"
-                data-bs-slide="next"
-              >
-                <span
-                  className="carousel-control-next-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="visually-hidden">Next</span>
-              </button>
             </div>
-          </div>
         </div>
       </div>
     </>
