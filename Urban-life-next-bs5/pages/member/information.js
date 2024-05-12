@@ -21,89 +21,12 @@ export default function Information() {
   const handleFieldChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
-
-  //表單送出(更新)
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault()
-  //   // 檢查密碼相關欄位是否有值，並且只有在使用者填寫了密碼時才檢查密碼相符性
-  //   let hasErrors = false
-  //   if (user.password && (!user.newPassword || !user.confirmPassword)) {
-  //     setErrors('新密碼和確認密碼為必填')
-  //     hasErrors = true
-  //   } else if (user.newPassword !== user.confirmPassword) {
-  //     setErrors('新密碼和確認密碼不匹配')
-  //     hasErrors = true
-  //   }
-
-  //   if (!hasErrors) {
-  //     try {
-  //       // 建立新的使用者物件，僅包含有值的屬性
-  //       const updatedUser = {}
-  //       Object.keys(user).forEach((key) => {
-  //         if (user[key] !== '') {
-  //           updatedUser[key] = user[key]
-  //         }
-  //       })
-
-  //       // 檢查是否有要更新的資料
-  //       if (Object.keys(updatedUser).length === 0) {
-  //         setErrors('沒有要更新的資料')
-  //         return
-  //       }
-
-  //       const memberInfo = JSON.parse(localStorage.getItem('member-info'))
-  //       const userId = memberInfo.id
-  //       if (!memberInfo) {
-  //         console.error('Error: Member info not found in localStorage')
-  //         window.location.href = '/member'
-  //         return
-  //       }
-
-  //       // 更新使用者資訊
-  //       const response = await fetch(
-  //         `http://localhost:3005/api/user/${userId}`,
-  //         {
-  //           method: 'PUT',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //           body: JSON.stringify(updatedUser),
-  //         }
-  //       )
-
-  //       const data = await response.json()
-
-  //       if (response.ok) {
-  //         console.log('更新成功')
-  //         console.log('使用者資訊：', data.user)
-  //         // 更新本地存储中的 member-info 对象的 name 字段
-  //         const updatedMemberInfo = { ...memberInfo, name: data.user.name }
-  //         localStorage.setItem('member-info', JSON.stringify(updatedMemberInfo))
-  //         if (data.logout) {
-  //           await fetch('http://localhost:3005/api/user/logout', {
-  //             method: 'POST',
-  //             headers: {
-  //               Authorization: `Bearer ${localStorage.getItem('access-token')}`, // 假设你有保存 token 到 localStorage 中
-  //             },
-  //           })
-  //           localStorage.removeItem('member-info')
-  //           window.location.href = '/member'
-  //         }
-  //         // window.location.reload()
-  //       } else {
-
-  //         console.error('更新失敗:', data.message)
-  //       }
-  //       alert(data.message)
-  //       window.location.reload()
-  //     } catch (error) {
-  //       console.error('更新失敗:', error)
-  //     }
-  //   }
-  // }
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setShowConfirmModal(false)
     // 檢查密碼相關欄位是否有值，並且只有在使用者填寫了密碼時才檢查密碼相符性
+
     let hasErrors = false
     if (user.password && (!user.newPassword || !user.confirmPassword)) {
       alert('新密碼和確認密碼為必填')
@@ -180,7 +103,14 @@ export default function Information() {
       }
     }
   }
-
+  const handleConfirm = () => {
+    // 弹出确认模态框
+    setShowConfirmModal(true)
+  }
+  const handleCloseModal = () => {
+    // 关闭确认模态框
+    setShowConfirmModal(false)
+  }
   return (
     <>
       <div className="container">
@@ -189,10 +119,7 @@ export default function Information() {
             <AsideAccount />
           </div>
           <div className="col-lg-9 col-md-12 main-content">
-            <div
-              className="d-flex align-items-center justify-content-between title-margin
-            "
-            >
+            <div className="d-flex align-items-center justify-content-between title-margin">
               <div className="title">個人資料</div>
             </div>
             <div className="form">
@@ -349,8 +276,58 @@ export default function Information() {
                     onChange={handleFieldChange}
                   />
                 </div>
+                  <div
+                    className="modal fade"
+                    id="confirm"
+                    tabIndex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                    // 在这里设置模态框的初始化属性
+                  >
+                    <div className="modal-dialog">
+                      <div className="modal-content">
+                        <div className="modal-header">
+                          <button
+                            type="button"
+                            className="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            onClick={handleCloseModal}
+                          ></button>
+                        </div>
+                        <div className="modal-body">
+                          <p>確定提交？</p>
+                          <p>帳戶資訊提交後不可更改</p>
+                        </div>
+                        <div className="modal-footer">
+                          <button
+                            type="button"
+                            className="btn btn-main"
+                            data-bs-dismiss="modal"
+                          >
+                            關閉
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-detail"
+                            onClick={handleSubmit}
+                          >
+                            確定
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              
+
                 <div className="text-center pt-3 mb-3">
-                  <button type="submit" className="btn btn-add">
+                  <button
+                    type="button"
+                    className="btn btn-add"
+                    onClick={handleConfirm}
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirm"
+                  >
                     確認修改
                   </button>
                 </div>
