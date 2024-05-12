@@ -69,7 +69,7 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
                     console.log('Collection added:', updatedData);
                   })
                   .catch(error => {
-                    alert("請先登入會員在使用收藏功能")
+                    alert("請先登入會員再進行收藏功能")
                     window.location.href = "/member/login";
                     console.error('Failed to add collection:', error.message);
                     // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
