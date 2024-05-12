@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { MdOutlineAddAPhoto } from 'react-icons/md'
 import { BiFile } from 'react-icons/bi'
 import { BiIdCard } from 'react-icons/bi'

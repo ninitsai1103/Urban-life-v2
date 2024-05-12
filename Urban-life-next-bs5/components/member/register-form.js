@@ -130,7 +130,8 @@ export default function RegisterForm() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 className="form-control w-100"
-                placeholder="密碼"
+                minLength={6}
+                placeholder="密碼須至少六位數"
                 name="password"
                 onChange={handleFieldChange}
               />

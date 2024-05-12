@@ -34,6 +34,15 @@ export default function Information() {
     } else if (user.newPassword !== user.confirmPassword) {
       alert('新密碼和確認密碼不匹配')
       hasErrors = true
+    }else if(user.password && user.newPassword.length < 6){
+      alert('密碼長度至少六位數')
+      hasErrors = true
+    }
+    // 检查手机号码格式
+    const phonePattern = /^09\d{8}$/
+    if (user.phone && !phonePattern.test(user.phone)) {
+      alert('請輸入正確的手機號碼')
+      hasErrors = true
     }
 
     if (!hasErrors) {
@@ -141,6 +150,7 @@ export default function Information() {
                     onChange={handleFieldChange}
                     readOnly={!!member?.name}
                     placeholder={member?.name ? member?.name : '姓名'}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -156,7 +166,6 @@ export default function Information() {
                     id="exampleInputEmail"
                     readOnly={true}
                     placeholder={member?.email}
-                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -177,7 +186,6 @@ export default function Information() {
                     value={user.phone}
                     readOnly={!!member?.phone}
                     onChange={handleFieldChange}
-                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -196,7 +204,6 @@ export default function Information() {
                       value={member?.birthday}
                       readOnly={!!member?.birthday}
                       onChange={handleFieldChange}
-                      required
                     />
                   </div>
                 </div>
@@ -271,54 +278,54 @@ export default function Information() {
                     className="form-control"
                     id="exampleInputPassword3"
                     placeholder="請輸入新密碼"
+                    minLength={6}
                     name="confirmPassword"
                     value={user.confirmPassword}
                     onChange={handleFieldChange}
                   />
                 </div>
-                  <div
-                    className="modal fade"
-                    id="confirm"
-                    tabIndex="-1"
-                    aria-labelledby="exampleModalLabel"
-                    aria-hidden="true"
-                    // 在这里设置模态框的初始化属性
-                  >
-                    <div className="modal-dialog">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                          <button
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onClick={handleCloseModal}
-                          ></button>
-                        </div>
-                        <div className="modal-body">
-                          <p>確定提交？</p>
-                          <p>帳戶資訊提交後不可更改</p>
-                        </div>
-                        <div className="modal-footer">
-                          <button
-                            type="button"
-                            className="btn btn-main"
-                            data-bs-dismiss="modal"
-                          >
-                            關閉
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-detail"
-                            onClick={handleSubmit}
-                          >
-                            確定
-                          </button>
-                        </div>
+                <div
+                  className="modal fade"
+                  id="confirm"
+                  tabIndex="-1"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                  // 在这里设置模态框的初始化属性
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                          onClick={handleCloseModal}
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        <p>確定提交？</p>
+                        <p>帳戶資訊提交後不可更改</p>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-main"
+                          data-bs-dismiss="modal"
+                        >
+                          關閉
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-detail"
+                          onClick={handleSubmit}
+                        >
+                          確定
+                        </button>
                       </div>
                     </div>
                   </div>
-              
+                </div>
 
                 <div className="text-center pt-3 mb-3">
                   <button
