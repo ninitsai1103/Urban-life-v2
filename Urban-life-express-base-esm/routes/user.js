@@ -13,7 +13,7 @@ let blackListedToken = []
 dotenv.config()
 const secretKey = process.env.SECRET_KEY
 const upload = multer()
-const __dirname = import.meta.dirname;
+const __dirname = import.meta.dirname
 router.get('/', async (req, res) => {
   // res.send("獲取所有使用者");
   // getUserAll
@@ -100,118 +100,72 @@ router.post('', upload.none(), async (req, res) => {
   }
 })
 
-// router.put('/:id', upload.none(), async (req, res) => {
-//   const id = req.params.id
-//   const { name = null, phone = null, birthday = null, address = null, gender = null } = req.body
-
-//   const sqlUpdate =
-//     'UPDATE `user_teacher` SET `name` = ?, `phone` = ?, `birthday` = ?, `address` = ?, `gender` = ? WHERE `id` = ?'
-//   try {
-//     const [result] = await db.execute(sqlUpdate,
-//        [
-//       name,
-//       phone,
-//       birthday,
-//       address,
-//       gender,
-//       id,
-//     ]
-//   )
-
-//     if (result.affectedRows === 0) {
-//       return res
-//         .status(404)
-//         .json({ status: 'error', message: 'User not found' })
-//     }
-
-//     // 成功更新使用者資訊
-//     const userInfoSql = 'SELECT * FROM `user_teacher` WHERE `id` = ?'
-//     const [userInfoRows] = await db.execute(userInfoSql, [id])
-//     const user = userInfoRows[0]
-
-//     let token = jwt.sign(
-//       {
-//         id: user.id,
-//         name: user.name,
-//         identity_id: user.identity_id,
-//       },
-//       secretKey,
-//       { expiresIn: '30d' }
-//     )
-
-//     res.status(200).json({
-//       status: 'success',
-//       message: 'User information updated successfully',
-//       token,
-//     })
-//   } catch (err) {
-//     console.error(err)
-//     const message = err.message || 'Failed to update user information'
-//     res.status(500).json({ status: 'error', message })
-//   }
-// })
 router.put('/:id', upload.none(), async (req, res) => {
   const id = req.params.id
-  const { name, phone, birthday, address, gender } = req.body
-
-  const updateValues = [] // 用於存儲要更新的欄位和值的陣列
-  const sqlParams = [] // 用於存儲 SQL 語句中的參數值的陣列
-
-  // 檢查每個欄位，如果有值，則將其添加到 updateValues 和 sqlParams 中
-  if (name) {
-    updateValues.push('name = ?')
-    sqlParams.push(name)
-  }
-  if (phone) {
-    updateValues.push('phone = ?')
-    sqlParams.push(phone)
-  }
-  if (birthday) {
-    updateValues.push('birthday = ?')
-    sqlParams.push(birthday)
-  }
-  if (address) {
-    updateValues.push('address = ?')
-    sqlParams.push(address)
-  }
-  if (gender) {
-    updateValues.push('gender = ?')
-    sqlParams.push(gender)
-  }
-
-  // 構建 SQL 更新語句
-  const sqlUpdate = `UPDATE user_teacher SET ${updateValues.join(', ')} WHERE id = ?`
-  sqlParams.push(id) // 添加 ID 參數
+  const { name, phone, birthday, address, password, newPassword } = req.body
 
   try {
+    // 如果提供了新密码，则进行密码验证
+    if (password) {
+      // 檢查原密碼是否正確
+      const checkPasswordSql = 'SELECT password FROM user_teacher WHERE id = ?'
+      const [passwordRows] = await db.execute(checkPasswordSql, [id])
+
+      // 如果有找到用戶並且密碼不匹配，則返回錯誤
+      if (passwordRows.length === 0 || passwordRows[0].password !== password) {
+        return res.status(401).json({ status: 'error', message: '密碼錯誤' })
+      }
+    }
+
+    // 更新用戶資訊
+    const updateValues = []
+    const sqlParams = []
+
+    if (name) {
+      updateValues.push('name = ?')
+      sqlParams.push(name)
+    }
+    if (phone) {
+      updateValues.push('phone = ?')
+      sqlParams.push(phone)
+    }
+    if (birthday) {
+      updateValues.push('birthday = ?')
+      sqlParams.push(birthday)
+    }
+    if (address) {
+      updateValues.push('address = ?')
+      sqlParams.push(address)
+    }
+    if (newPassword) {
+      updateValues.push('password = ?')
+      sqlParams.push(newPassword)
+    }
+
+    // 添加 ID 到 SQL 參數中
+    sqlParams.push(id)
+
+    // 構建 SQL 更新語句
+    const sqlUpdate = `UPDATE user_teacher SET ${updateValues.join(', ')} WHERE id = ?`
+
     // 執行更新
     const [result] = await db.execute(sqlUpdate, sqlParams)
 
     if (result.affectedRows === 0) {
-      return res
-        .status(404)
-        .json({ status: 'error', message: 'User not found' })
+      return res.status(404).json({ status: 'error', message: 'User not found' })
     }
-
+     // 成功更新使用者資訊
+     const userInfoSql = 'SELECT * FROM user_teacher WHERE id = ?';
+     const [userInfoRows] = await db.execute(userInfoSql, [id]);
+     const user = userInfoRows[0];
+    
     // 成功更新使用者資訊
-    const userInfoSql = 'SELECT * FROM user_teacher WHERE id = ?'
-    const [userInfoRows] = await db.execute(userInfoSql, [id])
-    const user = userInfoRows[0]
-
-    let token = jwt.sign(
-      {
-        id: user.id,
-        name: user.name,
-        identity_id: user.identity_id,
-      },
-      secretKey,
-      { expiresIn: '30d' }
-    )
-
     res.status(200).json({
       status: 'success',
-      message: 'User information updated successfully',
-      token,
+      message: '更新成功',
+      logout: password ? true : false,
+      user
+     
     })
   } catch (err) {
     console.error(err)
@@ -219,7 +173,6 @@ router.put('/:id', upload.none(), async (req, res) => {
     res.status(500).json({ status: 'error', message })
   }
 })
-
 
 
 router.delete('/:id', (req, res) => {
@@ -256,7 +209,7 @@ router.post('/login', upload.none(), async (req, res) => {
 
     return res.status(200).json({
       status: 'success',
-      message: "Login successful",
+      message: 'Login successful',
       user: userInfo,
       token,
     })
@@ -286,7 +239,6 @@ router.post('/logout', checkToken, (req, res) => {
     token,
   })
 })
-
 
 function checkToken(req, res, next) {
   let token = req.get('Authorization')

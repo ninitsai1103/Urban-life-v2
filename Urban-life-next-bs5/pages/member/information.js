@@ -11,15 +11,11 @@ export default function Information() {
     name: '',
     phone: '',
     birthday: '',
-    gender: '',
     address: '',
-    password: "",
-    newPassword: "",
-    confirmPassword: "",
+    password: '',
+    newPassword: '',
+    confirmPassword: '',
   })
-  // 錯誤訊息狀態
-  const [errors, setErrors] = useState(null)
-
 
   // 多欄位共用事件處理函式
   const handleFieldChange = (e) => {
@@ -27,19 +23,96 @@ export default function Information() {
   }
 
   //表單送出(更新)
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+  //   // 檢查密碼相關欄位是否有值，並且只有在使用者填寫了密碼時才檢查密碼相符性
+  //   let hasErrors = false
+  //   if (user.password && (!user.newPassword || !user.confirmPassword)) {
+  //     setErrors('新密碼和確認密碼為必填')
+  //     hasErrors = true
+  //   } else if (user.newPassword !== user.confirmPassword) {
+  //     setErrors('新密碼和確認密碼不匹配')
+  //     hasErrors = true
+  //   }
+
+  //   if (!hasErrors) {
+  //     try {
+  //       // 建立新的使用者物件，僅包含有值的屬性
+  //       const updatedUser = {}
+  //       Object.keys(user).forEach((key) => {
+  //         if (user[key] !== '') {
+  //           updatedUser[key] = user[key]
+  //         }
+  //       })
+
+  //       // 檢查是否有要更新的資料
+  //       if (Object.keys(updatedUser).length === 0) {
+  //         setErrors('沒有要更新的資料')
+  //         return
+  //       }
+
+  //       const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+  //       const userId = memberInfo.id
+  //       if (!memberInfo) {
+  //         console.error('Error: Member info not found in localStorage')
+  //         window.location.href = '/member'
+  //         return
+  //       }
+
+  //       // 更新使用者資訊
+  //       const response = await fetch(
+  //         `http://localhost:3005/api/user/${userId}`,
+  //         {
+  //           method: 'PUT',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //           body: JSON.stringify(updatedUser),
+  //         }
+  //       )
+
+  //       const data = await response.json()
+
+  //       if (response.ok) {
+  //         console.log('更新成功')
+  //         console.log('使用者資訊：', data.user)
+  //         // 更新本地存储中的 member-info 对象的 name 字段
+  //         const updatedMemberInfo = { ...memberInfo, name: data.user.name }
+  //         localStorage.setItem('member-info', JSON.stringify(updatedMemberInfo))
+  //         if (data.logout) {
+  //           await fetch('http://localhost:3005/api/user/logout', {
+  //             method: 'POST',
+  //             headers: {
+  //               Authorization: `Bearer ${localStorage.getItem('access-token')}`, // 假设你有保存 token 到 localStorage 中
+  //             },
+  //           })
+  //           localStorage.removeItem('member-info')
+  //           window.location.href = '/member'
+  //         }
+  //         // window.location.reload()
+  //       } else {
+
+  //         console.error('更新失敗:', data.message)
+  //       }
+  //       alert(data.message)
+  //       window.location.reload()
+  //     } catch (error) {
+  //       console.error('更新失敗:', error)
+  //     }
+  //   }
+  // }
   const handleSubmit = async (e) => {
     e.preventDefault()
-  
     // 檢查密碼相關欄位是否有值，並且只有在使用者填寫了密碼時才檢查密碼相符性
     let hasErrors = false
     if (user.password && (!user.newPassword || !user.confirmPassword)) {
-      setErrors('新密碼和確認密碼為必填')
+      alert('新密碼和確認密碼為必填')
       hasErrors = true
     } else if (user.newPassword !== user.confirmPassword) {
-      setErrors('新密碼和確認密碼不匹配')
+      alert('新密碼和確認密碼不匹配')
       hasErrors = true
     }
-  
+
     if (!hasErrors) {
       try {
         // 建立新的使用者物件，僅包含有值的屬性
@@ -49,45 +122,64 @@ export default function Information() {
             updatedUser[key] = user[key]
           }
         })
-  
+
         // 檢查是否有要更新的資料
         if (Object.keys(updatedUser).length === 0) {
-          setErrors('沒有要更新的資料')
+          alert('沒有要更新的資料')
           return
         }
-  
+
         const memberInfo = JSON.parse(localStorage.getItem('member-info'))
         const userId = memberInfo.id
         if (!memberInfo) {
           console.error('Error: Member info not found in localStorage')
+          window.location.href = '/member'
           return
         }
-  
+
         // 更新使用者資訊
-        const response = await fetch(`http://localhost:3005/api/user/${userId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedUser),
-        })
-  
+        const response = await fetch(
+          `http://localhost:3005/api/user/${userId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedUser),
+          }
+        )
+
         const data = await response.json()
-  
+
         if (response.ok) {
           console.log('更新成功')
           console.log('使用者資訊：', data.user)
-          alert('更新成功')
+          // 更新本地存储中的 member-info 对象的 name 字段
+          const updatedMemberInfo = { ...memberInfo, name: data.user.name }
+          localStorage.setItem('member-info', JSON.stringify(updatedMemberInfo))
+          if (data.logout) {
+            await fetch('http://localhost:3005/api/user/logout', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('access-token')}`, // 假设你有保存 token 到 localStorage 中
+              },
+            })
+            alert('密碼更新成功，需重新登入')
+            localStorage.removeItem('member-info')
+            window.location.href = '/member'
+            return // 重要：在这里返回，避免执行下面的 window.location.reload()
+          }
+          // 如果没有提供新密码，则重新加载页面
           window.location.reload()
         } else {
           console.error('更新失敗:', data.message)
         }
+        alert(data.message)
       } catch (error) {
         console.error('更新失敗:', error)
       }
     }
   }
-  
 
   return (
     <>
@@ -137,6 +229,7 @@ export default function Information() {
                     id="exampleInputEmail"
                     readOnly={true}
                     placeholder={member?.email}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -157,6 +250,7 @@ export default function Information() {
                     value={user.phone}
                     readOnly={!!member?.phone}
                     onChange={handleFieldChange}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -175,6 +269,7 @@ export default function Information() {
                       value={member?.birthday}
                       readOnly={!!member?.birthday}
                       onChange={handleFieldChange}
+                      required
                     />
                   </div>
                 </div>
@@ -202,69 +297,63 @@ export default function Information() {
                     />
                   )}
                 </div>
-                {/* <div className="text-center pt-3 mb-3">
+                <div className="mb-3 section-font text-primary2 ">密碼變更</div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputPassword1"
+                    className="form-label fonts"
+                  >
+                    原密碼
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="exampleInputPassword1"
+                    placeholder="請輸入原密碼"
+                    name="password"
+                    value={user.password}
+                    onChange={handleFieldChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputPassword2"
+                    className="form-label fonts"
+                  >
+                    新密碼
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="exampleInputPassword2"
+                    placeholder="請輸入新密碼"
+                    name="newPassword"
+                    value={user.newPassword}
+                    onChange={handleFieldChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputPassword3"
+                    className="form-label fonts"
+                  >
+                    重新輸入新密碼
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="exampleInputPassword3"
+                    placeholder="請輸入新密碼"
+                    name="confirmPassword"
+                    value={user.confirmPassword}
+                    onChange={handleFieldChange}
+                  />
+                </div>
+                <div className="text-center pt-3 mb-3">
                   <button type="submit" className="btn btn-add">
                     確認修改
                   </button>
-                </div> */}
-              {/* </form> */}
-              <div className="mb-3 section-font text-primary2 ">密碼變更</div>
-              <div className="mb-3">
-                <label
-                  htmlFor="exampleInputPassword1"
-                  className="form-label fonts"
-                >
-                  原密碼
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="exampleInputPassword1"
-                  placeholder="請輸入原密碼"
-                  name="password"
-                  value={user.password}
-                  onChange={handleFieldChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label
-                  htmlFor="exampleInputPassword2"
-                  className="form-label fonts"
-                >
-                  新密碼
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="exampleInputPassword2"
-                  placeholder="請輸入新密碼"
-                  name="newPassword"
-                  value={user.newPassword}
-                  onChange={handleFieldChange}
-                />
-              </div>
-              <div className="mb-3">
-                <label
-                  htmlFor="exampleInputPassword3"
-                  className="form-label fonts"
-                >
-                  重新輸入新密碼
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="exampleInputPassword3"
-                  placeholder="請輸入新密碼"
-                  name="confirmPassword"
-                  value={user.confirmPassword}
-                  onChange={handleFieldChange}
-                />
-              </div>
-              <div className="text-center pt-3 mb-3">
-                <button type="submit" className="btn btn-add">
-                  確認修改
-                </button>
-              </div>
+                </div>
               </form>
             </div>
           </div>
