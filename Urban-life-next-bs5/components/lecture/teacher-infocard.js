@@ -38,6 +38,7 @@ export default function TeacherCardInfo() {
           width: 309px;
           height: 422px;
           min-width: 309px;
+          max-width: 309px;
         }
 
         img {

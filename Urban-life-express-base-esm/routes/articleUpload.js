@@ -6,15 +6,15 @@ const router = express.Router()
 router.post('/', async function (req, res) {
   try {
     console.log(req.body) // Log the request body to see what data is coming in.
-    const { title, content, categoryId, userId } = req.body // Destructure the needed fields from the request body.
+    const { title, content, categoryId, userId, img } = req.body // Destructure the needed fields from the request body.
 
     // Assuming the validity of the article is set as true by default.
-    let insertArticleSql = `INSERT INTO article (title,date, content, category_id,created_at, user_id, valid) VALUES (?,?, ?, ?,?, ?, 1)`
+    let insertArticleSql = `INSERT INTO article (title,date, content, category_id,created_at, user_id, img, valid) VALUES (?,?, ?, ?,?, ?,?, 1)`
 
     let date = new Date()
 
     // Array of values to be used in the SQL query.
-    const values = [title, date, content, categoryId, date, userId]
+    const values = [title, date, content, categoryId, date, userId, img]
 
     // Executing the query
     const [rows, fields] = await db.query(insertArticleSql, values)

@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react'
-// import LoadingImageSvg from './loading-image-svg'
-// import useProducts from '@/hooks/product/useProducts'
-import toast, { Toaster } from 'react-hot-toast'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
-// import useProducts from '@/hooks/product/useProducts'
 import useColloections from '@/hooks/product/useCollections'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function ProductCard({ product, collections}) {
 const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
-// const {products} = useProducts();
 const {addCollection, removeCollection} =useColloections();
 
 
@@ -67,8 +63,17 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
                 (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
                 onClick={e => {
                   e.preventDefault();
-                  toggleCollection();
-                  addCollection(product.id);
+                  addCollection(product.id)
+                  .then(updatedData => {
+                    toggleCollection();
+                    console.log('Collection added:', updatedData);
+                  })
+                  .catch(error => {
+                    alert("請先登入會員再進行收藏功能")
+                    window.location.href = "/member/login";
+                    console.error('Failed to add collection:', error.message);
+                    // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
+                  });
                 }} />)
               }
             </div>
@@ -199,7 +204,7 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
         .imgWrap img {
           width: 100%;
           height: 100%;
-          object-fit: contain;
+          object-fit: cotain;
         }
         .text-through {
           text-decoration: line-through;

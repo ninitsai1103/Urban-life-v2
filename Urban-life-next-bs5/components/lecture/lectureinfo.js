@@ -40,25 +40,6 @@ export default function LectureInfo() {
         </div>
         <div className="input-group mb-1 w-75">
           <div className={styles.infotext}>報名人數：</div>
-          <button className="btn btn-bg" type="button" id="button-minus">
-            -
-          </button>
-          <input
-            type="text"
-            className="form-control text-center"
-            value="1"
-            id="number-input"
-          />
-          <button
-            className="btn d-flex justify-content-center btn-bg"
-            type="button"
-            id="button-plus"
-          >
-            +
-          </button>
-          <div className={`${styles.infotext} pt-2`} style={{ width: '400px'}}>
-          ※單筆購課最多五人，請注意
-        </div>
         </div>
         
         <div>

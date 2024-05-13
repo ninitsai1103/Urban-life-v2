@@ -32,8 +32,9 @@ router.get('/:articleId', async function (req, res) {
 });
 
 // POST 路由，用于新增评论
-router.post('/article-comment', async (req, res) => {
+router.post('/', async (req, res) => {
   const { articleId, userId, commentText } = req.body;
+  
 
   // 确保所有必要的字段都被提供
   if (!articleId || !userId || !commentText) {
@@ -44,9 +45,9 @@ router.post('/article-comment', async (req, res) => {
   }
 
   const insertSql = `
-    INSERT INTO article_comment (article_id, user_id, comment_text, created_at)
-    VALUES (?, ?, ?, NOW());
-  `;
+    INSERT INTO article_comment (article_id, user_id, comment, date, valid)
+    VALUES (?, ?, ?, NOW(), 1);
+  `; // 設置valid為1表示有效
 
   try {
     const result = await db.query(insertSql, [articleId, userId, commentText]);
@@ -65,5 +66,3 @@ router.post('/article-comment', async (req, res) => {
 });
 
 export default router;
-
-
