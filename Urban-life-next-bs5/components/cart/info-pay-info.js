@@ -97,6 +97,7 @@ export default function InfoPayPage() {
                 autoFocus
                 disabled={same}
                 onChange={handleFieldChange}
+                required
               />
             </td>
           </tr>
@@ -112,6 +113,7 @@ export default function InfoPayPage() {
                 placeholder="請輸入收件人電話"
                 disabled={same}
                 onChange={handleFieldChange}
+                required
               />
             </td>
           </tr>
@@ -127,6 +129,7 @@ export default function InfoPayPage() {
                 placeholder="請輸入收件人地址"
                 disabled={same}
                 onChange={handleFieldChange}
+                required
               />
             </td>
           </tr>
@@ -142,6 +145,7 @@ export default function InfoPayPage() {
                 placeholder="請輸入收件人電子信箱"
                 disabled={same}
                 onChange={handleFieldChange}
+                required
               />
             </td>
           </tr>

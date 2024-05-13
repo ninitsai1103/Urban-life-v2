@@ -136,7 +136,7 @@ router.get(`/reserve`, async function (req, res) {
   }
 
   const orderId = req.query.orderId
-  console.log('orderId', orderId);
+  console.log('orderId', orderId)
 
   // 設定重新導向與失敗導向的網址
   const redirectUrls = {
@@ -209,41 +209,71 @@ router.get(`/confirm`, async function (req, res) {
 
   console.log('dbOrder', dbOrder)
 
+  //訂單編號
+  const order_id = dbOrder[0].order_id
+  console.log("order_id", order_id);
+
+  //訂單成立時間
+  const date = dbOrder[0].date
+  console.log("date", date);
+
   // 交易資料
   const transaction = JSON.parse(dbOrder[0].reservation)
 
-  console.log("transaction",transaction)
+  console.log('transaction', transaction)
 
   // 交易金額
   const amount = transaction.amount
 
-    try {
-      // 最後確認交易
-      const linePayResponse = await linePayClient.confirm.send({
-        transactionId: transactionId,
-        body: {
-          currency: 'TWD',
-          amount: amount,
-        },
-      })
+  try {
+    // 最後確認交易
+    const linePayResponse = await linePayClient.confirm.send({
+      transactionId: transactionId,
+      body: {
+        currency: 'TWD',
+        amount: amount,
+      },
+    })
 
-      // linePayResponse.body回傳的資料
-      console.log("linePayResponse", linePayResponse)
+    // linePayResponse.body回傳的資料
+    console.log('linePayResponse', linePayResponse)
 
-      let status = 'paid'
-
-      if (linePayResponse.body.returnCode !== '0000') {
-        status = 'fail'
-      }
-      // 更新資料庫的訂單狀態
-      const updateSql = `UPDATE order_detail SET status = ? WHERE transaction_id = ?`
-      const result = await db.query(updateSql, [status, transactionId])
-
-      return res.json({ status: 'success', data: linePayResponse.body })
-    } catch (error) {
-      return res.json({ status: 'fail', data: error.data })
+    const order_info = {
+      order_id: order_id,
+      date: date
     }
+
+    console.log("order_info", order_info);
+
+    let status = 'paid'
+
+    if (linePayResponse.body.returnCode !== '0000') {
+      status = 'fail'
+    }
+    // 更新資料庫的訂單狀態
+    const updateSql = `UPDATE order_detail SET status = ? WHERE transaction_id = ?`
+    const result = await db.query(updateSql, [status, transactionId])
+
+    return res.json({ status: 'success', data: [linePayResponse.body, order_info] })
+  } catch (error) {
+    return res.json({ status: 'fail', data: error.data })
+  }
 })
+
+// router.get('/order-info', async function (req, res) {
+//   const transactionId = req.query.transactionId
+//   try {
+//     //取得資料庫訂單時間與編號
+//     const getOrderInfoSql = `SELECT order_id, date FROM order_detail WHERE  WHERE transaction_id = ?`
+//     const [dbOrderInfo] = await db.query(getOrderInfoSql, [transactionId])
+
+//     console.log('dborderInfo', dbOrderInfo)
+
+//     return res.json({ status: 'success', data: dbOrderInfo })
+//   } catch (error){
+//     return res.json({ status: 'fail', data: error.data })
+//   }
+// })
 
 // 檢查交易用
 //其實用不到，後台修改資料時才會用

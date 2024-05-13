@@ -18,14 +18,19 @@ export default function InfoPayCounter() {
   }
 
   // const [discount, setDiscount] = useState(0)
-  const [couponDiscount, setcouponDiscount] = useState(0)
+  const [couponDiscount, setCouponDiscount] = useState(0)
 
   useEffect(() => {
     const data = window.localStorage.getItem('selectedCoupon')
     console.log('data', data)
-    const couponDiscount = JSON.parse(data).amount
-    console.log('couponDiscount', couponDiscount)
-    setcouponDiscount(couponDiscount)
+    if(data && data !== '[]'){
+      const couponDiscount = JSON.parse(data).amount
+      console.log('couponDiscount', couponDiscount)
+      setCouponDiscount(couponDiscount)
+    }else{
+      const couponDiscount = Number(0)
+      setCouponDiscount(couponDiscount)
+    }
     // let discount
     // if (couponDiscount>1 || couponDiscount === 0) {
     //   discount = couponDiscount
