@@ -18,28 +18,55 @@ export default function useColloections() {
 
 
   //新增商品收藏
+  // const addCollection = (productId) => {
+  //   api
+  //     .get(`/collection/add/${productId}`)
+  //     .then((response) => {
+  //       // console.log(response.data)
+  //       const updatedData = {
+  //         ...response.data.data,
+  //         valid: Number(response.data.data.valid) // 將布林值轉為數字
+  //     };
+      
+       
+  //     })
+  //     .catch((error) => {
+  //       // alert('請登入會員再進行收藏功能')
+  //       if (error.response && error.response.status === 409) {
+  //         console.log('商品已在收藏中。')
+  //       } else if (error.response && error.response.status === 401) {
+  //         console.log('尚未登入')
+  //       } else {
+  //         console.log('操作失敗，請稍後再試。')
+  //       }
+  //       console.log('Error adding collection:', error)
+  //     })
+  //     // console.log(collections);
+  // }
+
   const addCollection = (productId) => {
-    api
-      .get(`/collection/add/${productId}`)
+    return api.get(`/collection/add/${productId}`)
       .then((response) => {
-        // console.log(response.data)
         const updatedData = {
           ...response.data.data,
           valid: Number(response.data.data.valid) // 將布林值轉為數字
-      };
-      
-       
+        };
+        return updatedData; // 返回更新後的數據
       })
       .catch((error) => {
-        // alert('請登入會員再進行收藏功能')
-        if (error.response && error.response.status === 409) {
-          console.log('商品已在收藏中。')
+        console.log('Error adding collection:', error);
+        if (error.response) {
+          if (error.response.status === 409) {
+            throw new Error('商品已在收藏中。');
+          } else if (error.response.status === 401) {
+            throw new Error('尚未登入');
+          } else {
+            throw new Error('操作失敗，請稍後再試。');
+          }
         } else {
-          console.log('操作失敗，請稍後再試。')
+          throw error; // 將非 HTTP 響應錯誤重新拋出
         }
-        console.log('Error adding collection:', error)
-      })
-      // console.log(collections);
+      });
   }
 
   //移除商品收藏
