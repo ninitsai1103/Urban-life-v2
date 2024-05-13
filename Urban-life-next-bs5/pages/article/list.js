@@ -5,6 +5,7 @@ import ArticleCard from '@/components/article/articlecard'
 import Sidebar from '@/components/article/sidenav'
 import { FaFilter } from 'react-icons/fa'
 import { IoAdd } from 'react-icons/io5'
+import Link from 'next/link'
 
 // 使用自定義 Hook 來獲取文章資料
 import useArticles from '@/hooks/use-articles'
@@ -145,7 +146,9 @@ export default function List() {
                   })
                   .map((article) => (
                     <div className="col-md-3 p-2">
+                    <Link className='text-decoration-none' key={article.id} href={`/article/${article.id}`}>
                       <ArticleCard key={article.id} article={article} />
+                      </Link>
                     </div>
                   ))}
               </div>

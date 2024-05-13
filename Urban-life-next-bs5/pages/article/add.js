@@ -42,14 +42,20 @@ export default function Add() {
       setErrors(formErrors)
       return
     }
-
+    console.log(article)
+    const htmlString = article.content
+    const match = htmlString.match(/<img src="([^"]+)"/)
+    const firstImgSrc = match ? match[1] : null
+    console.log(firstImgSrc)
+    const url = firstImgSrc.split('/')[3]
+    console.log(url)
     // 沒有錯誤，繼續提交
     fetch('http://localhost:3005/api/articleUpload', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...article, userId: 1 }), // 假設的用戶 ID
+      body: JSON.stringify({ ...article, userId: 1, img: url }), // 假設的用戶 ID
     })
       .then((response) => response.json())
       .then((data) => {

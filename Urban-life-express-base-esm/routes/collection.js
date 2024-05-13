@@ -113,4 +113,66 @@ router.get('/remove/:product_id', authenticate, async (req, res) => {
 })
 
 
+// 新增文章收藏
+router.post('/add/article/:article_id', authenticate, async (req, res) => {
+  const userId = req.decoded.id
+  const articleId = parseInt(req.params.article_id, 10)
+  try {
+    const existingCollection = await Collection.findOne({
+      where: {
+        user_id: userId,
+        article_id: articleId,
+      },
+    })
+    if (existingCollection) {
+      console.log(existingCollection);
+      if (existingCollection.valid) {
+        return res.status(409).json({ status: 'fail', message: 'Article already in collection.' })
+      } else {
+        // 如果存在但不是有效的，則更新valid為1
+        await existingCollection.update({ valid: 1 });
+        return res.status(200).json({ status: 'success', message: `Article added to collection successfully. Article ID: ${articleId}.` })
+      }
+    } else {
+      // 如果不存在，則創建新的收藏紀錄
+      const newCollection = await Collection.create({
+        user_id: userId,
+        product_id: 0,
+        pdltat_id: 3,
+        article_id: articleId,
+        valid: 1,
+      })
+      res.json({ status: 'success', data: newCollection })
+    }
+  } catch (error) {
+    console.error('Error adding article to collection', error)
+    res.status(500).json({ status: 'error', message: 'Error adding article to collection.' })
+  }
+})
+
+// 取消文章收藏
+router.get('/remove/article/:article_id', authenticate, async (req, res) => {
+  const userId = req.decoded.id
+  const articleId = parseInt(req.params.article_id, 10)
+  try {
+    const result = await Collection.update({ valid: 0 }, {
+      where: {
+        user_id: userId,
+        article_id: articleId,
+      },
+    })
+    let msg = ''
+    if (result[0] === 0) {
+      msg = 'Article already removed.'
+    } else {
+      msg = 'Article removed from collection.'
+    }
+    res.json({ status: 'success', message: msg })
+  } catch (error) {
+    console.error('Error removing article from collection', error)
+    res.status(500).json({ status: 'error', message: 'Error removing article from collection.' })
+  }
+})
+
 export default router
+
