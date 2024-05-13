@@ -3,18 +3,38 @@ import { useState, useEffect, useMemo } from 'react'
 import Herosection from '@/components/lecture/herosection'
 import { Container } from 'react-bootstrap'
 import Search from '@/components/lecture/search'
-import TeachersCard from '@/components/lecture/teacherscard'
 import Page from '@/components/product/pagination'
+import Link from 'next/link'
+import TeacherCardInfo from '@/components/lecture/teacher-infocard'
+import { UseTeacherInfo } from '@/hooks/use-teacher'
 
 export default function LectureHome() {
+  const { teachers } = UseTeacherInfo();
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const perpages = 12
+  // 分頁相關狀態
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const perPage = 16; // 每頁顯示的卡片數量
+  const [displayedTeachers, setDisplayedTeachers] = useState([]);
 
+  useEffect(() => {
+    // 計算總頁數
+    const totalPageCount = Math.ceil(teachers.length / perPage);
+    setTotalPages(totalPageCount);
+  }, [teachers]);
+
+  useEffect(() => {
+    // 當頁碼改變時，根據當前頁碼更新顯示的教師卡片
+    const startIndex = (currentPage - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    const currentTeachers = teachers.slice(startIndex, endIndex);
+    setDisplayedTeachers(currentTeachers);
+  }, [currentPage, teachers]);
+
+  // 頁碼改變時的處理函數
   const handlePageChange = (page) => {
-    setCurrentPage(page)
-  }
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -29,33 +49,17 @@ export default function LectureHome() {
             <Search />
           </div>
           <div className="cardgrp">
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
-            <TeachersCard />
+              <TeacherCardInfo  />
           </div>
         </section>
         <div className="container ">
           <Page
-            perpages={perpages}
+            perpages={perPage}
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
           />
         </div>
-
       </div>
 
       <style jsx>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import styles from './carousel.module.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useProducts from '@/hooks/product/useProducts';
@@ -64,14 +64,14 @@ export default function Carousel({ productId }) {
         loop={true}
       >
         {getImg().map((imageUrl, index) => (
-          <>
-        <SwiperSlide className='wrap-img'>
+          <Fragment key={`cover-${index}`}>
+        <SwiperSlide  className='wrap-img'>
           <img src={getCover()} />
         </SwiperSlide>
-        <SwiperSlide key={index} className='wrap-img'>
+        <SwiperSlide key={`img-${index}`} className='wrap-img'>
           <img src={imageUrl} alt={`Product Image ${index + 1}`}/>
         </SwiperSlide>
-        </>
+        </Fragment>
         ))}
       </Swiper>
       <Swiper
@@ -84,14 +84,14 @@ export default function Carousel({ productId }) {
         className={styles.mySwiper}
       >
          {getImg().map((imageUrl, index) => (
-          <>
-        <SwiperSlide style={{ cursor: 'pointer' }}>
+          <Fragment key={`thumb-${index}`}>
+        <SwiperSlide  style={{ cursor: 'pointer' }}>
           <img src={getCover()} />
         </SwiperSlide>
-        <SwiperSlide key={`img-${index}`} style={{ cursor: 'pointer' }}>
+        <SwiperSlide key={`thumb-detail-${index}`} style={{ cursor: 'pointer' }}>
           <img src={imageUrl} alt={`Product Image ${index + 1}`}/>
         </SwiperSlide>
-        </>
+        </Fragment>
         ))}
    
       </Swiper>

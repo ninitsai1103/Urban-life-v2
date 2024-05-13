@@ -12,9 +12,8 @@ import { RiFilter2Fill } from 'react-icons/ri'
 import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
 import { filter } from 'lodash'
-import api  from '@/services/axios-with-token'
+import api from '@/services/axios-with-token'
 // import { totalItems } from '@/hooks/cart-reducer-state'
-
 
 export default function List() {
   //設定篩選狀態
@@ -26,19 +25,19 @@ export default function List() {
     hrsExpress: false,
     location: false,
   })
-  
-  const [minPriceValue, setMinPriceValue] = useState('');
+
+  const [minPriceValue, setMinPriceValue] = useState('')
   const handleMinPriceValue = (e) => {
-    setMinPriceValue(()=>e.target.value)
-  };
-  const [maxPriceValue, setMaxPriceValue] = useState('');
+    setMinPriceValue(() => e.target.value)
+  }
+  const [maxPriceValue, setMaxPriceValue] = useState('')
   const handleMaxPriceValue = (e) => {
-    setMaxPriceValue(()=>e.target.value)
-  };
+    setMaxPriceValue(() => e.target.value)
+  }
 
   const [list, setList] = useState([])
   const { products } = useProducts()
-  const {collections} = useColloections()
+  const { collections } = useColloections()
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -46,6 +45,9 @@ export default function List() {
 
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
+
+  //搜尋
+  const [searchResults, setSearchResults] = useState([]);
 
   //分類後的產品(如果沒有點選分類就返回原本的產品列表)
   const secProducts = useMemo(() => {
@@ -57,7 +59,8 @@ export default function List() {
   //排序狀態和邏輯(初始值代入分類後的產品)
   const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
 
-  const filteredProducts = useMemo(() => { //設定篩選的產品
+  const filteredProducts = useMemo(() => {
+    //設定篩選的產品
     return sortDatas.filter((secProducts) => {
       return (
         (!filterCondition.minPrice ||
@@ -65,7 +68,7 @@ export default function List() {
         (!filterCondition.maxPrice ||
           secProducts.price <= Number(filterCondition.maxPrice)) &&
         (!filterCondition.size || secProducts.size === filterCondition.size) &&
-        (!filterCondition.priceOver1000 || secProducts.price > 1000) &&  
+        (!filterCondition.priceOver1000 || secProducts.price > 1000) &&
         (filterCondition.hrsExpress === false ||
           secProducts.hrs_express === (filterCondition.hrsExpress === true)) &&
         (filterCondition.location === false ||
@@ -74,20 +77,19 @@ export default function List() {
     })
   }, [filterCondition, sortDatas])
 
-
   //分頁&分類&排序
   useEffect(() => {
     //更新分頁總數
     const newTotalPages = Math.ceil(filteredProducts.length / perpages)
     if (totalPages !== newTotalPages) {
-      setTotalPages(newTotalPages);
+      setTotalPages(newTotalPages)
     }
     //更新列表
     const startIndex = (currentPage - 1) * perpages
     const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
-    const newList = filteredProducts.slice(startIndex, endIndex);
+    const newList = filteredProducts.slice(startIndex, endIndex)
     if (JSON.stringify(list) !== JSON.stringify(newList)) {
-      setList(newList);
+      setList(newList)
     }
   }, [currentPage, perpages, filteredProducts])
 
@@ -102,45 +104,50 @@ export default function List() {
     setCurrentPage(1) //重新設定為第一頁
   }
 
+  //全部商品
+
+  const allProducts = () => {
+    setSelectCategory(null)
+    setList(products)
+  }
+
   //排序控制
   const changeSort = (key, order) => {
     handleSortDatas(key, order)
   }
 
   const get_input_range = () => {
-    return {'minPrice': minPriceValue, 'maxPrice': maxPriceValue}
+    return { minPrice: minPriceValue, maxPrice: maxPriceValue }
   }
 
   //更新按鈕處理邏輯
   const handleSelectedValue = (e, name, obj) => {
-    setFilterCondition(prevCondition => {
-        const newCondition = {...prevCondition}
-        if(name == "price") {
-          newCondition.minPrice = obj.minPrice
-          newCondition.maxPrice = obj.maxPrice
+    setFilterCondition((prevCondition) => {
+      const newCondition = { ...prevCondition }
+      if (name == 'price') {
+        newCondition.minPrice = obj.minPrice
+        newCondition.maxPrice = obj.maxPrice
+      }
+
+      if (name == 'size') {
+        newCondition.size = obj.value
+      }
+
+      if (name == 'service') {
+        if (obj.service_name == '免運') {
+          newCondition.priceOver1000 = !newCondition.priceOver1000
         }
-
-        if(name == "size") {
-          newCondition.size = obj.value
+        if (obj.service_name == '快速到貨') {
+          newCondition.hrsExpress = !newCondition.hrsExpress
         }
-
-        if(name == "service") {
-          if(obj.service_name == "免運") {
-            newCondition.priceOver1000 = !newCondition.priceOver1000
-          }
-          if(obj.service_name == "快速到貨") {
-            newCondition.hrsExpress = !newCondition.hrsExpress
-          }
-          if(obj.service_name == "離島") {
-            newCondition.location = !newCondition.location
-          }
+        if (obj.service_name == '離島') {
+          newCondition.location = !newCondition.location
         }
-        // console.log(newCondition);
-        return newCondition;
-      })
-
-    };
-
+      }
+      // console.log(newCondition);
+      return newCondition
+    })
+  }
 
   //清空篩選
   const clearFilter = () => {
@@ -152,13 +159,8 @@ export default function List() {
       hrsExpress: false,
       location: false,
     })
-    setCurrentPage(1);
+    setCurrentPage(1)
   }
-
-
-  
-
- 
 
   // Toggle the side navigation
   // useEffect(() => {
@@ -201,6 +203,23 @@ export default function List() {
                     id="headingOne"
                   >
                     分類
+                  </h2>
+                </div>
+                <div className="accordion-item">
+                  <h2 className="accordion-header " id="allProduct">
+                    <button
+                      className="accordion-button collapsed set-padding pri-category-bg"
+                      type="button"
+                      // data-bs-toggle="collapse"
+                      data-bs-target="#collapseAll"
+                      aria-expanded="false"
+                      aria-controls="collapseAll"
+                      onClick={() => {
+                        allProducts()
+                      }}
+                    >
+                      全部商品
+                    </button>
                   </h2>
                 </div>
                 <div className="accordion-item">
@@ -638,9 +657,15 @@ export default function List() {
                     name="price"
                     id="exampleRadios1"
                     value="<149"
-                    checked={filterCondition.minPrice === 0 && filterCondition.maxPrice === 149 }
+                    checked={
+                      filterCondition.minPrice === 0 &&
+                      filterCondition.maxPrice === 149
+                    }
                     onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':0, 'maxPrice':149})
+                      handleSelectedValue(e, 'price', {
+                        minPrice: 0,
+                        maxPrice: 149,
+                      })
                     }}
                   />
                   <label
@@ -657,9 +682,15 @@ export default function List() {
                     name="price"
                     id="exampleRadios2"
                     value="150-299"
-                    checked={filterCondition.minPrice === 150 && filterCondition.maxPrice === 299 }
+                    checked={
+                      filterCondition.minPrice === 150 &&
+                      filterCondition.maxPrice === 299
+                    }
                     onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':150, 'maxPrice':299})
+                      handleSelectedValue(e, 'price', {
+                        minPrice: 150,
+                        maxPrice: 299,
+                      })
                     }}
                   />
                   <label
@@ -676,9 +707,15 @@ export default function List() {
                     name="price"
                     id="exampleRadios3"
                     value="300-499"
-                    checked={filterCondition.minPrice === 300 && filterCondition.maxPrice === 499 }
+                    checked={
+                      filterCondition.minPrice === 300 &&
+                      filterCondition.maxPrice === 499
+                    }
                     onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':300, 'maxPrice':499})
+                      handleSelectedValue(e, 'price', {
+                        minPrice: 300,
+                        maxPrice: 499,
+                      })
                     }}
                   />
                   <label
@@ -695,9 +732,15 @@ export default function List() {
                     name="price"
                     id="exampleRadios4"
                     value="500-999"
-                    checked={filterCondition.minPrice === 500 && filterCondition.maxPrice === 799 }
+                    checked={
+                      filterCondition.minPrice === 500 &&
+                      filterCondition.maxPrice === 799
+                    }
                     onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':500, 'maxPrice':799})
+                      handleSelectedValue(e, 'price', {
+                        minPrice: 500,
+                        maxPrice: 799,
+                      })
                     }}
                   />
                   <label
@@ -713,10 +756,15 @@ export default function List() {
                     type="radio"
                     name="price"
                     id="exampleRadios5"
-                    checked={filterCondition.minPrice === 800 && filterCondition.maxPrice === 9999999 }
+                    checked={
+                      filterCondition.minPrice === 800 &&
+                      filterCondition.maxPrice === 9999999
+                    }
                     onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':800, 'maxPrice':9999999})
-                      // handleFreeShipping(true)
+                      handleSelectedValue(e, 'price', {
+                        minPrice: 800,
+                        maxPrice: 9999999,
+                      })
                     }}
                   />
                   <label
@@ -738,7 +786,7 @@ export default function List() {
                     aria-label="minPrice"
                     value={minPriceValue}
                     onChange={(e) => {
-                      handleMinPriceValue(e);
+                      handleMinPriceValue(e)
                     }}
                   />
                   <span className="input-group-text px-1 no-border-bg">-</span>
@@ -750,14 +798,14 @@ export default function List() {
                     aria-label="maxPrice"
                     value={maxPriceValue}
                     onChange={(e) => {
-                      handleMaxPriceValue(e);
+                      handleMaxPriceValue(e)
                     }}
                   />
                   <button
                     className="set-button-style d-flex align-items-center p-1 rounded"
                     type="button"
                     onClick={(e) => {
-                      handleSelectedValue(e, "price", get_input_range()) 
+                      handleSelectedValue(e, 'price', get_input_range())
                     }}
                   >
                     <MdKeyboardArrowRight className="text-white" />
@@ -773,7 +821,7 @@ export default function List() {
                     value="大"
                     checked={filterCondition.size === '大'}
                     onChange={(e) => {
-                      handleSelectedValue(e, "size", {'value':'大'}) 
+                      handleSelectedValue(e, 'size', { value: '大' })
                     }}
                   />
                   <label
@@ -792,7 +840,7 @@ export default function List() {
                     value="小"
                     checked={filterCondition.size === '小'}
                     onChange={(e) => {
-                      handleSelectedValue(e, "size", {'value':'小'}) 
+                      handleSelectedValue(e, 'size', { value: '小' })
                     }}
                   />
                   <label
@@ -807,11 +855,14 @@ export default function List() {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    name='freeShipping'
+                    name="freeShipping"
                     id="freeShipping"
                     checked={filterCondition.priceOver1000}
-                    onChange={(e)=>{
-                      handleSelectedValue(e, "service", {'service_name':'免運', 'service_state':filterCondition.priceOver1000}) 
+                    onChange={(e) => {
+                      handleSelectedValue(e, 'service', {
+                        service_name: '免運',
+                        service_state: filterCondition.priceOver1000,
+                      })
                     }}
                   />
                   <label
@@ -827,11 +878,14 @@ export default function List() {
                     className="form-check-input"
                     type="checkbox"
                     value="rhsExpress"
-                    name='rhsExpress'
+                    name="rhsExpress"
                     id="rhsExpress"
                     checked={filterCondition.hrsExpress}
-                    onChange={(e)=>{
-                      handleSelectedValue(e, "service", {'service_name':'快速到貨', 'service_state':filterCondition.hrsExpress}) 
+                    onChange={(e) => {
+                      handleSelectedValue(e, 'service', {
+                        service_name: '快速到貨',
+                        service_state: filterCondition.hrsExpress,
+                      })
                     }}
                   />
                   <label
@@ -847,11 +901,14 @@ export default function List() {
                     className="form-check-input"
                     type="checkbox"
                     value="location"
-                    name='name'
+                    name="name"
                     id="location"
                     checked={filterCondition.location}
-                    onChange={(e)=>{
-                      handleSelectedValue(e, "service", {'service_name':'離島', 'service_state':filterCondition.location}) 
+                    onChange={(e) => {
+                      handleSelectedValue(e, 'service', {
+                        service_name: '離島',
+                        service_state: filterCondition.location,
+                      })
                     }}
                   />
                   <label
@@ -867,7 +924,7 @@ export default function List() {
           {/* product-list */}
           <div className="product-list col-lg-10">
             <div className="ps-3 mb-3">
-              <Search />
+              <Search filteredProducts={filteredProducts} setList={setSearchResults}/>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mt-3">
                   <li class="breadcrumb-item">
@@ -888,8 +945,9 @@ export default function List() {
               </nav>
               {/* 搜尋、排序 */}
               <div className="amount&sort d-flex justify-content-between align-items-center">
+                {/* {} */}
                 <p className="mb-0 text-color2-nohover">
-                  共 {sortDatas.length} 筆商品
+                  共 {filteredProducts.length} 筆商品
                 </p>
                 <div className="d-flex align-items-center">
                   <CiViewTable
@@ -1379,11 +1437,18 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios1"
                             value="option1"
-                            checked={filterCondition.minPrice === 0 && filterCondition.maxPrice === 149 }
+                            checked={
+                              filterCondition.minPrice === 0 &&
+                              filterCondition.maxPrice === 149
+                            }
                             onChange={(e) => {
-                              handleSelectedValue(e, "price", {'minPrice':0, 'maxPrice':149})
-                            }}/>
-                            
+                              handleSelectedValue(e, 'price', {
+                                minPrice: 0,
+                                maxPrice: 149,
+                              })
+                            }}
+                          />
+
                           <label
                             className="form-check-label set-fs12"
                             htmlFor="exampleRadios1"
@@ -1398,10 +1463,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios2"
                             value="option2"
-                            checked={filterCondition.minPrice === 150 && filterCondition.maxPrice === 299 }
-                    onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':150, 'maxPrice':299})
-                    }}
+                            checked={
+                              filterCondition.minPrice === 150 &&
+                              filterCondition.maxPrice === 299
+                            }
+                            onChange={(e) => {
+                              handleSelectedValue(e, 'price', {
+                                minPrice: 150,
+                                maxPrice: 299,
+                              })
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1417,10 +1488,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios3"
                             value="option3"
-                            checked={filterCondition.minPrice === 300 && filterCondition.maxPrice === 499 }
-                    onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':300, 'maxPrice':499})
-                    }}
+                            checked={
+                              filterCondition.minPrice === 300 &&
+                              filterCondition.maxPrice === 499
+                            }
+                            onChange={(e) => {
+                              handleSelectedValue(e, 'price', {
+                                minPrice: 300,
+                                maxPrice: 499,
+                              })
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1436,10 +1513,16 @@ export default function List() {
                             name="exampleRadios"
                             id="exampleRadios4"
                             value="option4"
-                            checked={filterCondition.minPrice === 500 && filterCondition.maxPrice === 799 }
-                    onChange={(e) => {
-                      handleSelectedValue(e, "price", {'minPrice':500, 'maxPrice':799})
-                    }}
+                            checked={
+                              filterCondition.minPrice === 500 &&
+                              filterCondition.maxPrice === 799
+                            }
+                            onChange={(e) => {
+                              handleSelectedValue(e, 'price', {
+                                minPrice: 500,
+                                maxPrice: 799,
+                              })
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1456,7 +1539,10 @@ export default function List() {
                             id="exampleRadios5"
                             value="option5"
                             onChange={(e) => {
-                              handleSelectedValue(e, "price", {'minPrice':800, 'maxPrice':9999999})
+                              handleSelectedValue(e, 'price', {
+                                minPrice: 800,
+                                maxPrice: 9999999,
+                              })
                               // handleFreeShipping(true)
                             }}
                           />
@@ -1479,7 +1565,7 @@ export default function List() {
                             aria-label="minPrice"
                             value={minPriceValue}
                             onChange={(e) => {
-                              handleMinPriceValue(e);
+                              handleMinPriceValue(e)
                             }}
                           />
                           <span className="input-group-text px-1 no-border-bg">
@@ -1491,15 +1577,15 @@ export default function List() {
                             placeholder=""
                             aria-label="maxPrice"
                             value={maxPriceValue}
-                    onChange={(e) => {
-                      handleMaxPriceValue(e);
-                    }}
+                            onChange={(e) => {
+                              handleMaxPriceValue(e)
+                            }}
                           />
                           <button
                             className="set-button-style d-flex align-items-center p-1 rounded"
                             type="button"
                             onClick={(e) => {
-                              handleSelectedValue(e, "price", get_input_range()) 
+                              handleSelectedValue(e, 'price', get_input_range())
                             }}
                           >
                             <MdKeyboardArrowRight className="text-white" />
@@ -1515,7 +1601,7 @@ export default function List() {
                             value="大"
                             checked={filterCondition.size === '大'}
                             onChange={(e) => {
-                              handleSelectedValue(e, "size", {'value':'大'}) 
+                              handleSelectedValue(e, 'size', { value: '大' })
                             }}
                           />
                           <label
@@ -1534,7 +1620,7 @@ export default function List() {
                             value="小"
                             checked={filterCondition.size === '小'}
                             onChange={(e) => {
-                              handleSelectedValue(e, "size", {'value':'小'}) 
+                              handleSelectedValue(e, 'size', { value: '小' })
                             }}
                           />
                           <label
@@ -1549,12 +1635,15 @@ export default function List() {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            name='freeShipping'
-                    id="freeShipping"
-                    checked={filterCondition.priceOver1000}
-                    onChange={(e)=>{
-                      handleSelectedValue(e, "service", {'service_name':'免運', 'service_state':filterCondition.priceOver1000}) 
-                    }}
+                            name="freeShipping"
+                            id="freeShipping"
+                            checked={filterCondition.priceOver1000}
+                            onChange={(e) => {
+                              handleSelectedValue(e, 'service', {
+                                service_name: '免運',
+                                service_state: filterCondition.priceOver1000,
+                              })
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1569,12 +1658,15 @@ export default function List() {
                             className="form-check-input"
                             type="checkbox"
                             value="rhsExpress"
-                    name='rhsExpress'
-                    id="rhsExpress"
-                    checked={filterCondition.hrsExpress}
-                    onChange={(e)=>{
-                      handleSelectedValue(e, "service", {'service_name':'快速到貨', 'service_state':filterCondition.hrsExpress}) 
-                    }}
+                            name="rhsExpress"
+                            id="rhsExpress"
+                            checked={filterCondition.hrsExpress}
+                            onChange={(e) => {
+                              handleSelectedValue(e, 'service', {
+                                service_name: '快速到貨',
+                                service_state: filterCondition.hrsExpress,
+                              })
+                            }}
                           />
                           <label
                             className="form-check-label set-fs12"
@@ -1584,25 +1676,28 @@ export default function List() {
                           </label>
                         </div>
                         <p className="set-fw700 mt-1 mb-0">可寄往離島</p>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    value="location"
-                    name='name'
-                    id="location"
-                    checked={filterCondition.location}
-                    onChange={(e)=>{
-                      handleSelectedValue(e, "service", {'service_name':'離島', 'service_state':filterCondition.location}) 
-                    }}
-                  />
-                  <label
-                    className="form-check-label set-fs12"
-                    htmlFor="flexCheckDefault"
-                  >
-                    可配送離島的商品(馬祖、金門、澎湖)
-                  </label>
-                </div>
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            value="location"
+                            name="name"
+                            id="location"
+                            checked={filterCondition.location}
+                            onChange={(e) => {
+                              handleSelectedValue(e, 'service', {
+                                service_name: '離島',
+                                service_state: filterCondition.location,
+                              })
+                            }}
+                          />
+                          <label
+                            className="form-check-label set-fs12"
+                            htmlFor="flexCheckDefault"
+                          >
+                            可配送離島的商品(馬祖、金門、澎湖)
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1674,24 +1769,43 @@ export default function List() {
               </div>
             </div>
             {/* 商品欄 */}
-            <div div className="container ">
-              <div className="row row-cols-2 row-cols-lg-4 g-4">
-                {list.map((product) => (
-                  <Link key={product.id} href={`/product/${product.id}`}>
-                  <ProductCard key={product.id} product={product} collections={collections} />
-                   </Link>
-                ))}
+            {filteredProducts.length !== 0 ? (
+              <div div className="container ">
+                <div className="row row-cols-2 row-cols-lg-4 g-4">
+                  {list.map((product) => (
+                    <Link
+                      className="text-decoration-none"
+                      key={product.id}
+                      href={`/product/${product.id}`}
+                    >
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        products={searchResults}
+                        collections={collections}
+                      />
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="container ">
+                <h4>未有符合篩選條件的商品</h4>
+              </div>
+            )}
             {/* 分頁 */}
-            <div className="container ">
-              <Page
-                perpages={perpages}
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
+            {filteredProducts.length !== 0 ? (
+              <div className="container ">
+                <Page
+                  perpages={perpages}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       </div>

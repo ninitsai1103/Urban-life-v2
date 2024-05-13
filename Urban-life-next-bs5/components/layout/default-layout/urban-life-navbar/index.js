@@ -78,7 +78,7 @@ export default function MyNavbar() {
                 <Link href="http://localhost:3000/article">文章分享</Link>
               </li>
               <li>
-                <Link href="">講師陣容</Link>
+                <Link href="http://localhost:3000/teacher">講師陣容</Link>
               </li>
               <li>
                 <Link href={`http://localhost:3000/member${memberUrl}`}>
@@ -93,9 +93,10 @@ export default function MyNavbar() {
               <FaUser style={{ color: 'white', fontSize: '24px' }} />
             </div>
             <div className="cart">
-              <FaShoppingCart style={{ color: 'white', fontSize: '28px' }} />
-              <a href="" />
-              <span>2</span>
+              <Link href="http://localhost:3000/cart">
+                <FaShoppingCart style={{ color: 'white', fontSize: '24px' }} />
+                <span>{totalItems}</span>
+              </Link>
             </div>
           </div>
         </div>

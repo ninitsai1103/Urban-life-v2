@@ -1,4 +1,5 @@
-import React from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import LectureMyCard from '@/components/lecture/card'
 import Lectureslider from '@/components/lecture/lectureslider'
 import LectureInfo from '@/components/lecture/lectureinfo'
@@ -6,8 +7,45 @@ import Feedback from '@/components/lecture/feedback'
 import Link from 'next/link'
 import Lecturedetail from '@/components/lecture/lecturedetail'
 import Safeinfo from '@/components/lecture/safeinfo'
+import { UseLecture } from '@/hooks/use-lecture'
 
 export default function LectureDetail() {
+  const { lectures } = UseLecture()
+  const router = useRouter()
+  const { id } = router.query
+  const [lecture, setLecture] = useState(null)
+
+  useEffect(() => {
+    if (lectures) {
+      const foundLecture = lectures.find((item) => item.id === parseInt(id))
+      if (foundLecture) {
+        setLecture(foundLecture)
+      }
+    }
+  }, [id, lectures])
+
+  // 渲染 loading 狀態或資料
+  // if (!lecture) {
+  //   return <div>Loading...</div>
+  // }
+
+  //猜你喜歡
+  const [randomLectures, setRandomLectures] = useState([]);
+
+  useEffect(() => {
+    generateRandomLectures();
+  }, []);
+
+  // 生成隨機的講座卡片
+  const generateRandomLectures = () => {
+    // 將講座數組進行隨機排序
+    const shuffledLectures = lectures.sort(() => Math.random() - 0.5);
+    // 只取前四個隨機卡片
+    const selectedLectures = shuffledLectures.slice(0, 4);
+    // 更新狀態以渲染隨機卡片
+    setRandomLectures(selectedLectures);
+  };
+
   return (
     <>
       <div className="container">
@@ -31,6 +69,7 @@ export default function LectureDetail() {
               </ol>
             </nav>
           </div>
+          {lectures.map((lectures) => {
           <div className="lectureinfo">
             <div className="slider">
               <Lectureslider />
@@ -39,6 +78,7 @@ export default function LectureDetail() {
               <LectureInfo />
             </div>
           </div>
+          })}
         </section>
         <section className="section2">
           <h1 className="sectiontitle">集合地點</h1>
@@ -53,16 +93,18 @@ export default function LectureDetail() {
                 <div className="subinfo">請至少提前半小時到達集合地點</div>
               </div>
               <div className="name">
-                  <div className="subtitle">交通資訊</div>
-                  <div className="subinfo">
-                    1. 可以搭乘各級火車至中壢站下車
-                    <br />
-                    <br />
-                    2. 搭乘機場捷運於A22老街溪站下車 &nbsp;&nbsp;&nbsp;轉乘市內公車
-                    <br />
-                    <br />
-                    3. 自行開車者可於國道一號中壢交流 &nbsp;&nbsp;&nbsp;道下交流道後往市區方向行駛
-                  </div>
+                <div className="subtitle">交通資訊</div>
+                <div className="subinfo">
+                  1. 可以搭乘各級火車至中壢站下車
+                  <br />
+                  <br />
+                  2. 搭乘機場捷運於A22老街溪站下車
+                  &nbsp;&nbsp;&nbsp;轉乘市內公車
+                  <br />
+                  <br />
+                  3. 自行開車者可於國道一號中壢交流
+                  &nbsp;&nbsp;&nbsp;道下交流道後往市區方向行駛
+                </div>
               </div>
               <div className="con">
                 ※有任何問題皆可撥打講師或辦公室連絡電話
@@ -70,15 +112,15 @@ export default function LectureDetail() {
                 <br /> &nbsp;&nbsp;&nbsp;辦公室：03-4567890
               </div>
             </div>
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17207.0092075364!2d121.21220967794753!3d24.954954783550026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34682248fcfa49d7%3A0x57e0b78df52b3c96!2z5Lit5aOi54Gr6LuK56uZ!5e0!3m2!1szh-TW!2stw!4v1714979692462!5m2!1szh-TW!2stw"
-                width={640}
-                height={555}
-                style={{ border: "1px solid black" }}
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17207.0092075364!2d121.21220967794753!3d24.954954783550026!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34682248fcfa49d7%3A0x57e0b78df52b3c96!2z5Lit5aOi54Gr6LuK56uZ!5e0!3m2!1szh-TW!2stw!4v1714979692462!5m2!1szh-TW!2stw"
+              width={640}
+              height={555}
+              style={{ border: '1px solid black' }}
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </section>
         <section className="section3">
@@ -97,11 +139,22 @@ export default function LectureDetail() {
         </section>
         <section className="section6">
           <h1 className="sectiontitle">探索其他課程</h1>
-          <div className="cardgrp">
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
+          <div style={{ maxWidth: '1296px', overflow: 'hidden' }}>
+            <div className="cardgrp">
+              {randomLectures.map((lecture) => (
+                <LectureMyCard key={lecture.id} lecture={lecture} />
+              ))}
+            </div>
+            {/* 刷新按鈕 */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '30px',
+              }}
+            >
+              <button className='btn btn-add' onClick={generateRandomLectures}>猜你喜歡</button>
+            </div>
           </div>
         </section>
       </div>
@@ -209,11 +262,8 @@ export default function LectureDetail() {
           .cardgrp {
             display: flex;
             align-items: flex-start;
-            align-content: flex-start;
             gap: 10px;
-            align-self: stretch;
-            flex-wrap: wrap;
-            padding-top: 5px;
+            flex: 1 0 0;
           }
 
           .meetingpoint {

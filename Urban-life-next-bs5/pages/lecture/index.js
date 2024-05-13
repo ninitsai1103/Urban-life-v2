@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LectureMyCard from '@/components/lecture/card'
 import LectureMyCardNp from '@/components/lecture/card-np'
 import LectureWish from '@/components/lecture/wish'
@@ -14,19 +14,120 @@ import QAList from '@/components/lecture/qacard'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 
 // 引入課程hooks
-import useTeacherLectures from '@/hooks/use- teacherlectures'
+import { UseLecture } from '@/hooks/use-lecture'
+import { UseTeacherInfo } from '@/hooks/use-teacher'
 
 export default function LectureHome() {
-  // 把lecture資料拿出來
-  const { lectures } = useTeacherLectures()
-  // console.log(lectures)
+  // 把資料拿出來
+  const { lectures } = UseLecture()
+  const { teachers } = UseTeacherInfo()
 
-  // 從calandar接到時間
+  // 從calandar接到時間 (因為是最後的日期貼上去所以是接到這個月的月底時間)
   const [nowTime, setNowTime] = useState(new Date())
-  console.log(nowTime)
+  // console.log(nowTime)
+
+  // const [filterCondition, setFilterCondition] = useState({
+  //   thisMonth: true,
+  //   popular: false,
+  //   upcoming: false,
+  // })
+
+  // const getFilteredLectures = () => {
+  //   let filteredLectures = lectures.filter((lecture) => {
+  //     const deadlineDate = new Date(lecture.deadline)
+  //     const currentMonth = nowTime.getMonth()
+  //     const deadlineMonth = deadlineDate.getMonth()
+  //     return filterCondition.thisMonth && currentMonth === deadlineMonth
+  //   })
+
+  //   if (!filterCondition.thisMonth) {
+  //     filteredLectures = lectures
+  //   } else if (filterCondition.popular) {
+  //     filteredLectures = lectures
+  //       .sort((a, b) => b.amount - a.amount)
+  //       .slice(0, 8)
+  //   } else if (filterCondition.upcoming) {
+  //     const nextMonth = nowTime.getMonth() + 1
+  //     filteredLectures = lectures.filter((lecture) => {
+  //       const deadlineDate = new Date(lecture.deadline)
+  //       const deadlineMonth = deadlineDate.getMonth()
+  //       return nextMonth === deadlineMonth
+  //     })
+  //   }
+
+  //   return filteredLectures
+  // }
+
+  // const handleFilterButtons = (filterType) => {
+  //   switch (filterType) {
+  //     case '本月課程':
+  //       setFilterCondition({ thisMonth: true, popular: false, upcoming: false })
+  //       break
+  //     case '所有課程':
+  //       setFilterCondition({
+  //         thisMonth: false,
+  //         popular: false,
+  //         upcoming: false,
+  //       })
+  //       break
+  //     case '熱門課程':
+  //       setFilterCondition({ thisMonth: true, popular: true, upcoming: false })
+  //       break
+  //     case '即將開課':
+  //       setFilterCondition({ thisMonth: true, popular: false, upcoming: true })
+  //       break
+  //     default:
+  //       break
+  //   }
+  // }
+
+  // const filteredLectures = getFilteredLectures()
+  // useEffect(() => {
+  //   handleFilterButtons('本月課程')
+  //   getFilteredLectures()
+  // }, [])
+  const [renderLectures, setRenderLectures] = useState(lectures)
+
+  // useEffect(() => {
+  //   console.log("=====================================================origin lectures", renderLectures);
+  // }, [])
+
+
+  //本月課程按鈕
+  const handleThisMonth = () => {
+    const today = new Date()
+    // console.log(today.getMonth()+1);
+    const currentMonth = today.getMonth() + 1;
+    const lecturesThisMonth = lectures.filter((v, i) => {
+      return v.lecture_date.slice(5, 7) == currentMonth
+    })
+    setRenderLectures(lecturesThisMonth)
+  }
+  //熱門課程按鈕
+  const handlePopular = () => {}
+  //即將開課按鈕
+  const handleUpcoming = () => {}
 
   // 從課程卡片拿出來的資料
   const [cardData, setCardData] = useState({})
+
+  //講師陣容
+
+  const [randomTeachers, setRandomTeachers] = useState([])
+
+  useEffect(() => {
+    generateRandomTeachers()
+  }, [])
+
+  // 生成隨機的教師卡片
+  const generateRandomTeachers = () => {
+    // 將教師數組進行隨機排序
+    const shuffledTeachers = teachers.sort(() => Math.random() - 0.5)
+    // 只取前四個隨機卡片
+    const selectedTeachers = shuffledTeachers.slice(0, 4)
+    // 更新狀態以渲染隨機卡片
+    setRandomTeachers(selectedTeachers)
+  }
 
   return (
     <>
@@ -41,10 +142,30 @@ export default function LectureHome() {
             <Search />
           </div>
           <div className="btngrp">
-            <button className="btn btn-main-r">本月課程</button>
-            <button className="btn btn-main-r">所有課程</button>
-            <button className="btn btn-main-r">熱門課程</button>
-            <button className="btn btn-main-r">即將開課</button>
+            <button
+              className="btn btn-main-r"
+              onClick={() => handleThisMonth()}
+            >
+              本月課程
+            </button>
+            <button
+              className="btn btn-main-r"
+              onClick={() => handleFilterButtons('所有課程')}
+            >
+              所有課程
+            </button>
+            <button
+              className="btn btn-main-r"
+              onClick={() => handlePopular()}
+            >
+              熱門課程
+            </button>
+            <button
+              className="btn btn-main-r"
+              onClick={() => handleUpcoming()}
+            >
+              即將開課
+            </button>
           </div>
           <div className="bar">
             <div className="lecnum">共 8 門課程</div>
@@ -86,14 +207,7 @@ export default function LectureHome() {
             </div>
           </div>
           <div className="cardgrp">
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
-            <LectureMyCard />
+            <LectureMyCard lectures={renderLectures} />
           </div>
         </section>
         {/* 行事曆 */}
@@ -108,10 +222,10 @@ export default function LectureHome() {
                 .filter((lecture) => {
                   // 取得講座報名截止日期的年份和月份
                   const deadlineYear = new Date(
-                    lecture.sign_up_deadline
+                    lecture.lecture_date
                   ).getFullYear()
                   const deadlineMonth = new Date(
-                    lecture.sign_up_deadline
+                    lecture.lecture_date
                   ).getMonth()
 
                   // 取得當前日期的年份和月份
@@ -170,11 +284,22 @@ export default function LectureHome() {
         <section className="section6">
           <h1 className="sectiontitle">講師陣容</h1>
           <p className="teachertext">Teacher</p>
-          <div className="teachergrp">
-            <TeacherCardInfo />
-            <TeacherCardInfo />
-            <TeacherCardInfo />
-            <TeacherCardInfo />
+          <div style={{ maxWidth: '1290px', overflow: 'hidden' }}>
+            <div className="teachergrp">
+              {randomTeachers.map((teacher) => (
+                <TeacherCardInfo key={teacher.id} teacher={teacher} />
+              ))}
+            </div>
+            {/* 刷新按鈕 */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '30px',
+              }}
+            >
+              <button className='btn btn-add' onClick={generateRandomTeachers}>隨機發現還有哪些老師</button>
+            </div>
           </div>
         </section>
       </div>

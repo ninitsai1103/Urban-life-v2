@@ -11,7 +11,7 @@ export default function ArticleCard({ article,identityId }) {
   return (
     <>
       <div className="article_card_styles w-100 d-flex" key={article.id}>
-        <img alt='' src={`/images/article/article_img/${article.img}`}></img>
+        <img alt='' src={`http://localhost:3005/images/article/${article.img}`}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
             <div className="article_card_text_time_time">{article.created_at}</div>

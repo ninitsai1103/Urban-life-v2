@@ -3,6 +3,7 @@ import styles from './lectureinfo.module.css'
 import { TbStarFilled } from 'react-icons/tb'
 import { BsCart3 } from 'react-icons/bs'
 import { GoHeart } from 'react-icons/go'
+import { UseLecture } from '@/hooks/use-lecture'
 
 export default function LectureInfo() {
   return (

@@ -1,32 +1,33 @@
 import { useState, useEffect } from 'react'
+import useProducts from '@/hooks/product/useProducts'
+import toast, { Toaster } from 'react-hot-toast'
+import useColloections from '@/hooks/product/useCollections'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
-import useColloections from '@/hooks/product/useCollections'
-import toast, { Toaster } from 'react-hot-toast'
 
-export default function ProductCard({ product, collections}) {
-const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
-const {addCollection, removeCollection} =useColloections();
-
-
-// init IsCollected by collection -> valid
-useEffect(() => {
-  // 檢查當前商品是否在收藏列表中
-setIsCollected(collections.find(item => item.product_id == product.id && item.valid == 1))
-// console.log(isCollected);
-},[collections, product.id])
-
-
-//切換商品的收藏狀態
-  const toggleCollection = () => {
-    setIsCollected(!isCollected);
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-      toast.success(message, {
-      })
-    }
-    
+export default function Recommend({ product,collections }) {
+//   const [recommended, setRecommended] = useState([])
+  const {addCollection, removeCollection} =useColloections();
+  const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
+    const {products} = useProducts();
+console.log(collections);
+  useEffect(() => {
+    // 檢查當前商品是否在收藏列表中
+  setIsCollected(collections.find(item => item.product_id == products.id && item.valid == 1))
+  console.log(isCollected);
+  },[collections, products])
   
+  
+  //切換商品的收藏狀態
+    const toggleCollection = () => {
+      setIsCollected(!isCollected);
+      const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+        toast.success(message, {
+        })
+      }
+
+
 
   return (
     <>
@@ -47,35 +48,35 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
                   ? product.name
                   : `${product.name}(${product.size})`}
               </h5>
-              <Toaster
-                position="top-center"
-                reverseOrder={false}
-              />
-             
-              {isCollected ?
-                (<FaHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
-                  onClick={e => {
-                    e.preventDefault();
-                    toggleCollection();
-                    removeCollection(product.id);
+              <Toaster position="top-center" reverseOrder={false} />
+
+              {isCollected ? (
+                <FaHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
                   }}
-                     />) :
-                (<FaRegHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }}
-                onClick={e => {
-                  e.preventDefault();
-                  addCollection(product.id)
-                  .then(updatedData => {
-                    toggleCollection();
-                    console.log('Collection added:', updatedData);
-                  })
-                  .catch(error => {
-                    alert("請先登入會員再進行收藏功能")
-                    window.location.href = "/member/login";
-                    console.error('Failed to add collection:', error.message);
-                    // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
-                  });
-                }} />)
-              }
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection()
+                    removeCollection(product.id)
+                  }}
+                />
+              ) : (
+                <FaRegHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection()
+                    addCollection(product.id)
+                  }}
+                />
+              )}
             </div>
             <div className="star d-flex">
               <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
@@ -130,21 +131,29 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
                 <TbStarFilled style={{ color: '#F6A404', fontSize: '19px' }} />
                 <p className="ms-1 mb-0 fs-15">{product.star}</p>
               </div>
-              {isCollected ?
-              (<FaHeart style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136' }} 
-                onClick={e => {
-                    e.preventDefault();
-                    toggleCollection();
-                    removeCollection(product.id);
+              {isCollected ? (
+                <FaHeart
+                  style={{
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
                   }}
-              />):
-              (<FaRegHeart style={{ fontSize: '20px', cursor: 'pointer' }}
-              onClick={e => {
-                  e.preventDefault();
-                  toggleCollection();
-                  addCollection(product.id);
-                }} />)
-              }
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection()
+                    removeCollection(product.id)
+                  }}
+                />
+              ) : (
+                <FaRegHeart
+                  style={{ fontSize: '20px', cursor: 'pointer' }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection()
+                    addCollection(product.id)
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -198,13 +207,13 @@ setIsCollected(collections.find(item => item.product_id == product.id && item.va
           border-top: 1px solid #a9a6a6;
         }
         .imgWrap {
-          width: 243px;
-          height: 243px;
+          width: 294px;
+          height: 294px;
         }
         .imgWrap img {
           width: 100%;
           height: 100%;
-          object-fit: cotain;
+          object-fit: contain;
         }
         .text-through {
           text-decoration: line-through;
