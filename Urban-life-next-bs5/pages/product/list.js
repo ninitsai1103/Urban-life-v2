@@ -14,7 +14,6 @@ import { RxTable } from 'react-icons/rx'
 import { filter } from 'lodash'
 import api from '@/services/axios-with-token'
 
-
 export default function List() {
   //設定篩選狀態
   const [filterCondition, setFilterCondition] = useState({
@@ -46,9 +45,9 @@ export default function List() {
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
 
-  //搜尋
-  const [inputText, setInputText] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [flag, setFlag] = useState(false)
+
+  // const [searchResults, setSearchResults] = useState([]);
 
   //分類後的產品(如果沒有點選分類就返回原本的產品列表)
   const secProducts = useMemo(() => {
@@ -78,21 +77,45 @@ export default function List() {
     })
   }, [filterCondition, sortDatas])
 
-  //分頁&分類&排序
+  useEffect(() => {
+    if (filteredProducts.length > 0) setFlag(true)
+  }, [filteredProducts])
+
+  //搜尋
+  const [inputText, setInputText] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+
+  const searchedProducts = () => {
+    if (inputText) {
+      let result = filteredProducts.filter((product) =>
+        product.name.toLowerCase().includes(inputText.toLowerCase())
+      )
+      setSearchResults(result)
+    }else {
+    setSearchResults( filteredProducts) //沒有輸入搜尋時
+     
+  }
+}
+
+  useEffect(() => {
+    searchedProducts() // 每次 inputText 改變時重新計算搜尋結果
+  }, [filteredProducts])
+
+  //分頁&分類&排序&搜尋
   useEffect(() => {
     //更新分頁總數
-    const newTotalPages = Math.ceil(filteredProducts.length / perpages)
+    const newTotalPages = Math.ceil(searchResults.length / perpages)
     if (totalPages !== newTotalPages) {
       setTotalPages(newTotalPages)
     }
     //更新列表
     const startIndex = (currentPage - 1) * perpages
-    const endIndex = Math.min(startIndex + perpages, filteredProducts.length)
-    const newList = filteredProducts.slice(startIndex, endIndex)
+    const endIndex = Math.min(startIndex + perpages, searchResults.length)
+    const newList = searchResults.slice(startIndex, endIndex)
     if (JSON.stringify(list) !== JSON.stringify(newList)) {
       setList(newList)
     }
-  }, [currentPage, perpages, filteredProducts])
+  }, [currentPage, perpages, searchResults])
 
   //分頁控制
   const handlePageChange = (page) => {
@@ -105,8 +128,7 @@ export default function List() {
     setCurrentPage(1) //重新設定為第一頁
   }
 
-  //全部商品
-
+  //頁面刷新為全部商品
   const allProducts = () => {
     setSelectCategory(null)
     setList(products)
@@ -164,24 +186,6 @@ export default function List() {
   }
 
 
-  //搜尋
-  const searchedProducts = useEffect(() => {
-    let result = filteredProducts; 
-  
-    if (inputText) {
-      result = result.filter(product =>
-        product.name.toLowerCase().includes(inputText.toLowerCase())
-      );
-    }
-    
-    setList(result)
-  }, [inputText, filteredProducts]);
-  
-
-  useEffect(() => {
-    console.log("搜索结果更新：", searchResults);
-  }, [searchResults]);  
-  
   // Toggle the side navigation
   // useEffect(() => {
   //   // fix next issue
@@ -223,23 +227,6 @@ export default function List() {
                     id="headingOne"
                   >
                     分類
-                  </h2>
-                </div>
-                <div className="accordion-item">
-                  <h2 className="accordion-header " id="allProduct">
-                    <button
-                      className="accordion-button collapsed set-padding pri-category-bg"
-                      type="button"
-                      // data-bs-toggle="collapse"
-                      data-bs-target="#collapseAll"
-                      aria-expanded="false"
-                      aria-controls="collapseAll"
-                      onClick={() => {
-                        allProducts()
-                      }}
-                    >
-                      全部商品
-                    </button>
                   </h2>
                 </div>
                 <div className="accordion-item">
@@ -944,7 +931,10 @@ export default function List() {
           {/* product-list */}
           <div className="product-list col-lg-10">
             <div className="ps-3 mb-3">
-              <Search filteredProducts={filteredProducts} setInputText={setInputText}/>
+              <Search
+                setInputText={setInputText}
+                searchedProducts={searchedProducts}
+              />
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mt-3">
                   <li class="breadcrumb-item">
@@ -966,7 +956,7 @@ export default function List() {
               {/* 搜尋、排序 */}
               <div className="amount&sort d-flex justify-content-between align-items-center">
                 <p className="mb-0 text-color2-nohover">
-                  共 {filteredProducts.length} 筆商品
+                  共 {searchResults.length} 筆商品
                 </p>
                 <div className="d-flex align-items-center">
                   <CiViewTable
@@ -1740,6 +1730,18 @@ export default function List() {
                           href="#"
                           onClick={(e) => {
                             e.preventDefault()
+                            allProducts()
+                          }}
+                        >
+                          全部商品
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
                             changeSort('price', 'descending')
                           }}
                         >
@@ -1788,7 +1790,11 @@ export default function List() {
               </div>
             </div>
             {/* 商品欄 */}
-            {filteredProducts.length !== 0 ? (
+            {flag && filteredProducts.length == 0 ? (
+              <div className="container ">
+                <h4>未有符合篩選條件的商品</h4>
+              </div>
+            ) : (
               <div div className="container ">
                 <div className="row row-cols-2 row-cols-lg-4 g-4">
                   {list.map((product) => (
@@ -1800,16 +1806,13 @@ export default function List() {
                       <ProductCard
                         key={product.id}
                         product={product}
-                        products={searchResults}
+                        // products={searchResults}
                         collections={collections}
+                        // searchedProducts={searchedProducts}
                       />
                     </Link>
                   ))}
                 </div>
-              </div>
-            ) : (
-              <div className="container ">
-                <h4>未有符合篩選條件的商品</h4>
               </div>
             )}
             {/* 分頁 */}
