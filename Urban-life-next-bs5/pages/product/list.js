@@ -13,7 +13,7 @@ import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
 import { filter } from 'lodash'
 import api from '@/services/axios-with-token'
-// import { totalItems } from '@/hooks/cart-reducer-state'
+
 
 export default function List() {
   //設定篩選狀態
@@ -47,6 +47,7 @@ export default function List() {
   const [selectCategory, setSelectCategory] = useState(null)
 
   //搜尋
+  const [inputText, setInputText] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
   //分類後的產品(如果沒有點選分類就返回原本的產品列表)
@@ -162,6 +163,25 @@ export default function List() {
     setCurrentPage(1)
   }
 
+
+  //搜尋
+  const searchedProducts = useEffect(() => {
+    let result = filteredProducts; 
+  
+    if (inputText) {
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(inputText.toLowerCase())
+      );
+    }
+    
+    setList(result)
+  }, [inputText, filteredProducts]);
+  
+
+  useEffect(() => {
+    console.log("搜索结果更新：", searchResults);
+  }, [searchResults]);  
+  
   // Toggle the side navigation
   // useEffect(() => {
   //   // fix next issue
@@ -924,7 +944,7 @@ export default function List() {
           {/* product-list */}
           <div className="product-list col-lg-10">
             <div className="ps-3 mb-3">
-              <Search filteredProducts={filteredProducts} setList={setSearchResults}/>
+              <Search filteredProducts={filteredProducts} setInputText={setInputText}/>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mt-3">
                   <li class="breadcrumb-item">
@@ -945,7 +965,6 @@ export default function List() {
               </nav>
               {/* 搜尋、排序 */}
               <div className="amount&sort d-flex justify-content-between align-items-center">
-                {/* {} */}
                 <p className="mb-0 text-color2-nohover">
                   共 {filteredProducts.length} 筆商品
                 </p>
