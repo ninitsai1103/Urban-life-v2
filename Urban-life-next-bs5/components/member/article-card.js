@@ -29,11 +29,11 @@ export default function ArticleCard({ article,identityId }) {
             <div className="article_card_left_bottom d-flex">
               <div className="article_card_bottom_collect d-flex align-items-center">
                 <CiHeart style={{ color: 'red' }} />
-                <div className="article_card_bottom_left_margin">收藏數</div>
+                <div className="article_card_bottom_left_margin">{article.total_collections}</div>
               </div>
               <div className="d-flex align-items-center">
                 <FaCommentDots style={{ color: '#9EA78B' }} />
-                <div className="article_card_bottom_left_margin">評論數</div>
+                <div className="article_card_bottom_left_margin">{article.total_comments}</div>
               </div>
             </div>
             <div className="d-flex">

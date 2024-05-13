@@ -431,93 +431,7 @@ export default function LectureManagement() {
     }
   }
 
-  // 更新課程清單code
-  const updateLecture = async (lectureId, lectureFields, pictureFields) => {
-    const url = 'http://localhost:3005/api/teacher-lecture' // 請求的路由
-
-    try {
-      // 創建 FormData 來包含課程字段和圖片文件
-    const formData = new FormData();
-    formData.append('id', lectureId); // 確保包含課程ID用於更新操作
-
-    // 加入課程欄位資訊到 FormData
-    Object.keys(lectureFields).forEach(key => {
-      formData.append(key, lectureFields[key]);
-    });
-
-    // 加入圖片文件到 FormData
-    Object.keys(pictureFields).forEach(key => {
-      if (pictureFields[key] instanceof File) { // 確保只處理文件類型
-        formData.append(key, pictureFields[key]);
-      }
-    });
-
-    // 發送包含課程和圖片的請求
-    const response = await fetch(url, {
-      method: 'PUT',
-      body: formData,
-    });
-
-    const responseData = await response.json();
-    console.log('Update lecture with picture response:', responseData);
-
-
-      // 檢查請求是否成功，根據需要進行後續操作
-    if (response.ok) {
-      console.log('課程更新成功');
-      window.location.reload(); // 重新加載當前頁面
-      return responseData; // 返回成功的數據
-    } else {
-      console.error('Update failed:', responseData);
-      // 處理失敗情況
-    }
-    } catch (error) {
-      console.log('Error updating lecture:', error)
-      throw error // 可以根據需要處理錯誤或返回其他數據
-    }
-  }
-
   
-  // 新增課程與圖片
-  const addLectureWithPicture = async (lectureFields, pictureFields) => {
-    const lectureUrl = 'http://localhost:3005/api/teacher-lecture';
-
-    try {
-      // 創建 FormData 來包含課程字段和圖片文件
-      const formData = new FormData();
-      // 加入課程欄位資訊到 FormData
-      Object.keys(lectureFields).forEach(key => {
-        formData.append(key, lectureFields[key]);
-      });
-      // 加入圖片文件到 FormData
-      Object.keys(pictureFields).forEach(key => {
-        if (pictureFields[key] instanceof File) { // 確保只處理文件類型
-          formData.append(key, pictureFields[key]);
-        }
-      });
-
-      // 發送包含課程和圖片的請求
-      const response = await fetch(lectureUrl, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const responseData = await response.json();
-      console.log('Add lecture with picture response:', responseData);
-
-      // 檢查請求是否成功，根據需要進行後續操作
-      if (response.ok) {
-        window.location.reload(); // 重新加載當前頁面
-        return responseData; // 返回成功的數據
-      } else {
-        console.error('Add failed:', responseData);
-        // 處理失敗情況
-      }
-    } catch (error) {
-      console.error('Error adding lecture with picture:', error);
-      throw error; // 可以根據需要處理錯誤或返回其他數據
-    }
-  }
 
   return (
     <>
@@ -660,8 +574,6 @@ export default function LectureManagement() {
                             lecture={lecture}
                             identityId={identityId}
                             deleteLecture={deleteLecture}
-                            updateLecture={updateLecture}
-                            addLectureWithPicture={addLectureWithPicture}
                           />
                         ))}
                       </table>
@@ -683,8 +595,6 @@ export default function LectureManagement() {
                           lecture={lecture}
                           identityId={identityId}
                           deleteLecture={deleteLecture}
-                          updateLecture={updateLecture}
-                          addLectureWithPicture={addLectureWithPicture}
                         />
                       ))}
                     </div>
@@ -797,10 +707,7 @@ export default function LectureManagement() {
 
       {/* 新增課程Modal導入 */}
       <LectureAddModal
-        addLectureWithPicture={addLectureWithPicture}
-        // addLecture={addLecture}
         identityId={identityId}
-        // addLecturePicture={addLecturePicture}
       />
 
       <style jsx>{`

@@ -1,11 +1,6 @@
-import { React, useState } from 'react'
+import { React, useState, useEffect } from 'react'
 
-export default function LectureAddModal({
-  identityId,
-  addLecture,
-  addLecturePicture,
-  addLectureWithPicture,
-}) {
+export default function LectureAddModal({ identityId }) {
   // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
   const [selectedFile1, setSelectedFile1] = useState(null)
   const [selectedFile2, setSelectedFile2] = useState(null)
@@ -49,11 +44,88 @@ export default function LectureAddModal({
   const [description, setDescription] = useState('')
   const [content, setContent] = useState('')
   const [locationId, setLocationId] = useState('')
-  const [lectureDate, setLectureDate] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
+
+  const [showTimeError, setShowTimeError] = useState(false) // 控制錯誤訊息顯示
+
+  // 處理時間輸入變化
+  const handleTimeChange = (e, setTimeFunction) => {
+    const formattedTime = e.target.value
+    setTimeFunction(formattedTime) // 更新時間狀態
+  }
+
+  useEffect(() => {
+    // 確保 startTime 和 endTime 都已設置才進行時間合法性檢查
+    if (startTime && endTime) {
+      let isValidTime = true
+
+      if (endTime < startTime) {
+        isValidTime = false
+        // 清空第二個選擇器的內容
+        setEndTime('') // 將對應的時間設為空字串
+      }
+
+      // 更新顯示錯誤訊息的狀態
+      setShowTimeError(!isValidTime)
+    }
+  }, [startTime, endTime])
+
   const [signUpStart, setSignUpStart] = useState('')
   const [signUpEnd, setSignUpEnd] = useState('')
+  const [showSignUpStartDateError, setShowSignUpStartDateError] =
+    useState(false)
+  const [showSignUpEndDateError, setShowSignUpEndDateError] = useState(false)
+
+  // 取得明天的日期和時間，格式為 YYYY-MM-DDTHH:mm （datetime-local 需要此格式）
+  const getTomorrowDateTime = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+
+    tomorrow.setDate(tomorrow.getDate() + 1) // 加一天
+    tomorrow.setHours(tomorrow.getHours() + 8) // 加8小時
+
+    // 格式化日期和時間
+    const formattedTomorrowDateTime = tomorrow.toISOString().slice(0, 16)
+    return formattedTomorrowDateTime
+
+    // return tomorrow.toISOString().slice(0, 16) // 格式化日期和時間
+  }
+
+  // 處理報名日期輸入變化
+  const handleSignUpDateChange = (e, setSignUpDateFunction) => {
+    const formattedSignUpDateTime = e.target.value
+
+    // 取得明天日期和時間
+    const tomorrowDateTime = getTomorrowDateTime()
+
+    // 確保報名開始時間不早於當前日期和時間
+    if (setSignUpDateFunction === setSignUpStart) {
+      if (formattedSignUpDateTime < tomorrowDateTime) {
+        setSignUpDateFunction('')
+        setShowSignUpStartDateError(true)
+        return
+      }
+      setShowSignUpStartDateError(false)
+    }
+
+    // 更新報名日期狀態
+    setSignUpDateFunction(formattedSignUpDateTime)
+
+    // 確保報名截止時間不早於報名開始時間
+    if (setSignUpDateFunction === setSignUpEnd) {
+      if (formattedSignUpDateTime < signUpStart) {
+        setSignUpDateFunction('')
+        setShowSignUpEndDateError(true)
+      } else {
+        setShowSignUpEndDateError(false)
+      }
+    }
+  }
+
+  const [lectureDate, setLectureDate] = useState('')
+  const [lectureDateError, setLectureDateError] = useState(false)
+
   const [price, setPrice] = useState('')
   const [amount, setAmount] = useState('')
 
@@ -74,25 +146,35 @@ export default function LectureAddModal({
     setLocationId(selectedLocationId) // 更新 locationId 狀態
   }
 
+  // 處理上課日期變化
   const handleLectureDateChange = (e) => {
-    setLectureDate(e.target.value)
+    const formattedLectureDate = e.target.value
+
+    // 更新 lectureDate 狀態
+    setLectureDate(formattedLectureDate)
+
+    // 確認 lectureDate 是否早於 signUpEnd
+    if (signUpEnd && formattedLectureDate < signUpEnd) {
+      setLectureDateError(true)
+    } else {
+      setLectureDateError(false)
+    }
   }
 
-  const handleStartTimeChange = (e) => {
-    setStartTime(e.target.value)
-  }
+  useEffect(() => {
+    // 提取 signUpEnd 的日期部分並增加兩天
+    if (signUpEnd) {
+      const signUpEndDate = new Date(signUpEnd)
+      signUpEndDate.setDate(signUpEndDate.getDate() + 1) // 增加兩天
+      const signUpEndDateOnly = signUpEndDate.toISOString().slice(0, 10) // 只取日期部分
 
-  const handleEndTimeChange = (e) => {
-    setEndTime(e.target.value)
-  }
+      // 確保 lectureDate 不早於 signUpEnd + 2 天
+      if (lectureDate && lectureDate < signUpEndDateOnly) {
+        setLectureDate('')
+      }
+    }
+  }, [signUpEnd, lectureDate])
 
-  const handleSignUpStartChange = (e) => {
-    setSignUpStart(e.target.value)
-  }
-
-  const handleSignUpEndChange = (e) => {
-    setSignUpEnd(e.target.value)
-  }
 
   const handlePriceChange = (e) => {
     setPrice(e.target.value)
@@ -187,8 +269,12 @@ export default function LectureAddModal({
                   style={{ fontSize: '14px' }}
                   onClick={() => {
                     setName('科技與創新推動都市永續農業')
-                    setDescription('參訪城市都市農業中心，探索都市農業的創新與科技應用，以及推動城市永續農業的發展。學員將了解都市農業科技的最新發展，參與相關示範和實驗，深入了解永續農業的實踐和挑戰。')
-                    setContent('在參訪城市都市農業中心的課程中，學員將有機會深入探索都市農業的創新和科技應用，以及推動城市永續農業的發展。課程將介紹最新的都市農業科技，如垂直種植、智能溫室、水培技術等，並探討這些技術在提高農業生產效率和環境友好性方面的應用。學員將透過參觀示範區和參與實驗活動，親身體驗這些技術的應用和效果，從而加深對永續農業的理解和認識。同時，課程也將討論都市農業所面臨的挑戰，如土地利用、資源管理等，並探索可行的解決方案，以推動城市永續農業的發展。')
+                    setDescription(
+                      '參訪城市都市農業中心，探索都市農業的創新與科技應用，以及推動城市永續農業的發展。學員將了解都市農業科技的最新發展，參與相關示範和實驗，深入了解永續農業的實踐和挑戰。'
+                    )
+                    setContent(
+                      '在參訪城市都市農業中心的課程中，學員將有機會深入探索都市農業的創新和科技應用，以及推動城市永續農業的發展。課程將介紹最新的都市農業科技，如垂直種植、智能溫室、水培技術等，並探討這些技術在提高農業生產效率和環境友好性方面的應用。學員將透過參觀示範區和參與實驗活動，親身體驗這些技術的應用和效果，從而加深對永續農業的理解和認識。同時，課程也將討論都市農業所面臨的挑戰，如土地利用、資源管理等，並探索可行的解決方案，以推動城市永續農業的發展。'
+                    )
                     setLocationId('5')
                     setLectureDate('2024-06-10')
                     setStartTime('08:00:00')
@@ -259,45 +345,53 @@ export default function LectureAddModal({
                           </td>
                         </tr>
                         <tr>
-                          <th>上課日期：</th>
-                          <td>
-                            <input
-                              type="date"
-                              className="form-control"
-                              // name="name"
-                              value={lectureDate}
-                              onChange={handleLectureDateChange}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
                           <th>上課時間：</th>
                           <td>
+                            {showTimeError && ( // 如果 showTimeError 為 true，顯示錯誤訊息
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *結束時間不能早於開始時間
+                              </div>
+                            )}
                             <input
                               type="time"
                               className="form-control"
                               // name="name"
                               value={startTime}
-                              onChange={handleStartTimeChange}
+                              onChange={(e) =>
+                                handleTimeChange(e, setStartTime)
+                              }
                             />
                             <input
                               type="time"
                               className="form-control"
                               // name="name"
                               value={endTime}
-                              onChange={handleEndTimeChange}
+                              onChange={(e) => handleTimeChange(e, setEndTime)}
                             />
                           </td>
                         </tr>
                         <tr>
                           <th>報名開始時間：</th>
                           <td>
+                            {showSignUpStartDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *請至少設定於一日之後
+                              </div>
+                            )}
                             <input
                               type="datetime-local"
                               className="form-control"
                               // name="name"
                               value={signUpStart}
-                              onChange={handleSignUpStartChange}
+                              onChange={(e) =>
+                                handleSignUpDateChange(e, setSignUpStart)
+                              }
                               step="600" // 步長設置為 600 秒（10 分鐘）
                             />
                           </td>
@@ -305,13 +399,43 @@ export default function LectureAddModal({
                         <tr>
                           <th>報名截止時間：</th>
                           <td>
+                            {showSignUpEndDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *不能早於報名開始時間
+                              </div>
+                            )}
                             <input
                               type="datetime-local"
                               className="form-control"
                               // name="name"
                               value={signUpEnd}
-                              onChange={handleSignUpEndChange}
+                              onChange={(e) =>
+                                handleSignUpDateChange(e, setSignUpEnd)
+                              }
                               step="600" // 步長設置為 600 秒（10 分鐘）
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>上課日期：</th>
+                          <td>
+                            {lectureDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *不能早於報名結束時間天
+                              </div>
+                            )}
+                            <input
+                              type="date"
+                              className="form-control"
+                              // name="name"
+                              value={lectureDate}
+                              onChange={handleLectureDateChange}
                             />
                           </td>
                         </tr>
@@ -482,11 +606,11 @@ export default function LectureAddModal({
           width: 80%;
           margin: 3px;
         }
-        .textarea1{
+        .textarea1 {
           height: 100px;
         }
 
-        .textarea2{
+        .textarea2 {
           height: 200px;
         }
 
