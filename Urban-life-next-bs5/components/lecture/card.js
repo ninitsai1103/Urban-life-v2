@@ -36,6 +36,8 @@ export default function LectureMyCard({lecture, collections }) {
     }
   }
 
+  
+
   return (
     <>
       <div className={styles.card}>

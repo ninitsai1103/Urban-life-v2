@@ -3,19 +3,26 @@ import AsideAccount from '@/components/member/aside-account'
 import OrderList from '@/components/member/order-list'
 import OrderCard from '@/components/member/order-card'
 import Page from '@/components/product/pagination'
+
+import { useMemberInfo } from '@/hooks/use-member-info'
 export default function OrderMainPage() {
   // order的訂單狀態
   const [orders, setOrders] = useState([])
 
+  // 利用use-member-info的hooks抓取localStorage的會員資訊
+  const { member } = useMemberInfo()
+  
+
   // 連線至order_detail
-  const getOrderDetail = async () => {
-    const url = 'http://localhost:3005/api/order'
+  const getOrderDetail = async (id) => {
+    
+    const url = `http://localhost:3005/api/order?user_id=${id}`
 
     // fetch抓資料
     try {
       const res = await fetch(url)
       const data = await res.json()
-      console.log(data);
+      console.log(data)
 
       const orders = data.data.order
       // console.log(orders)
@@ -74,8 +81,10 @@ export default function OrderMainPage() {
   }
 
   useEffect(() => {
-    getOrderDetail()
-  }, [])
+    if (member) {
+      getOrderDetail(member.id)
+    }
+  }, [member])
 
   return (
     <>

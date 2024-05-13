@@ -21,19 +21,17 @@ export default function CalendarBody({ calendarMain, cardData }) {
 
   // 接收到cardData存在後就加進課程的一個資料裡面
   const [myCalendarLectures, setMyCalandarLecture] = useState([])
-  useEffect(() => {
+  const handleAddtoCalandar = () => {
     if (cardData.lecturename !== undefined) {
       const newMyCalendarLectures = [...myCalendarLectures, cardData]
       setMyCalandarLecture(newMyCalendarLectures)
       console.log(newMyCalendarLectures)
     }
+  }
+  useEffect(() => {
+    handleAddtoCalandar()
   }, [cardData])
 
-  // 加入到行事曆的狀態，判斷她要不要顯示刪除按鈕
-  const [calandarLectureExist, setCalandarLectureExist] = useState(false)
-  useEffect(()=>{
-
-  },[calandarLectureExist])
   return (
     <>
       <div className="body mt-4">
@@ -65,9 +63,14 @@ export default function CalendarBody({ calendarMain, cardData }) {
                 <div>{day}</div>
                 {/* 在這裡渲染 cardData */}
                 <div>
+                  {}
                   {myCalendarLectures.map((myCalendarLecture) => {
-                    return day == moment(myCalendarLecture.lecture_date).format('DD') ? (
-                      <div className='myCalendarLecture'>{myCalendarLecture.lecturename}</div>
+                    return myCalendarLecture.isAddedtoCalendar &&
+                      day ==
+                        moment(myCalendarLecture.lecture_date).format('DD') ? (
+                      <div className="myCalendarLecture fade-in">
+                        {myCalendarLecture.lecturename}
+                      </div>
                     ) : (
                       <></>
                     )
@@ -87,10 +90,20 @@ export default function CalendarBody({ calendarMain, cardData }) {
           width: 80px;
           height: 100px;
         }
-        .myCalendarLecture{
-          background-color:#f3b454;
+        .myCalendarLecture {
+          background-color: #f3b454;
           border-radius: 1rem;
           text-align: center;
+          animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
         }
       `}</style>
     </>

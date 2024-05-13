@@ -6,7 +6,7 @@ import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import useColloections from '@/hooks/product/useCollections'
 
-export default function LectureMyCardNp({ lecture, setCardData, collections }) {
+export default function LectureMyCardNp({ lecture, setCardData, collections , }) {
   const {
     id,
     content,
@@ -31,8 +31,10 @@ export default function LectureMyCardNp({ lecture, setCardData, collections }) {
   // 確認日期是否在今天之前
   const isBeforeToday = new Date(lecture_date) < new Date()
 
+  // 新增一個狀態，切換商品是否有加入行事曆，進而去改變它的按鈕
+  const [isAddedtoCalendar, setIsAddedtoCalendar] = useState(true)
   // 點擊加入行事曆
-  const handleAddtoCalandar = () => {
+  const handleAddtoCalendar = () => {
     const lectureData = {
       lecturename: name,
       start_date: sign_up_starting,
@@ -40,8 +42,13 @@ export default function LectureMyCardNp({ lecture, setCardData, collections }) {
       lecture_date: lecture_date,
       starting_time: starting_time,
       ending_time: ending_time,
+      isAddedtoCalendar: isAddedtoCalendar,
     }
     setCardData(lectureData)
+    setIsAddedtoCalendar(!isAddedtoCalendar)
+
+
+    
   }
 
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
@@ -49,17 +56,17 @@ export default function LectureMyCardNp({ lecture, setCardData, collections }) {
 
   //切換商品的收藏狀態
   const toggleCollection = () => {
-    setIsCollected(!isCollected);
+    setIsCollected(!isCollected)
     const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-    toast.success(message);
+    toast.success(message)
     if (lecture && lecture.id) {
       if (isCollected) {
-        removeCollection(lecture.id);
+        removeCollection(lecture.id)
       } else {
-        addCollection(lecture.id);
+        addCollection(lecture.id)
       }
     } else {
-      console.error('lecture is undefined or has no id property');
+      console.error('lecture is undefined or has no id property')
     }
   }
 
@@ -131,18 +138,28 @@ export default function LectureMyCardNp({ lecture, setCardData, collections }) {
           <div className={styles.priceText}>NT：{price}</div>
           {/* 根據日期是否在今天之前來決定按鈕樣式 */}
           {isBeforeToday ? (
-            <button
-              className="btn btn-main"
-              style={{ maxWidth: '106px' }}
-              onClick={handleAddtoCalandar}
-            >
-              加入行事曆
-            </button>
+            isAddedtoCalendar ? (
+              <button
+                className="btn btn-main"
+                style={{ maxWidth: '106px' }}
+                onClick={handleAddtoCalendar}
+              >
+                加入行事曆
+              </button>
+            ) : (
+              <button
+                className="btn btn-danger"
+                style={{ maxWidth: '106px' }}
+                onClick={handleAddtoCalendar}
+              >
+                刪除
+              </button>
+            )
           ) : (
             <button
               className="btn btn-add"
               style={{ maxWidth: '106px' }}
-              onClick={handleAddtoCalandar}
+              onClick={handleAddtoCalendar}
             >
               加入購物車
             </button>
