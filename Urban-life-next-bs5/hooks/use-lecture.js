@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useContext, createContext, useState, useEffect } from 'react';
 
-const useLectures = () => {
+const LectureContext = createContext(null)
+
+
+export function LectureProvider({ children }) {
   const [lectures, setLectures] = useState([]);
 
 
@@ -25,7 +28,11 @@ const useLectures = () => {
     fetchLectures();
   }, []);
 
-  return { lectures }; 
+  return (
+    <LectureContext.Provider value={{ lectures, setLectures }}>
+      {children}
+    </LectureContext.Provider>
+  )
 };
 
-export default useLectures;
+export const UseLecture = () => useContext(LectureContext)

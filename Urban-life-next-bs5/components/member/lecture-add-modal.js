@@ -119,45 +119,48 @@ export default function LectureAddModal({
         price,
         amount,
         teacher_id: identityId,
-      };
-  
+      }
+
       // 創建一個新的 FormData 物件
-      const formData = new FormData();
-  
+      const formData = new FormData()
+
       // 加入課程欄位資訊到 FormData
       Object.keys(lectureFields).forEach((key) => {
-        formData.append(key, lectureFields[key]);
-      });
-  
+        formData.append(key, lectureFields[key])
+      })
+
       // 加入圖片檔案到 FormData，檢查每個文件是否已選擇
       if (selectedFile1) {
-        formData.append('selectedFiles1', selectedFile1);
+        formData.append('selectedFiles1', selectedFile1)
       }
       if (selectedFile2) {
-        formData.append('selectedFiles2', selectedFile2);
+        formData.append('selectedFiles2', selectedFile2)
       }
       if (selectedFile3) {
-        formData.append('selectedFiles3', selectedFile3);
+        formData.append('selectedFiles3', selectedFile3)
       }
       if (selectedFile4) {
-        formData.append('selectedFiles4', selectedFile4);
+        formData.append('selectedFiles4', selectedFile4)
       }
-  
+
       // 發送請求到後端，處理課程資料和圖片的新增
-      const response = await fetch('http://localhost:3005/api/teacher-lecture', {
-        method: 'POST',
-        body: formData,
-      });
-  
+      const response = await fetch(
+        'http://localhost:3005/api/teacher-lecture',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      )
+
       if (response.ok) {
-        console.log('課程和圖片新增成功');
-        window.location.reload(); // 重新加載當前頁面或進行其他相關操作
+        console.log('課程和圖片新增成功')
+        window.location.reload() // 重新加載當前頁面或進行其他相關操作
       } else {
-        const responseData = await response.json();
-        console.log('新增失敗:', responseData);
+        const responseData = await response.json()
+        console.log('新增失敗:', responseData)
       }
     } catch (error) {
-      console.log('Error handling adding lecture with picture:', error);
+      console.log('Error handling adding lecture with picture:', error)
     }
   }
 
@@ -178,6 +181,26 @@ export default function LectureAddModal({
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
                   這裡是課程名稱
                 </h1>
+                <button
+                  type="button"
+                  className="btn btn-add-r ms-3"
+                  style={{ fontSize: '14px' }}
+                  onClick={() => {
+                    setName('科技與創新推動都市永續農業')
+                    setDescription('參訪城市都市農業中心，探索都市農業的創新與科技應用，以及推動城市永續農業的發展。學員將了解都市農業科技的最新發展，參與相關示範和實驗，深入了解永續農業的實踐和挑戰。')
+                    setContent('在參訪城市都市農業中心的課程中，學員將有機會深入探索都市農業的創新和科技應用，以及推動城市永續農業的發展。課程將介紹最新的都市農業科技，如垂直種植、智能溫室、水培技術等，並探討這些技術在提高農業生產效率和環境友好性方面的應用。學員將透過參觀示範區和參與實驗活動，親身體驗這些技術的應用和效果，從而加深對永續農業的理解和認識。同時，課程也將討論都市農業所面臨的挑戰，如土地利用、資源管理等，並探索可行的解決方案，以推動城市永續農業的發展。')
+                    setLocationId('5')
+                    setLectureDate('2024-06-10')
+                    setStartTime('08:00:00')
+                    setEndTime('17:00:00')
+                    setSignUpStart('2024-05-10 00:00:00')
+                    setSignUpEnd('2024-05-20 00:00:00')
+                    setPrice('800')
+                    setAmount('20')
+                  }}
+                >
+                  一鍵填入
+                </button>
                 <button
                   type="button"
                   className="btn-close"
@@ -319,9 +342,9 @@ export default function LectureAddModal({
                         <tr>
                           <th>簡短介紹：</th>
                           <td>
-                            <input
+                            <textarea
                               type="text"
-                              className="form-control"
+                              className="form-control textarea1"
                               // name="name"
                               value={description}
                               onChange={handleDescriptionChange}
@@ -331,9 +354,9 @@ export default function LectureAddModal({
                         <tr>
                           <th>詳細介紹：</th>
                           <td>
-                            <input
+                            <textarea
                               type="text"
-                              className="form-control"
+                              className="form-control textarea2"
                               // name="name"
                               value={content}
                               onChange={handleContentChange}
@@ -347,7 +370,8 @@ export default function LectureAddModal({
                               <div>*第一章圖為封面圖</div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 1)} name="selectedFiles1"
+                                onChange={(e) => handleFileChange(e, 1)}
+                                name="selectedFiles1"
                               />
                               {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
                                 <>
@@ -364,7 +388,8 @@ export default function LectureAddModal({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 2)} name="selectedFiles2"
+                                onChange={(e) => handleFileChange(e, 2)}
+                                name="selectedFiles2"
                               />
                               {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
                                 <>
@@ -381,7 +406,8 @@ export default function LectureAddModal({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 3)} name="selectedFiles3"
+                                onChange={(e) => handleFileChange(e, 3)}
+                                name="selectedFiles3"
                               />
                               {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
                                 <>
@@ -455,6 +481,13 @@ export default function LectureAddModal({
         select {
           width: 80%;
           margin: 3px;
+        }
+        .textarea1{
+          height: 100px;
+        }
+
+        .textarea2{
+          height: 200px;
         }
 
         .modal-table {

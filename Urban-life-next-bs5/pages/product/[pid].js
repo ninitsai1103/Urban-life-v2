@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
 import toast, { Toaster } from 'react-hot-toast'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'
 import { BsCart3 } from 'react-icons/bs'
@@ -10,59 +10,70 @@ import { GoHeart, GoHeartFill } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import useProducts from '@/hooks/product/useProducts'
 import useColloections from '@/hooks/product/useCollections'
-
-
-
+import { useCheckout } from '@/hooks/use-checkout'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export default function Detail() {
-const {products} = useProducts();
-const {collections, addCollection, removeCollection} = useColloections();
-const router = useRouter();
-const {pid} = router.query;
-const [product, setProduct] = useState(null)
-const [isCollected, setIsCollected] =useState(null) //商品是否有被收藏
-const [amount, setAmount] = useState(1)
+  const { products } = useProducts()
+  const { collections, addCollection, removeCollection } = useColloections()
 
-//pid動態路由
-useEffect(() => {
-  if (pid && products.length > 0) {
-  const fetchProduct = products.find(item => item.id === parseInt(pid))
-  setProduct(fetchProduct);
+  // use to get product id by url
+  const router = useRouter()
+  const { pid } = router.query
+
+  const [product, setProduct] = useState(null)
+  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+
+  //加入購物車
+  const { addItem } = useCheckout()
+  const MySwal = withReactContent(Swal)
+
+  useEffect(() => {
+    //根據pid動態路由對應商品資料
+    if (pid && products.length > 0) {
+      const fetchProduct = products.find(
+        (item) => item.id === parseInt(pid, 10)
+      )
+      setProduct(fetchProduct)
+    }
+  }, [products])
+
+  // init IsCollected by collection -> valid
+  useEffect(() => {
+    // 檢查當前商品是否在收藏列表中
+    setIsCollected(
+      collections.find((item) => item.product_id == pid && item.valid == 1)
+    )
+  }, [collections])
+
+  //切換商品的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    toast.success(message, {})
   }
 
-// 收藏
- // 檢查當前商品是否在收藏列表中
- const isFound = collections.find(item => item.product_id === pid && item.valid === 1)
- setIsCollected(Boolean(isFound))
-},[pid, products, collections]) 
+  // useEffect(()=>{
+  //   console.log(isCollected);
+  // }, [isCollected])
 
+  const notifySA = (product) => {
+    MySwal.fire({
+      title: '成功加入',
+      text: product.name + '已成功加入購物車!',
+      icon: 'success',
+    })
+  }
 
-
-//切換商品的收藏狀態
-  const toggleCollection = () => {
-    setIsCollected(!isCollected);
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-      toast.success(message, {
-      })
-    }
-    
-//增加商品數量
-const addAmount = () => {
-  const maxAmount = product.amount;
-  console.log(maxAmount);
-  setAmount(prevAmount =>  Math.min(maxAmount, prevAmount + 1));
-  
-}
-
-//減少商品數量
-const reduceAmount = () => {
-  setAmount(prevAmount => Math.max(0, prevAmount - 1))
-}
-
+  // //將商品資料傳入localstorage
+  // const productLS = () => {
+  //   localStorage.setItem('prouduct',)
+  // }
 
   return (
     <>
-        <div className="container " >
+      <div className="container ">
         <div className="row mt-5 mx-2">
           <div className="col-12">
             <Link className="text-decoration-none fs-5" href="">
@@ -90,13 +101,18 @@ const reduceAmount = () => {
               </li>
             </ol>
           </nav>
-          
+
           <div className=" col col-lg-7 mb-3 mb-lg-0" style={{ top: '2rem' }}>
             <Carousel productId={pid} />
           </div>
-        
+
           <div className="col col-lg-5 set-font set-div-height d-flex flex-column justify-content-between">
-            <h4 className="mb-3 fs-4">{product && (pid > 440 && pid <451 ? product.name : `${product.name}(${product.size})`)}</h4>
+            <h4 className="mb-3 fs-4">
+              {product &&
+                (pid > 440 && pid < 451
+                  ? product.name
+                  : `${product.name}(${product.size})`)}
+            </h4>
             <p className="product-desc set-height">
               {product && product.description}
             </p>
@@ -107,7 +123,9 @@ const reduceAmount = () => {
               <p className="card-text mb-0 me-3 text-color2-nohover ">
                 NTD {product && product.price}
               </p>
-              <p className="card-text text-delete set-text-color3">NTD { product && product.price + 200}</p>
+              <p className="card-text text-delete set-text-color3">
+                NTD {product && product.price + 200}
+              </p>
             </div>
             <div className="star d-flex align-items-center mb-4">
               <p className="me-2 mb-0">評價</p>
@@ -115,9 +133,11 @@ const reduceAmount = () => {
                 className=""
                 style={{ color: '#F6A404', fontSize: '20px' }}
               />
-              <p className="ms-1 mb-0 fs-17 padding">{product && product.star}</p>
+              <p className="ms-1 mb-0 fs-17 padding">
+                {product && product.star}
+              </p>
             </div>
-            <div className="input-group mb-4 w-50">
+            {/* <div className="input-group mb-4 w-50">
               <button className="btn  btn-bg" type="button" id="button-minus"
               onClick={reduceAmount}>
                 -
@@ -136,47 +156,69 @@ const reduceAmount = () => {
               >
                 +
               </button>
-            </div>
+            </div> */}
             <div>
-              <button className="btn btn-main btn-hover w-100 mb-3">
+              <Link
+                className="btn btn-main btn-hover w-100 mb-3"
+                href="/cart"
+                onClick={() => {
+                  addItem(product)
+                }}
+              >
                 <AiOutlineShopping
                   className="me-1 mb-1"
                   style={{ fontSize: '21px' }}
                 />
                 立即購買
-              </button>
+              </Link>
               <div className="d-flex justify-content-between">
-              <Toaster
-                position="top-center"
-                reverseOrder={false}
-              />
-                <button className="btn btn-add btn-hover2  ">
+                <Toaster position="top-center" reverseOrder={false} />
+                <button
+                  className="btn btn-add btn-hover2 "
+                  onClick={() => {
+                    // 呈現訊息
+                    notifySA(product)
+                    // notify(v.name)
+
+                    // 加入購物車狀態
+                    addItem(product)
+                  }}
+                >
                   <BsCart3 className="me-1 mb-1" style={{ fontSize: '17px' }} />
                   加入購物車
                 </button>
-                { isCollected ? 
-                  (<button className="btn btn-add btn-hover2"
-                onClick={e => {
-                    e.preventDefault();
-                    toggleCollection();
-                    removeCollection(product.id);
-                  }}>
-                  <GoHeartFill className="me-1 mb-1"  style={{ fontSize: '19px', color: '#ff4136' }}/>
-                  取消收藏
+
+                {isCollected ? (
+                  <button
+                    className="btn btn-add btn-hover2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      removeCollection(pid)
+                    }}
+                  >
+                    <GoHeartFill
+                      className="me-1 mb-1"
+                      style={{ fontSize: '19px', color: '#ff4136' }}
+                    />
+                    取消收藏
                   </button>
-                )
-               :
-               (<button className="btn btn-add btn-hover2"
-                 onClick={e => {
-                  e.preventDefault();
-                  toggleCollection();
-                  addCollection(product.id);
-                }}>
-                  <GoHeart className="me-1 mb-1" style={{ fontSize: '19px' }} />
-                  加入收藏
-                </button>)
-               
-              }
+                ) : (
+                  <button
+                    className="btn btn-add btn-hover2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      addCollection(pid)
+                    }}
+                  >
+                    <GoHeart
+                      className="me-1 mb-1"
+                      style={{ fontSize: '19px' }}
+                    />
+                    加入收藏
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -196,11 +238,11 @@ const reduceAmount = () => {
               </p>
             </div>
           </div>
-        
+
           <div className="col-12 mb-5">
             <h4 className="text-center mb-5">購買須知</h4>
             <div className="d-flex justify-content-center align-items-center bg-opacity py-4 p-lg-5 fw-400 border-rd">
-              <p className="text-start mb-0 font-weight-light col-lg-7 set-width2">
+              <div className="text-start mb-0 font-weight-light col-lg-7 set-width2">
                 1.植栽受環境、季節因素影響導致每顆型態會有所不同,但我們皆會確保健康才出貨。
                 <br />
                 2.活體植栽在運送過程中仍可能有少許葉損與土撒,我們會盡力妥善包裝減少損害。
@@ -212,10 +254,10 @@ const reduceAmount = () => {
                 <p className="mt-3">
                   以上說明還請您詳細參閱，如可接受再進行下單,感謝您的包容,讓我們一起快樂種植吧!
                 </p>
-              </p>
+              </div>
             </div>
           </div>
-       
+
           <div className="col-12 mb-5">
             <h4 className="text-center mb-5">買家評價</h4>
             <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
@@ -306,7 +348,7 @@ const reduceAmount = () => {
           </div>
           <div className="col-12 mb-5  position-relative px-0">
             <h4 className="text-center mb-5">推薦商品</h4>
-            <div id="carouselExampleControls" class="carousel slide">
+            <div id="carouselExampleControls" className="carousel slide">
               <div className="carousel-inner">
                 <div className="carousel-item active">
                   {/* <ProductCard product={product}/> */}
@@ -314,8 +356,8 @@ const reduceAmount = () => {
                 <div className="carousel-item">
                   {/* <ProductCard product={product} /> */}
                 </div>
-                 {/* <!-- Additional carousel items -->  */}
-                </div>
+                {/* <!-- Additional carousel items -->  */}
+              </div>
               <button
                 className="carousel-control-prev d-none d-lg-block"
                 type="button"
@@ -343,7 +385,7 @@ const reduceAmount = () => {
             </div>
           </div>
         </div>
-      </div>   
+      </div>
     </>
   )
 }

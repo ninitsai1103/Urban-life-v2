@@ -17,27 +17,6 @@ function ProductRating({
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
-  const handleSubmit = async () => {
-    let url = 'http://localhost:3005/api/product_lecture_comment'
-
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: 43,
-        comment: comment,
-        star: rating,
-        product_lecture_id: itemId,
-      }),
-    })
-
-    const data = await res.json()
-  }
-
-  // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
-  const [hoverRating, setHoverRating] = useState(0)
   return (
     <>
       <Button className="btn btn-main border-0" onClick={handleShow}>
@@ -85,14 +64,12 @@ function ProductRating({
             </div>
             <div>
               <div className="body-title">詳細評價</div>
-              <input
-                // className="form-control"
-                // rows="4"
-                defaultValue={comment}
-                // onChange={(e) => {
-                //   onCommentChange(itemName, e.target.value)
-                // }}
-              ></input>
+              <textarea
+                className="form-control"
+                rows="4"
+                value={comment}
+                onChange={(e) => onCommentChange(itemName, e.target.value)}
+              ></textarea>
             </div>
           </div>
         </Modal.Body>

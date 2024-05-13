@@ -14,10 +14,7 @@ const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
 const {addCollection, removeCollection} =useColloections();
 
 
-
-// const collections=[]
-// console.log(collections);
-
+// init IsCollected by collection -> valid
 useEffect(() => {
   // 檢查當前商品是否在收藏列表中
 setIsCollected(collections.find(item => item.product_id == product.id && item.valid == 1))

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import getWeeksInMonth from './utils'
 
@@ -11,25 +11,23 @@ export default function CalendarBody({ calendarMain, cardData }) {
   const handleDateClick = (day) => {
     const clickedDate = moment(calendarMain).date(day)
     console.log('Clicked Date:', clickedDate.format('YYYY-MM-DD'))
+    // console.log(typeof day)
   }
 
   // 檢查傳過來的訊息
   // console.log(cardData);
   // 接收到cardData存在後就加進行事曆裡面
-  const lectureAdd = () => {
-    if (cardData) {
-      return
-      ;<>
-        <div key={index}>
-          <h3>{cardData.lecture_name}</h3>
-          <p>{cardData.start_date}</p>
-        </div>
-      </>
-    } else {
-      return null // 如果 cardData 不存在，返回 null 或其他你想要顯示的內容
-    }
-  }
+  // console.log(typeof moment(cardData.lecture_date).format('DD'))
 
+  // 接收到cardData存在後就加進課程的一個資料裡面
+  const [myCalandarLecture, setMyCalandarLecture] = useState([])
+  useEffect(() => {
+    if (cardData.lecturename !== undefined) {
+      const newMyCalendarLecture = [...myCalandarLecture, cardData.lecturename]
+      setMyCalandarLecture(newMyCalendarLecture)
+      console.log(newMyCalendarLecture)
+    }
+  }, [cardData])
   return (
     <>
       <div className="body mt-4">
@@ -58,7 +56,13 @@ export default function CalendarBody({ calendarMain, cardData }) {
                 key={dIdx}
                 onClick={day ? () => handleDateClick(day) : undefined}
               >
-                {day}
+                <div>{day}</div>
+                {/* 在這裡渲染 cardData */}
+                <div>
+                  {day == moment(cardData.lecture_date).format('DD') ? (
+                    <>{cardData.lecturename}</>
+                  ) : null}
+                </div>
               </div>
             ))}
           </div>
