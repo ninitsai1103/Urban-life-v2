@@ -7,7 +7,7 @@ import { UseLecture } from '@/hooks/use-lecture'
 
 export default function LectureMyCard({lectures}) {
   // const { lectures } = UseLecture()
-  console.log("origin lectures in card", lectures);
+  // console.log("origin lectures in card", lectures);
 
   return (
     <>

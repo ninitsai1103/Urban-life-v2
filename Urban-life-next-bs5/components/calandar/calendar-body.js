@@ -20,14 +20,20 @@ export default function CalendarBody({ calendarMain, cardData }) {
   // console.log(typeof moment(cardData.lecture_date).format('DD'))
 
   // 接收到cardData存在後就加進課程的一個資料裡面
-  const [myCalandarLecture, setMyCalandarLecture] = useState([])
+  const [myCalendarLectures, setMyCalandarLecture] = useState([])
   useEffect(() => {
     if (cardData.lecturename !== undefined) {
-      const newMyCalendarLecture = [...myCalandarLecture, cardData.lecturename]
-      setMyCalandarLecture(newMyCalendarLecture)
-      console.log(newMyCalendarLecture)
+      const newMyCalendarLectures = [...myCalendarLectures, cardData]
+      setMyCalandarLecture(newMyCalendarLectures)
+      console.log(newMyCalendarLectures)
     }
   }, [cardData])
+
+  // 加入到行事曆的狀態，判斷她要不要顯示刪除按鈕
+  const [calandarLectureExist, setCalandarLectureExist] = useState(false)
+  useEffect(()=>{
+
+  },[calandarLectureExist])
   return (
     <>
       <div className="body mt-4">
@@ -59,9 +65,13 @@ export default function CalendarBody({ calendarMain, cardData }) {
                 <div>{day}</div>
                 {/* 在這裡渲染 cardData */}
                 <div>
-                  {day == moment(cardData.lecture_date).format('DD') ? (
-                    <>{cardData.lecturename}</>
-                  ) : null}
+                  {myCalendarLectures.map((myCalendarLecture) => {
+                    return day == moment(myCalendarLecture.lecture_date).format('DD') ? (
+                      <div className='myCalendarLecture'>{myCalendarLecture.lecturename}</div>
+                    ) : (
+                      <></>
+                    )
+                  })}
                 </div>
               </div>
             ))}
@@ -76,6 +86,11 @@ export default function CalendarBody({ calendarMain, cardData }) {
         .date-block {
           width: 80px;
           height: 100px;
+        }
+        .myCalendarLecture{
+          background-color:#f3b454;
+          border-radius: 1rem;
+          text-align: center;
         }
       `}</style>
     </>

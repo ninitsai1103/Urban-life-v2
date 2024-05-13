@@ -46,10 +46,10 @@ export default function LectureMyCardNp({ lecture, product, setCardData, collect
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
   const { addCollection, removeCollection } = useColloections();
 
-  useEffect(() => {
-    // 檢查當前商品是否在收藏列表中
-    setIsCollected(collections.find(item => item.product_id == product.id && item.valid == 1))
-  }, [collections, product.id])
+  // useEffect(() => {
+  //   // 檢查當前商品是否在收藏列表中
+  //   setIsCollected(collections.find(item => item.product_id == product.id && item.valid == 1))
+  // }, [collections, product.id])
 
   //切換商品的收藏狀態
   const toggleCollection = () => {
