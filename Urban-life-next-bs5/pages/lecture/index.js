@@ -24,100 +24,94 @@ export default function LectureHome() {
 
   // 從calandar接到時間 (因為是最後的日期貼上去所以是接到這個月的月底時間)
   const [nowTime, setNowTime] = useState(new Date())
-  // console.log(nowTime)
 
-  // const [filterCondition, setFilterCondition] = useState({
-  //   thisMonth: true,
-  //   popular: false,
-  //   upcoming: false,
-  // })
-
-  // const getFilteredLectures = () => {
-  //   let filteredLectures = lectures.filter((lecture) => {
-  //     const deadlineDate = new Date(lecture.deadline)
-  //     const currentMonth = nowTime.getMonth()
-  //     const deadlineMonth = deadlineDate.getMonth()
-  //     return filterCondition.thisMonth && currentMonth === deadlineMonth
-  //   })
-
-  //   if (!filterCondition.thisMonth) {
-  //     filteredLectures = lectures
-  //   } else if (filterCondition.popular) {
-  //     filteredLectures = lectures
-  //       .sort((a, b) => b.amount - a.amount)
-  //       .slice(0, 8)
-  //   } else if (filterCondition.upcoming) {
-  //     const nextMonth = nowTime.getMonth() + 1
-  //     filteredLectures = lectures.filter((lecture) => {
-  //       const deadlineDate = new Date(lecture.deadline)
-  //       const deadlineMonth = deadlineDate.getMonth()
-  //       return nextMonth === deadlineMonth
-  //     })
-  //   }
-
-  //   return filteredLectures
-  // }
-
-  // const handleFilterButtons = (filterType) => {
-  //   switch (filterType) {
-  //     case '本月課程':
-  //       setFilterCondition({ thisMonth: true, popular: false, upcoming: false })
-  //       break
-  //     case '所有課程':
-  //       setFilterCondition({
-  //         thisMonth: false,
-  //         popular: false,
-  //         upcoming: false,
-  //       })
-  //       break
-  //     case '熱門課程':
-  //       setFilterCondition({ thisMonth: true, popular: true, upcoming: false })
-  //       break
-  //     case '即將開課':
-  //       setFilterCondition({ thisMonth: true, popular: false, upcoming: true })
-  //       break
-  //     default:
-  //       break
-  //   }
-  // }
-
-  // const filteredLectures = getFilteredLectures()
-  // useEffect(() => {
-  //   handleFilterButtons('本月課程')
-  //   getFilteredLectures()
-  // }, [])
   const [renderLectures, setRenderLectures] = useState(lectures)
+  const [selectedSortOption, setSelectedSortOption] = useState('');
 
-  // useEffect(() => {
-  //   console.log("=====================================================origin lectures", renderLectures);
-  // }, [])
-
+  const [lectureCount, setLectureCount] = useState(0); // 增加一個狀態用於存儲課程數量
 
   //本月課程按鈕
   const handleThisMonth = () => {
     const today = new Date()
-    // console.log(today.getMonth()+1);
     const currentMonth = today.getMonth() + 1;
-    const lecturesThisMonth = lectures.filter((v, i) => {
-      return v.lecture_date.slice(5, 7) == currentMonth
-    })
-    setRenderLectures(lecturesThisMonth)
+    const lecturesThisMonth = lectures.filter((lecture) => {
+      return lecture.lecture_date.slice(5, 7) == currentMonth
+    }).sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date));
+    setRenderLectures(lecturesThisMonth);
+    // 將排序設置為預設值，以避免影響後續的排序狀態
+    setSelectedSortOption('');
+    setLectureCount(lecturesThisMonth.length); // 更新課程數量
   }
-  //熱門課程按鈕
-  const handlePopular = () => {}
+
   //即將開課按鈕
-  const handleUpcoming = () => {}
+  const handleNextMonth = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1; // 如果當前是12月，則下個月為1月，否則為當前月份加1
+    const nextYear = currentMonth === 12 ? today.getFullYear() + 1 : today.getFullYear(); // 如果當前是12月，則下個月的年份為當前年份加1，否則為當前年份
+    const nextMonthString = nextMonth < 10 ? `0${nextMonth}` : `${nextMonth}`; // 將下個月轉換為兩位數的字符串形式
+    const nextMonthStart = `${nextYear}-${nextMonthString}-01`; // 下個月的開始日期（假設為當月的第一天）
+    const nextMonthEnd = `${nextYear}-${nextMonthString}-31`; // 下個月的結束日期（假設為當月的最後一天）
+    const lecturesNextMonth = lectures.filter((v, i) => {
+      return v.lecture_date >= nextMonthStart && v.lecture_date <= nextMonthEnd;
+    }).sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date)); // 過濾出下個月的講座
+    setRenderLectures(lecturesNextMonth); // 更新渲染的講座列表
+    setSelectedSortOption('');
+    setLectureCount(lecturesNextMonth.length); // 更新課程數量
+  };
+
+  // 所有課程按鈕
+  const handleAllLectures = () => {
+    // 基於當前時間排序所有課程
+    const sortedLectures = lectures.sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date));
+    // 設置為渲染的講座列表
+    setRenderLectures(sortedLectures);
+    setSelectedSortOption('');
+    setLectureCount(sortedLectures.length); // 更新課程數量
+  };
 
   // 從課程卡片拿出來的資料
   const [cardData, setCardData] = useState({})
 
+  // 搜尋功能
+  const handleSearch = (keyword) => {
+    const filteredLectures = lectures.filter((lecture) =>
+      lecture.name.toLowerCase().includes(keyword.toLowerCase()) ||
+      lecture.teacher_name.toLowerCase().includes(keyword.toLowerCase()) ||
+      lecture.lecture_date.toLowerCase().includes(keyword.toLowerCase()) ||
+      lecture.description.toLowerCase().includes(keyword.toLowerCase()) ||
+      lecture.content.toLowerCase().includes(keyword.toLowerCase())
+    );
+    setRenderLectures(filteredLectures);
+  };
+
+  // 根據選擇的排序選項對課程進行排序
+  const [selectedSortOptionDD, setSelectedSortOptionDD] = useState('');
+
+
+  const handleSortDropdown = (sortBy) => {
+    handleSort(sortBy); // 調用排序函式
+    setSelectedSortOptionDD(sortBy); // 設置所選的排序方式為狀態
+  };
+
+
+  const handleSort = (sortBy) => {
+    let sortedLectures = [...renderLectures];
+    if (sortBy === 'priceHighToLow') {
+      sortedLectures.sort((a, b) => b.price - a.price);
+    } else if (sortBy === 'priceLowToHigh') {
+      sortedLectures.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'starHighToLow') {
+      sortedLectures.sort((a, b) => b.star - a.star);
+    } else if (sortBy === 'starLowToHigh') {
+      sortedLectures.sort((a, b) => a.star - b.star);
+    }
+    setRenderLectures(sortedLectures);
+    setSelectedSortOption(sortBy);
+  };
+
   //講師陣容
-
   const [randomTeachers, setRandomTeachers] = useState([])
-
-  useEffect(() => {
-    generateRandomTeachers()
-  }, [])
 
   // 生成隨機的教師卡片
   const generateRandomTeachers = () => {
@@ -129,6 +123,23 @@ export default function LectureHome() {
     setRandomTeachers(selectedTeachers)
   }
 
+  useEffect(() => {
+    if (lectures.length > 0) {
+      // 如果 lectures 不為空，則設置 renderLectures
+      setRenderLectures(lectures);
+      setLectureCount(lectures.length);
+    }
+    
+    handleThisMonth(); // 初次渲染時顯示本月課程
+  }, [lectures]);
+
+  useEffect(() => {
+    if (teachers.length > 0) {
+      // 如果 teachers 不為空，則設置 randomTeachers
+      generateRandomTeachers();
+    }
+  }, [teachers]);
+  
   return (
     <>
       <section className="slider">
@@ -139,36 +150,30 @@ export default function LectureHome() {
       <div className="container">
         <section className="section1">
           <div className="search">
-            <Search />
+            <Search handleSearch={handleSearch} />
           </div>
           <div className="btngrp">
             <button
               className="btn btn-main-r"
-              onClick={() => handleThisMonth()}
+              onClick={handleThisMonth}
             >
               本月課程
             </button>
             <button
               className="btn btn-main-r"
-              onClick={() => handleFilterButtons('所有課程')}
+              onClick={handleAllLectures}
             >
               所有課程
             </button>
             <button
               className="btn btn-main-r"
-              onClick={() => handlePopular()}
-            >
-              熱門課程
-            </button>
-            <button
-              className="btn btn-main-r"
-              onClick={() => handleUpcoming()}
+              onClick={handleNextMonth}
             >
               即將開課
             </button>
           </div>
           <div className="bar">
-            <div className="lecnum">共 8 門課程</div>
+            <div className="lecnum">共 {lectureCount} 門課程</div>
             <div className="dropdown">
               <button
                 className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center sort-btn-size"
@@ -177,38 +182,48 @@ export default function LectureHome() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                排序
+                {selectedSortOption ? (
+                  <>
+                      {selectedSortOptionDD === 'priceHighToLow' ? '價格由高到低' :
+                        selectedSortOptionDD === 'priceLowToHigh' ? '價格由低到高' :
+                        selectedSortOptionDD === 'starHighToLow' ? '評價由高到低' :
+                        selectedSortOptionDD === 'starLowToHigh' ? '評價由低到高' : ''}
+                  </>
+                ) : (
+                  '排序'
+                )}
               </button>
-              <ul
-                className="dropdown-menu"
-                aria-labelledby="dropdownMenuButton1"
-              >
+              <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <button className="dropdown-item" onClick={() => handleSortDropdown('priceHighToLow')}>
                     價格由高到低
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
-                    價格由舊到新
-                  </a>
+                  <button className="dropdown-item" onClick={() => handleSortDropdown('priceLowToHigh')}>
+                    價格由低到高
+                  </button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <button className="dropdown-item" onClick={() => handleSortDropdown('starHighToLow')}>
                     評價由高到低
-                  </a>
+                  </button>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <button className="dropdown-item" onClick={() => handleSortDropdown('starLowToHigh')}>
                     評價由低到高
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="cardgrp">
-            <LectureMyCard lectures={renderLectures} />
-          </div>
+          {renderLectures.length > 0 ? (
+            <div className="cardgrp">
+              <LectureMyCard lectures={renderLectures} />
+            </div>
+          ) : (
+            <p>No lectures available</p>
+          )}
         </section>
         {/* 行事曆 */}
         <section className="section2">
@@ -235,6 +250,7 @@ export default function LectureHome() {
                   // 檢查講座報名截止日期的年份和月份是否與當前日期的年份和月份相同
                   return deadlineYear === nowYear && deadlineMonth === nowMonth
                 })
+                .sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date))
                 .map((lecture) => {
                   return (
                     <LectureMyCardNp
@@ -278,18 +294,22 @@ export default function LectureHome() {
           <h1 className="sectiontitle">常見問題</h1>
           <QAList />
         </section>
-        <section className="section5">
+        {/* <section className="section5">
           <h1 className="sectiontitle">還在猶豫嗎？來看看好評推薦吧！</h1>
-        </section>
+        </section> */}
         <section className="section6">
           <h1 className="sectiontitle">講師陣容</h1>
           <p className="teachertext">Teacher</p>
           <div style={{ maxWidth: '1290px', overflow: 'hidden' }}>
-            <div className="teachergrp">
-              {randomTeachers.map((teacher) => (
-                <TeacherCardInfo key={teacher.id} teacher={teacher} />
-              ))}
-            </div>
+            {randomTeachers.length > 0 ? (
+              <div className="teachergrp">
+                {randomTeachers.map((teacher) => (
+                  <TeacherCardInfo key={teacher.id} teacher={teacher} />
+                ))}
+              </div>
+            ) : (
+              <p>No teachers available</p>
+            )}
             {/* 刷新按鈕 */}
             <div
               style={{
@@ -298,7 +318,7 @@ export default function LectureHome() {
                 marginTop: '30px',
               }}
             >
-              <button className='btn btn-add' onClick={generateRandomTeachers}>隨機發現還有哪些老師</button>
+              <button className='btn btn-add' onClick={generateRandomTeachers}>發現還有哪些老師</button>
             </div>
           </div>
         </section>
