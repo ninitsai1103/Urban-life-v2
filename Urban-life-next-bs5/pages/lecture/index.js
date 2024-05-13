@@ -22,7 +22,7 @@ export default function LectureHome() {
   // 把資料拿出來
   const { lectures } = UseLecture()
   const { teachers } = UseTeacherInfo()
-  const { collections } = useColloections()
+  const { collections } = useColloections([])
 
   // 從calandar接到時間 (因為是最後的日期貼上去所以是接到這個月的月底時間)
   const [nowTime, setNowTime] = useState(new Date())
