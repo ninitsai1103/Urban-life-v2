@@ -40,16 +40,23 @@ router.get('/', async function (req, res) {
   let sqlLectures = `
   SELECT 
     product_lecture.*,
-    location.name AS location_name 
+    location.name AS location_name,
+    COALESCE(SUM(cart.amount), 0) AS total_bought
   FROM 
     product_lecture
   LEFT JOIN
     location
   ON
     product_lecture.location_id = location.id
+  LEFT JOIN
+    cart
+  ON
+    product_lecture.id = cart.product_id
   WHERE 
-    valid = 1 AND pdlt_id = 2
-    `
+    product_lecture.valid = 1 AND product_lecture.pdlt_id = 2
+  GROUP BY 
+    product_lecture.id, location.name;
+  `
 
   try {
     const [rows, fields] = await db.query(sqlLectures) // 將 sqlProducts 作為參數傳遞給 db.query()

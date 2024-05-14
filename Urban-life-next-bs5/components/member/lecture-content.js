@@ -118,7 +118,6 @@ export default function LectureContentTbody({
     }
   }, [startingTime, endingTime])
 
-
   // 定義選擇的報名開始日期時間狀態變數，初始值為 sign_up_starting 或空字串
   const [signUpStart, setSignUpStart] = useState(
     lecture && lecture.sign_up_starting ? lecture.sign_up_starting : ''
@@ -128,7 +127,8 @@ export default function LectureContentTbody({
     lecture && lecture.sign_up_deadline ? lecture.sign_up_deadline : ''
   )
 
-  const [showSignUpStartDateError, setShowSignUpStartDateError] = useState(false)
+  const [showSignUpStartDateError, setShowSignUpStartDateError] =
+    useState(false)
   const [showSignUpEndDateError, setShowSignUpEndDateError] = useState(false)
 
   // 取得明天的日期和時間，格式為 YYYY-MM-DDTHH:mm （datetime-local 需要此格式）
@@ -212,7 +212,6 @@ export default function LectureContentTbody({
       }
     }
   }, [signUpEnd, lectureDate])
-
 
   // 狀態變量
   const [name, setName] = useState(lecture.name) // 初始值設定為 lecture 的名稱
@@ -344,13 +343,13 @@ export default function LectureContentTbody({
 
       {/* 檢視modal */}
       <div
-        className="modal fade modal_width"
+        className="modal fade modal_width "
         id={`detailModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog custom-modal-width">
           <div className="modal-content">
             <form>
               <div className="modal-header">
@@ -406,14 +405,14 @@ export default function LectureContentTbody({
                         </tr>
                         <tr>
                           <th>已報名人數：</th>
-                          <td>15</td>
+                          <td>{lecture.total_bought}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th>已報名學員：</th>
                           <td>
                             許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
                           </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <th>簡短介紹：</th>
                           <td>{lecture.description}</td>
@@ -490,7 +489,7 @@ export default function LectureContentTbody({
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog custom-modal-width">
           <div className="modal-content">
             <form>
               <div className="modal-header">
@@ -634,7 +633,7 @@ export default function LectureContentTbody({
                         <tr>
                           <th>上課日期：</th>
                           <td>
-                          {lectureDateError && (
+                            {lectureDateError && (
                               <div
                                 className="fw-bold"
                                 style={{ fontSize: '12px', color: 'red' }}
@@ -702,93 +701,140 @@ export default function LectureContentTbody({
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <div>*第一章圖為封面圖</div>
-                            <img
-                              className="originImg"
-                              src={`http://localhost:3005/lecture_img/${lecture.cover}`}
-                            ></img>
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 1)}
-                                name="selectedFiles1"
-                              />
-                              {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>替換圖片預覽：</div>
+                            <div className="d-flex mt-2">
+                              <div className="w-50">
+                                <div className="fw-bold mb-3 mt-2">
+                                  *第一張圖為封面圖
+                                </div>
+                                <div className="d-flex justify-content-center">
                                   <img
-                                    className="updateImg"
-                                    src={previewURL1}
-                                    alt=""
-                                  />
-                                </>
-                              )}
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.cover}`}
+                                  ></img>
+                                </div>
+                              </div>
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 1)}
+                                  name="selectedFiles1"
+                                />
+                                {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div style={{ fontSize: '16px' }}>
+                                      替換圖片預覽：
+                                    </div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL1}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             </div>
 
-                            <img
-                              className="originImg mt-4"
-                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
-                            ></img>
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 2)}
-                                name="selectedFiles2"
-                              />
-                              {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>替換圖片預覽：</div>
+                            <div className="d-flex mt-4">
+                              <div className="w-50">
+                                <div className="fw-bold mb-3 mt-2">
+                                  第二張：
+                                </div>
+                                <div className="d-flex justify-content-center">
                                   <img
-                                    className="updateImg"
-                                    src={previewURL2}
-                                    alt=""
-                                  />
-                                </>
-                              )}
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
+                                  ></img>
+                                </div>
+                              </div>
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 2)}
+                                  name="selectedFiles2"
+                                />
+                                {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>替換圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL2}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             </div>
 
-                            <img
-                              className="originImg mt-4"
-                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
-                            ></img>
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 3)}
-                                name="selectedFiles3"
-                              />
-                              {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>替換圖片預覽：</div>
+                            <div className="d-flex mt-4">
+                              <div className="w-50">
+                                <div className="fw-bold mb-3 mt-2">
+                                  第三張：
+                                </div>
+                                <div className="d-flex justify-content-center">
                                   <img
-                                    className="updateImg"
-                                    src={previewURL3}
-                                    alt=""
-                                  />
-                                </>
-                              )}
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
+                                  ></img>
+                                </div>
+                              </div>
+
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 3)}
+                                  name="selectedFiles3"
+                                />
+                                {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>替換圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL3}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             </div>
 
-                            <img
-                              className="originImg mt-4"
-                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
-                            ></img>
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 4)}
-                                name="selectedFiles4"
-                              />
-                              {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>替換圖片預覽：</div>
+                            <div className="d-flex mt-4 mb-2">
+                              <div className="w-50">
+                                <div className="fw-bold  mb-3 mt-2">
+                                  第四張：
+                                </div>
+                                <div className="d-flex justify-content-center">
                                   <img
-                                    className="updateImg"
-                                    src={previewURL4}
-                                    alt=""
-                                  />
-                                </>
-                              )}
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
+                                  ></img>
+                                </div>
+                              </div>
+
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 4)}
+                                  name="selectedFiles4"
+                                />
+                                {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>替換圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL4}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -880,6 +926,9 @@ export default function LectureContentTbody({
       </div>
 
       <style jsx>{`
+        .custom-modal-width {
+          max-width: 700px; /* modal寬度 */
+        }
         .setup-max-width {
           max-width: 100px;
           white-space: nowrap; /* 防止文字換行 */
@@ -907,20 +956,22 @@ export default function LectureContentTbody({
         }
 
         .textarea2 {
-          height: 200px;
+          height: 300px;
         }
 
         .modal-table {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 30%;
+            width: 25%;
+            vertical-align: middle; /* 讓字垂直置中 */
+            text-align: center;
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 70%;
+            width: 75%;
           }
           input {
             margin: 3px;
@@ -933,16 +984,24 @@ export default function LectureContentTbody({
             margin-left: 7px;
           }
           .originImg {
-            width: 80%;
-            margin-bottom: 10px;
+            height: 120px;
+            width: auto;
+            margin-top: 5px; 
+             {
+              /* margin-bottom: 10px;
             margin: 5px;
-            margin-left: 7px;
+            margin-left: 7px; */
+            }
           }
           .updateImg {
-            width: 50%;
-            margin-bottom: 10px;
+            height: 120px;
+            width: auto;
+            margin: auto;
+             {
+              /* margin-bottom: 10px;
             margin: 5px;
-            margin-left: 7px;
+            margin-left: 7px; */
+            }
           }
         }
 

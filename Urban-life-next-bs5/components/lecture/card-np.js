@@ -46,9 +46,6 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
     }
     setCardData(lectureData)
     setIsAddedtoCalendar(!isAddedtoCalendar)
-
-
-    
   }
 
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏

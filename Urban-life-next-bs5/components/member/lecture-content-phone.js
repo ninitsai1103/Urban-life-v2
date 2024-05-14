@@ -406,11 +406,11 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名開始時間：</th>
+                          <th>報名<br />開始時間：</th>
                           <td>{lecture.sign_up_starting}</td>
                         </tr>
                         <tr>
-                          <th>報名截止時間：</th>
+                          <th>報名<br />截止時間：</th>
                           <td>{lecture.sign_up_deadline}</td>
                         </tr>
                         <tr>
@@ -423,14 +423,14 @@ export default function LectureContentPhone({
                         </tr>
                         <tr>
                           <th>已報名人數：</th>
-                          <td>15</td>
+                          <td>{lecture.total_bought}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th>已報名學員：</th>
                           <td>
                             許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
                           </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <th>簡短介紹：</th>
                           <td>{lecture.description}</td>
@@ -603,7 +603,7 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名開始時間：</th>
+                          <th>報名<br />開始時間：</th>
                           <td>
                           {showSignUpStartDateError && (
                               <div
@@ -626,7 +626,7 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名截止時間：</th>
+                          <th>報名<br />截止時間：</th>
                           <td>
                           {showSignUpEndDateError && (
                               <div
@@ -719,7 +719,7 @@ export default function LectureContentPhone({
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <div>*第一章圖為封面圖</div>
+                            <div className="fw-bold">*第一張圖為封面圖</div>
                             <img
                               className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.cover}`}
@@ -741,8 +741,9 @@ export default function LectureContentPhone({
                               )}
                             </div>
 
+                            <div className="mt-4 fw-bold">第二張：</div>
                             <img
-                              className="originImg mt-4"
+                              className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
                             ></img>
                             <div>
@@ -762,8 +763,9 @@ export default function LectureContentPhone({
                               )}
                             </div>
 
+                            <div className="mt-4 fw-bold">第三張：</div>
                             <img
-                              className="originImg mt-4"
+                              className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
                             ></img>
                             <div>
@@ -783,8 +785,9 @@ export default function LectureContentPhone({
                               )}
                             </div>
 
+                            <div className="mt-4 fw-bold">第四張：</div>
                             <img
-                              className="originImg mt-4"
+                              className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
                             ></img>
                             <input
@@ -924,21 +927,23 @@ export default function LectureContentPhone({
         }
 
         .textarea2{
-          height: 200px;
+          height: 300px;
         }
 
 
         .modal-table {
           th {
             border: 1px solid #ccc;
-            padding: 5px 10px;
-            width: 40%;
+            padding: 5px 2px;
+            width: 25%;
+            vertical-align: middle; /* 讓字垂直置中 */
+            text-align: center;
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 60%;
+            width: 75%;
           }
           input {
             margin: 3px;
