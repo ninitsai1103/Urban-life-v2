@@ -14,7 +14,7 @@ import db from '#configs/mysql.js'
 
 // 獲取商品或課程評價以及評價會員的路由
 router.get('/', async function (req, res) {
-  let commentSQL = 'SELECT pc.*, ut.email, ut.img FROM product_lecture_comment pc JOIN user_teacher ut ON pc.user_id = ut.id'
+  let commentSQL = 'SELECT pc.*, ut.email, ut.img ,pl.name,pl.pdlt_id FROM product_lecture_comment pc JOIN user_teacher ut ON pc.user_id = ut.id JOIN product_lecture pl ON pc.product_lecture_id = pl.id WHERE pc.valid = 1'
   try {
     const [rows, fields] = await db.query(commentSQL)
     const userOfComments = rows.map(comment =>{

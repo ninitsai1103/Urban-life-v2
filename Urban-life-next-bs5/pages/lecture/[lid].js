@@ -22,9 +22,8 @@ export default function LectureDetail() {
   const router = useRouter()
   const { lid } = router.query
   const [lecture, setLecture] = useState(null)
-  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
-  const [comment, setComment] = useState(null)
-
+  const [isCollected, setIsCollected] = useState([]) //課程是否有被收藏
+  const [lectureComments, setLectureComments] = useState([])
   //加入購物車
   const { addItem } = useCheckout()
   const MySwal = withReactContent(Swal)
@@ -33,8 +32,8 @@ export default function LectureDetail() {
   const [visibleComments, setVisibleComments] = useState(2)
   const [showAll, setShowAll] = useState(false)
 
+  //根據lid動態路由找課程
   useEffect(() => {
-    //根據lid動態路由對應商品資料
     if (lid && lectures.length > 0) {
       const fetchLecture = lectures.find(
         (item) => item.id === parseInt(lid, 10)
@@ -44,16 +43,16 @@ export default function LectureDetail() {
   }, [lectures, lid])
 
   useEffect(() => {
-    // 檢查當前商品是否在收藏列表中
+    // 檢查當前課程是否在收藏列表中
     setIsCollected(
       collections.find((item) => item.product_id == lid && item.valid == 1)
     )
   }, [collections])
 
-  //切換商品的收藏狀態
+  //切換課程的收藏狀態
   const toggleCollection = () => {
     setIsCollected(!isCollected)
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    const message = isCollected ? '課程已取消收藏!' : '課程已加入收藏!'
     toast.success(message, {})
   }
 
@@ -65,7 +64,7 @@ export default function LectureDetail() {
     })
   }
 
-  //根據lid動態路由對應商品評論
+  //根據lid動態路由對應課程評論
   useEffect(() => {
     if (lid && comments.length > 0) {
       const fetchComment = comments
@@ -74,7 +73,7 @@ export default function LectureDetail() {
           ...comment,
           date: commentDate(comment.created_at),
         }))
-      setComment(fetchComment)
+      setLectureComments(fetchComment)
     }
   }, [comments, lid])
 
@@ -203,7 +202,7 @@ export default function LectureDetail() {
         </section>
         <section className="section5">
           <h1 className="sectiontitle">學員評價</h1>
-          <Feedback />
+          <Feedback comments={lectureComments} />
         </section>
         <section className="section6">
           <h1 className="sectiontitle">探索其他課程</h1>

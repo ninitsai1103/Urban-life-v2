@@ -23,6 +23,21 @@ export default function Order({ order }) {
 
   // 商品課程評論的資料
   const [comments, setComments] = useState([])
+
+  // 每個商品與課程都有獨立的評分狀態
+  const [productRatings, setProductRatings] = useState({})
+  const [lectureRatings, setLectureRatings] = useState({})
+  const [productComments, setProductComments] = useState({})
+  const [lectureComments, setLectureComments] = useState({})
+
+  // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
+  const [hoverRating, setHoverRating] = useState({})
+
+  // 紀錄當前商品評論的打開狀態
+  const [currentProduct, setCurrentProduct] = useState({})
+  // 紀錄當前課程評論的打開狀態
+  const [currentLecture, setCurrentLecture] = useState({})
+
   // 獲取評論資料function
   const getComments = async () => {
     let url = 'http://localhost:3005/api/product_lecture_comment'
@@ -33,7 +48,52 @@ export default function Order({ order }) {
       const newComments = data.data.comments
 
       setComments(newComments)
-      console.log(comments)
+      console.log(newComments)
+
+      // newComments.map((newComment) => {
+      //   handleProductRatingChange(newComment.name, newComment.star)
+      //   handleLectureRatingChange(newComment.name, newComment.star)
+      // })
+
+      // 讀取資料的評論內容並設定到狀態裡面
+      setProductRatings((prevRatings) => {
+        const newRatings = { ...prevRatings }
+        newComments.forEach((newComment) => {
+          if (newComment.pdlt_id == 1) {
+            newRatings[newComment.name] = newComment.star
+          }
+        })
+        return newRatings
+      })
+      setProductComments((prevRatings) => {
+        const newCommentsState = { ...prevRatings }
+        newComments.forEach((newComment) => {
+          if (newComment.pdlt_id == 1) {
+            newCommentsState[newComment.name] = newComment.comment
+          }
+        })
+        return newCommentsState
+      })
+
+      setLectureRatings((prevRatings) => {
+        const newRatings = { ...prevRatings }
+        newComments.forEach((newComment) => {
+          if (newComment.pdlt_id === 2) {
+            newRatings[newComment.name] = newComment.star
+          }
+        })
+        return newRatings
+      })
+
+      setLectureComments((prevRatings) => {
+        const newCommentsState = { ...prevRatings }
+        newComments.forEach((newComment) => {
+          if (newComment.pdlt_id === 2) {
+            newCommentsState[newComment.name] = newComment.comment
+          }
+        })
+        return newCommentsState
+      })
     } catch (error) {
       console.error('Error fetching comments:', error)
     }
@@ -42,15 +102,6 @@ export default function Order({ order }) {
   useEffect(() => {
     getComments()
   }, [])
-
-  // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
-  const [hoverRating, setHoverRating] = useState({})
-
-  // 每個商品與課程都有獨立的評分狀態
-  const [productRatings, setProductRatings] = useState({})
-  const [lectureRatings, setLectureRatings] = useState({})
-  const [productComments, setProductComments] = useState({})
-  const [lectureComments, setLectureComments] = useState({})
 
   const handleHoverRatingChange = (itemName, rating) => {
     setHoverRating({ ...hoverRating, [itemName]: rating })
@@ -70,11 +121,6 @@ export default function Order({ order }) {
   const handleLectureCommentChange = (itemName, comment) => {
     setLectureComments({ ...lectureComments, [itemName]: comment })
   }
-
-  // 紀錄當前商品評論的打開狀態
-  const [currentProduct, setCurrentProduct] = useState({})
-  // 紀錄當前課程評論的打開狀態
-  const [currentLecture, setCurrentLecture] = useState({})
 
   // 點擊評論按鈕，可以開啟該商品的評論
   const handleShowrating = (itemName) => {
@@ -110,7 +156,7 @@ export default function Order({ order }) {
       if (!res.ok) {
         throw new Error('Failed to submit comment and rating')
       }
-
+      await getComments()
       const data = await res.json()
       console.log('Comment submitted successfully:', data)
     } catch (error) {
@@ -173,6 +219,7 @@ export default function Order({ order }) {
             <div className="modal-body">
               <p style={{ fontSize: '14px' }}>訂單資訊</p>
               {/*訂單資訊 */}
+              {/* ----------------商品TABLE START---------------- */}
               <table className="table">
                 <thead>
                   <tr className="border-bottom border-black">
@@ -213,101 +260,141 @@ export default function Order({ order }) {
                           <td className="text-center">
                             NTD {item.price * item.amount}
                           </td>
-
+                          {/* 把商品評論導入近來 */}
                           <td>
-                            {/* {!currentProduct[item.name] && ( */}
+                            {comments.some(
+                              (comment) =>
+                                comment.product_lecture_id === item.product_id
+                            ) ? (
+                              comments
+                                .filter(
+                                  (comment) =>
+                                    comment.product_lecture_id ===
+                                    item.product_id
+                                )
+                                .map((comment) => (
+                                  <>
+                                    <div key={comment.id}>
+                                      <div className="rate-star mb-1">
+                                        <div className="body-title">評價</div>
+                                        {Array(5)
+                                          .fill(1)
+                                          .map((v, i) => {
+                                            // 每個按鈕的分數，相當於索引+1
+                                            const score = i + 1
 
-                            <button
-                              className="btn btn-main"
-                              onClick={() => {
-                                handleShowrating(item.name)
-                              }}
-                            >
-                              商品評價
-                            </button>
-                            {/* )} */}
-                            {/* {currentProduct[item.name] && ( */}
-
-                            <div className="rate">
-                              <div className="rate-star mb-1">
-                                <div className="body-title">評價</div>
-                                {Array(5)
-                                  .fill(1)
-                                  .map((v, i) => {
-                                    // 每個按鈕的分數，相當於索引+1
-                                    const score = 1 + i
-
-                                    return (
-                                      <button
-                                        key={i}
-                                        className={styles['star-btn']}
-                                        onClick={() =>
-                                          handleProductRatingChange(
-                                            item.name,
-                                            score
-                                          )
-                                        }
-                                        onMouseEnter={() => {
-                                          handleHoverRatingChange(
-                                            item.name,
-                                            score
-                                          )
-                                        }}
-                                        onMouseLeave={() => {
-                                          setHoverRating(0)
-                                        }}
-                                      >
-                                        <span
-                                          className={
-                                            score <=
-                                              productRatings[item.name] ||
-                                            score <= hoverRating[item.name]
-                                              ? styles['on']
-                                              : styles['off']
+                                            return (
+                                              <button
+                                                key={i}
+                                                className={styles['star-btn']}
+                                              >
+                                                <span
+                                                  className={
+                                                    score <=
+                                                    productRatings[item.name]
+                                                      ? styles['on']
+                                                      : styles['off']
+                                                  }
+                                                >
+                                                  &#9733;
+                                                </span>
+                                              </button>
+                                            )
+                                          })}
+                                      </div>
+                                      <div className="rate-comment">
+                                        <input
+                                          className="form-control p-0"
+                                          disabled
+                                          defaultValue={
+                                            productComments[item.name]
                                           }
-                                        >
-                                          &#9733;
-                                        </span>
-                                      </button>
-                                    )
-                                  })}
-                              </div>
-                              <div>
-                                {/* <div className="body-title">詳細評價</div> */}
-                                <input
-                                  className="form-control p-0"
-                                  defaultValue={productComments[item.name]}
-                                  onChange={(e) => {
-                                    handleProductCommentChange(
-                                      item.name,
-                                      e.target.value
-                                    )
-                                  }}
-                                ></input>
-                              </div>
+                                        ></input>
+                                      </div>
+                                    </div>
+                                  </>
+                                ))
+                            ) : !currentProduct[item.name] ? (
                               <button
                                 className="btn btn-main"
-                                onClick={() =>
-                                  handleSubmit(
-                                    productRatings[item.name],
-                                    productComments[item.name],
-                                    item.id
-                                  )
-                                }
+                                onClick={() => {
+                                  handleShowrating(item.name)
+                                }}
                               >
-                                送出評論
+                                商品評價
                               </button>
-                            </div>
-                            {/* )} */}
+                            ) : (
+                              <div className="rate">
+                                <div className="rate-star mb-1">
+                                  <div className="body-title">評價</div>
+                                  {Array(5)
+                                    .fill(1)
+                                    .map((v, i) => {
+                                      // 每個按鈕的分數，相當於索引+1
+                                      const score = 1 + i
 
-                            {/* <ProductRating
-                              itemId={item.id}
-                              itemName={item.name}
-                              rating={productRatings[item.name] || 0}
-                              comment={productComments[item.name] || ''}
-                              onRatingChange={handleProductRatingChange}
-                              onCommentChange={handleProductCommentChange}
-                            ></ProductRating> */}
+                                      return (
+                                        <button
+                                          key={i}
+                                          className={styles['star-btn']}
+                                          onClick={() =>
+                                            handleProductRatingChange(
+                                              item.name,
+                                              score
+                                            )
+                                          }
+                                          onMouseEnter={() => {
+                                            handleHoverRatingChange(
+                                              item.name,
+                                              score
+                                            )
+                                          }}
+                                          onMouseLeave={() => {
+                                            setHoverRating(0)
+                                          }}
+                                        >
+                                          <span
+                                            className={
+                                              score <=
+                                                productRatings[item.name] ||
+                                              score <= hoverRating[item.name]
+                                                ? styles['on']
+                                                : styles['off']
+                                            }
+                                          >
+                                            &#9733;
+                                          </span>
+                                        </button>
+                                      )
+                                    })}
+                                </div>
+                                <div>
+                                  {/* <div className="body-title">詳細評價</div> */}
+                                  <input
+                                    className="form-control p-0"
+                                    defaultValue={productComments[item.name]}
+                                    onChange={(e) => {
+                                      handleProductCommentChange(
+                                        item.name,
+                                        e.target.value
+                                      )
+                                    }}
+                                  ></input>
+                                </div>
+                                <button
+                                  className="btn btn-main"
+                                  onClick={() =>
+                                    handleSubmit(
+                                      productRatings[item.name],
+                                      productComments[item.name],
+                                      item.product_id
+                                    )
+                                  }
+                                >
+                                  送出評論
+                                </button>
+                              </div>
+                            )}
                           </td>
                         </tr>
                       </tbody>
@@ -315,6 +402,9 @@ export default function Order({ order }) {
                   }
                 })}
               </table>
+              {/* ----------------商品TABLE END------------------ */}
+
+              {/* ----------------課程TABLE START---------------- */}
               <table className="table">
                 <thead>
                   <tr className="border-bottom border-black">
@@ -356,7 +446,59 @@ export default function Order({ order }) {
                             NTD {item.price * item.amount}
                           </td>
                           <td>
-                            {!currentLecture[item.name] && (
+                            {comments.some(
+                              (comment) =>
+                                comment.product_lecture_id === item.product_id
+                            ) ? (
+                              comments
+                                .filter(
+                                  (comment) =>
+                                    comment.product_lecture_id ===
+                                    item.product_id
+                                )
+                                .map((comment) => (
+                                  <>
+                                    <div key={comment.id}>
+                                      <div className="rate-star mb-1">
+                                        <div className="body-title">評價</div>
+                                        {Array(5)
+                                          .fill(1)
+                                          .map((v, i) => {
+                                            // 每個按鈕的分數，相當於索引+1
+                                            const score = i + 1
+
+                                            return (
+                                              <button
+                                                key={i}
+                                                className={styles['star-btn']}
+                                              >
+                                                <span
+                                                  className={
+                                                    score <=
+                                                    lectureRatings[item.name]
+                                                      ? styles['on']
+                                                      : styles['off']
+                                                  }
+                                                >
+                                                  &#9733;
+                                                </span>
+                                              </button>
+                                            )
+                                          })}
+                                      </div>
+                                      <div className="rate-comment">
+                                        <input
+                                          className="form-control p-0"
+                                          disabled
+                                          defaultValue={
+                                            lectureComments[item.name]
+                                          }
+                                        ></input>
+                                      </div>
+                                    </div>
+                                  </>
+                                ))
+                            ) : !currentLecture[item.name] ? (
                               <button
                                 className="btn btn-main"
                                 type="button"
@@ -366,8 +508,7 @@ export default function Order({ order }) {
                               >
                                 課程評價
                               </button>
-                            )}
-                            {currentLecture[item.name] && (
+                            ) : (
                               <div className="rate-star mb-1">
                                 <div className="body-title">評價</div>
                                 {Array(5)
@@ -426,9 +567,9 @@ export default function Order({ order }) {
                                     className="btn btn-main"
                                     onClick={() =>
                                       handleSubmit(
-                                        productRatings[item.name],
-                                        productComments[item.name],
-                                        item.id
+                                        lectureRatings[item.name],
+                                        lectureComments[item.name],
+                                        item.product_id
                                       )
                                     }
                                   >
@@ -437,15 +578,6 @@ export default function Order({ order }) {
                                 </div>
                               </div>
                             )}
-
-                            {/* <LectureRating
-                              itemId={item.id}
-                              itemName={item.name}
-                              rating={lectureRatings[item.name] || 0}
-                              comment={lectureComments[item.name] || ''}
-                              onRatingChange={handleLectureRatingChange}
-                              onCommentChange={handleLectureCommentChange}
-                            ></LectureRating> */}
                           </td>
                         </tr>
                       </tbody>
@@ -453,6 +585,7 @@ export default function Order({ order }) {
                   }
                 })}
               </table>
+              {/* ----------------課程TABLE END------------------ */}
               <div className="d-flex justify-content-end">
                 <div>共 {totalAmount} 件</div>
               </div>

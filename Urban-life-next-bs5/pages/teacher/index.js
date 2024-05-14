@@ -9,53 +9,52 @@ import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
 
 export default function LectureHome() {
-  
-  const { teachers } = UseTeacherInfo();  
-  const [renderTeachers, setRenderTeachers] = useState([]);
+  const { teachers } = UseTeacherInfo()
+  const [renderTeachers, setRenderTeachers] = useState([])
 
   // 搜尋
   const handleSearch = (keyword) => {
     const filteredTeachers = teachers.filter((teacher) =>
-      teacher.name.toLowerCase().includes(keyword.toLowerCase()) ||
-      teacher.email.toLowerCase().includes(keyword.toLowerCase()) ||
-      teacher.phone.toLowerCase().includes(keyword.toLowerCase()) ||
-      teacher.intro.toLowerCase().includes(keyword.toLowerCase())
-    );
+        teacher.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        teacher.email.toLowerCase().includes(keyword.toLowerCase()) ||
+        teacher.phone.toLowerCase().includes(keyword.toLowerCase()) ||
+        teacher.intro.toLowerCase().includes(keyword.toLowerCase())
+    )
 
-    setRenderTeachers(filteredTeachers); // 直接設置 renderTeachers 的狀態
-  };
+    setRenderTeachers(filteredTeachers) // 直接設置 renderTeachers 的狀態
+  }
 
   // 分頁相關狀態
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const perPage = 16; //一頁幾筆資料
-  const [displayedTeachers, setDisplayedTeachers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const perPage = 16 //一頁幾筆資料
+  const [displayedTeachers, setDisplayedTeachers] = useState([])
 
   //sync
   useEffect(() => {
-  if(teachers.length) setRenderTeachers(teachers)
-  }, [teachers]);
+    if (teachers.length) setRenderTeachers(teachers)
+  }, [teachers])
 
   useEffect(() => {
     // 計算總頁數
-    const totalPageCount = Math.ceil(teachers.length / perPage);
-    setTotalPages(totalPageCount);
-  }, [teachers]);
+    const totalPageCount = Math.ceil(teachers.length / perPage)
+    setTotalPages(totalPageCount)
+  }, [teachers])
 
-  const sortedTeachers = [...teachers].sort((a, b) => a.id - b.id);
+  const sortedTeachers = [...teachers].sort((a, b) => a.id - b.id)
 
   useEffect(() => {
     // 當頁碼改變時，根據當前頁碼更新顯示的教師卡片
-    const startIndex = (currentPage - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const currentTeachers = renderTeachers.slice(startIndex, endIndex);
-    setDisplayedTeachers(currentTeachers);
-  }, [currentPage, renderTeachers]);
+    const startIndex = (currentPage - 1) * perPage
+    const endIndex = startIndex + perPage
+    const currentTeachers = renderTeachers.slice(startIndex, endIndex)
+    setDisplayedTeachers(currentTeachers)
+  }, [currentPage, renderTeachers])
 
   // 頁碼改變時的處理函數
   const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+    setCurrentPage(page)
+  }
 
   return (
     <>
@@ -74,18 +73,12 @@ export default function LectureHome() {
           </div>
         </section>
         <div className="container ">
-        <Page
+          <Page
             perpages={perPage}
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
           />
-          {/* <Page
-            perpages={perpages}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          /> */}
         </div>
       </div>
 
@@ -101,18 +94,17 @@ export default function LectureHome() {
 
           .search {
             display: flex;
-            padding: 15px 20px !important;
+            padding: 15px 20px;
             align-items: flex-start;
             align-self: stretch;
           }
 
           .cardgrp {
             display: flex;
-            width: 1296px;
             justify-content: center;
             align-items: flex-start;
             align-content: flex-start;
-            gap: 50px;
+            gap: 20px;
             flex-wrap: wrap;
           }
         `}
