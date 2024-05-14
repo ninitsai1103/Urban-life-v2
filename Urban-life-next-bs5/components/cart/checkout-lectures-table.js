@@ -98,11 +98,11 @@ export default function CheckoutProductsTable() {
                   <td className="w-50">
                     <div className="d-flex align-items-center">
                       <div className={styles.d_img}>
-                        <img src={v.cover} className="img-fluid" />
+                        <img src={`http://localhost:3005/lecture_img/${v.cover}`} className="img-fluid" />
                       </div>
                       <div className="ps-sm-2">
                         <div className={styles.name}>
-                          {v.name} ({v.starting_date})
+                          {v.name} ({v.lecture_date})
                         </div>
                         <div className={styles.d_cell_price}>
                           單價：{v.price}

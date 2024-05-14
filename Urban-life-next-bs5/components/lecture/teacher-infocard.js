@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
 
-export default function TeacherCardInfo({ teachers =[]}) {
- // const { teachers } = UseTeacherInfo()
+export default function TeacherCardInfo({ teachers = []}) {
 
   return (
     <>

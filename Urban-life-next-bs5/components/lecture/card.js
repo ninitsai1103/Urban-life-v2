@@ -5,7 +5,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { TbStarFilled } from 'react-icons/tb'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
-import { UseLecture } from '@/hooks/use-lecture'
 import useColloections from '@/hooks/product/useCollections'
 
 export default function LectureMyCard({ lecture, collections=[] }) {
@@ -14,12 +13,8 @@ export default function LectureMyCard({ lecture, collections=[] }) {
 
   useEffect(() => {
     // 檢查當前講座是否在收藏列表中
-    console.log('collections', collections)
-    console.log('0000000000000000000000', typeof collections)
     const obj = collections
     const arr =  Object.keys(obj).map((id) => obj[id])
-    console.log("arrrrrr", arr);
-    console.log("arrrrrr00000000", typeof arr);
     const data = arr.some(
       (item) => item.product_id === lecture.id && item.valid === 1
     )

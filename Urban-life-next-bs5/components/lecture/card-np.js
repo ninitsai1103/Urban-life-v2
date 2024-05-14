@@ -29,7 +29,7 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
   } = lecture
 
   // 確認日期是否在今天之前
-  const isBeforeToday = new Date(lecture_date) < new Date()
+  const isBeforeToday = new Date(sign_up_deadline) < new Date()
 
   // 新增一個狀態，切換商品是否有加入行事曆，進而去改變它的按鈕
   const [isAddedtoCalendar, setIsAddedtoCalendar] = useState(true)
