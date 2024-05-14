@@ -3,9 +3,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from './member.module.css'
 import { MdOutlineAddAPhoto } from 'react-icons/md'
+import { BiFile } from 'react-icons/bi'
 import { PiFilesThin } from 'react-icons/pi'
 import { BiIdCard } from 'react-icons/bi'
 import { MdFavoriteBorder } from 'react-icons/md'
+import { RiCoupon2Line } from 'react-icons/ri'
 import { GoBook } from 'react-icons/go'
 import { IoIosLogOut } from 'react-icons/io'
 import { useRouter } from 'next/router'
@@ -41,7 +43,7 @@ export default function TeacherAsideAccount() {
         method: 'POST',
         body: formData,
       })
-      // 上传成功后提示上传成功
+      // 上傳成功後提示上傳成功
       alert('檔案上傳成功')
       window.location.reload()
     } catch (error) {
@@ -74,10 +76,14 @@ export default function TeacherAsideAccount() {
     if (selectedValue === '1') {
       router.push('/member/teacherInformation') // 個人資料頁面路徑
     } else if (selectedValue === '2') {
-      router.push('/member/teacherCollect') // 收藏頁面路徑
+      router.push('/member/...') // 課程管理頁面路徑
     } else if (selectedValue === '3') {
-      router.push('/member/article-management') // 文章管理頁面路徑
+      router.push('/member/...') // 文章管理頁面路徑
     } else if (selectedValue === '4') {
+      router.push('/member/teacherCollect') // 收藏頁面路徑
+    } else if (selectedValue === '5') {
+      router.push('/member/article-management') // 文章管理頁面路徑
+    } else if (selectedValue === '6') {
       router.push('/member/lecture-management') // 課程管理頁面路徑
     }
   }
@@ -137,31 +143,35 @@ export default function TeacherAsideAccount() {
             className="form-select phone-select d-lg-none "
             aria-label="Default select example"
             value={
-              // 網址待修
               currentPath === '/member/teacherInformation'
-                ? '1'
-                : // 網址待修
-                currentPath === '/member/teacherCollect'
-                ? '2'
-                : currentPath === '/member/article-management'
+                ? '1' // 網址待修
+                : currentPath === '/member/...'
+                ? '2'  // 網址待修
+                : currentPath === '/member/...'
                 ? '3'
-                : currentPath === '/member/lecture-management'
+                : currentPath === '/member/teacherCollect'
                 ? '4'
+                : currentPath === '/member/article-management'
+                ? '5'
+                : currentPath === '/member/lecture-management'
+                ? '6'
                 : ''
             }
             onChange={handleSelectChange}
           >
             <option value="1">個人資料</option>
-            <option value="2">我的收藏</option>
-            <option value="3">文章管理</option>
-            <option value="4">課程管理</option>
+            <option value="2">訂單記錄</option>
+            <option value="3">我的優惠券</option>
+            <option value="4">我的收藏</option>
+            <option value="5">文章管理</option>
+            <option value="6">課程管理</option>
           </select>
 
           <ul className="list-unstyled window_menu d-none d-lg-block">
-            {/* 網址待修 */}
+            
             <li>
               <a
-                className={currentPath === '/member/index' ? 'active' : ''}
+                className={currentPath === '/member/teacherInformation' ? 'active' : ''}
                 href="/member/teacherInformation"
               >
                 <BiIdCard /> 個人資料
@@ -170,7 +180,25 @@ export default function TeacherAsideAccount() {
             {/* 網址待修 */}
             <li>
               <a
-                className={currentPath === '/favorites' ? 'active' : ''}
+                className={currentPath === '/member/...' ? 'active' : ''}
+                href="/member/..."
+              >
+                <BiFile /> 訂單記錄
+              </a>
+            </li>
+            {/* 網址待修 */}
+            <li>
+              <a
+                className={currentPath === '/member/...' ? 'active' : ''}
+                href="/member/..."
+              >
+                <RiCoupon2Line /> 我的優惠券
+              </a>
+            </li>
+            
+            <li>
+              <a
+                className={currentPath === '/member/teacherCollect' ? 'active' : ''}
                 href="/member/teacherCollect"
               >
                 <MdFavoriteBorder /> 我的收藏

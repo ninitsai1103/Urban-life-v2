@@ -7,7 +7,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/thumbs'
 import { Autoplay, FreeMode, Navigation, Thumbs } from 'swiper/modules'
 
-export default function Lectureslider() {
+export default function Lectureslider({lecture}) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
 
   return (
@@ -29,16 +29,16 @@ export default function Lectureslider() {
         loop={true}
       >
         <SwiperSlide className="wrap-img">
-          <img src="/images/lecture/lecture_1.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.cover}`} />
         </SwiperSlide>
         <SwiperSlide className="wrap-img">
-          <img src="/images/lecture/lecture_2.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`} />
         </SwiperSlide>
         <SwiperSlide className="wrap-img">
-          <img src="/images/lecture/lecture_3.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`} />
         </SwiperSlide>
         <SwiperSlide className="wrap-img">
-          <img src="/images/lecture/lecture_4.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`} />
         </SwiperSlide>
       </Swiper>
       <Swiper
@@ -51,16 +51,16 @@ export default function Lectureslider() {
         className={styles.lectureSlider}
       >
         <SwiperSlide style={{ cursor: 'pointer' }}>
-          <img src="/images/lecture/lecture_1.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.cover}`} />
         </SwiperSlide>
         <SwiperSlide style={{ cursor: 'pointer' }}>
-          <img src="/images/lecture/lecture_2.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`} />
         </SwiperSlide>
         <SwiperSlide style={{ cursor: 'pointer' }}>
-          <img src="/images/lecture/lecture_3.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`} />
         </SwiperSlide>
         <SwiperSlide style={{ cursor: 'pointer' }}>
-          <img src="/images/lecture/lecture_4.jpg" />
+          <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`} />
         </SwiperSlide>
       </Swiper>
     </>

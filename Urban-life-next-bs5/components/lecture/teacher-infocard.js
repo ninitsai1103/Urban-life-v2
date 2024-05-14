@@ -1,30 +1,30 @@
-import React, { useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
 
-export default function TeacherCardInfo({ teachers =[]}) {
- // const { teachers } = UseTeacherInfo()
-
+export default function TeacherCardInfo({ teachers = [] }) {
   return (
     <>
       {teachers.map((teachers) => {
         return (
-          <div className="card" key={teachers.id}>
-            <div className="card-top">
-              <img
-                className="card-img"
-                src={`/images/teacher/${teachers.img}`}
-                alt="Card image cap"
-              />
-            </div>
+          <Link key={teachers.id} href={`/teacher/${teachers.id}`}>
+            <div className="card" key={teachers.id}>
+              <div className="card-top">
+                <img
+                  className="card-img"
+                  src={`/images/teacher/${teachers.img}`}
+                  alt="Card image cap"
+                />
+              </div>
 
-            <div className="card-body">
-              <h5 className="name">{teachers.name} 講師</h5>
-              <p className="teacherinfo">{teachers.intro}</p>
+              <div className="card-body">
+                <h5 className="name">{teachers.name} 講師</h5>
+                <p className="teacherinfo">{teachers.intro}</p>
+              </div>
             </div>
-          </div>
+          </Link>
         )
       })}
-
       <style jsx>{`
         .card {
           display: flex;

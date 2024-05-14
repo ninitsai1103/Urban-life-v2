@@ -16,110 +16,100 @@ import Swal from 'sweetalert2'
 
 export default function LectureDetail() {
   const { lectures } = UseLecture()
-  const { collections, addCollection, removeCollection } = useColloections()
+  const { collections } = useColloections([])
   const { comments } = useCommment()
 
   const router = useRouter()
   const { lid } = router.query
   const [lecture, setLecture] = useState(null)
-  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
-  const [comment, setComment] = useState(null)
+  const [isCollected, setIsCollected] = useState([]) //課程是否有被收藏
+  const [lectureComments, setLectureComments] = useState([])
+  //加入購物車
+  const { addItem } = useCheckout()
+  const MySwal = withReactContent(Swal)
 
-  // useEffect(() => {
-  //   if (lectures) {
-  //     const foundLecture = lectures.find((item) => item.id === parseInt(lid))
-  //     if (foundLecture) {
-  //       setLecture(foundLecture)
-  //     }
-  //   }
-  // }, [lid, lectures])
+  //顯示評論
+  const [visibleComments, setVisibleComments] = useState(2)
+  const [showAll, setShowAll] = useState(false)
 
- //加入購物車
- const { addItem } = useCheckout()
- const MySwal = withReactContent(Swal)
+  //根據lid動態路由找課程
+  useEffect(() => {
+    if (lid && lectures.length > 0) {
+      const fetchLecture = lectures.find(
+        (item) => item.id === parseInt(lid, 10)
+      )
+      setLecture(fetchLecture)
+    }
+  }, [lectures, lid])
 
-//顯示評論
-const [visibleComments, setVisibleComments] = useState(2)
-const [showAll, setShowAll] = useState(false)
-
-useEffect(() => {
-  //根據lid動態路由對應商品資料
-  if (lid && lectures.length > 0) {
-    const fetchLecture = lectures.find(
-      (item) => item.id === parseInt(lid, 10)
+  useEffect(() => {
+    // 檢查當前課程是否在收藏列表中
+    setIsCollected(
+      collections.find((item) => item.product_id == lid && item.valid == 1)
     )
-    setLecture(fetchLecture)
+  }, [collections])
+
+  //切換課程的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '課程已取消收藏!' : '課程已加入收藏!'
+    toast.success(message, {})
   }
-}, [lectures, lid])
 
-useEffect(() => {
-  // 檢查當前商品是否在收藏列表中
-  setIsCollected(
-    collections.find((item) => item.product_id == lid && item.valid == 1)
-  )
-}, [collections])
-
-//切換商品的收藏狀態
-const toggleCollection = () => {
-  setIsCollected(!isCollected)
-  const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-  toast.success(message, {})
-}
-
-const notifySA = (lecture) => {
-  MySwal.fire({
-    title: '成功加入',
-    text: lecture.name + '已成功加入購物車!',
-    icon: 'success',
-  })
-}
-
-//根據lid動態路由對應商品評論
-useEffect(() => {
-  if (lid && comments.length > 0) {
-    const fetchComment = comments
-      .filter((item) => item.product_lecture_id === parseInt(lid, 10))
-      .map((comment) => ({
-        ...comment,
-        date: commentDate(comment.created_at),
-      }))
-    setComment(fetchComment)
+  const notifySA = (lecture) => {
+    MySwal.fire({
+      title: '成功加入',
+      text: lecture.name + '已成功加入購物車!',
+      icon: 'success',
+    })
   }
-}, [comments, lid])
 
- //擷取日期
- const commentDate = (datetime) => {
-  const datePart = datetime.split(' ')[0]
-  return datePart
-}
+  //根據lid動態路由對應課程評論
+  useEffect(() => {
+    if (lid && comments.length > 0) {
+      const fetchComment = comments
+        .filter((item) => item.product_lecture_id === parseInt(lid, 10))
+        .map((comment) => ({
+          ...comment,
+          date: commentDate(comment.created_at),
+        }))
+      setLectureComments(fetchComment)
+    }
+  }, [comments, lid])
 
-//查看更多評論
-const moreComment = (comment) => {
-  if (showAll) {
-    setVisibleComments(2)
-    setShowAll(false)
-  } else {
-    setVisibleComments(comment.length)
-    setShowAll(true)
+  //擷取日期
+  const commentDate = (datetime) => {
+    const datePart = datetime.split(' ')[0]
+    return datePart
   }
-}
+
+  //查看更多評論
+  const moreComment = (comment) => {
+    if (showAll) {
+      setVisibleComments(2)
+      setShowAll(false)
+    } else {
+      setVisibleComments(comment.length)
+      setShowAll(true)
+    }
+  }
 
   //猜你喜歡
-  const [randomLectures, setRandomLectures] = useState([]);
+  const [randomLectures, setRandomLectures] = useState([])
 
   // 生成隨機的講座卡片
   const generateRandomLectures = () => {
     // 將講座數組進行隨機排序
-    const shuffledLectures = lectures.sort(() => Math.random() - 0.5);
+    const shuffledLectures = lectures.sort(() => Math.random() - 0.5)
     // 只取前四個隨機卡片
-    const selectedLectures = shuffledLectures.slice(0, 4);
+    const selectedLectures = shuffledLectures.slice(0, 4)
     // 更新狀態以渲染隨機卡片
-    setRandomLectures(selectedLectures);
-  };
+    setRandomLectures(selectedLectures)
+  }
 
   useEffect(() => {
     if (lectures.length > 0) {
-      generateRandomLectures();
+      generateRandomLectures()
     }
   }, [lectures])
 
@@ -148,10 +138,12 @@ const moreComment = (comment) => {
           </div>
           <div className="lectureinfo">
             <div className="slider">
-              <Lectureslider />
+              {lecture && <Lectureslider lecture={lecture} />}
             </div>
             <div className="detail">
-              <LectureInfo />
+              {lecture && (
+                <LectureInfo lecture={lecture} collections={collections} />
+              )}
             </div>
           </div>
         </section>
@@ -201,7 +193,7 @@ const moreComment = (comment) => {
         <section className="section3">
           <h1 className="sectiontitle">一日課程內容</h1>
           <div className="">
-            <Lecturedetail />
+            {lecture && <Lecturedetail lecture={lecture} />}
           </div>
         </section>
         <section className="section4">
@@ -210,14 +202,18 @@ const moreComment = (comment) => {
         </section>
         <section className="section5">
           <h1 className="sectiontitle">學員評價</h1>
-          <Feedback />
+          <Feedback comments={lectureComments} />
         </section>
         <section className="section6">
           <h1 className="sectiontitle">探索其他課程</h1>
           <div style={{ maxWidth: '1296px', overflow: 'hidden' }}>
             <div className="cardgrp">
               {randomLectures.map((lecture) => (
-                <LectureMyCard key={lecture.id} lecture={lecture} />
+                <LectureMyCard
+                  key={lecture.id}
+                  lecture={lecture}
+                  collections={collections}
+                />
               ))}
             </div>
             {/* 刷新按鈕 */}
@@ -228,7 +224,9 @@ const moreComment = (comment) => {
                 marginTop: '30px',
               }}
             >
-              <button className='btn btn-add' onClick={generateRandomLectures}>發現有趣課程</button>
+              <button className="btn btn-add" onClick={generateRandomLectures}>
+                發現有趣課程
+              </button>
             </div>
           </div>
         </section>

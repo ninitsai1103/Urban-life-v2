@@ -8,9 +8,13 @@ export default function ArticleCard({ article,identityId }) {
   //   return null; // 不符合條件，不顯示該文章
   // }
 
+  const handleCardClick = () => {
+    window.location.href = `/article/${article.id}`;
+  };
+
   return (
     <>
-      <div className="article_card_styles w-100 d-flex" key={article.id}>
+      <div className="article_card_styles w-100 d-flex" key={article.id} onClick={handleCardClick}>
         <img alt='' src={`http://localhost:3005/images/article/${article.img}`}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
@@ -67,6 +71,7 @@ export default function ArticleCard({ article,identityId }) {
           height: 170px;
           margin-bottom: 20px;
           background-color: #ffffff;
+          cursor:pointer;
         }
         img {
           width: 150px;

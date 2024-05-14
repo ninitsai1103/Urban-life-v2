@@ -125,11 +125,12 @@ router.get('/remove/:product_id', authenticate, async (req, res) => {
 
 
 // 新增文章收藏
-router.post('/add/article/:article_id', authenticate, async (req, res) => {
+router.get('/add/article/:article_id', authenticate, async (req, res) => {
   const userId = req.decoded.id
   const articleId = parseInt(req.params.article_id, 10)
   try {
     const existingCollection = await Collection.findOne({
+      attributes: ['user_id', 'product_id', 'pdltat_id', 'article_id', 'valid'],
       where: {
         user_id: userId,
         article_id: articleId,
@@ -141,9 +142,31 @@ router.post('/add/article/:article_id', authenticate, async (req, res) => {
         return res.status(409).json({ status: 'fail', message: 'Article already in collection.' })
       } else {
         // 如果存在但不是有效的，則更新valid為1
-        await existingCollection.update({ valid: 1 });
-        return res.status(200).json({ status: 'success', message: `Article added to collection successfully. Article ID: ${articleId}.` })
+        const result = await Collection.update
+        ({valid:1},{
+          attributes: ['user_id', 'product_id', 'pdltat_id', 'article_id', 'valid'],
+          where: {
+            user_id: userId,
+            product_id: 0,
+            pdltat_id: 3,
+            article_id:articleId,
+            valid:0
+          },
+        })
+        //重新查詢更新後的紀錄
+        const updatedCollection = await Collection.findOne({
+          where: {
+            user_id: userId,
+            article_id: articleId,
+            pdltat_id: 3
+          }
+        });
+        // 將更新後的資料發送給前端
+        return res
+        .status(200)
+        .json({ status: 'success', message: `Update valid to 1 successfully, where article id = ${articleId}.`, data:updatedCollection })
       }
+      
     } else {
       // 如果不存在，則創建新的收藏紀錄
       const newCollection = await Collection.create({

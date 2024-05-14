@@ -1,16 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Myeditor from '@/components/article/Myeditor'
-import useArticles from '@/hooks/use-articles'
+import useArticles from '@/hooks/use-articles';
+import { useMemberInfo } from '@/hooks/use-member-info'
+import { useRouter } from 'next/router';
 
 export default function Edit() {
+  const router = useRouter();
+  const { aid } = router.query;  // 從 URL 獲取文章ID
   const { articles } = useArticles()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [categoryId, setCategoryId] = useState('')
+  
+
+  // member的hooks
+  const { member } = useMemberInfo()
+
+  // 判斷user是誰
+  const [userId, setUserId] = useState()
+  useEffect(() => {
+    const { identity_id, name, id } = JSON.parse(
+      localStorage.getItem('member-info')
+    )
+    setUserId(id)
+    console.log(name)
+    console.log(identity_id)
+    console.log(id)
+  }, [])
+
   // const [article, setArticle] = useState(null) // 文章状态
   const [editorLoaded, setEditorLoaded] = useState(false)
-  const aid = 44
   const [article, setArticle] = useState({
     title: '',
     content: '',
@@ -82,7 +102,7 @@ export default function Edit() {
       },
       body: JSON.stringify({
         ...article,
-        userId: 1,
+        userId: userId,
         content: content,
         title: title,
         categoryId: categoryId,

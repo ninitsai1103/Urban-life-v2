@@ -7,6 +7,7 @@
       font-weight: 700;
       line-height: normal;
       align-self: stretch;
+      width: 592px;
   }
 
   .imginfo {
@@ -23,6 +24,7 @@
       flex-direction: column;
       align-items: flex-start;
       align-self: stretch;
+
   }
 
   .infogroup {

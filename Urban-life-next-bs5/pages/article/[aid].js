@@ -20,6 +20,7 @@ export default function Detail() {
   const [isCollected, setIsCollected] = useState(null)
   const { collections, addArticleCollection, removeArticleCollection } =
     useCollections()
+
   useEffect(() => {
     if (aid && articles.length > 0) {
       const fetchArticle = articles.find(
@@ -27,14 +28,23 @@ export default function Detail() {
       )
       setArticle(fetchArticle) // 設置當前文章
     }
+  })
 
     // 檢查當前文章是否在收藏列表中
     // const isFound = collections.find(
     //   (item) => item.article_id === parseInt(aid, 10) && item.valid === 1
     // )
-    const isFound = collections.find((id) => id === parseInt(aid, 10))
-    setIsCollected(Boolean(isFound))
-  }, [aid, articles, collections])
+
+    useEffect(() => {
+      // 檢查當前文章是否在收藏列表中
+      setIsCollected(
+        collections.find((item) => item.article_id == aid && item.valid == 1)
+      )
+    }, [collections])
+  
+  //   const isFound = collections.find((id) => id === parseInt(aid, 10))
+  //   setIsCollected(Boolean(isFound))
+  // }, [aid, articles, collections])
 
   //call api
   const add_comment = async () => {
@@ -91,21 +101,28 @@ export default function Detail() {
   }
 
   // 切換文章的收藏狀態
-  const toggleCollection = async () => {
-    try {
-      const newIsCollected = !isCollected
-      if (newIsCollected) {
-        await addArticleCollection(aid)
-        toast.success('文章已加入收藏!')
-      } else {
-        await removeArticleCollection(article.id) // 確保使用正確的 ID
-        toast.success('文章已取消收藏!')
-      }
-      setIsCollected(newIsCollected)
-    } catch (error) {
-      console.error('Error toggling collection:', error)
-      toast.error('操作失敗')
-    }
+  // const toggleCollection = async () => {
+  //   try {
+  //     const newIsCollected = !isCollected
+  //     if (newIsCollected) {
+  //       await addArticleCollection(aid)
+  //       toast.success('文章已加入收藏!')
+  //     } else {
+  //       await removeArticleCollection(article.id) // 確保使用正確的 ID
+  //       toast.success('文章已取消收藏!')
+  //     }
+  //     setIsCollected(newIsCollected)
+  //   } catch (error) {
+  //     console.error('Error toggling collection:', error)
+  //     toast.error('操作失敗')
+  //   }
+  // }
+
+  //切換文章的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '文章已取消收藏!' : '文章已加入收藏!'
+    toast.success(message, {})
   }
 
   return (
@@ -130,7 +147,7 @@ export default function Detail() {
                   onClick={(e) => {
                     e.preventDefault()
                     toggleCollection()
-                    // removeArticleCollection(article.id)
+                    removeArticleCollection(article.id)
                   }}
                 >
                   <GoHeartFill
@@ -146,7 +163,7 @@ export default function Detail() {
                   onClick={(e) => {
                     e.preventDefault()
                     toggleCollection()
-                    // addArticleCollection(article.id)
+                    addArticleCollection(article.id)
                   }}
                 >
                   <GoHeart className="me-1 mb-1" style={{ fontSize: '19px' }} />
@@ -164,6 +181,9 @@ export default function Detail() {
               <button className="btn btn-add mx-3" onClick={del_article}>
                 刪除文章
               </button>
+              <Link className="btn btn-add mx-3" href={`/article/edit/${aid}`}>
+                編輯文章
+              </Link>
             </div>
           </div>
           <div className="col">

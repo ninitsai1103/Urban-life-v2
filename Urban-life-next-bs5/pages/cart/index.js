@@ -6,7 +6,7 @@ import CheckoutCouponsSelect from '@/components/cart/checkout-coupons'
 import CheckoutCounter from '@/components/cart/checkout-counter'
 import styles from '@/components/cart/cart.module.css'
 import Link from 'next/link'
-import AddProducts from '@/components/cart/add-products'
+// import AddProducts from '@/components/cart/add-products'
 // import coupons from '@/data/coupon.json'
 import { useUserCoupon } from '@/hooks/use-usercoupon'
 import { useCheckout } from '@/hooks/use-checkout'
@@ -48,7 +48,6 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <AddProducts />
       {totalItems > 0 ? (
         <div className="container pt-3">
           <Link type="button" className="btn btn-main" href="../product/list">

@@ -96,7 +96,7 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
         </div>
         {/* 只顯示未過期且還沒使用的優惠卷 */}
         <div
-          className="form-check-label d-flex align-items-center col-3"
+          className="form-check-label d-flex align-items-center col-4"
           htmlFor="none"
         >
           <input
@@ -112,9 +112,9 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
         </div>
         {couponNotExpired.map((v, i) => {
           return (
-            <div className="row  py-2" key={i}>
+            <div className="row py-2" key={i}>
               <div
-                className="form-check-label d-flex align-items-center col-3"
+                className="form-check-label d-flex align-items-center col-4"
                 htmlFor={`coupon${i}`}
               >
                 <input
@@ -130,7 +130,7 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
                 <div className={styles.coupon_name}>{v.name}</div>
               </div>
               <div
-                className={`col-3 ${styles.coupon_detail}`}
+                className={`col-2 ${styles.coupon_detail}`}
                 htmlFor={`coupon${i}`}
               >
                 {v.amount > 1 ? `${v.amount}元` : `${v.amount * 10}折`}

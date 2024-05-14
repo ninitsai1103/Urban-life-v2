@@ -29,7 +29,7 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
   } = lecture
 
   // 確認日期是否在今天之前
-  const isBeforeToday = new Date(lecture_date) < new Date()
+  const isBeforeToday = new Date(sign_up_deadline) < new Date()
 
   // 新增一個狀態，切換商品是否有加入行事曆，進而去改變它的按鈕
   const [isAddedtoCalendar, setIsAddedtoCalendar] = useState(true)
@@ -134,8 +134,7 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
         <div className={styles.cardBodyPrice}>
           <div className={styles.priceText}>NT：{price}</div>
           {/* 根據日期是否在今天之前來決定按鈕樣式 */}
-          {isBeforeToday ? (
-            isAddedtoCalendar ? (
+          {isAddedtoCalendar ? (
               <button
                 className="btn btn-main"
                 style={{ maxWidth: '106px' }}
@@ -151,16 +150,7 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
               >
                 刪除
               </button>
-            )
-          ) : (
-            <button
-              className="btn btn-add"
-              style={{ maxWidth: '106px' }}
-              onClick={handleAddtoCalendar}
-            >
-              加入購物車
-            </button>
-          )}
+            )}
         </div>
       </div>
     </>

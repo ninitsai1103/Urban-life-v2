@@ -1,8 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Myeditor from '@/components/article/Myeditor'
+import { useMemberInfo } from '@/hooks/use-member-info'
+
 
 export default function Add() {
+
+  // member的hooks
+  const { member } = useMemberInfo()
+
+  // 判斷user是誰
+  const [userId, setUserId] = useState()
+  useEffect(() => {
+    const { identity_id, name, id } = JSON.parse(
+      localStorage.getItem('member-info')
+    )
+    setUserId(id)
+    console.log(name)
+    console.log(identity_id)
+    console.log(id)
+  }, [])
+
   const [editorLoaded, setEditorLoaded] = useState(false)
   const [article, setArticle] = useState({
     title: '',
@@ -55,7 +73,7 @@ export default function Add() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...article, userId: 1, img: url }), // 假設的用戶 ID
+      body: JSON.stringify({ ...article, userId: userId, img: url }), // 假設的用戶 ID
     })
       .then((response) => response.json())
       .then((data) => {

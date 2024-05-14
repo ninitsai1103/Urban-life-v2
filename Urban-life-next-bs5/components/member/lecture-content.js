@@ -706,10 +706,12 @@ export default function LectureContentTbody({
                                 <div className="fw-bold mb-3 mt-2">
                                   *第一張圖為封面圖
                                 </div>
-                                <img
-                                  className="originImg"
-                                  src={`http://localhost:3005/lecture_img/${lecture.cover}`}
-                                ></img>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.cover}`}
+                                  ></img>
+                                </div>
                               </div>
                               <div className="w-50">
                                 <input
@@ -722,11 +724,13 @@ export default function LectureContentTbody({
                                     <div style={{ fontSize: '16px' }}>
                                       替換圖片預覽：
                                     </div>
-                                    <img
-                                      className="updateImg"
-                                      src={previewURL1}
-                                      alt=""
-                                    />
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL1}
+                                        alt=""
+                                      />
+                                    </div>
                                   </>
                                 )}
                               </div>
@@ -737,10 +741,12 @@ export default function LectureContentTbody({
                                 <div className="fw-bold mb-3 mt-2">
                                   第二張：
                                 </div>
-                                <img
-                                  className="originImg"
-                                  src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
-                                ></img>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
+                                  ></img>
+                                </div>
                               </div>
                               <div className="w-50">
                                 <input
@@ -751,11 +757,13 @@ export default function LectureContentTbody({
                                 {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
                                   <>
                                     <div>替換圖片預覽：</div>
-                                    <img
-                                      className="updateImg"
-                                      src={previewURL2}
-                                      alt=""
-                                    />
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL2}
+                                        alt=""
+                                      />
+                                    </div>
                                   </>
                                 )}
                               </div>
@@ -766,10 +774,12 @@ export default function LectureContentTbody({
                                 <div className="fw-bold mb-3 mt-2">
                                   第三張：
                                 </div>
-                                <img
-                                  className="originImg"
-                                  src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
-                                ></img>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
+                                  ></img>
+                                </div>
                               </div>
 
                               <div className="w-50">
@@ -781,23 +791,29 @@ export default function LectureContentTbody({
                                 {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
                                   <>
                                     <div>替換圖片預覽：</div>
-                                    <img
-                                      className="updateImg"
-                                      src={previewURL3}
-                                      alt=""
-                                    />
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL3}
+                                        alt=""
+                                      />
+                                    </div>
                                   </>
                                 )}
                               </div>
                             </div>
 
-                            <div className="d-flex mt-4">
+                            <div className="d-flex mt-4 mb-2">
                               <div className="w-50">
-                                <div className="fw-bold  mb-3 mt-2">第四張：</div>
-                                <img
-                                  className="originImg"
-                                  src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
-                                ></img>
+                                <div className="fw-bold  mb-3 mt-2">
+                                  第四張：
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
+                                  ></img>
+                                </div>
                               </div>
 
                               <div className="w-50">
@@ -809,11 +825,13 @@ export default function LectureContentTbody({
                                 {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
                                   <>
                                     <div>替換圖片預覽：</div>
-                                    <img
-                                      className="updateImg"
-                                      src={previewURL4}
-                                      alt=""
-                                    />
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL4}
+                                        alt=""
+                                      />
+                                    </div>
                                   </>
                                 )}
                               </div>
@@ -968,6 +986,7 @@ export default function LectureContentTbody({
           .originImg {
             height: 120px;
             width: auto;
+            margin-top: 5px; 
              {
               /* margin-bottom: 10px;
             margin: 5px;
@@ -977,6 +996,7 @@ export default function LectureContentTbody({
           .updateImg {
             height: 120px;
             width: auto;
+            margin: auto;
              {
               /* margin-bottom: 10px;
             margin: 5px;

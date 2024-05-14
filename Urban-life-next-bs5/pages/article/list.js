@@ -6,25 +6,43 @@ import Sidebar from '@/components/article/sidenav'
 import { FaFilter } from 'react-icons/fa'
 import { IoAdd } from 'react-icons/io5'
 import Link from 'next/link'
+import { useMemberInfo } from '@/hooks/use-member-info'
 
 // 使用自定義 Hook 來獲取文章資料
 import useArticles from '@/hooks/use-articles'
 // import fi from '@/node_modules 2/moment/dist/locale/fi'
 
 export default function List() {
-  // 從自定義 Hook useArticles 獲取文章數據，並使用 useState 來管理和更新這些數據的顯示狀態。在組件的其他部分，ArticleList 可用於顯示文章列表，而從 useArticles 獲取的 articles 數據可能會用於初始化或更新 ArticleList。
   const [list, setList] = useState([])
   const { articles } = useArticles()
   console.log(articles)
   const [filter, setFilter] = useState('ALL')
   const [sort, setSort] = useState('')
+  
+  // member的hooks
+  const { member } = useMemberInfo()
+
+  // 判斷user是誰
+  const [identityId, setUserIdentityId] = useState()
+  useEffect(() => {
+    const { identity_id, name, id } = JSON.parse(
+      localStorage.getItem('member-info')
+    )
+    setUserIdentityId(identity_id)
+    console.log(name)
+    console.log(identity_id)
+    console.log(id)
+  }, [])
+
+  // 設定按鈕是否顯示的狀態
+  const shouldShowButton = identityId === 2;
 
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   // const totalItems = 40;
   const perpages = 12 //一頁幾筆資料
-  //
+
   const handlePageChange = (page) => {
     setCurrentPage(page)
   }
@@ -87,7 +105,7 @@ export default function List() {
                   <div className="d-flex justify-content-between my-3">
                     <div className="breadcrumb-amount-bar mt-3">
                       <h6>文章列表/{filter}</h6>
-                      <h6>
+                      <h6 style={{ color: '#bd9250' }}>
                         共{' '}
                         {
                           articles.filter((article) => {
@@ -128,10 +146,10 @@ export default function List() {
                 </div>
               </div>
               <div className="mx-2 ">
-                <button className="btn btn-main">
+                <Link href="/article/add" className={`btn btn-main ${shouldShowButton ? '' : 'd-none'}`}>
                   <IoAdd />
                   新增文章
-                </button>
+                </Link>
               </div>
 
               {/* 文章卡片 */}
@@ -146,8 +164,12 @@ export default function List() {
                   })
                   .map((article) => (
                     <div className="col-md-3 p-2">
-                    <Link className='text-decoration-none' key={article.id} href={`/article/${article.id}`}>
-                      <ArticleCard key={article.id} article={article} />
+                      <Link
+                        className="text-decoration-none"
+                        key={article.id}
+                        href={`/article/${article.id}`}
+                      >
+                        <ArticleCard key={article.id} article={article} />
                       </Link>
                     </div>
                   ))}
@@ -219,8 +241,6 @@ export default function List() {
   .card-body {
     background-color: #ffffff;
     border-radius: 0 0 10px 10px;
-  }
-  .card-end {
   }
 
   /* 428px 以下開始為 手機(直) 最小尺寸 */

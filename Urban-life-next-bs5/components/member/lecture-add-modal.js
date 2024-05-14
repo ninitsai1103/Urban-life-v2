@@ -175,7 +175,6 @@ export default function LectureAddModal({ identityId }) {
     }
   }, [signUpEnd, lectureDate])
 
-
   const handlePriceChange = (e) => {
     setPrice(e.target.value)
   }
@@ -256,7 +255,7 @@ export default function LectureAddModal({ identityId }) {
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog custom-modal-width">
           <div className="modal-content">
             <form>
               <div className="modal-header">
@@ -490,77 +489,92 @@ export default function LectureAddModal({ identityId }) {
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <div>
-                              <div>*第一章圖為封面圖</div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 1)}
-                                name="selectedFiles1"
-                              />
-                              {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>圖片預覽：</div>
-                                  <img
-                                    className="updateImg mb-4"
-                                    src={previewURL1}
-                                    alt=""
-                                  />
-                                </>
-                              )}
+                            <div className="d-flex my-3">
+                              <div>
+                                <div className="fw-bold">*第一張圖為封面圖</div>
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 1)}
+                                  name="selectedFiles1"
+                                />
+                                {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL1}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+
+                              <div>
+                                <div className="fw-bold">第二張：</div>
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 2)}
+                                  name="selectedFiles2"
+                                />
+                                {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL2}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             </div>
 
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 2)}
-                                name="selectedFiles2"
-                              />
-                              {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>圖片預覽：</div>
-                                  <img
-                                    className="updateImg mb-4"
-                                    src={previewURL2}
-                                    alt=""
-                                  />
-                                </>
-                              )}
-                            </div>
+                            <div className="d-flex mb-3">
+                              <div>
+                                <div className="fw-bold">第三張：</div>
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 3)}
+                                  name="selectedFiles3"
+                                />
+                                {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL3}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
 
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 3)}
-                                name="selectedFiles3"
-                              />
-                              {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>圖片預覽：</div>
-                                  <img
-                                    className="updateImg mb-4"
-                                    src={previewURL3}
-                                    alt=""
-                                  />
-                                </>
-                              )}
-                            </div>
-
-                            <div>
-                              <input
-                                type="file"
-                                onChange={(e) => handleFileChange(e, 4)}
-                                name="selectedFiles4"
-                              />
-                              {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
-                                <>
-                                  <div>圖片預覽：</div>
-                                  <img
-                                    className="updateImg"
-                                    src={previewURL4}
-                                    alt=""
-                                  />
-                                </>
-                              )}
+                              <div>
+                                <div className="fw-bold">第四張：</div>
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 4)}
+                                  name="selectedFiles4"
+                                />
+                                {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL4}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -598,6 +612,9 @@ export default function LectureAddModal({ identityId }) {
       </div>
 
       <style jsx>{`
+        .custom-modal-width {
+          max-width: 700px; /* modal寬度 */
+        }
         .form-control {
           appearance: auto;
           width: 100%;
@@ -611,14 +628,16 @@ export default function LectureAddModal({ identityId }) {
         }
 
         .textarea2 {
-          height: 200px;
+          height: 300px;
         }
 
         .modal-table {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 30%;
+            width: 25%;
+            vertical-align: middle; /* 讓字垂直置中 */
+            text-align: center;
              {
               /* display: flex;
             align-items: center;
@@ -629,7 +648,7 @@ export default function LectureAddModal({ identityId }) {
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 70%;
+            width: 75%;
              {
               /* display: flex;
             align-items: center;
@@ -641,10 +660,14 @@ export default function LectureAddModal({ identityId }) {
             width: 100%;
           }
           .updateImg {
-            width: 50%;
+            height: 120px;
+            width: auto;
+             {
+              /* width: 50%;
             margin-bottom: 10px;
             margin: 5px;
-            margin-left: 7px;
+            margin-left: 7px; */
+            }
           }
         }
       `}</style>

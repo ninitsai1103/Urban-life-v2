@@ -29,7 +29,7 @@ export default function ArticleCard({ article }) {
               {' '}
               {article.date}| {article.category_name}
             </span>
-            <h5 className="card-title fs-6">{article.title}</h5>
+            <h5 className="card-title fs-6 text-overflow">{article.title}</h5>
           </div>
           <span className="card-text text-overflow">{article.content}</span>
           <div className="card-end d-flex gap-3">
