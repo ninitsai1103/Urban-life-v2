@@ -134,8 +134,7 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
         <div className={styles.cardBodyPrice}>
           <div className={styles.priceText}>NT：{price}</div>
           {/* 根據日期是否在今天之前來決定按鈕樣式 */}
-          {isBeforeToday ? (
-            isAddedtoCalendar ? (
+          {isAddedtoCalendar ? (
               <button
                 className="btn btn-main"
                 style={{ maxWidth: '106px' }}
@@ -151,16 +150,7 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
               >
                 刪除
               </button>
-            )
-          ) : (
-            <button
-              className="btn btn-add"
-              style={{ maxWidth: '106px' }}
-              onClick={handleAddtoCalendar}
-            >
-              加入購物車
-            </button>
-          )}
+            )}
         </div>
       </div>
     </>
