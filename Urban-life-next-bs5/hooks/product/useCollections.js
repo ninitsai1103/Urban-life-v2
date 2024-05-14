@@ -17,33 +17,6 @@ export default function useColloections() {
   }, [])
 
 
-  //新增商品收藏
-  // const addCollection = (productId) => {
-  //   api
-  //     .get(`/collection/add/${productId}`)
-  //     .then((response) => {
-  //       // console.log(response.data)
-  //       const updatedData = {
-  //         ...response.data.data,
-  //         valid: Number(response.data.data.valid) // 將布林值轉為數字
-  //     };
-      
-       
-  //     })
-  //     .catch((error) => {
-  //       // alert('請登入會員再進行收藏功能')
-  //       if (error.response && error.response.status === 409) {
-  //         console.log('商品已在收藏中。')
-  //       } else if (error.response && error.response.status === 401) {
-  //         console.log('尚未登入')
-  //       } else {
-  //         console.log('操作失敗，請稍後再試。')
-  //       }
-  //       console.log('Error adding collection:', error)
-  //     })
-  //     // console.log(collections);
-  // }
-
   const addCollection = (productId) => {
     return api.get(`/collection/add/${productId}`)
       .then((response) => {

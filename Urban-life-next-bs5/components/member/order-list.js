@@ -4,10 +4,6 @@ import styles from './star.module.css'
 
 import Image from 'next/image'
 
-// 評價的MODAL
-import ProductRating from './product-rating-modal'
-import LectureRating from './lecture-rating-modal'
-
 export default function Order({ order }) {
   const {
     id,
@@ -25,23 +21,27 @@ export default function Order({ order }) {
     pay,
   } = order
 
-  // // 點按時的評分，一開始是0分代表沒有評分
-  // const [productRating, setProductRating] = useState(0)
-  // // 點按時的評分，一開始是0分代表沒有評分
-  // const [lectureRating, setLectureRating] = useState(0)
-  // // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
-  // const [hoverRating, setHoverRating] = useState(0)
-  // // 商品評論的狀態
-  // const [productComment, setProductComment] = useState('')
-  // // 課程評論的狀態
-  // const [lectureComment, setLectureComment] = useState('')
+  // 商品課程評論的資料
+  const [comments, setComments] = useState([])
+  // 獲取評論資料function
+  const getComments = async () => {
+    let url = 'http://localhost:3005/api/product_lecture_comment'
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
 
-  // const handleProductTextAreaChange = (e) => {
-  //   setProductComment(e.target.value)
-  // }
-  // const handleLectureTextAreaChange = (e) => {
-  //   setLectureComment(e.target.value)
-  // }
+      const newComments = data.data.comments
+
+      setComments(newComments)
+      console.log(comments)
+    } catch (error) {
+      console.error('Error fetching comments:', error)
+    }
+  }
+
+  useEffect(() => {
+    getComments()
+  }, [])
 
   // 滑鼠游標懸停(hover)時候使用，一開始是0分代表沒有評分
   const [hoverRating, setHoverRating] = useState({})
@@ -51,9 +51,6 @@ export default function Order({ order }) {
   const [lectureRatings, setLectureRatings] = useState({})
   const [productComments, setProductComments] = useState({})
   const [lectureComments, setLectureComments] = useState({})
-
-  // 開啟商品評論的按鈕
-  const [showrating, setShowrating] = useState(false)
 
   const handleHoverRatingChange = (itemName, rating) => {
     setHoverRating({ ...hoverRating, [itemName]: rating })
@@ -74,22 +71,28 @@ export default function Order({ order }) {
     setLectureComments({ ...lectureComments, [itemName]: comment })
   }
 
-  // 紀錄當前評論商品的名稱
-  const [currentProduct, setCurrentProduct] = useState('')
+  // 紀錄當前商品評論的打開狀態
+  const [currentProduct, setCurrentProduct] = useState({})
+  // 紀錄當前課程評論的打開狀態
+  const [currentLecture, setCurrentLecture] = useState({})
 
   // 點擊評論按鈕，可以開啟該商品的評論
   const handleShowrating = (itemName) => {
-    setCurrentProduct(itemName)
+    setCurrentProduct({
+      ...currentProduct,
+      [itemName]: !currentProduct[itemName],
+    })
+    setCurrentLecture({
+      ...currentLecture,
+      [itemName]: !currentLecture[itemName],
+    })
   }
-  // 點下去會把評論打開
-  // const handleShowrating = (itemName, rating) => {
-  //   setShowrating({ ...showrating, [itemName]: rating })
-  // }
+
   // 提交評論
   const handleSubmit = async (rating, comment, id) => {
     let url = 'http://localhost:3005/api/product_lecture_comment'
     console.log(rating, comment, id)
-    
+
     try {
       const res = await fetch(url, {
         method: 'POST',
@@ -114,18 +117,10 @@ export default function Order({ order }) {
       console.error('Error submitting comment:', error.message)
     }
   }
-
-  // 獲取商品資料
-  // const { products } = useProducts()
-
+  // 統計訂單所有商品
   const totalAmount = items.reduce((acc, item) => {
     return acc + 1
   }, 0)
-
-  // useEffect(() => {
-  //   // 狀態更新後執行的操作
-  //   console.log('Product rating updated:', productRating)
-  // }, [productRating])
 
   return (
     <>
@@ -140,7 +135,7 @@ export default function Order({ order }) {
                 className="btn btn-main"
                 type="button"
                 data-bs-toggle="modal"
-                data-bs-target={`#Detail${address}`}
+                data-bs-target={`#Detail${order_id}`}
               >
                 查看訂單細節
               </button>
@@ -152,7 +147,7 @@ export default function Order({ order }) {
       {/* 訂單細節的Modal */}
       <div
         className="modal fade"
-        id={`Detail${address}`}
+        id={`Detail${order_id}`}
         tabIndex={-1}
         aria-labelledby="DetailLabel"
         aria-hidden="true"
@@ -181,10 +176,10 @@ export default function Order({ order }) {
               <table className="table">
                 <thead>
                   <tr className="border-bottom border-black">
-                    <th className="p-0 px-2">商品</th>
-                    <th className=" p-0 px-2">單價</th>
-                    <th className=" p-0 px-2">數量</th>
-                    <th className=" p-0 px-2">小計</th>
+                    <th className="p-0 px-2 ">商品</th>
+                    <th className=" p-0 px-2 ">單價</th>
+                    <th className=" p-0 px-2 text-center">數量</th>
+                    <th className=" p-0 px-2 text-center">小計</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -218,93 +213,92 @@ export default function Order({ order }) {
                           <td className="text-center">
                             NTD {item.price * item.amount}
                           </td>
+
                           <td>
-                            {!showrating ? (
+                            {/* {!currentProduct[item.name] && ( */}
+
+                            <button
+                              className="btn btn-main"
+                              onClick={() => {
+                                handleShowrating(item.name)
+                              }}
+                            >
+                              商品評價
+                            </button>
+                            {/* )} */}
+                            {/* {currentProduct[item.name] && ( */}
+
+                            <div className="rate">
+                              <div className="rate-star mb-1">
+                                <div className="body-title">評價</div>
+                                {Array(5)
+                                  .fill(1)
+                                  .map((v, i) => {
+                                    // 每個按鈕的分數，相當於索引+1
+                                    const score = 1 + i
+
+                                    return (
+                                      <button
+                                        key={i}
+                                        className={styles['star-btn']}
+                                        onClick={() =>
+                                          handleProductRatingChange(
+                                            item.name,
+                                            score
+                                          )
+                                        }
+                                        onMouseEnter={() => {
+                                          handleHoverRatingChange(
+                                            item.name,
+                                            score
+                                          )
+                                        }}
+                                        onMouseLeave={() => {
+                                          setHoverRating(0)
+                                        }}
+                                      >
+                                        <span
+                                          className={
+                                            score <=
+                                              productRatings[item.name] ||
+                                            score <= hoverRating[item.name]
+                                              ? styles['on']
+                                              : styles['off']
+                                          }
+                                        >
+                                          &#9733;
+                                        </span>
+                                      </button>
+                                    )
+                                  })}
+                              </div>
+                              <div>
+                                {/* <div className="body-title">詳細評價</div> */}
+                                <input
+                                  className="form-control p-0"
+                                  defaultValue={productComments[item.name]}
+                                  onChange={(e) => {
+                                    handleProductCommentChange(
+                                      item.name,
+                                      e.target.value
+                                    )
+                                  }}
+                                ></input>
+                              </div>
                               <button
                                 className="btn btn-main"
-                                onClick={() => {
-                                  handleShowrating(item.name)
-                                  setShowrating(!showrating)
-                                }}
+                                onClick={() =>
+                                  handleSubmit(
+                                    productRatings[item.name],
+                                    productComments[item.name],
+                                    item.id
+                                  )
+                                }
                               >
-                                商品評價
+                                送出評論
                               </button>
-                            ) : (
-                              <></>
-                            )}
-
-                            {currentProduct === item.name && (
-                              <div className="rate">
-                                <div className="rate-star mb-1">
-                                  <div className="body-title">評價</div>
-                                  {Array(5)
-                                    .fill(1)
-                                    .map((v, i) => {
-                                      // 每個按鈕的分數，相當於索引+1
-                                      const score = i + 1
-
-                                      return (
-                                        <button
-                                          key={i}
-                                          className={styles['star-btn']}
-                                          onClick={() =>
-                                            handleProductRatingChange(
-                                              item.name,
-                                              score
-                                            )
-                                          }
-                                          onMouseEnter={() => {
-                                            handleHoverRatingChange(
-                                              item.name,
-                                              score
-                                            )
-                                          }}
-                                          onMouseLeave={() => {
-                                            setHoverRating(0)
-                                          }}
-                                        >
-                                          <span
-                                            className={
-                                              score <=
-                                                productRatings[item.name] ||
-                                              score <= hoverRating[item.name]
-                                                ? styles['on']
-                                                : styles['off']
-                                            }
-                                          >
-                                            &#9733;
-                                          </span>
-                                        </button>
-                                      )
-                                    })}
-                                </div>
-                                <div>
-                                  {/* <div className="body-title">詳細評價</div> */}
-                                  <input
-                                    className="form-control p-0"
-                                    defaultValue={productComments[item.name]}
-                                    onChange={(e) => {
-                                      handleProductCommentChange(
-                                        item.name,
-                                        e.target.value
-                                      )
-                                    }}
-                                  ></input>
-                                </div>
-                                <button
-                                  className="btn btn-main"
-                                  onClick={() =>
-                                    handleSubmit(
-                                      productRatings[item.name],
-                                      productComments[item.name],
-                                      item.id
-                                    )
-                                  }
-                                >
-                                  送出評論
-                                </button>
-                              </div>
-                            )}
+                            </div>
+                            {/* )} */}
 
                             {/* <ProductRating
                               itemId={item.id}
@@ -324,10 +318,10 @@ export default function Order({ order }) {
               <table className="table">
                 <thead>
                   <tr className="border-bottom border-black">
-                    <th className="font-weight-bold p-0 px-2">課程</th>
-                    <th className="font-weight-bold p-0 px-2">單價</th>
-                    <th className="font-weight-bold p-0 px-2">數量</th>
-                    <th className="font-weight-bold p-0 px-2">小計</th>
+                    <th className="p-0 px-2">課程</th>
+                    <th className=" p-0 px-2 ">單價</th>
+                    <th className="p-0 px-2 text-center">數量</th>
+                    <th className="p-0 px-2 text-center">小計</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -362,70 +356,87 @@ export default function Order({ order }) {
                             NTD {item.price * item.amount}
                           </td>
                           <td>
-                            {/* <button
-                              className="btn btn-main"
-                              type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#LectureRate"
-                            >
-                              課程評價
-                            </button> */}
+                            {!currentLecture[item.name] && (
+                              <button
+                                className="btn btn-main"
+                                type="button"
+                                onClick={() => {
+                                  handleShowrating(item.name)
+                                }}
+                              >
+                                課程評價
+                              </button>
+                            )}
+                            {currentLecture[item.name] && (
+                              <div className="rate-star mb-1">
+                                <div className="body-title">評價</div>
+                                {Array(5)
+                                  .fill(1)
+                                  .map((v, i) => {
+                                    // 每個按鈕的分數，相當於索引+1
+                                    const score = i + 1
 
-                            <div className="rate-star mb-1">
-                              <div className="body-title">評價</div>
-                              {Array(5)
-                                .fill(1)
-                                .map((v, i) => {
-                                  // 每個按鈕的分數，相當於索引+1
-                                  const score = i + 1
-
-                                  return (
-                                    <button
-                                      key={i}
-                                      className={styles['star-btn']}
-                                      onClick={() =>
-                                        handleLectureRatingChange(
-                                          item.name,
-                                          score
-                                        )
-                                      }
-                                      onMouseEnter={() => {
-                                        handleHoverRatingChange(
-                                          item.name,
-                                          score
-                                        )
-                                      }}
-                                      onMouseLeave={() => {
-                                        setHoverRating(0)
-                                      }}
-                                    >
-                                      <span
-                                        className={
-                                          score <= lectureRatings[item.name] ||
-                                          score <= hoverRating[item.name]
-                                            ? styles['on']
-                                            : styles['off']
+                                    return (
+                                      <button
+                                        key={i}
+                                        className={styles['star-btn']}
+                                        onClick={() =>
+                                          handleLectureRatingChange(
+                                            item.name,
+                                            score
+                                          )
                                         }
+                                        onMouseEnter={() => {
+                                          handleHoverRatingChange(
+                                            item.name,
+                                            score
+                                          )
+                                        }}
+                                        onMouseLeave={() => {
+                                          setHoverRating(0)
+                                        }}
                                       >
-                                        &#9733;
-                                      </span>
-                                    </button>
-                                  )
-                                })}
-                            </div>
-                            <div>
-                              {/* <div className="body-title">詳細評價</div> */}
-                              <input
-                                className="form-control p-0"
-                                value={lectureComments[item.name]}
-                                onChange={(e) =>
-                                  handleLectureCommentChange(
-                                    item.name,
-                                    e.target.value
-                                  )
-                                }
-                              ></input>
-                            </div>
+                                        <span
+                                          className={
+                                            score <=
+                                              lectureRatings[item.name] ||
+                                            score <= hoverRating[item.name]
+                                              ? styles['on']
+                                              : styles['off']
+                                          }
+                                        >
+                                          &#9733;
+                                        </span>
+                                      </button>
+                                    )
+                                  })}
+                                <div>
+                                  {/* <div className="body-title">詳細評價</div> */}
+                                  <input
+                                    className="form-control p-0"
+                                    value={lectureComments[item.name]}
+                                    onChange={(e) =>
+                                      handleLectureCommentChange(
+                                        item.name,
+                                        e.target.value
+                                      )
+                                    }
+                                  ></input>
+                                  <button
+                                    className="btn btn-main"
+                                    onClick={() =>
+                                      handleSubmit(
+                                        productRatings[item.name],
+                                        productComments[item.name],
+                                        item.id
+                                      )
+                                    }
+                                  >
+                                    送出評論
+                                  </button>
+                                </div>
+                              </div>
+                            )}
 
                             {/* <LectureRating
                               itemId={item.id}

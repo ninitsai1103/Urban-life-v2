@@ -5,10 +5,11 @@ import { TbStarFilled, TbStar } from 'react-icons/tb'
 import useColloections from '@/hooks/product/useCollections'
 import toast, { Toaster } from 'react-hot-toast'
 
-export default function ProductCard({ product, collections}) {
+export default function ProductCard({ product, collections,products}) {
 const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
 const {addCollection, removeCollection} =useColloections();
 
+const hasSearchResults = products && products.length > 0;
 
 // init IsCollected by collection -> valid
 useEffect(() => {

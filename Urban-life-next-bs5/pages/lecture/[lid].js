@@ -8,33 +8,104 @@ import Link from 'next/link'
 import Lecturedetail from '@/components/lecture/lecturedetail'
 import Safeinfo from '@/components/lecture/safeinfo'
 import { UseLecture } from '@/hooks/use-lecture'
+import { useCheckout } from '@/hooks/use-checkout'
+import useColloections from '@/hooks/product/useCollections'
+import useCommment from '@/hooks/product/useCommment'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 
 export default function LectureDetail() {
   const { lectures } = UseLecture()
+  const { collections, addCollection, removeCollection } = useColloections()
+  const { comments } = useCommment()
+
   const router = useRouter()
-  const { id } = router.query
+  const { lid } = router.query
   const [lecture, setLecture] = useState(null)
+  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const [comment, setComment] = useState(null)
 
-  useEffect(() => {
-    if (lectures) {
-      const foundLecture = lectures.find((item) => item.id === parseInt(id))
-      if (foundLecture) {
-        setLecture(foundLecture)
-      }
-    }
-  }, [id, lectures])
+  // useEffect(() => {
+  //   if (lectures) {
+  //     const foundLecture = lectures.find((item) => item.id === parseInt(lid))
+  //     if (foundLecture) {
+  //       setLecture(foundLecture)
+  //     }
+  //   }
+  // }, [lid, lectures])
 
-  // 渲染 loading 狀態或資料
-  // if (!lecture) {
-  //   return <div>Loading...</div>
-  // }
+ //加入購物車
+ const { addItem } = useCheckout()
+ const MySwal = withReactContent(Swal)
+
+//顯示評論
+const [visibleComments, setVisibleComments] = useState(2)
+const [showAll, setShowAll] = useState(false)
+
+useEffect(() => {
+  //根據lid動態路由對應商品資料
+  if (lid && lectures.length > 0) {
+    const fetchLecture = lectures.find(
+      (item) => item.id === parseInt(lid, 10)
+    )
+    setLecture(fetchLecture)
+  }
+}, [lectures, lid])
+
+useEffect(() => {
+  // 檢查當前商品是否在收藏列表中
+  setIsCollected(
+    collections.find((item) => item.product_id == lid && item.valid == 1)
+  )
+}, [collections])
+
+//切換商品的收藏狀態
+const toggleCollection = () => {
+  setIsCollected(!isCollected)
+  const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+  toast.success(message, {})
+}
+
+const notifySA = (lecture) => {
+  MySwal.fire({
+    title: '成功加入',
+    text: lecture.name + '已成功加入購物車!',
+    icon: 'success',
+  })
+}
+
+//根據lid動態路由對應商品評論
+useEffect(() => {
+  if (lid && comments.length > 0) {
+    const fetchComment = comments
+      .filter((item) => item.product_lecture_id === parseInt(lid, 10))
+      .map((comment) => ({
+        ...comment,
+        date: commentDate(comment.created_at),
+      }))
+    setComment(fetchComment)
+  }
+}, [comments, lid])
+
+ //擷取日期
+ const commentDate = (datetime) => {
+  const datePart = datetime.split(' ')[0]
+  return datePart
+}
+
+//查看更多評論
+const moreComment = (comment) => {
+  if (showAll) {
+    setVisibleComments(2)
+    setShowAll(false)
+  } else {
+    setVisibleComments(comment.length)
+    setShowAll(true)
+  }
+}
 
   //猜你喜歡
   const [randomLectures, setRandomLectures] = useState([]);
-
-  useEffect(() => {
-    generateRandomLectures();
-  }, []);
 
   // 生成隨機的講座卡片
   const generateRandomLectures = () => {
@@ -45,6 +116,12 @@ export default function LectureDetail() {
     // 更新狀態以渲染隨機卡片
     setRandomLectures(selectedLectures);
   };
+
+  useEffect(() => {
+    if (lectures.length > 0) {
+      generateRandomLectures();
+    }
+  }, [lectures])
 
   return (
     <>
@@ -69,7 +146,6 @@ export default function LectureDetail() {
               </ol>
             </nav>
           </div>
-          {lectures.map((lectures) => {
           <div className="lectureinfo">
             <div className="slider">
               <Lectureslider />
@@ -78,7 +154,6 @@ export default function LectureDetail() {
               <LectureInfo />
             </div>
           </div>
-          })}
         </section>
         <section className="section2">
           <h1 className="sectiontitle">集合地點</h1>
@@ -153,7 +228,7 @@ export default function LectureDetail() {
                 marginTop: '30px',
               }}
             >
-              <button className='btn btn-add' onClick={generateRandomLectures}>猜你喜歡</button>
+              <button className='btn btn-add' onClick={generateRandomLectures}>發現有趣課程</button>
             </div>
           </div>
         </section>
