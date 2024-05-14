@@ -362,10 +362,10 @@ export default function Detail() {
             </div>
           ) : (
             <div className="col-12 mb-5">
-              <h4 className="text-center mb-5">買家評價</h4>
+              {/* <h4 className="text-center mb-5">買家評價</h4>
               <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
                 目前尚未有買家評價該商品
-              </div>
+              </div> */}
             </div>
           )}
           <div div className="container mb-5">

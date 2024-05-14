@@ -32,11 +32,10 @@ export default function Carousel({ productId }) {
       if (fetchProduct && fetchProduct.img) {
         setImg(fetchProduct.img.split(';'));
       }
-      // console.log(img);
     }
-
   }, [productId, products])
-
+  console.log(cover)
+  console.log(img);
   // 條件渲染，確保 productId 和 products 都已經準備好
   if (!productId || !products.length) return null;
   const getCover = () => {
@@ -45,6 +44,7 @@ export default function Carousel({ productId }) {
   const getImg = () => {
     return img ? img.map(imgName => `/images/product/product_img/${imgName}`) : [];
   }
+  
   return (
     <>
       <Swiper
@@ -63,16 +63,16 @@ export default function Carousel({ productId }) {
         className={styles.mySwiper2}
         loop={true}
       >
-        {getImg().map((imageUrl, index) => (
-          <Fragment key={`cover-${index}`}>
-        <SwiperSlide  className='wrap-img'>
+         {cover && (
+        <SwiperSlide key='cover-0' className='wrap-img'>
           <img src={getCover()} />
         </SwiperSlide>
+      )}
+      {getImg().map((imageUrl, index) => (
         <SwiperSlide key={`img-${index}`} className='wrap-img'>
           <img src={imageUrl} alt={`Product Image ${index + 1}`}/>
         </SwiperSlide>
-        </Fragment>
-        ))}
+      ))}
       </Swiper>
       <Swiper
         onSwiper={setThumbsSwiper}
@@ -83,17 +83,16 @@ export default function Carousel({ productId }) {
         modules={[FreeMode, Navigation, Thumbs]}
         className={styles.mySwiper}
       >
-         {getImg().map((imageUrl, index) => (
-          <Fragment key={`thumb-${index}`}>
-        <SwiperSlide  style={{ cursor: 'pointer' }}>
+         {cover && (
+        <SwiperSlide key='thumb-cover-0' style={{ cursor: 'pointer' }}>
           <img src={getCover()} />
         </SwiperSlide>
+      )}
+      {getImg().map((imageUrl, index) => (
         <SwiperSlide key={`thumb-detail-${index}`} style={{ cursor: 'pointer' }}>
           <img src={imageUrl} alt={`Product Image ${index + 1}`}/>
         </SwiperSlide>
-        </Fragment>
-        ))}
-   
+      ))}
       </Swiper>
 
 

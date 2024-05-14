@@ -11,11 +11,11 @@ export default function Recommend({ product,collections }) {
   const {addCollection, removeCollection} =useColloections();
   const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
     const {products} = useProducts();
-console.log(collections);
+
   useEffect(() => {
     // 檢查當前商品是否在收藏列表中
   setIsCollected(collections.find(item => item.product_id == products.id && item.valid == 1))
-  console.log(isCollected);
+  // console.log(isCollected);
   },[collections, products])
   
   
@@ -203,12 +203,34 @@ console.log(collections);
         .card {
           border-radius: 8px;
         }
+        .card-title {
+          white-space: nowrap; /* 保持文字在一行內 */
+          overflow: hidden; /* 隱藏超出容器部分的內容 */
+          text-overflow: ellipsis; /* 使用省略號表示文字被截斷 */
+          position: relative; /* 為了 tooltip 的絕對定位 */
+        }
+        .card-title:hover::after {
+          content: attr(data-tooltip); /* 使用自定義屬性來設置 tooltip 文字 */
+          position: absolute;
+          width: auto; /* 自動寬度 */
+          white-space: normal; /* 恢復正常換行 */
+          background-color: black; /* 背景顏色 */
+          color: white; /* 文字顏色 */
+          padding: 4px 8px; /* 內邊距 */
+          border-radius: 4px; /* 圓角 */
+          top: 100%; /* 在元素下方顯示 */
+          left: 0; /* 從左邊開始 */
+          z-index: 1000; /* 確保顯示在最上層 */
+        }
         .card-body {
           border-top: 1px solid #a9a6a6;
         }
         .imgWrap {
           width: 294px;
           height: 294px;
+          background-color:black;
+          display:flex;
+          justify-content: center;
         }
         .imgWrap img {
           width: 100%;
