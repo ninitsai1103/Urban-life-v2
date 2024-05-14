@@ -127,11 +127,8 @@ export default function LectureHome() {
 
   // 生成隨機的教師卡片
   const generateRandomTeachers = () => {
-    // 將教師數組進行隨機排序
     const shuffledTeachers = teachers.sort(() => Math.random() - 0.5)
-    // 只取前四個隨機卡片
     const selectedTeachers = shuffledTeachers.slice(0, 4)
-    // 更新狀態以渲染隨機卡片
     setRandomTeachers(selectedTeachers)
   }
 
@@ -146,8 +143,8 @@ export default function LectureHome() {
   }, [lectures])
 
   useEffect(() => {
+    console.log('Teachers:', teachers) // 調試教師數據
     if (teachers.length > 0) {
-      // 如果 teachers 不為空，則設置 randomTeachers
       generateRandomTeachers()
     }
   }, [teachers])
@@ -332,16 +329,10 @@ export default function LectureHome() {
         <section className="section6">
           <h1 className="sectiontitle">講師陣容</h1>
           <p className="teachertext">Teacher</p>
-          <div style={{ maxWidth: '1290px', overflow: 'hidden' }}>
-            {randomTeachers.length > 0 ? (
-              <div className="teachergrp">
-                {randomTeachers.map((teacher) => (
-                  <TeacherCardInfo key={teacher.id} teacher={teacher} />
-                ))}
-              </div>
-            ) : (
-              <p>No teachers available</p>
-            )}
+          <div style={{ maxWidth: '1296px', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <TeacherCardInfo teachers={randomTeachers} />
+            </div>
             {/* 刷新按鈕 */}
             <div
               style={{
