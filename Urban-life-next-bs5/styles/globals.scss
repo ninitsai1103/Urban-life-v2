@@ -120,6 +120,12 @@ img {
     color: white;
   }
 }
+.btn-cantusecoupon {
+  background-color: $grey-500;
+  border-radius: 1.2rem;
+  color: $grey-300;
+  
+}
 
 .btn-detail {
   // display: inline-block;
@@ -302,3 +308,4 @@ img {
 .bg-primary5 {
   background-color: $primary5;
 }
+

@@ -7,7 +7,7 @@ export default function ProductCategoryCard() {
       <div className={`card ${styles.card}`}  >
         <div className={`card-img ${styles.cardImg}`}>
           <img
-            src="/images/product/list/product.jpg"
+            src="/images/product/product_img/Pi2401260932.jpg"
             className={`card-img-top ${styles.cardImgTop}`}
           />
         </div>

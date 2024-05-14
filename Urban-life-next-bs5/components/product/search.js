@@ -1,7 +1,8 @@
-import React from 'react'
+import{useState} from 'react'
 import { CiSearch } from 'react-icons/ci'
 
-export default function Search() {
+export default function Search({ searchedProducts, setInputText}) {
+
   return (
     <>
       <div className="search col-12 col-lg-5 ">
@@ -10,9 +11,17 @@ export default function Search() {
             type="text"
             className="form-control"
             aria-label="Text input with button"
+            onChange={e=>{
+              setInputText(e.target.value) 
+            }}
           />
           <button className="btn p-1 " type="button" >
-            <CiSearch style={{fontSize:'30px'}} />
+            <CiSearch style={{fontSize:'30px'}}
+            onClick={
+              searchedProducts
+            } 
+
+            />
           </button>
           <br />
         </div>

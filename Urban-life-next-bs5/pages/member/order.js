@@ -1,13 +1,95 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
-import OrderList from '@/components/member/order'
+import OrderList from '@/components/member/order-list'
 import OrderCard from '@/components/member/order-card'
 import Page from '@/components/product/pagination'
-export default function Order() {
+
+import { useMemberInfo } from '@/hooks/use-member-info'
+export default function OrderMainPage() {
+  // order的訂單狀態
+  const [orders, setOrders] = useState([])
+
+  // 利用use-member-info的hooks抓取localStorage的會員資訊
+  const { member } = useMemberInfo()
+  
+
+  // 連線至order_detail
+  const getOrderDetail = async (id) => {
+    
+    const url = `http://localhost:3005/api/order?user_id=${id}`
+
+    // fetch抓資料
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      console.log(data)
+
+      const orders = data.data.order
+      // console.log(orders)
+      // 將相同order_id的東西儲存成一個物件
+      // 新增一個key專門儲存product的資料
+      const mergedOrders = orders.reduce((acc, order) => {
+        const existingOrder = acc.find(
+          (item) => item.order_id === order.order_id
+        )
+        if (existingOrder) {
+          // 如果訂單已存在，將新的商品資料合併到 items 陣列中
+          existingOrder.items.push({
+            id: order.id,
+            product_id: order.product_id,
+            pdlt_id: order.pdlt_id,
+            name: order.name,
+            price: order.price,
+            cover: order.cover,
+            amount: order.amount,
+          })
+        } else {
+          // 如果訂單不存在，新增一個新的訂單物件
+          acc.push({
+            order_id: order.order_id,
+            user_id: order.user_id,
+            pay: order.pay,
+            // order_code: order.order_code,
+            name: order.name,
+            phone: order.phone,
+            address: order.address,
+            email: order.email,
+            total: order.total,
+            date: order.date,
+            coupon_id: order.coupon_id,
+            items: [
+              {
+                id: order.id,
+                product_id: order.product_id,
+                pdlt_id: order.pdlt_id,
+                amount: order.amount,
+                name: order.name,
+                price: order.price,
+                cover: order.cover,
+              },
+            ],
+          })
+        }
+        return acc
+      }, [])
+
+      console.log(mergedOrders)
+      setOrders(mergedOrders)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (member) {
+      getOrderDetail(member.id)
+    }
+  }, [member])
+
   return (
     <>
       <div className="container">
-      <div className="row margin-padding">
+        <div className="row margin-padding">
           <div className="col-lg-3 col-md-12 aside">
             <AsideAccount />
           </div>
@@ -22,12 +104,24 @@ export default function Order() {
               <div className="row">
                 {/* 桌面版顯示表格 */}
                 <div className="col-lg-12 d-none d-lg-block ">
-                  <OrderList/>
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">訂單ID</th>
+                        <th scope="col">訂單日期</th>
+                        <th scope="col">金額</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    {orders.map((order) => {
+                      return <OrderList order={order} key={order.order_id} />
+                    })}
+                  </table>
                 </div>
                 {/* 手機版顯示卡片 */}
                 <div className="d-lg-none">
-                  <OrderCard />   
-                  <OrderCard />                                        
+                  <OrderCard />
+                  <OrderCard />
                 </div>
               </div>
             </div>
@@ -39,7 +133,7 @@ export default function Order() {
       </div>
 
       <style jsx>{`
-        .margin-padding{
+        .margin-padding {
           margin: 20px;
           padding: 33px 0px;
         }
@@ -98,7 +192,6 @@ export default function Order() {
           }
           .content {
             padding: 0px;
-           
           }
         }
       `}</style>

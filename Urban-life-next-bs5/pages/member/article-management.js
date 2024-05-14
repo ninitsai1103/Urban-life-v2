@@ -1,10 +1,122 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import ArticleCard from '@/components/member/article-card'
 import TeacherAsideAccount from '@/components/member/teacher-aside-account'
 import Page from '@/components/product/pagination'
 import { IoAdd } from 'react-icons/io5'
+import useTeacherArticles from '@/hooks/use-teacherarticle'
+import { useMemberInfo } from '@/hooks/use-member-info'
 
 export default function ArticleManagement() {
+  const [ArticlesList, setArticlesList] = useState([])
+  const { articles } = useTeacherArticles()
+
+  // member的hooks
+  const { member } = useMemberInfo()
+
+  //分頁
+  const [articleCurrentPage, setArticleCurrentPage] = useState(1)
+  const [ArticleTotalPages, setArticleTotalPages] = useState(1)
+  const ArticlePerpages = 5
+  
+
+  // 判斷user是誰
+  const [identityId, setUserIdentityId] = useState()
+  useEffect(() => {
+    const { identity_id, name, id } = JSON.parse(
+      localStorage.getItem('member-info')
+    )
+    setUserIdentityId(id)
+    console.log(name)
+    console.log(identity_id)
+    console.log(id);
+  }, [])
+
+
+  useEffect(() => {
+    if (!identityId) return; // 等待 identityId 設置後再執行
+
+    // 過濾符合條件的文章
+    const filteredArticles = articles.filter(article => article.user_id === identityId);
+
+    // 更新分頁資訊
+    const newArticleTotalPages = Math.ceil(filteredArticles.length / ArticlePerpages);
+    setArticleTotalPages(newArticleTotalPages);
+
+    // 根據當前頁數更新展示的文章列表
+    const ArticleStartIndex = (articleCurrentPage - 1) * ArticlePerpages;
+    const ArticleEndIndex = Math.min(ArticleStartIndex + ArticlePerpages, filteredArticles.length);
+    setArticlesList(filteredArticles.slice(ArticleStartIndex, ArticleEndIndex));
+  }, [articleCurrentPage, articles, identityId])
+
+  const handleArticlePageChange = (articlePage) => {
+    setArticleCurrentPage(articlePage)
+  }
+
+  // article排序
+  const [ArticleSortOption, setArticleSortOption] = useState('ArticleNewest') // 初始排序方式：根據課程時間由新到舊
+  const handleArticleSortChange = (option) => {
+    setArticleSortOption(option)
+  }
+
+  useEffect(() => {
+    let filteredArticles = articles.filter(article => article.user_id === identityId);
+
+    // 根據排序選項重新排序
+    switch (ArticleSortOption) {
+      case 'ArticleNewest':
+        filteredArticles.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )
+        break
+      case 'ArticleOldest':
+        filteredArticles.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        )
+        break
+        case 'ArticleNewest':
+        filteredArticles.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )
+        break
+      case 'ArticleOldest':
+        filteredArticles.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        )
+        break
+      case 'ArticleUpdateNewest':
+        filteredArticles.sort(
+          (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+        )
+        break
+      case 'ArticleUpdateOldest':
+        filteredArticles.sort(
+          (a, b) => new Date(a.updated_at) - new Date(b.updated_at)
+        )
+        break
+      default:
+        break
+    }
+
+    // 更新課程列表
+    const ArticleStartIndex =
+      (articleCurrentPage - 1) * ArticlePerpages
+    const ArticleEndIndex = Math.min(
+      ArticleStartIndex + ArticlePerpages,
+      filteredArticles.length
+    )
+    setArticlesList(
+      filteredArticles.slice(ArticleStartIndex, ArticleEndIndex)
+    )
+
+    // 更新總頁數
+    const ArticleTotalPages = Math.ceil(
+      filteredArticles.length / ArticlePerpages
+    )
+    setArticleTotalPages(ArticleTotalPages)
+  }, [articleCurrentPage, articles, ArticleSortOption])
+
+
+
   return (
     <>
       {/* EBE3DB */}
@@ -17,20 +129,84 @@ export default function ArticleManagement() {
             <div className="d-flex justify-content-between align-items-center teacher-margin-bottom">
               <div className="teacher-text-title">我的文章</div>
               <div className="add-article-btn">
-                <button className="btn btn-main">
+                <a className="btn btn-main" href="/article/add">
                   <IoAdd />
                   新增文章
-                </button>
+                </a>
               </div>
             </div>
+            <div className="dropdown">
+                    <button
+                      className="btn dropdown-toggle fs-6 d-flex justify-content-center align-items-center"
+                      type="button"
+                      id="articleDropdown1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      排序
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="articleDropdown1"
+                    >
+                    <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleArticleSortChange('ArticleNewest')
+                          }
+                        >
+                          建立時間由新到舊
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleArticleSortChange('ArticleOldest')
+                          }
+                        >
+                          建立時間由舊到新
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleArticleSortChange('ArticleUpdateNewest')
+                          }
+                        >
+                          更新時間由新到舊
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleArticleSortChange('ArticleUpdateOldest')
+                          }
+                        >
+                          更新時間由舊到新
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
             <div className="teacher-margin-bottom">
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
+              {ArticlesList.map((article) => (
+                <ArticleCard key={article.id} article={article} identityId={identityId}/>
+              ))}
             </div>
             <div>
-              <Page />
+              <Page
+                totalPages={ArticleTotalPages}
+                currentPage={articleCurrentPage}
+                perpages={ArticlePerpages}
+                onPageChange={handleArticlePageChange}
+              />
             </div>
           </div>
         </div>
@@ -57,22 +233,24 @@ export default function ArticleManagement() {
           margin-bottom: 50px;
         }
 
-         {
-          /* .add-article-btn{
-          border-radius: 100px;
-          border: none;
-          padding: 4px 20px;
-          color: white;
-          background-color: #849474;
-          right: 0;
-        } */
-        }
-
         .teacher-article-management {
           margin: 20px;
           padding: 33px 0;
-          {/* margin: 20px 0px; */}
-          {/* padding: 0px; */}
+           {
+            /* margin: 20px 0px; */
+          }
+           {
+            /* padding: 0px; */
+          }
+        }
+
+        .dropdown {
+          margin-bottom: 20px;
+          button {
+            margin-left: auto;
+            background-color: #ffffff;
+            padding: 5px 50px;
+          }
         }
 
         @media (max-width: 992px) {
@@ -97,6 +275,13 @@ export default function ArticleManagement() {
           }
           .add-article-btn {
             margin-left: auto;
+          }
+          .dropdown {
+            button {
+              border: 1px solid #ccc;
+              padding: 5px 0px;
+              width: 50%;
+            }
           }
         }
       `}</style>

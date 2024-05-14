@@ -1,458 +1,96 @@
-// import { useEffect } from 'react'
-
-// export default function List() {
-//   // Toggle the side navigation
-//   useEffect(() => {
-//     // fix next issue
-//     if (typeof window !== 'undefined') {
-//       const sidebarToggle = document.body.querySelector('#sidebarToggle')
-
-//       if (sidebarToggle) {
-//         // 在localStorage中儲存目前sidebar情況
-//         if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-//           document.body.classList.toggle('sb-sidenav-toggled')
-//         }
-
-//         sidebarToggle.addEventListener('click', (event) => {
-//           event.preventDefault()
-
-//           document.body.classList.toggle('sb-sidenav-toggled')
-
-//           localStorage.setItem(
-//             'sb|sidebar-toggle',
-//             document.body.classList.contains('sb-sidenav-toggled')
-//           )
-//         })
-//       }
-//     }
-//   }, [])
-
-//   return (
-//     <>
-//       <div className="row mt-2 mb-3">
-//         <h5 className="card-text d-flex justify-content-between align-items-center">
-//           <span className="ps-3">Nike Air Force 1 (91)</span>
-//           <div className="d-flex p-2 justify-content-end align-items-center">
-//             <div className="toolbar">
-//               <button className="btn" id="sidebarToggle">
-//                 隱藏篩選條件 <i className="bi bi-toggles"></i>
-//               </button>
-//             </div>
-//             <div className="dropdown">
-//               <button
-//                 className="btn dropdown-toggle"
-//                 type="button"
-//                 data-bs-toggle="dropdown"
-//                 aria-expanded="false"
-//               >
-//                 排序依據
-//               </button>
-//               <ul className="dropdown-menu">
-//                 <li>
-//                   <a className="dropdown-item" href="#">
-//                     最新
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a className="dropdown-item" href="#">
-//                     價格：由高至低
-//                   </a>
-//                 </li>
-//                 <li>
-//                   <a className="dropdown-item" href="#">
-//                     價格：由低至高
-//                   </a>
-//                 </li>
-//               </ul>
-//             </div>
-//           </div>
-//         </h5>
-//       </div>
-//       <div className="row">
-//         <div className="col-sm-12">
-//           <div className="d-flex" id="wrapper">
-//             <div className="bg-white me-3" id="sidebar-wrapper">
-//               <div className="scroll">
-//                 <div className="cats">
-//                   <div>
-//                     <button type="button" className="btn">
-//                       運動生活
-//                     </button>
-//                   </div>
-//                   <div>
-//                     <button type="button" className="btn">
-//                       當季新品
-//                     </button>
-//                   </div>
-//                   <div>
-//                     <button type="button" className="btn">
-//                       促銷
-//                     </button>
-//                   </div>
-//                 </div>
-
-//                 <div
-//                   className="accordion accordion-flush"
-//                   id="accordionFlushExample"
-//                 >
-//                   <div className="accordion-item">
-//                     <h2 className="accordion-header">
-//                       <button
-//                         className="accordion-button collapsed"
-//                         type="button"
-//                         data-bs-toggle="collapse"
-//                         aria-expanded="false"
-//                         data-bs-target="#panelsStayOpen-collapseOne"
-//                         aria-controls="panelsStayOpen-collapseOne"
-//                       >
-//                         性別
-//                       </button>
-//                     </h2>
-//                     <div
-//                       id="panelsStayOpen-collapseOne"
-//                       className="accordion-collapse collapse"
-//                     >
-//                       <div className="accordion-body px-1">
-//                         <div className="form-check">
-//                           <input
-//                             className="form-check-input"
-//                             type="checkbox"
-//                             value=""
-//                             id="flexCheckDefault"
-//                           />
-//                           <label
-//                             className="form-check-label"
-//                             htmlFor="flexCheckDefault"
-//                           >
-//                             男性
-//                           </label>
-//                         </div>
-//                         <div className="form-check">
-//                           <input
-//                             className="form-check-input"
-//                             type="checkbox"
-//                             value=""
-//                             id="flexCheckChecked"
-//                           />
-//                           <label
-//                             className="form-check-label"
-//                             htmlFor="flexCheckChecked"
-//                           >
-//                             女性
-//                           </label>
-//                         </div>
-//                         <div className="form-check">
-//                           <input
-//                             className="form-check-input"
-//                             type="checkbox"
-//                             value=""
-//                             id="flexCheckChecked"
-//                           />
-//                           <label
-//                             className="form-check-label"
-//                             htmlFor="flexCheckChecked"
-//                           >
-//                             中性
-//                           </label>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <div className="accordion-item">
-//                     <h2 className="accordion-header">
-//                       <button
-//                         className="accordion-button collapsed"
-//                         type="button"
-//                         data-bs-toggle="collapse"
-//                         data-bs-target="#panelsStayOpen-collapseTwo"
-//                         aria-expanded="false"
-//                         aria-controls="panelsStayOpen-collapseTwo"
-//                       >
-//                         顏色
-//                       </button>
-//                     </h2>
-//                     <div
-//                       id="panelsStayOpen-collapseTwo"
-//                       className="accordion-collapse collapse"
-//                     >
-//                       <div className="accordion-body px-1">
-//                         <div className="d-flex flex-row justify-content-around mb-2">
-//                           <div className="p-2">
-//                             <div className="d-flex flex-column">
-//                               <div>
-//                                 <button
-//                                   type="button"
-//                                   className="btn btn-primary btn-circle"
-//                                 ></button>
-//                               </div>
-//                               <div className="color-f">紫色</div>
-//                             </div>
-//                           </div>
-//                           <div className="p-2">
-//                             <div className="d-flex flex-column">
-//                               <div>
-//                                 <button
-//                                   type="button"
-//                                   className="btn btn-primary btn-circle"
-//                                 ></button>
-//                               </div>
-//                               <div className="color-f">紫色</div>
-//                             </div>
-//                           </div>
-//                           <div className="p-2">
-//                             <div className="d-flex flex-column">
-//                               <div>
-//                                 <button
-//                                   type="button"
-//                                   className="btn btn-primary btn-circle"
-//                                 ></button>
-//                               </div>
-//                               <div className="color-f">紫色</div>
-//                             </div>
-//                           </div>
-//                         </div>
-//                         <div className="d-flex flex-row justify-content-around mb-2">
-//                           <div className="p-2">
-//                             <div className="d-flex flex-column">
-//                               <div>
-//                                 <button
-//                                   type="button"
-//                                   className="btn btn-primary btn-circle"
-//                                 ></button>
-//                               </div>
-//                               <div className="color-f">紫色</div>
-//                             </div>
-//                           </div>
-//                           <div className="p-2">
-//                             <div className="d-flex flex-column">
-//                               <div>
-//                                 <button
-//                                   type="button"
-//                                   className="btn btn-primary btn-circle"
-//                                 ></button>
-//                               </div>
-//                               <div className="color-f">紫色</div>
-//                             </div>
-//                           </div>
-//                           <div className="p-2">
-//                             <div className="d-flex flex-column">
-//                               <div>
-//                                 <button
-//                                   type="button"
-//                                   className="btn btn-primary btn-circle"
-//                                 ></button>
-//                               </div>
-//                               <div className="color-f">紫色</div>
-//                             </div>
-//                           </div>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <div className="accordion-item">
-//                     <h2 className="accordion-header">
-//                       <button
-//                         className="accordion-button collapsed"
-//                         type="button"
-//                         data-bs-toggle="collapse"
-//                         data-bs-target="#panelsStayOpen-collapseThree"
-//                         aria-expanded="false"
-//                         aria-controls="panelsStayOpen-collapseThree"
-//                       >
-//                         價格範圍
-//                       </button>
-//                     </h2>
-//                     <div
-//                       id="panelsStayOpen-collapseThree"
-//                       className="accordion-collapse collapse"
-//                     >
-//                       <div className="accordion-body px-1">
-//                         <div className="form-check">
-//                           <input
-//                             className="form-check-input"
-//                             type="checkbox"
-//                             value=""
-//                             id="flexCheckDefault"
-//                           />
-//                           <label
-//                             className="form-check-label"
-//                             htmlFor="flexCheckDefault"
-//                           >
-//                             $1,500以下
-//                           </label>
-//                         </div>
-//                         <div className="form-check">
-//                           <input
-//                             className="form-check-input"
-//                             type="checkbox"
-//                             value=""
-//                             id="flexCheckChecked"
-//                           />
-//                           <label
-//                             className="form-check-label"
-//                             htmlFor="flexCheckChecked"
-//                           >
-//                             $1,500 - $3,000
-//                           </label>
-//                         </div>
-//                         <div className="form-check">
-//                           <input
-//                             className="form-check-input"
-//                             type="checkbox"
-//                             value=""
-//                             id="flexCheckChecked"
-//                           />
-//                           <label
-//                             className="form-check-label"
-//                             htmlFor="flexCheckChecked"
-//                           >
-//                             $3,001 - $5,999
-//                           </label>
-//                         </div>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div id="page-content-wrapper">
-//               <div className="container-fluid">
-//                 <div className="row row-cols-1 row-cols-md-3 g-4">
-//                   <div className="col">
-//                     <div className="card w-350 no-border f-16">
-//                       <img
-//                         src="/images/product/list/p1-thumb.webp"
-//                         className="card-img-top"
-//                         alt="..."
-//                       />
-//                       <div className="card-body no-space-x">
-//                         <p className="card-text note-text">新品上市</p>
-//                         <p className="card-text">Nike Air Force 1 Shadow</p>
-//                         <p className="card-text type-text">女鞋</p>
-//                         <p className="card-text type-text mb-2">3 種顏色</p>
-//                         <span className="h-currency bold h-now">$1,990</span>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <div className="col">
-//                     <div className="card w-350 no-border f-16">
-//                       <img
-//                         src="/images/product/list/p1-thumb.webp"
-//                         className="card-img-top"
-//                         alt="..."
-//                       />
-//                       <div className="card-body no-space-x">
-//                         <p className="card-text note-text">新品上市</p>
-//                         <p className="card-text">Nike Air Force 1 Shadow</p>
-//                         <p className="card-text type-text">女鞋</p>
-//                         <p className="card-text type-text mb-2">3 種顏色</p>
-//                         <span className="h-currency bold h-now">$1,990</span>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <div className="col">
-//                     <div className="card w-350 no-border f-16">
-//                       <img
-//                         src="/images/product/list/p1-thumb.webp"
-//                         className="card-img-top"
-//                         alt="..."
-//                       />
-//                       <div className="card-body no-space-x">
-//                         <p className="card-text note-text">新品上市</p>
-//                         <p className="card-text">Nike Air Force 1 Shadow</p>
-//                         <p className="card-text type-text">女鞋</p>
-//                         <p className="card-text type-text mb-2">3 種顏色</p>
-//                         <span className="h-currency bold h-now">$1,990</span>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <div className="col">
-//                     <div className="card w-350 no-border f-16">
-//                       <img
-//                         src="/images/product/list/p1-thumb.webp"
-//                         className="card-img-top"
-//                         alt="..."
-//                       />
-//                       <div className="card-body no-space-x">
-//                         <p className="card-text note-text">新品上市</p>
-//                         <p className="card-text">Nike Air Force 1 Shadow</p>
-//                         <p className="card-text type-text">女鞋</p>
-//                         <p className="card-text type-text mb-2">3 種顏色</p>
-//                         <span className="h-currency bold h-now">$1,990</span>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   )
-// }
-
-import React from 'react'
+import { useState, useEffect } from 'react'
 import Page from '@/components/product/pagination'
 import Search from '@/components/product/search'
 import ArticleCard from '@/components/article/articlecard'
+import Sidebar from '@/components/article/sidenav'
 import { FaFilter } from 'react-icons/fa'
+import { IoAdd } from 'react-icons/io5'
+import Link from 'next/link'
+import { useMemberInfo } from '@/hooks/use-member-info'
+
+// 使用自定義 Hook 來獲取文章資料
+import useArticles from '@/hooks/use-articles'
+// import fi from '@/node_modules 2/moment/dist/locale/fi'
 
 export default function List() {
+  const [list, setList] = useState([])
+  const { articles } = useArticles()
+  console.log(articles)
+  const [filter, setFilter] = useState('ALL')
+  const [sort, setSort] = useState('')
+  
+  // member的hooks
+  const { member } = useMemberInfo()
+
+  // 判斷user是誰
+  const [identityId, setUserIdentityId] = useState()
+  useEffect(() => {
+    const { identity_id, name, id } = JSON.parse(
+      localStorage.getItem('member-info')
+    )
+    setUserIdentityId(identity_id)
+    console.log(name)
+    console.log(identity_id)
+    console.log(id)
+  }, [])
+
+  // 設定按鈕是否顯示的狀態
+  const shouldShowButton = identityId === 2;
+
+  //分頁
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  // const totalItems = 40;
+  const perpages = 12 //一頁幾筆資料
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  const handleSortChange = (e) => {
+    console.log(e.target.value)
+    setSort(e.target.value)
+  }
+  useEffect(() => {
+    const filteredArticles = articles.filter((article) => {
+      if (filter == 'ALL') {
+        return true
+      } else {
+        return article.category_name == filter
+      }
+    })
+    const sortedArticles = filteredArticles.sort((a, b) => {
+      if (sort === '4') {
+        // Sort by date
+        return new Date(a.date) - new Date(b.date)
+      } else if (sort === '3') {
+        // Sort by date
+        return -(new Date(a.date) - new Date(b.date))
+      } else if (sort === '2') {
+        // Sort by total comments
+        return b.total_comments - a.total_comments
+      } else if (sort === '1') {
+        // Sort by total collections
+        return b.total_collections - a.total_collections
+      } else return true
+    })
+    const totalPages = Math.ceil(sortedArticles.length / perpages)
+    setTotalPages(totalPages)
+    //更新列表
+    const startIndex = (currentPage - 1) * perpages
+    const endIndex = Math.min(startIndex + perpages, sortedArticles.length)
+
+    setList(sortedArticles.slice(startIndex, endIndex))
+    console.log(articles, totalPages)
+  }, [currentPage, articles, filter, sort])
+  console.log('39', list)
   return (
     <>
       <div className="container bg-color g-3 mt-5 my-2">
         <div className="row d-flex">
           {/*   類別按鈕列表  */}
           <div className="col-2 d-none d-lg-block d-md-none">
-            <div className="sidenav ">
-              <div className="list-group">
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action active"
-                  aria-current="true"
-                >
-                  文章分類
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action active"
-                >
-                  課程分享
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  植栽照顧
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  植物分享
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  資材
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  肥料
-                </button>
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                >
-                  書籍
-                </button>
-              </div>
-            </div>
+            <Sidebar filter={filter} setFilter={setFilter} />
           </div>
           {/* 搜尋與文章列表  */}
 
@@ -466,8 +104,20 @@ export default function List() {
                 <div className="">
                   <div className="d-flex justify-content-between my-3">
                     <div className="breadcrumb-amount-bar mt-3">
-                      <h6>文章列表/課程分享</h6>
-                      <h6>共 5 篇文章</h6>
+                      <h6>文章列表/{filter}</h6>
+                      <h6 style={{ color: '#bd9250' }}>
+                        共{' '}
+                        {
+                          articles.filter((article) => {
+                            if (filter == 'ALL') {
+                              return true
+                            } else {
+                              return article.category_name == filter
+                            }
+                          }).length
+                        }{' '}
+                        篇文章
+                      </h6>
                     </div>
                     <div className="d-flex ">
                       <button
@@ -481,29 +131,57 @@ export default function List() {
                         <select
                           className="form-select"
                           aria-label="Default select example"
+                          // onClick={handleFilter}
+                          onChange={handleSortChange}
                         >
                           <option selected="">排序依據</option>
-                          <option value={1}>最多瀏覽</option>
                           <option value={1}>最多收藏</option>
                           <option value={2}>最多留言</option>
                           <option value={3}>最新文章</option>
-                          <option value={3}>最舊文章</option>
-
+                          <option value={4}>最舊文章</option>
                         </select>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <div className="mx-2 ">
+                <Link href="/article/add" className={`btn btn-main ${shouldShowButton ? '' : 'd-none'}`}>
+                  <IoAdd />
+                  新增文章
+                </Link>
+              </div>
 
               {/* 文章卡片 */}
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
-              <ArticleCard />
+              <div className="d-flex flex-wrap ">
+                {list
+                  .filter((article) => {
+                    if (filter == 'ALL') {
+                      return true
+                    } else {
+                      return article.category_name == filter
+                    }
+                  })
+                  .map((article) => (
+                    <div className="col-md-3 p-2">
+                      <Link
+                        className="text-decoration-none"
+                        key={article.id}
+                        href={`/article/${article.id}`}
+                      >
+                        <ArticleCard key={article.id} article={article} />
+                      </Link>
+                    </div>
+                  ))}
+              </div>
 
               {/* 分頁 */}
-              <Page />
+              <Page
+                perpages={perpages}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </div>
           </div>
         </div>
@@ -563,8 +241,6 @@ export default function List() {
   .card-body {
     background-color: #ffffff;
     border-radius: 0 0 10px 10px;
-  }
-  .card-end {
   }
 
   /* 428px 以下開始為 手機(直) 最小尺寸 */

@@ -1,15 +1,125 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
-import dynamic from 'next/dynamic'
-const InputDatePicker = dynamic(
-  () => import('@/components/common/input-date-picker'),
-  {
-    ssr: false,
-  }
-)
+import ZipCode from '@/components/member/zip-code'
+import { useMemberInfo } from '@/hooks/use-member-info'
+
 export default function Information() {
-  const [showDatepicker, setShowDatepicker] = useState(false)
-  const [date, setDate] = useState('')
+  // hooks
+  const { member } = useMemberInfo()
+  // 用物件狀態對應整個表單欄位
+  const [user, setUser] = useState({
+    name: '',
+    phone: '',
+    birthday: '',
+    address: '',
+    password: '',
+    newPassword: '',
+    confirmPassword: '',
+  })
+
+  // 多欄位共用事件處理函式
+  const handleFieldChange = (e) => {
+    setUser({ ...user, [e.target.name]: e.target.value })
+  }
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setShowConfirmModal(false)
+    // 檢查密碼相關欄位是否有值，並且只有在使用者填寫了密碼時才檢查密碼相符性
+
+    let hasErrors = false
+    if (user.password && (!user.newPassword || !user.confirmPassword)) {
+      alert('新密碼和確認密碼為必填')
+      hasErrors = true
+    } else if (user.newPassword !== user.confirmPassword) {
+      alert('新密碼和確認密碼不匹配')
+      hasErrors = true
+    }else if(user.password && user.newPassword.length < 6){
+      alert('密碼長度至少六位數')
+      hasErrors = true
+    }
+    // 检查手机号码格式
+    const phonePattern = /^09\d{8}$/
+    if (user.phone && !phonePattern.test(user.phone)) {
+      alert('請輸入正確的手機號碼')
+      hasErrors = true
+    }
+
+    if (!hasErrors) {
+      try {
+        // 建立新的使用者物件，僅包含有值的屬性
+        const updatedUser = {}
+        Object.keys(user).forEach((key) => {
+          if (user[key] !== '') {
+            updatedUser[key] = user[key]
+          }
+        })
+
+        // 檢查是否有要更新的資料
+        if (Object.keys(updatedUser).length === 0) {
+          alert('沒有要更新的資料')
+          return
+        }
+
+        const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+        const userId = memberInfo.id
+        if (!memberInfo) {
+          console.error('Error: Member info not found in localStorage')
+          window.location.href = '/member'
+          return
+        }
+
+        // 更新使用者資訊
+        const response = await fetch(
+          `http://localhost:3005/api/user/${userId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedUser),
+          }
+        )
+
+        const data = await response.json()
+
+        if (response.ok) {
+          console.log('更新成功')
+          console.log('使用者資訊：', data.user)
+          // 更新本地存储中的 member-info 对象的 name 字段
+          const updatedMemberInfo = { ...memberInfo, name: data.user.name }
+          localStorage.setItem('member-info', JSON.stringify(updatedMemberInfo))
+          if (data.logout) {
+            await fetch('http://localhost:3005/api/user/logout', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('access-token')}`, // 假设你有保存 token 到 localStorage 中
+              },
+            })
+            alert('密碼更新成功，需重新登入')
+            localStorage.removeItem('member-info')
+            window.location.href = '/member'
+            return // 重要：在这里返回，避免执行下面的 window.location.reload()
+          }
+          // 如果没有提供新密码，则重新加载页面
+          window.location.reload()
+        } else {
+          console.error('更新失敗:', data.message)
+        }
+        alert(data.message)
+      } catch (error) {
+        console.error('更新失敗:', error)
+      }
+    }
+  }
+  const handleConfirm = () => {
+    // 弹出确认模态框
+    setShowConfirmModal(true)
+  }
+  const handleCloseModal = () => {
+    // 关闭确认模态框
+    setShowConfirmModal(false)
+  }
   return (
     <>
       <div className="container">
@@ -18,14 +128,11 @@ export default function Information() {
             <AsideAccount />
           </div>
           <div className="col-lg-9 col-md-12 main-content">
-            <div
-              className="d-flex align-items-center justify-content-between title-margin
-            "
-            >
+            <div className="d-flex align-items-center justify-content-between title-margin">
               <div className="title">個人資料</div>
             </div>
             <div className="form">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-3 section-font text-primary2">帳戶資訊</div>
                 <div className="mb-3">
                   <label
@@ -38,7 +145,12 @@ export default function Information() {
                     type="name"
                     className="form-control"
                     id="exampleInputName"
-                    placeholder="姓名"
+                    name="name"
+                    value={user.name}
+                    onChange={handleFieldChange}
+                    readOnly={!!member?.name}
+                    placeholder={member?.name ? member?.name : '姓名'}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -46,13 +158,34 @@ export default function Information() {
                     htmlFor="exampleInputEmail"
                     className="form-label fonts"
                   >
+                    電子信箱
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="exampleInputEmail"
+                    readOnly={true}
+                    placeholder={member?.email}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label
+                    htmlFor="exampleInputPhone"
+                    className="form-label fonts"
+                  >
                     手機號碼 *
                   </label>
                   <input
-                    type="phone"
+                    type="text"
                     className="form-control"
+                    name="phone"
                     id="exampleInputPhone"
-                    placeholder="09"
+                    pattern="09\d{8}"
+                    title="例如：0911222333" // 提供格式提示
+                    placeholder={member?.phone ? member.phone : '09'}
+                    value={user.phone}
+                    readOnly={!!member?.phone}
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="mb-3">
@@ -63,89 +196,41 @@ export default function Information() {
                     生日 *
                   </label>
                   <div className="input-group position-relative d-inline-flex align-items-center">
-                    <InputDatePicker
-                      showDatepicker={showDatepicker}
-                      setFormat="yyyy-mm-dd"
-                      showFormat="yyyy/mm/dd"
-                      setDate={setDate}
-                      className="form-control w-100 }"
-                      style={{
-                        borderRadius: 2.8,
-                      }}
-                      placeholder="出生年月日"
+                    <input
+                      type="date"
+                      className="form-control"
+                      name="birthday"
+                      id="exampleInputDate"
+                      value={member?.birthday}
+                      readOnly={!!member?.birthday}
+                      onChange={handleFieldChange}
                     />
-                    <i
-                      className="bi bi-calendar4 position-absolute"
-                      role="presentation"
-                      style={{ right: 10, cursor: 'pointer', zIndex: 100 }}
-                      onClick={() => setShowDatepicker(!showDatepicker)}
-                    ></i>
                   </div>
                 </div>
-                <div className="row mb-3">
-                  <div className="btn-group">
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="sex"
-                      id="option1"
-                      autoComplete="off"
-                    />
-                    <label
-                      className="btn btn-outline-primary"
-                      htmlFor="option1"
-                    >
-                      男
-                    </label>
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="sex"
-                      id="option2"
-                      autoComplete="off"
-                    />
-                    <label
-                      className="btn btn-outline-primary"
-                      htmlFor="option2"
-                    >
-                      女
-                    </label>
-                  </div>
-                </div>
-                <div className="mb-3 row">
+
+                <div className="mb-3">
                   <label
                     htmlFor="exampleInputAddress"
                     className="form-label fonts"
                   >
                     地址 *
                   </label>
-                  <div className="col-md-4 ">
-                    <select className="form-control">
-                      <option disabled selected>
-                        選擇縣市
-                      </option>
-                      <option>台北市</option>
-                      <option>新北市</option>
-                      {/* 其他縣市 */}
-                    </select>
-                  </div>
-                  <div className="col-md-4 mt-3 mt-md-0 ">
-                    <select className="form-control">
-                      <option disabled selected>
-                        選擇鄉鎮區
-                      </option>
-                      {/* 根據所選縣市提供對應的鄉鎮區選項 */}
-                    </select>
-                  </div>
-                  <div className="col-md-4 mt-3 mt-md-0 ">
+                  {member?.address ? (
                     <input
-                      type="text"
+                      type="address"
                       className="form-control"
-                      placeholder="請輸入地址"
+                      id="exampleInputAddress"
+                      placeholder={member?.address}
+                      readOnly={true}
                     />
-                  </div>
+                  ) : (
+                    <ZipCode
+                      onAddressChange={(fullAddress) =>
+                        setUser({ ...user, address: fullAddress })
+                      }
+                    />
+                  )}
                 </div>
-
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
                 <div className="mb-3">
                   <label
@@ -159,11 +244,14 @@ export default function Information() {
                     className="form-control"
                     id="exampleInputPassword1"
                     placeholder="請輸入原密碼"
+                    name="password"
+                    value={user.password}
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="exampleInputPassword1"
+                    htmlFor="exampleInputPassword2"
                     className="form-label fonts"
                   >
                     新密碼
@@ -171,13 +259,16 @@ export default function Information() {
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword2"
                     placeholder="請輸入新密碼"
+                    name="newPassword"
+                    value={user.newPassword}
+                    onChange={handleFieldChange}
                   />
                 </div>
                 <div className="mb-3">
                   <label
-                    htmlFor="exampleInputPassword1"
+                    htmlFor="exampleInputPassword3"
                     className="form-label fonts"
                   >
                     重新輸入新密碼
@@ -185,12 +276,65 @@ export default function Information() {
                   <input
                     type="password"
                     className="form-control"
-                    id="exampleInputPassword1"
+                    id="exampleInputPassword3"
                     placeholder="請輸入新密碼"
+                    minLength={6}
+                    name="confirmPassword"
+                    value={user.confirmPassword}
+                    onChange={handleFieldChange}
                   />
                 </div>
+                <div
+                  className="modal fade"
+                  id="confirm"
+                  tabIndex="-1"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                  // 在这里设置模态框的初始化属性
+                >
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <button
+                          type="button"
+                          className="btn-close"
+                          data-bs-dismiss="modal"
+                          aria-label="Close"
+                          onClick={handleCloseModal}
+                        ></button>
+                      </div>
+                      <div className="modal-body">
+                        <p>確定提交？</p>
+                        <p>帳戶資訊提交後不可更改</p>
+                      </div>
+                      <div className="modal-footer">
+                        <button
+                          type="button"
+                          className="btn btn-main"
+                          data-bs-dismiss="modal"
+                        >
+                          關閉
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-detail"
+                          onClick={handleSubmit}
+                        >
+                          確定
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="text-center pt-3 mb-3">
-                  <button type="submit" className="btn btn-add">
+                  <button
+                    type="button"
+                    className="btn btn-add"
+                    onClick={handleConfirm}
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirm"
+                  >
                     確認修改
                   </button>
                 </div>
@@ -205,7 +349,7 @@ export default function Information() {
           margin: 20px;
           padding: 33px 0px;
         }
-        
+
         .main-content {
           padding: 30px 20px;
           background-color: #ffffff;
@@ -241,8 +385,8 @@ export default function Information() {
 
         @media (max-width: 768px) {
           .title-margin {
-          margin-bottom: 0px;
-        }
+            margin-bottom: 0px;
+          }
           .title {
             display: none;
           }

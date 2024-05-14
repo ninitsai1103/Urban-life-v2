@@ -1,0 +1,20 @@
+.lectureSliderBig {
+    margin-bottom:10px;
+  }
+  .wrap-img img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 2px solid var(--grey-500, #A9A6A6);
+  }
+   
+    @media (min-width: 752px) {
+      .lectureSliderBig {
+        width: 752px;
+        height: 530px;
+      }
+      .lectureSlider {
+        width: 752px;
+        height: 127px;
+      }
+    }

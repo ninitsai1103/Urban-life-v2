@@ -1,0 +1,56 @@
+.card {
+    /* display: flex; */
+    width: 873px;
+    padding: 20px 30px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.wishTitle {
+    color: var(--primary-5, #2F4715);
+
+    /* ZenKaku-h2 */
+    font-family: "Zen Kaku Gothic New";
+    font-size: 42px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.wishInfo {
+    color: var(--primary-5, #2F4715);
+    margin-top: 20px;
+
+    /* ZenKaku-h4 */
+    font-family: "Zen Kaku Gothic New";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.textarea {
+    padding: 20px;
+    border: none;
+    outline: none;
+}
+
+.wishBtn {
+    justify-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 30px;
+}
+
+.wishArea {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    align-items: center;
+    gap: 10px;
+}

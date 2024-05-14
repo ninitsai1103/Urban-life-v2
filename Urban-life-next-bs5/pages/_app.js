@@ -18,6 +18,18 @@ import { CatLoader, NoLoader } from '@/hooks/use-loader/components'
 //兆妮導入use-checkout hook
 import { CartProvider } from '@/hooks/use-checkout'
 
+// 浩雲導入user-coupon hook
+import { UserCouponProvider } from '@/hooks/use-usercoupon'
+
+//兆妮導入use-member-info hook
+import { MemberInfoProvider } from '@/hooks/use-member-info'
+
+//導入use-teacher測試
+import { TeacherInfoProvider } from '@/hooks/use-teacher'
+
+//世炘導入use-lecture
+import { LectureProvider } from '@/hooks/use-lecture'
+
 export default function MyApp({ Component, pageProps }) {
   // 導入bootstrap的JS函式庫
   useEffect(() => {
@@ -30,11 +42,20 @@ export default function MyApp({ Component, pageProps }) {
     Component.getLayout || ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
   return (
-    
-      <LoaderProvider close={2} CustomLoader={CatLoader}>
-        <CartProvider>{getLayout(<Component {...pageProps} />)}</CartProvider>
-      </LoaderProvider>
-    
-    // 我把 AuthProvider刪掉 就不會跳出問題了      
+    <LoaderProvider close={2} CustomLoader={CatLoader}>
+      <MemberInfoProvider>
+        <LectureProvider>
+          <TeacherInfoProvider>
+            <UserCouponProvider>
+              <CartProvider>
+                {getLayout(<Component {...pageProps} />)}
+              </CartProvider>
+            </UserCouponProvider>
+          </TeacherInfoProvider>
+        </LectureProvider>
+      </MemberInfoProvider>
+    </LoaderProvider>
+
+    // 我把 AuthProvider刪掉 就不會跳出問題了
   )
 }

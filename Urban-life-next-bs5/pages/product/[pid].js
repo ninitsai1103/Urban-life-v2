@@ -1,64 +1,198 @@
-import React from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
-import ProductCard from '@/components/product-test/product-card'
-
+import toast, { Toaster } from 'react-hot-toast'
+import { useRouter } from 'next/router'
+// import { useNavigate} from 'react-router-dom';
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'
 import { BsCart3 } from 'react-icons/bs'
-import { GoHeart } from 'react-icons/go'
+import { GoHeart, GoHeartFill } from 'react-icons/go'
 import { MdArrowBackIosNew } from 'react-icons/md'
+import useProducts from '@/hooks/product/useProducts'
+import useColloections from '@/hooks/product/useCollections'
+import useCommment from '@/hooks/product/useCommment'
+import { useCheckout } from '@/hooks/use-checkout'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import Recommend from '@/components/product/recommend'
+// import ProductCard from '@/components/product/product-card'
 
 export default function Detail() {
+  const { products } = useProducts()
+  const { collections, addCollection, removeCollection } = useColloections()
+  const { comments } = useCommment()
+
+  // use to get product id by url
+  const router = useRouter()
+  const { pid } = router.query
+
+  const [product, setProduct] = useState(null)
+  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const [comment, setComment] = useState(null)
+
+  //加入購物車
+  const { addItem } = useCheckout()
+  const MySwal = withReactContent(Swal)
+
+  //顯示評論
+  const [visibleComments, setVisibleComments] = useState(2)
+  const [showAll, setShowAll] = useState(false)
+
+  //返回上一頁
+  // const navigate = useNavigate();
+
+  const [recommended, setRecommended] = useState([])
+
+
+  useEffect(() => {
+    //根據pid動態路由對應商品資料
+    if (pid && products.length > 0) {
+      const fetchProduct = products.find(
+        (item) => item.id === parseInt(pid, 10)
+      )
+      setProduct(fetchProduct)
+    }
+  }, [products, pid])
+
+  // init IsCollected by collection -> valid
+  useEffect(() => {
+    // 檢查當前商品是否在收藏列表中
+    setIsCollected(
+      collections.find((item) => item.product_id == pid && item.valid == 1)
+    )
+  }, [collections])
+
+  //切換商品的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    toast.success(message, {})
+  }
+
+  // useEffect(()=>{
+  //   console.log(isCollected);
+  // }, [isCollected])
+
+  const notifySA = (product) => {
+    MySwal.fire({
+      title: '成功加入',
+      text: product.name + '已成功加入購物車!',
+      icon: 'success',
+    })
+  }
+
+  useEffect(() => {
+    //根據pid動態路由對應商品評論
+    if (pid && comments.length > 0) {
+      const fetchComment = comments
+        .filter((item) => item.product_lecture_id === parseInt(pid, 10))
+        .map((comment) => ({
+          ...comment,
+          date: commentDate(comment.created_at),
+        }))
+      setComment(fetchComment)
+    }
+  }, [comments, pid])
+
+  //擷取日期
+  const commentDate = (datetime) => {
+    const datePart = datetime.split(' ')[0]
+    return datePart
+  }
+
+  //查看更多評論
+  const moreComment = (comment) => {
+    if (showAll) {
+      setVisibleComments(2)
+      setShowAll(false)
+    } else {
+      setVisibleComments(comment.length)
+      setShowAll(true)
+    }
+  }
+
+  useEffect(() => {
+    if (products.length > 0) {
+      const filteredProducts = products.filter(product => product.id < 442 || product.id > 450);
+      const shuffled = filteredProducts.sort(() => 0.5 - Math.random())
+      setRecommended(shuffled.slice(0, 4)) // 隨機從products選取四個商品
+    }
+  }, [products])
+  
+
+  //返回上一頁
+  // function handleBack() {
+  //   navigate(-1);  
+  // }
+
+  useEffect(() => {
+    console.log(comment)
+  }, [comment])
+
   return (
     <>
       <div className="container ">
         <div className="row mt-5 mx-2">
-          <div className="col-12">
-            <Link className="text-decoration-none fs-5" href="">
+          {/* <div className="col-12">
+            <button className="text-decoration-none fs-5" href="#"
+            onClick={handleBack}
+            >
               <MdArrowBackIosNew
                 className="me-1 mb-1"
                 style={{ fontSize: '18px' }}
               />
               返回上一頁
-            </Link>
-          </div>
+            </button>
+          </div> */}
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mt-3">
               <li className="breadcrumb-item">
-                <Link className="text-decoration-none" href="#">
-                  商品總覽
+                <Link className="text-decoration-none" href="/">
+                  首頁
                 </Link>
               </li>
               <li className="breadcrumb-item " aria-current="page">
-                <Link className="text-decoration-none" href="#">
-                  商品主分類
+                <Link className="text-decoration-none" href="/product/list">
+                  商品總覽
                 </Link>
               </li>
               <li className="breadcrumb-item active" aria-current="page">
-                商品次分類
+              {product ? (
+                <Link className="text-decoration-none" href={`/product/${pid}`}>
+                  {product.name}
+                </Link>
+              ) : (
+                <span>商品細節頁</span>)
+              }
               </li>
             </ol>
           </nav>
 
           <div className=" col col-lg-7 mb-3 mb-lg-0" style={{ top: '2rem' }}>
-            <Carousel />
+            <Carousel productId={pid} />
           </div>
 
           <div className="col col-lg-5 set-font set-div-height d-flex flex-column justify-content-between">
-            <h4 className="mb-3 fs-4">初雪 ('EarliSnow')(大)</h4>
+            <h4 className="mb-3 fs-4">
+              {product &&
+                (pid > 440 && pid < 451
+                  ? product.name
+                  : `${product.name}(${product.size})`)}
+            </h4>
             <p className="product-desc set-height">
-              獨家！首個早熟品種。
-              在春季和秋季試驗中表現出色。比雪之冠更早熟、更一致、更可靠。中等大小的植株，包裹度平均。適應性廣泛。
+              {product && product.description}
             </p>
             <p className="mb-2 pb-2 set-border">
               ※請詳閱下方照料方式說明及購買須知
             </p>
             <div className="price d-flex align-items-center mt-1 mb-3 fs-18 fw-700">
               <p className="card-text mb-0 me-3 text-color2-nohover ">
-                NTD 300
+                NTD {product && product.price}
               </p>
-              <p className="card-text text-delete set-text-color3">NTD 400</p>
+              <p className="card-text text-delete set-text-color3">
+                NTD {product && product.price + 200}
+              </p>
             </div>
             <div className="star d-flex align-items-center mb-4">
               <p className="me-2 mb-0">評價</p>
@@ -66,43 +200,81 @@ export default function Detail() {
                 className=""
                 style={{ color: '#F6A404', fontSize: '20px' }}
               />
-              <p className="ms-1 mb-0 fs-17 padding">4.7</p>
-            </div>
-            <div className="input-group mb-4 w-50">
-              <button className="btn  btn-bg" type="button" id="button-minus">
-                -
-              </button>
-              <input
-                type="text"
-                className="form-control text-center"
-                value="1"
-                id="number-input"
-              />
-              <button
-                className="btn d-flex justify-content-center btn-bg"
-                type="button"
-                id="button-plus"
-              >
-                +
-              </button>
+              <p className="ms-1 mb-0 fs-17 padding">
+                {product && product.star}
+              </p>
             </div>
             <div>
-              <button className="btn btn-main btn-hover w-100 mb-3">
+              <Link
+                className="btn btn-main btn-hover w-100 mb-3"
+                href="/cart"
+                onClick={() => {
+                  addItem(product)
+                }}
+              >
                 <AiOutlineShopping
                   className="me-1 mb-1"
                   style={{ fontSize: '21px' }}
                 />
                 立即購買
-              </button>
+              </Link>
               <div className="d-flex justify-content-between">
-                <button className="btn btn-add btn-hover2  ">
+                <Toaster position="top-center" reverseOrder={false} />
+                <button
+                  className="btn btn-add btn-hover2 "
+                  onClick={() => {
+                    // 呈現訊息
+                    notifySA(product)
+                    // notify(v.name)
+
+                    // 加入購物車狀態
+                    addItem(product)
+                  }}
+                >
                   <BsCart3 className="me-1 mb-1" style={{ fontSize: '17px' }} />
                   加入購物車
                 </button>
-                <button className="btn btn-add btn-hover2  ">
-                  <GoHeart className="me-1 mb-1" style={{ fontSize: '19px' }} />
-                  加入收藏
-                </button>
+
+                {isCollected ? (
+                  <button
+                    className="btn btn-add btn-hover2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      removeCollection(pid)
+                    }}
+                  >
+                    <GoHeartFill
+                      className="me-1 mb-1"
+                      style={{ fontSize: '19px', color: '#ff4136' }}
+                    />
+                    取消收藏
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-add btn-hover2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      addCollection(pid)
+                      .then(updatedData => {
+                        toggleCollection();
+                        console.log('Collection added:', updatedData);
+                      })
+                      .catch(error => {
+                        alert("請先登入會員再進行收藏功能")
+                        window.location.href = "/member/login";
+                        console.error('Failed to add collection:', error.message);
+                        // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
+                      });
+                    }}
+                  >
+                    <GoHeart
+                      className="me-1 mb-1"
+                      style={{ fontSize: '19px' }}
+                    />
+                    加入收藏
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -118,17 +290,15 @@ export default function Detail() {
                 />
               </div>
               <p className="text-start mb-0 my-lg-5 font-weight-light col-lg-7 set-width">
-                「初雪」（EarliSnow）這款引人注目的早熟品種，是農民和園丁們的新寵。作為首個推出的早熟品種，初雪展現出令人驚艷的性能和品質，為您的種植計劃帶來了嶄新的選擇。
-                在春季和秋季的試驗中，初雪表現出色，展現出超越同類產品的優異特性。它比雪之冠更早熟，更一致，更可靠，為您提供了更加靈活的收成時間。這意味著您可以在早熟的品質和豐收的樂趣中，更好地計劃和安排您的生產週期。
-                初雪的植株中等大小，整齊而健康，易於管理。每株植株的果實包裹度均勻，確保了收成的穩定性和品質。無論您是在農場、菜園還是花園中種植，初雪都能夠適應不同的環境和種植方式。
-                其廣泛的適應性意味著初雪可以在各種氣候和土壤條件下生長茁壯，為您提供了更多的選擇和可能性。不論您是專業農民還是業餘園丁，初雪都將成為您不可或缺的良伴，為您帶來豐富的收成和令人滿意的種植體驗。選擇初雪，為您的種植計劃帶來早熟、穩定和可靠的新起點！
+                {product && product.content}
               </p>
             </div>
           </div>
+
           <div className="col-12 mb-5">
             <h4 className="text-center mb-5">購買須知</h4>
             <div className="d-flex justify-content-center align-items-center bg-opacity py-4 p-lg-5 fw-400 border-rd">
-              <p className="text-start mb-0 font-weight-light col-lg-7 set-width2">
+              <div className="text-start mb-0 font-weight-light col-lg-7 set-width2">
                 1.植栽受環境、季節因素影響導致每顆型態會有所不同,但我們皆會確保健康才出貨。
                 <br />
                 2.活體植栽在運送過程中仍可能有少許葉損與土撒,我們會盡力妥善包裝減少損害。
@@ -140,135 +310,82 @@ export default function Detail() {
                 <p className="mt-3">
                   以上說明還請您詳細參閱，如可接受再進行下單,感謝您的包容,讓我們一起快樂種植吧!
                 </p>
-              </p>
+              </div>
             </div>
           </div>
-          <div className="col-12 mb-5">
-            <h4 className="text-center mb-5">買家評價</h4>
-            <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="mt-3">共 5 則評論</p>
-                <div className="dropdown">
-                  <button
-                    className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center btn-color sort-btn-size2"
-                    type="button"
-                    id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+          {comment && comment.length > 0 ? (
+            <div className="col-12 mb-5">
+              <h4 className="text-center mb-5">買家評價</h4>
+              <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="mt-3">共 {comment.length} 則評論</p>
+                </div>
+
+                {comment.slice(0, visibleComments).map((item) => (
+                  <Fragment key={item.id}>
+                    <hr />
+                    <div>
+                      <div className="d-flex justify-content-start align-items-center mb-3">
+                        <img
+                          className="rounded-circle set-size2 me-3"
+                          src={`http://localhost:3005/avatar/${item.img}`}
+                        />
+                        <p className="me-5 mb-0">{item.email}</p>
+                        <p className="mb-0 grey">{item.date}</p>
+                      </div>
+                      <div className="star d-flex align-items-center mb-1">
+                        <p className="me-2 mb-0">評價</p>
+                        <TbStarFilled
+                          className="padding"
+                          style={{ color: '#F6A404', fontSize: '20px' }}
+                        />
+                        <p className="ms-1 mb-0 fs-15 ">{item.star}</p>
+                      </div>
+                      <p>{item.comment}</p>
+                    </div>
+                  </Fragment>
+                ))}
+                <hr />
+                {comment.length > 2 && (
+                  <Link
+                    className="text-decoration-none grey-hover"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      moreComment(comment)
+                    }}
                   >
-                    排序
-                  </button>
-                  <ul
-                    className="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton1"
+                    {showAll ? '收起更多評論' : '查看更多評論'}
+                  </Link>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="col-12 mb-5">
+              <h4 className="text-center mb-5">買家評價</h4>
+              <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+                目前尚未有買家評價該商品
+              </div>
+            </div>
+          )}
+          <div div className="container mb-5">
+          <h4 className="text-center mb-5">推薦商品</h4>
+              <div className="row row-cols-2 row-cols-lg-4 g-4">
+                {recommended.map((product) => (
+                  <Link
+                    className="text-decoration-none"
+                    key={product.id}
+                    href={`/product/${product.id}`}
                   >
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由新到舊
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由舊到新
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由高到低
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="#">
-                        評價由低到高
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                    <Recommend
+                      key={product.id}
+                      product={product}
+                      collections={collections}
+                    />
+                  </Link>
+                ))}
               </div>
-              <hr />
-              <div>
-                <div className="d-flex justify-content-start align-items-center mb-3">
-                  <img
-                    className="rounded-circle set-size2 me-3"
-                    src="https://images.pexels.com/photos/2023384/pexels-photo-2023384.jpeg"
-                  />
-                  <p className="me-5 mb-0">yd***</p>
-                  <p className="mb-0 grey">3天前</p>
-                </div>
-                <div className="star d-flex align-items-center mb-1">
-                  <p className="me-2 mb-0">評價</p>
-                  <TbStarFilled
-                    className="padding"
-                    style={{ color: '#F6A404', fontSize: '20px' }}
-                  />
-                  <p className="ms-1 mb-0 fs-15 ">4.7</p>
-                </div>
-                <p>非常喜歡，品質很好~</p>
-              </div>
-              <hr />
-              <div>
-                <div className="d-flex justify-content-start align-items-center mb-3">
-                  <img
-                    className="rounded-circle set-size2 me-3"
-                    src="https://images.pexels.com/photos/57416/cat-sweet-kitty-animals-57416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  />
-                  <p className="me-5 mb-0">rr***</p>
-                  <p className="mb-0 grey">5天前</p>
-                </div>
-                <div className="star d-flex align-items-center mb-1">
-                  <p className="me-2 mb-0">評價</p>
-                  <TbStarFilled
-                    className="padding"
-                    style={{ color: '#F6A404', fontSize: '20px' }}
-                  />
-                  <p className="ms-1 mb-0 fs-15 ">4.5</p>
-                </div>
-                <p>推薦用心的賣家</p>
-              </div>
-              <hr />
-              <Link className="text-decoration-none grey-hover" href="">
-                查看更多評價
-              </Link>
             </div>
-          </div>
-          <div className="col-12 mb-5  position-relative px-0">
-            <h4 className="text-center mb-5">推薦商品</h4>
-            <div id="carouselExampleControls" class="carousel slide">
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <ProductCard />
-                </div>
-                <div className="carousel-item">
-                  <ProductCard />
-                </div>
-                {/* <!-- Additional carousel items --> */}
-              </div>
-              <button
-                className="carousel-control-prev d-none d-lg-block"
-                type="button"
-                data-bs-target="#carouselExampleControls"
-                data-bs-slide="prev"
-              >
-                <span
-                  className="carousel-control-prev-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="visually-hidden">Previous</span>
-              </button>
-              <button
-                className="carousel-control-next d-none d-lg-block"
-                type="button"
-                data-bs-target="#carouselExampleControls"
-                data-bs-slide="next"
-              >
-                <span
-                  className="carousel-control-next-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="visually-hidden">Next</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </>

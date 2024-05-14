@@ -10,6 +10,11 @@ import ProductCategoryCard from '@/components/home-page/product-category-card'
 import LectureCard1 from '@/components/home-page/lecture-card1'
 import LectureCard2 from '@/components/home-page/lecture-card2'
 import TeacherCard from '@/components/home-page/teacher-card'
+import TeacherCardInfo from '@/components/lecture/teacher-infocard'
+
+
+// CALENDER
+// import Calendar from '@/components/calandar/calendar'
 
 // REACT ICON
 import { IoIosArrowForward } from 'react-icons/io'
@@ -23,32 +28,10 @@ export default function Home() {
   return (
     <>
       <section className="slider">
-        <Container fluid className="p-0">
-          <Carousel interval={2000}>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/images/test/slider1.jpg"
-                alt="First slide"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/images/test/slider2.jpg"
-                alt="Second slide"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/images/test/slider3.jpg"
-                alt="Third slide"
-              />
-            </Carousel.Item>
-          </Carousel>
-        </Container>
+       
+        
       </section>
+
       <section className="本月主打">
         <Container>
           <h1 className="text-center">本月主打!</h1>
@@ -76,6 +59,11 @@ export default function Home() {
           </div>
         </Container>
       </section>
+      {/* <section>
+        <Container>
+          <Calendar />
+        </Container>
+      </section> */}
       <section className="商品分類">
         <Container>
           <h1 className="text-center">商品分類</h1>
@@ -108,10 +96,14 @@ export default function Home() {
           <p className="text-center">Become a member now to get discounts！</p>
 
           <div className="d-flex justify-content-center mb-3">
-            <img className="img-fluid" src="/images/test/slider1.jpg" />
+            <img
+              className="img-fluid"
+              src="/images/test/slider1.jpg"
+              alt="Membership offer"
+            />
           </div>
           <div className="d-flex justify-content-center">
-            <button className="btn btn-detail w-50 d-flex justify-content-center align-items-center gap-2">
+            <button className="btn btn-detail w-auto d-flex justify-content-center align-items-center gap-2">
               立即加入 <FaRunning />
             </button>
           </div>
@@ -151,16 +143,16 @@ export default function Home() {
           <p className="text-center">Teacher</p>
           <div className="row mb-4 d-flex justify-content-center">
             <div className="col-6 col-sm-3 teacher-card">
-              <TeacherCard />
+              <TeacherCardInfo />
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-              <TeacherCard />
+              <TeacherCardInfo />
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-              <TeacherCard />
+              <TeacherCardInfo />
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-              <TeacherCard />
+              <TeacherCardInfo />
             </div>
           </div>
 
@@ -180,29 +172,33 @@ export default function Home() {
           }
 
           .slider {
-            margin-top: 0px;
+            margin: 0;
+            padding: 0;
           }
-          .slide {
-            width: 100% !important;
+
+          .carousel {
+            margin-bottom: 30px;
           }
-          .product-card {
+
+          .carousel-control-prev,
+          .carousel-control-next {
+            width: 1000px;
+          }
+
+          .product-card,
+          .category-card,
+          .teacher-card {
             display: flex;
             justify-content: center;
             padding: 0;
             margin: 10px 0;
           }
 
-          .category-card {
-            display: flex;
-            justify-content: center;
-            padding: 0;
-            margin: 10px 0;
-          }
-          .teacher-card {
-            display: flex;
-            justify-content: center;
-            padding: 0;
-            margin: 10px 0;
+          @media (max-width: 768px) {
+            .carousel-control-prev,
+            .carousel-control-next {
+              display: none;
+            }
           }
         `}
       </style>

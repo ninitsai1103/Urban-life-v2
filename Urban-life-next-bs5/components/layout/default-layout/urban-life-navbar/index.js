@@ -1,14 +1,63 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { TfiMenu } from 'react-icons/tfi'
 import { FaUser } from 'react-icons/fa'
 import { FaShoppingCart } from 'react-icons/fa'
 import Link from 'next/link'
+import { identity } from 'lodash'
+import { useCheckout } from '@/hooks/use-checkout'
 export default function MyNavbar() {
+  const { totalItems } = useCheckout()
+  const [phoneNav, setPhoneNav] = useState(false)
+
+  const handlePhoneNav = () => {
+    setPhoneNav(!phoneNav)
+  }
+
+  // 判斷現在的user是誰
+  const [user, setUser] = useState('登入')
+
+  // 會員網址
+  const [memberUrl, setMemberUrl] = useState('')
+
+  // 渲染以後才能拿到localStorage
+  useEffect(() => {
+    // 把localStorage裡的member-info拉出來
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+
+    if (memberInfo) {
+      // member-info是物件需要解構下
+      const { name, identity_id } = memberInfo
+      const newUser = name
+
+      switch (identity_id) {
+        case 1:
+          setUser(newUser)
+          setMemberUrl('/official-account')
+          break
+        case 2:
+          setUser(newUser)
+          setMemberUrl('/article-management')
+          break
+        case 3:
+          setUser(newUser)
+          setMemberUrl('/information')
+          break
+        case '':
+          setMemberUrl('/login')
+          break
+      }
+    }
+  }, [user])
   return (
     <>
       <div className="header">
         <div className="container d-flex m-3">
-          <div className="nav-phone-left ">
+          <div
+            className="nav-phone-left "
+            onClick={() => {
+              handlePhoneNav()
+            }}
+          >
             <TfiMenu style={{ color: 'white', fontSize: '24px' }} />
           </div>
           <div className="nav-left logo">
@@ -23,53 +72,58 @@ export default function MyNavbar() {
                 <Link href="http://localhost:3000/product/list">商品總覽</Link>
               </li>
               <li>
-                <Link href="">課程</Link>
+                <Link href="http://localhost:3000/lecture">課程</Link>
               </li>
               <li>
                 <Link href="http://localhost:3000/article">文章分享</Link>
               </li>
               <li>
-                <Link href="">講師陣容</Link>
+                <Link href="http://localhost:3000/teacher">講師陣容</Link>
               </li>
               <li>
-                <Link href="http://localhost:3000/member">會員專區</Link>
+                <Link href={`http://localhost:3000/member${memberUrl}`}>
+                  會員專區
+                </Link>
               </li>
             </ul>
           </div>
           <div className="nav-right">
-            <div className="user ">
-              <p className="mx-2">小明</p>
+            <div className="user">
+              <p className="mx-2">{user}</p>
               <FaUser style={{ color: 'white', fontSize: '24px' }} />
             </div>
             <div className="cart">
-              <FaShoppingCart style={{ color: 'white', fontSize: '24px' }} />
-              <a href="" />
-              <span>2</span>
+              <Link href="http://localhost:3000/cart">
+                <FaShoppingCart style={{ color: 'white', fontSize: '24px' }} />
+                <span>{totalItems}</span>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-      <div className="header-phone-nav">
-        <div className="container-fluid header-phone-nav-container">
-          <div className="nav-down">
-            <p>首頁</p>
-          </div>
-          <div className="nav-down">
-            <p>商品總覽</p>
-          </div>
-          <div className="nav-down">
-            <p>課程</p>
-          </div>
-          <div className="nav-down">
-            <p>文章分享</p>
-          </div>
-          <div className="nav-down">
-            <p>講師陣容</p>
+      {!phoneNav ? (
+        <></>
+      ) : (
+        <div className="header-phone-nav">
+          <div className="container-fluid header-phone-nav-container">
+            <div className="nav-down">
+              <p>首頁</p>
+            </div>
+            <div className="nav-down">
+              <p>商品總覽</p>
+            </div>
+            <div className="nav-down">
+              <p>課程</p>
+            </div>
+            <div className="nav-down">
+              <p>文章分享</p>
+            </div>
+            <div className="nav-down">
+              <p>講師陣容</p>
+            </div>
           </div>
         </div>
-      </div>
-
-    
+      )}
 
       <style jsx>{`
         .header {
@@ -180,9 +234,6 @@ export default function MyNavbar() {
           }
         }
 
-        .header-phone-nav {
-          display: none;
-        }
         @media (max-width: 1200px) {
           .header-phone-nav {
             display: block;
@@ -203,6 +254,7 @@ export default function MyNavbar() {
             margin: 0px;
           }
         }
+
         .nav-down p:hover {
           color: #f3b454;
           border-bottom: 1px solid #f3b454;

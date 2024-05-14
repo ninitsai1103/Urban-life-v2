@@ -1,88 +1,220 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import Comment from '@/components/article/comment'
 import { SlArrowLeft } from 'react-icons/sl'
 import { FaRegHeart } from 'react-icons/fa'
+import { GoHeartFill, GoHeart } from 'react-icons/go'
+import useArticles from '@/hooks/use-articles'
+import useArticlesComment from '../../hooks/use-article-comment'
+import { useRouter } from 'next/router'
+import useCollections from '@/hooks/product/useCollections' // Import useCollections hook
+import toast, { Toaster } from 'react-hot-toast'
+import Link from 'next/link'
 
 export default function Detail() {
+  const { articles } = useArticles()
+  const router = useRouter()
+  const { aid } = router.query
+  const [article, setArticle] = useState(null) // 文章状态
+  const [commentText, setCommentText] = useState('') // 绑定输入框用于新增评论
+  const { articleComments } = useArticlesComment(aid) // 使用 Hook 获取评论
+  const [isCollected, setIsCollected] = useState(null)
+  const { collections, addArticleCollection, removeArticleCollection } =
+    useCollections()
+
+  useEffect(() => {
+    if (aid && articles.length > 0) {
+      const fetchArticle = articles.find(
+        (item) => item.id === parseInt(aid, 10)
+      )
+      setArticle(fetchArticle) // 設置當前文章
+    }
+  })
+
+    // 檢查當前文章是否在收藏列表中
+    // const isFound = collections.find(
+    //   (item) => item.article_id === parseInt(aid, 10) && item.valid === 1
+    // )
+
+    useEffect(() => {
+      // 檢查當前文章是否在收藏列表中
+      setIsCollected(
+        collections.find((item) => item.article_id == aid && item.valid == 1)
+      )
+    }, [collections])
+  
+  //   const isFound = collections.find((id) => id === parseInt(aid, 10))
+  //   setIsCollected(Boolean(isFound))
+  // }, [aid, articles, collections])
+
+  //call api
+  const add_comment = async () => {
+    var myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+    // get userid from localstorage
+    const member_text = localStorage.getItem('member-info')
+    const member_json = JSON.parse(member_text)
+    const userId = member_json.id
+    var raw = JSON.stringify({
+      articleId: aid,
+      userId: userId,
+      commentText: commentText,
+    })
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    }
+
+    try {
+      const response = await fetch(
+        'http://localhost:3005/api/article-comment',
+        requestOptions
+      )
+      const result = await response.text()
+      console.log(result)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+
+  const del_article = () => {
+    var myHeaders = new Headers()
+    myHeaders.append('Content-Type', 'application/json')
+
+    var raw = JSON.stringify({
+      articleId: aid,
+    })
+
+    var requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    }
+
+    fetch('http://localhost:3005/api/del', requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log('error', error))
+  }
+
+  // 切換文章的收藏狀態
+  // const toggleCollection = async () => {
+  //   try {
+  //     const newIsCollected = !isCollected
+  //     if (newIsCollected) {
+  //       await addArticleCollection(aid)
+  //       toast.success('文章已加入收藏!')
+  //     } else {
+  //       await removeArticleCollection(article.id) // 確保使用正確的 ID
+  //       toast.success('文章已取消收藏!')
+  //     }
+  //     setIsCollected(newIsCollected)
+  //   } catch (error) {
+  //     console.error('Error toggling collection:', error)
+  //     toast.error('操作失敗')
+  //   }
+  // }
+
+  //切換文章的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '文章已取消收藏!' : '文章已加入收藏!'
+    toast.success(message, {})
+  }
+
   return (
     <>
-      <div className="container ">
+      <div className="container">
         <div className="row mt-2 mx-2">
-          {/* breadcrumb */}
-          <div className="col-sm-12">
-            <SlArrowLeft />
-            <a
-              href="https://www.example.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-decoration-none mx-2"
-            >
-              返回上一頁
-            </a>
-          </div>
+          <Toaster position="top-center" reverseOrder={false} />
 
-          {/* article title  */}
+          <div className="col-sm-12">
+            <SlArrowLeft onClick={() => router.back()} />
+            <span className="text-decoration-none mx-2">返回上一頁</span>
+          </div>
           <div className="col-sm-12 black-bottom-border">
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-center mt-3">
-                <h1>2023帶狀課程圓滿結束</h1>
-                <button className="btn btn-add ms-3">課程分享</button>
+                <h1>{article?.title}</h1>
               </div>
-
-              <button className="btn btn-like mt-3">
-                <FaRegHeart />
+              {/* Toggle collection button */}
+              {isCollected ? (
+                <button
+                  className="btn btn-add btn-hover2"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection()
+                    removeArticleCollection(article.id)
+                  }}
+                >
+                  <GoHeartFill
+                    className="me-1 mb-1"
+                    style={{ fontSize: '19px', color: '#ff4136' }}
+                  />
+                  取消收藏
+                </button>
+              ) : (
+                <Link
+                  href="#"
+                  className="btn-hover2"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection()
+                    addArticleCollection(article.id)
+                  }}
+                >
+                  <GoHeart className="me-1 mb-1" style={{ fontSize: '19px' }} />
+                  加入收藏
+                </Link>
+              )}
+            </div>
+            <div className="d-flex align-items-center ">
+              <button className="btn btn-add mx-3">
+                {article?.category_name}
               </button>
-            </div>
-            <div className="d-flex align-items-center mt-3">
-              <h6 className="me-3">2020-12-08 13:22:49</h6>
-              <h6>作者:小名</h6>
-            </div>
-          </div>
-          {/* article content */}
-          <button className="col-sm-12"></button>
-          {/* 黑線 */}
-          <div className="col-sm-12 black-bottom-border">
-            <button className="btn btn-main my-3">編輯文章</button>
-          </div>
 
+              <h6 className="me-3">{article?.created_at}</h6>
+              <h6>作者:{article?.author_name}</h6>
+              <button className="btn btn-add mx-3" onClick={del_article}>
+                刪除文章
+              </button>
+              <Link className="btn btn-add mx-3" href={`/article/edit/${aid}`}>
+                編輯文章
+              </Link>
+            </div>
+          </div>
           <div className="col">
             <img
-              src="/images/article/article_phone_card_image.png"
+              src={`http://localhost:3005/images/article/${article?.img}`}
               className="my-3 h-50"
-              alt="..."
+              alt={article?.title || 'Article Image'}
             />
-            <p className="">
-              時光飛逝，2023年快到尾聲，這一期的帶狀課程也要結束了。同學們學會做瓶中花園，老師也學會怎麼做出好吃的磅蛋糕。
-              感謝同學百忙中抽空來上課，連續10個禮拜真的不容易，在匆匆進門時能聽到“來喝杯茶，吃個蛋糕”，洗滌一身疲憊，是真心的接待。
-              訶梨勒是藥師佛手持藥草，象徵無比的祝福。訶梨勒藥草茶來自喜馬拉雅山2000公尺的高度，也是珍稀無比的存在。藥草的愛全程陪伴我們上完這一期的課程，帶入植物的樂趣。
-            </p>
+            <p>{article?.content}</p>
           </div>
         </div>
-        {/* section2 */}
         <div className="row my-3 bg-light">
-          <div className="col-sm-12  border-radius border ">
+          <div className="col-sm-12  border-radius border">
             <h4 className="text-center mb-5 mt-3">留言</h4>
-            {/* 留言區 */}
-            <Comment />
-            <Comment />
-            <Comment />
-
+            {articleComments.map((comment) => (
+              <Comment key={comment.id} comment={comment} />
+            ))}
             <div className="mx-5">
-              <label
-                htmlFor="exampleFormControlTextarea1"
-                className="form-label"
-              ></label>
               <textarea
                 className="form-control"
                 id="exampleFormControlTextarea1"
                 rows={3}
-                defaultValue={''}
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
               />
-            </div>
-
-            <div className="d-flex justify-content-end my-3">
-            <button class="btn btn-primary mx-5 my-3 ">確認新增</button>
-
+              <button
+                className="btn btn-primary mx-5 my-3"
+                onClick={add_comment}
+              >
+                新增留言
+              </button>
             </div>
           </div>
         </div>
@@ -90,35 +222,3 @@ export default function Detail() {
     </>
   )
 }
-
-;<style jsx>{`
-  .container {
-    width: 1440px;
-    padding: 10px;
-  }
-  .border-radius {
-    border-radius: 10px;
-  }
-  .black-bottom-border {
-    border-bottom: 1px solid black;
-    padding-bottom: 10px;
-  }
-
-  .border-bottom {
-    border-bottom: 1px solid #445c2d;
-    text-decoration: underline;
-    text-decoration-color: black; /* 或者使用 #000000 */
-  }
-
-  /* 428px 以下開始為 手機(直) 最小尺寸 */
-  @media (min-width: 576px) { 
-    
-
-
-   }
-  /* @media screen and (max-width : 428px ){
-    .demo_style{
-    
-    }
-  } */
-`}</style>

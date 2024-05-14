@@ -1,136 +1,360 @@
-import React from 'react'
+import { React, useState, useEffect } from 'react'
 
-export default function LectureContent() {
+export default function LectureContentTbody({
+  lecture,
+  identityId,
+  deleteLecture,
+}) {
+  // 處理時間字符串，僅顯示到秒
+  function formatTime(timeString) {
+    // 切割字符串，只保留時分秒部分
+    const timeWithoutMilliseconds = timeString.split('.')[0]
+    return timeWithoutMilliseconds
+  }
+
+  // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
+  const [selectedFile1, setSelectedFile1] = useState(null)
+  const [selectedFile2, setSelectedFile2] = useState(null)
+  const [selectedFile3, setSelectedFile3] = useState(null)
+  const [selectedFile4, setSelectedFile4] = useState(null)
+  // 預覽圖片的網址(呼叫URL.createObjectURL得到的網址)
+  const [previewURL1, setPreviewURL1] = useState('')
+  const [previewURL2, setPreviewURL2] = useState('')
+  const [previewURL3, setPreviewURL3] = useState('')
+  const [previewURL4, setPreviewURL4] = useState('')
+
+  // 定義一個通用的處理文件變化的函數
+  const handleFileChange = (e, fileNumber) => {
+    const file = e.target.files[0] // 從事件中獲取上傳的文件
+    const setSelectedFile = `setSelectedFile${fileNumber}`
+    const setPreviewURL = `setPreviewURL${fileNumber}`
+
+    if (file) {
+      // 如果有文件被選擇
+      switch (fileNumber) {
+        case 1:
+          // 將第一個文件設置為選擇的文件
+          setSelectedFile1(file)
+          // 生成第一個文件的預覽 URL
+          setPreviewURL1(URL.createObjectURL(file))
+          break
+        case 2:
+          setSelectedFile2(file)
+          setPreviewURL2(URL.createObjectURL(file))
+          break
+        case 3:
+          setSelectedFile3(file)
+          setPreviewURL3(URL.createObjectURL(file))
+          break
+        case 4:
+          setSelectedFile4(file)
+          setPreviewURL4(URL.createObjectURL(file))
+          break
+        default:
+          break
+      }
+    } else {
+      // 如果沒有文件被選擇，則清空相應的文件和預覽 URL
+      switch (fileNumber) {
+        case 1:
+          setSelectedFile1(null)
+          setPreviewURL1('')
+          break
+        case 2:
+          setSelectedFile2(null)
+          setPreviewURL2('')
+          break
+        case 3:
+          setSelectedFile3(null)
+          setPreviewURL3('')
+          break
+        case 4:
+          setSelectedFile4(null)
+          setPreviewURL4('')
+          break
+        default:
+          break
+      }
+    }
+  }
+
+  // 從資料庫取時間資料時轉換時間格式
+  // 定義時間格式化函數
+  function formatTimeForInput(timeString) {
+    // 假設timeString格式為"HH:mm:ss.SSSSSS"
+    const parts = timeString.split(':')
+    const hhmm = `${parts[0]}:${parts[1]}` // 只保留HH:mm部分
+    return hhmm
+  }
+  // 狀態管理
+  const [startingTime, setStartingTime] = useState(
+    formatTimeForInput(lecture.starting_time)
+  )
+  const [endingTime, setEndingTime] = useState(
+    formatTimeForInput(lecture.ending_time)
+  )
+
+  const [showTimeError, setShowTimeError] = useState(false) // 控制錯誤訊息顯示
+
+  // 處理時間輸入變化
+  const handleTimeChange = (e, setTimeFunction) => {
+    const formattedTime = e.target.value
+    setTimeFunction(formattedTime) // 更新時間狀態
+  }
+
+  useEffect(() => {
+    // 確保 startTime 和 endTime 都已設置才進行時間合法性檢查
+    if (startingTime && endingTime) {
+      let isValidTime = true
+
+      if (endingTime < startingTime) {
+        isValidTime = false
+        // 清空第二個選擇器的內容
+        setEndingTime('') // 將對應的時間設為空字串
+      }
+
+      // 更新顯示錯誤訊息的狀態
+      setShowTimeError(!isValidTime)
+    }
+  }, [startingTime, endingTime])
+
+  // 定義選擇的報名開始日期時間狀態變數，初始值為 sign_up_starting 或空字串
+  const [signUpStart, setSignUpStart] = useState(
+    lecture && lecture.sign_up_starting ? lecture.sign_up_starting : ''
+  )
+  // 定義選擇的報名截止日期時間狀態變數，初始值為 sign_up_deadline 或空字串
+  const [signUpEnd, setSignUpEnd] = useState(
+    lecture && lecture.sign_up_deadline ? lecture.sign_up_deadline : ''
+  )
+
+  const [showSignUpStartDateError, setShowSignUpStartDateError] =
+    useState(false)
+  const [showSignUpEndDateError, setShowSignUpEndDateError] = useState(false)
+
+  // 取得明天的日期和時間，格式為 YYYY-MM-DDTHH:mm （datetime-local 需要此格式）
+  const getTomorrowDateTime = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+
+    tomorrow.setDate(tomorrow.getDate() + 1) // 加一天
+    tomorrow.setHours(tomorrow.getHours() + 8) // 加8小時
+
+    // 格式化日期和時間
+    const formattedTomorrowDateTime = tomorrow.toISOString().slice(0, 16)
+    return formattedTomorrowDateTime
+
+    // return tomorrow.toISOString().slice(0, 16) // 格式化日期和時間
+  }
+
+  // 處理報名日期輸入變化
+  const handleSignUpDateChange = (e, setSignUpDateFunction) => {
+    const formattedSignUpDateTime = e.target.value
+
+    // 取得明天日期和時間
+    const tomorrowDateTime = getTomorrowDateTime()
+
+    // 確保報名開始時間不早於當前日期和時間
+    if (setSignUpDateFunction === setSignUpStart) {
+      if (formattedSignUpDateTime < tomorrowDateTime) {
+        setSignUpDateFunction('')
+        setShowSignUpStartDateError(true)
+        return
+      }
+      setShowSignUpStartDateError(false)
+    }
+
+    // 更新報名日期狀態
+    setSignUpDateFunction(formattedSignUpDateTime)
+
+    // 確保報名截止時間不早於報名開始時間
+    if (setSignUpDateFunction === setSignUpEnd) {
+      if (formattedSignUpDateTime < signUpStart) {
+        setSignUpDateFunction('')
+        setShowSignUpEndDateError(true)
+      } else {
+        setShowSignUpEndDateError(false)
+      }
+    }
+  }
+
+  // 定義選擇的日期狀態變數，初始值為 lecture_date 或空字串
+  const [lectureDate, setLectureDate] = useState(
+    lecture && lecture.lecture_date ? lecture.lecture_date : ''
+  )
+  const [lectureDateError, setLectureDateError] = useState(false)
+
+  // 處理日期或日期時間變化的函數
+  // handleDateChange
+  const handleLectureDateChange = (e) => {
+    const formattedLectureDate = e.target.value
+
+    // 更新 lectureDate 狀態
+    setLectureDate(formattedLectureDate)
+
+    // 確認 lectureDate 是否早於 signUpEnd
+    if (signUpEnd && formattedLectureDate < signUpEnd) {
+      setLectureDateError(true)
+    } else {
+      setLectureDateError(false)
+    }
+  }
+
+  useEffect(() => {
+    // 提取 signUpEnd 的日期部分並增加兩天
+    if (signUpEnd) {
+      const signUpEndDate = new Date(signUpEnd)
+      signUpEndDate.setDate(signUpEndDate.getDate() + 2) // 增加兩天
+      const signUpEndDateOnly = signUpEndDate.toISOString().slice(0, 10) // 只取日期部分
+
+      // 確保 lectureDate 不早於 signUpEnd + 2 天
+      if (lectureDate && lectureDate < signUpEndDateOnly) {
+        setLectureDate('')
+      }
+    }
+  }, [signUpEnd, lectureDate])
+
+  // 狀態變量
+  const [name, setName] = useState(lecture.name) // 初始值設定為 lecture 的名稱
+  const handleNameChange = (e) => {
+    setName(e.target.value)
+  }
+  const [locationId, setLocationId] = useState(lecture.location_id)
+  const handleLocationIdChange = (e) => {
+    const selectedLocationId = e.target.value
+    setLocationId(selectedLocationId) // 更新 locationId 狀態
+  }
+  const [price, setPrice] = useState(lecture.price)
+  const handlePriceChange = (e) => {
+    setPrice(e.target.value)
+  }
+  const [amount, setAmount] = useState(lecture.amount)
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value)
+  }
+  const [description, setDescription] = useState(lecture.description)
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value)
+  }
+  const [content, setContent] = useState(lecture.content)
+  const handleContentChange = (e) => {
+    setContent(e.target.value)
+  }
+
+  // 刪除課程
+  const handleDelete = async (id) => {
+    try {
+      // 在這裡調用 deleteLecture 函數並傳遞
+      await deleteLecture(id)
+
+      // 可以在這裡添加更新頁面或重新加載數據的邏輯
+    } catch (error) {
+      console.error('Error deleting lecture:', error)
+    }
+  }
+
+  // 更新課程內容
+  const handleUpdate = async (lectureId) => {
+    try {
+      // 定義更新課程相關字段
+      const updatedFields = {
+        name,
+        description,
+        content,
+        location_id: locationId,
+        lecture_date: lectureDate,
+        starting_time: startingTime,
+        ending_time: endingTime,
+        sign_up_starting: signUpStart,
+        sign_up_deadline: signUpEnd,
+        price,
+        amount,
+      }
+
+      // 創建一個新的 FormData 物件
+      const formData = new FormData()
+      formData.append('id', lectureId) // 將課程 ID 加入 FormData
+
+      // 加入課程欄位資訊到 FormData
+      Object.entries(updatedFields).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
+
+      // 加入圖片檔案到 FormData，只加入有選擇的新檔案，或者加入原有的檔案名稱
+      if (selectedFile1) {
+        formData.append('selectedFiles1', selectedFile1)
+      }
+      if (selectedFile2) {
+        formData.append('selectedFiles2', selectedFile2)
+      }
+      if (selectedFile3) {
+        formData.append('selectedFiles3', selectedFile3)
+      }
+      if (selectedFile4) {
+        formData.append('selectedFiles4', selectedFile4)
+      }
+
+      // 發送請求到後端，處理課程資料和圖片的更新
+      const response = await fetch(
+        `http://localhost:3005/api/teacher-lecture`,
+        {
+          method: 'PUT',
+          body: formData,
+        }
+      )
+
+      if (response.ok) {
+        console.log('課程和圖片更新成功')
+        window.location.reload() // 重新加載當前頁面或進行其他相關操作
+      } else {
+        const responseData = await response.json()
+        console.error('更新失敗:', responseData)
+      }
+    } catch (error) {
+      console.log('Error updating lecture:', error)
+    }
+  }
+
   return (
     <>
-      {/* 我的課程排序 */}
-      <div className="dropdown">
-        <button
-          className="btn dropdown-toggle fs-6 d-flex justify-content-center align-items-center"
-          type="button"
-          id="lectureDropdown1"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          排序
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="lectureDropdown1">
-          <li>
-            <a className="dropdown-item" href="#">
-              上課時間由新到舊
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              上課時間由舊到新
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              更新時間由新到舊
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              更新時間由舊到新
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      {/* 我的課程頁面 */}
-      <div className="lecture_window_table">
-        <table className="table">
-          <thead className="text-center">
-            <tr>
-              <th scope="col">課程名稱</th>
-              <th scope="col">上課時間</th>
-              <th scope="col" className="nodisplay_768px">
-                報名時間
-              </th>
-              <th scope="col">上課人數</th>
-              <th scope="col">價錢</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody className="text-center align-middle">
-            <tr>
-              <td scope="row">上課好有趣</td>
-              <td>2023-12-04</td>
-              <td className="nodisplay_768px">
-                <div>2023-12-04</div>
-                <div>~</div>
-                <div>2023-12-04</div>
-              </td>
-              <td>20</td>
-              <td>$888</td>
-              <td>
-                <button
-                  className="btn btn-detail"
-                  data-bs-toggle="modal"
-                  data-bs-target="#detailModal"
-                >
-                  檢視
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* 手機板課程頁面 */}
-      <div className="lecture_body_phone d-none">
-        <div className="lecture_phone_card p-3 ">
-          <table className="w-100">
-            <tbody className="w-100">
-              <tr>
-                <th>課程名稱：</th>
-                <td>大吉大利-採摘體驗</td>
-              </tr>
-              <tr>
-                <th>上課時間：</th>
-                <td>2025-12-04</td>
-              </tr>
-              <tr>
-                <th>報名截止時間：</th>
-                <td>2025-12-04</td>
-              </tr>
-              <tr>
-                <th>上課人數：</th>
-                <td>20</td>
-              </tr>
-              <tr>
-                <th>價錢：</th>
-                <td>$800</td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="phone-lecture-detail w-100 d-flex">
+      <tbody className="text-center align-middle" key={lecture.id}>
+        <tr>
+          <td scope="row" className="setup-max-width">
+            {lecture.name}
+          </td>
+          <td>{lecture.lecture_date}</td>
+          <td className="nodisplay_992px">
+            <div className="setup-max-width-time text-center">
+              {lecture.sign_up_deadline}
+            </div>
+          </td>
+          <td>{lecture.amount}</td>
+          <td>{lecture.price}</td>
+          <td>
             <button
               className="btn btn-detail"
               data-bs-toggle="modal"
-              data-bs-target="#detailModal"
+              data-bs-target={`#detailModal-${lecture.id}`}
             >
               檢視
             </button>
-          </div>
-        </div>
-      </div>
+          </td>
+        </tr>
+      </tbody>
 
       {/* 檢視modal */}
       <div
-        className="modal fade"
-        id="detailModal"
+        className="modal fade modal_width "
+        id={`detailModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog custom-modal-width">
           <div className="modal-content">
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
+                  {lecture.name}
                 </h1>
                 <button
                   type="button"
@@ -146,41 +370,77 @@ export default function LectureContent() {
                       <tbody>
                         <tr>
                           <th>課程名稱：</th>
-                          <td>大吉大利-採摘體驗</td>
+                          <td>{lecture.name}</td>
+                        </tr>
+                        <tr>
+                          <th>課程地點：</th>
+                          <td>{lecture.location_name}</td>
+                        </tr>
+                        <tr>
+                          <th>上課日期：</th>
+                          <td>{lecture.lecture_date}</td>
                         </tr>
                         <tr>
                           <th>上課時間：</th>
-                          <td>2025-12-04</td>
+                          <td>
+                            {formatTime(lecture.starting_time)}~
+                            {formatTime(lecture.ending_time)}
+                          </td>
                         </tr>
                         <tr>
                           <th>報名開始時間：</th>
-                          <td>2025-12-04</td>
+                          <td>{lecture.sign_up_starting}</td>
                         </tr>
                         <tr>
                           <th>報名截止時間：</th>
-                          <td>2025-12-04</td>
+                          <td>{lecture.sign_up_deadline}</td>
                         </tr>
                         <tr>
                           <th>價格：</th>
-                          <td>1000</td>
+                          <td>${lecture.price}</td>
                         </tr>
                         <tr>
-                          <th>報名人數：</th>
-                          <td>20</td>
+                          <th>可報名人數：</th>
+                          <td>{lecture.amount}</td>
                         </tr>
                         <tr>
                           <th>已報名人數：</th>
-                          <td>15</td>
+                          <td>{lecture.total_bought}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th>已報名學員：</th>
                           <td>
                             許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
                           </td>
+                        </tr> */}
+                        <tr>
+                          <th>簡短介紹：</th>
+                          <td>{lecture.description}</td>
+                        </tr>
+                        <tr>
+                          <th>詳細介紹：</th>
+                          <td>{lecture.content}</td>
                         </tr>
                         <tr>
                           <th>課程圖片：</th>
-                          <td>圖片一、圖片二、圖片三、圖片四</td>
+                          <td>
+                            <img
+                              className="displayOriginImg"
+                              src={`http://localhost:3005/lecture_img/${lecture.cover}`}
+                            ></img>
+                            <img
+                              className="displayOriginImg"
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
+                            ></img>
+                            <img
+                              className="displayOriginImg"
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
+                            ></img>
+                            <img
+                              className="displayOriginImg"
+                              src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
+                            ></img>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -202,7 +462,7 @@ export default function LectureContent() {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deleteModal"
+                    data-bs-target={`#deleteModal-${lecture.id}`}
                   >
                     下架課程
                   </button>
@@ -210,7 +470,7 @@ export default function LectureContent() {
                     type="button"
                     className="btn btn-main"
                     data-bs-toggle="modal"
-                    data-bs-target="#updateModal"
+                    data-bs-target={`#updateModal-${lecture.id}`}
                   >
                     修改
                   </button>
@@ -224,17 +484,17 @@ export default function LectureContent() {
       {/* 修改modal */}
       <div
         className="modal fade"
-        id="updateModal"
+        id={`updateModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog custom-modal-width">
           <div className="modal-content">
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
+                  {lecture.name}
                 </h1>
                 <button
                   type="button"
@@ -255,40 +515,138 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="大吉大利-採摘體驗"
+                              value={name}
+                              onChange={handleNameChange}
                             />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>上課地點：</th>
+                          <td>
+                            <select
+                              className="form-control"
+                              // name="name"
+                              value={locationId}
+                              onChange={handleLocationIdChange}
+                            >
+                              <option value="">請選擇上課地點</option>
+                              <option value="1">臺北市</option>
+                              <option value="2">新北市</option>
+                              <option value="3">基隆市</option>
+                              <option value="4">桃園市</option>
+                              <option value="5">新竹縣</option>
+                              <option value="6">苗里縣</option>
+                              <option value="7">臺中市</option>
+                              <option value="8">彰化縣</option>
+                              <option value="9">南投縣</option>
+                              <option value="10">雲林縣</option>
+                              <option value="11">嘉義縣</option>
+                              <option value="12">臺南市</option>
+                              <option value="13">高雄市</option>
+                              <option value="14">屏東縣</option>
+                              <option value="15">臺東縣</option>
+                              <option value="16">花蓮縣</option>
+                              <option value="17">宜蘭縣</option>
+                              <option value="18">澎湖縣</option>
+                              <option value="19">金門縣</option>
+                              <option value="20">連江縣</option>
+                            </select>
                           </td>
                         </tr>
                         <tr>
                           <th>上課時間：</th>
                           <td>
+                            {showTimeError && ( // 如果 showTimeError 為 true，顯示錯誤訊息
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *結束時間不能早於開始時間
+                              </div>
+                            )}
                             <input
-                              type="text"
-                              className="form-control"
-                              name="name"
-                              value="2025-12-04"
+                              type="time"
+                              id="appt"
+                              className="appt form-control"
+                              value={startingTime}
+                              onChange={(e) =>
+                                handleTimeChange(e, setStartingTime)
+                              }
+                            />
+                            <input
+                              type="time"
+                              id="appt"
+                              className="appt form-control"
+                              value={endingTime}
+                              onChange={(e) =>
+                                handleTimeChange(e, setEndingTime)
+                              }
                             />
                           </td>
                         </tr>
                         <tr>
                           <th>報名開始時間：</th>
                           <td>
+                            {showSignUpStartDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *請至少設定於一日之後
+                              </div>
+                            )}
                             <input
-                              type="text"
+                              type="datetime-local"
+                              id="meeting-time"
                               className="form-control"
-                              name="name"
-                              value="2025-12-04"
+                              value={signUpStart}
+                              onChange={(e) =>
+                                handleSignUpDateChange(e, setSignUpStart)
+                              }
+                              step="600" // 步長設置為 600 秒（10 分鐘）
                             />
                           </td>
                         </tr>
                         <tr>
                           <th>報名截止時間：</th>
                           <td>
+                            {showSignUpEndDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *不能早於報名開始時間
+                              </div>
+                            )}
                             <input
-                              type="text"
+                              type="datetime-local"
+                              id="meeting-time"
                               className="form-control"
-                              name="name"
-                              value="2025-12-04"
+                              value={signUpEnd}
+                              onChange={(e) =>
+                                handleSignUpDateChange(e, setSignUpEnd)
+                              }
+                              step="600" // 步長設置為 600 秒（10 分鐘）
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>上課日期：</th>
+                          <td>
+                            {lectureDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *不能早於報名結束時間
+                              </div>
+                            )}
+                            <input
+                              type="date"
+                              id="start"
+                              className="trip-start form-control"
+                              value={lectureDate}
+                              onChange={handleLectureDateChange}
                             />
                           </td>
                         </tr>
@@ -299,30 +657,185 @@ export default function LectureContent() {
                               type="text"
                               className="form-control"
                               name="name"
-                              value="1000"
+                              value={price}
+                              onChange={handlePriceChange}
                             />
                           </td>
                         </tr>
                         <tr>
-                          <th>報名人數：</th>
+                          <th>可報名人數：</th>
                           <td>
                             <input
                               type="text"
                               className="form-control"
                               name="name"
-                              value="20"
+                              value={amount}
+                              onChange={handleAmountChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>簡短介紹：</th>
+                          <td>
+                            <textarea
+                              // type="text"
+                              className="form-control textarea1"
+                              name="name"
+                              value={description}
+                              onChange={handleDescriptionChange}
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>詳細介紹：</th>
+                          <td>
+                            <textarea
+                              // type="text"
+                              className="form-control textarea2"
+                              name="name"
+                              value={content}
+                              onChange={handleContentChange}
                             />
                           </td>
                         </tr>
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <input
-                              type="text"
-                              className="form-control"
-                              name="name"
-                              value="圖片一、圖片二、圖片三、圖片四"
-                            />
+                            <div className="d-flex mt-2">
+                              <div className="w-50">
+                                <div className="fw-bold mb-3 mt-2">
+                                  *第一張圖為封面圖
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.cover}`}
+                                  ></img>
+                                </div>
+                              </div>
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 1)}
+                                  name="selectedFiles1"
+                                />
+                                {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div style={{ fontSize: '16px' }}>
+                                      替換圖片預覽：
+                                    </div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL1}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="d-flex mt-4">
+                              <div className="w-50">
+                                <div className="fw-bold mb-3 mt-2">
+                                  第二張：
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
+                                  ></img>
+                                </div>
+                              </div>
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 2)}
+                                  name="selectedFiles2"
+                                />
+                                {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>替換圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL2}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="d-flex mt-4">
+                              <div className="w-50">
+                                <div className="fw-bold mb-3 mt-2">
+                                  第三張：
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
+                                  ></img>
+                                </div>
+                              </div>
+
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 3)}
+                                  name="selectedFiles3"
+                                />
+                                {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>替換圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL3}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="d-flex mt-4 mb-2">
+                              <div className="w-50">
+                                <div className="fw-bold  mb-3 mt-2">
+                                  第四張：
+                                </div>
+                                <div className="d-flex justify-content-center">
+                                  <img
+                                    className="originImg"
+                                    src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
+                                  ></img>
+                                </div>
+                              </div>
+
+                              <div className="w-50">
+                                <input
+                                  type="file"
+                                  onChange={(e) => handleFileChange(e, 4)}
+                                  name="selectedFiles4"
+                                />
+                                {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
+                                  <>
+                                    <div>替換圖片預覽：</div>
+                                    <div className="d-flex justify-content-center">
+                                      <img
+                                        className="updateImg"
+                                        src={previewURL4}
+                                        alt=""
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </div>
                           </td>
                         </tr>
                       </tbody>
@@ -345,15 +858,19 @@ export default function LectureContent() {
                     className="btn btn-delete mx-1"
                     data-bs-toggle="modal"
                     data-bs-dismiss="modal"
-                    data-bs-target="#deleteModal"
+                    data-bs-target={`#deleteModal-${lecture.id}`}
                   >
                     下架課程
                   </button>
                   <button
                     type="submit"
+                    // type="submit"
                     className="btn btn-main"
-                    data-bs-toggle="modal"
-                    data-bs-target="#updateModal"
+                    data-bs-dismiss="modal"
+                    // data-bs-toggle="modal"
+                    aria-label="Close"
+                    // data-bs-target={`#updateModal-${lecture.id}`}
+                    onClick={() => handleUpdate(lecture.id)}
                   >
                     確認修改
                   </button>
@@ -367,7 +884,7 @@ export default function LectureContent() {
       {/* 刪除modal */}
       <div
         className="modal fade"
-        id="deleteModal"
+        id={`deleteModal-${lecture.id}`}
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -376,7 +893,7 @@ export default function LectureContent() {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                刪除課程
+                刪除「{lecture.name}」課程
               </h1>
               <button
                 type="button"
@@ -385,7 +902,7 @@ export default function LectureContent() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">確認刪除?</div>
+            <div className="modal-body">確認刪除「{lecture.name}」?</div>
             <div className="modal-footer">
               <button
                 type="button"
@@ -394,7 +911,13 @@ export default function LectureContent() {
               >
                 取消
               </button>
-              <a type="button" href="" className="btn btn-delete" role="button">
+              <a
+                type="button"
+                href=""
+                className="btn btn-delete"
+                role="button"
+                onClick={() => handleDelete(lecture.id)}
+              >
                 確認
               </a>
             </div>
@@ -403,87 +926,88 @@ export default function LectureContent() {
       </div>
 
       <style jsx>{`
-        .dropdown {
-          margin-bottom: 20px;
-          button {
-            margin-left: auto;
-            background-color: #ffffff;
-            padding: 5px 50px;
-          }
+        .custom-modal-width {
+          max-width: 700px; /* modal寬度 */
         }
-        .lecture_phone_card {
-          background-color: #ffffff;
-          border-radius: 8px;
-          border: 1px solid #ccc;
-          table{
-            th, td {
-            width: 50%;
-            padding: 10px;
-          }
-          }
+        .setup-max-width {
+          max-width: 100px;
+          white-space: nowrap; /* 防止文字換行 */
+          overflow: hidden; /* 隱藏超出範圍的文字 */
+          text-overflow: ellipsis; /* 顯示省略號 */
         }
-        .phone-lecture-detail {
-          padding: 10px;
-          button {
-            margin-left: auto;
-          }
+        .setup-max-width-time {
+          margin: auto;
+          max-width: 100px;
+          white-space: nowrap; /* 防止文字換行 */
+          overflow: hidden; /* 隱藏超出範圍的文字 */
+          text-overflow: ellipsis; /* 顯示省略號 */
+        }
+
+        .form-control {
+          appearance: auto;
+          width: 100%;
+        }
+        select {
+          width: 80%;
+          margin: 3px;
+        }
+        .textarea1 {
+          height: 100px;
+        }
+
+        .textarea2 {
+          height: 300px;
         }
 
         .modal-table {
           th {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 150px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
+            width: 25%;
+            vertical-align: middle; /* 讓字垂直置中 */
+            text-align: center;
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-             {
-              /* display: flex;
-            align-items: center;
-            justify-content: center; */
-            }
+            width: 75%;
           }
           input {
             margin: 3px;
+            width: 100%;
+          }
+          .displayOriginImg {
+            width: 45%;
+            margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px;
+          }
+          .originImg {
+            height: 120px;
+            width: auto;
+            margin-top: 5px; 
+             {
+              /* margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px; */
+            }
+          }
+          .updateImg {
+            height: 120px;
+            width: auto;
+            margin: auto;
+             {
+              /* margin-bottom: 10px;
+            margin: 5px;
+            margin-left: 7px; */
+            }
           }
         }
 
-        @media (max-width: 768px) {
-          .dropdown {
-            button {
-              border: 1px solid #ccc;
-              padding: 5px 0px;
-              width: 50%;
-            }
-          }
-          .nodisplay_768px {
+        @media (max-width: 992px) {
+          .nodisplay_992px {
             display: none;
-          }
-          .lecture_window_table {
-            display: none;
-          }
-          .lecture_body_phone {
-            display: block !important;
-          }
-        }
-        @media (max-width: 576px) {
-          .lecture_window_table table {
-            th {
-              font-size: 10px;
-            }
-            td {
-              font-size: 10px;
-            }
-            button {
-              font-size: 10px;
-            }
           }
         }
       `}</style>

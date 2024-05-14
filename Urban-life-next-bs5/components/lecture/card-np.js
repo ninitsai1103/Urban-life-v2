@@ -1,35 +1,156 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import styles from './card-np.module.css'
-import { AiFillStar } from 'react-icons/ai'
-import { FaRegHeart } from "react-icons/fa";
+import toast, { Toaster } from 'react-hot-toast'
+import { TbStarFilled } from 'react-icons/tb'
+import { FaHeart } from 'react-icons/fa'
+import { FaRegHeart } from 'react-icons/fa'
+import useColloections from '@/hooks/product/useCollections'
 
-export default function MyCardNp() {
+export default function LectureMyCardNp({ lecture, setCardData, collections , }) {
+  const {
+    id,
+    content,
+    name,
+    star,
+    description,
+    teacher_name,
+    lecture_date,
+    starting_time,
+    ending_time,
+    location_id,
+    price,
+    amount,
+    cover,
+    lecture_img1,
+    lecture_img2,
+    lecture_img3,
+    sign_up_starting,
+    sign_up_deadline,
+  } = lecture
+
+  // 確認日期是否在今天之前
+  const isBeforeToday = new Date(sign_up_deadline) < new Date()
+
+  // 新增一個狀態，切換商品是否有加入行事曆，進而去改變它的按鈕
+  const [isAddedtoCalendar, setIsAddedtoCalendar] = useState(true)
+  // 點擊加入行事曆
+  const handleAddtoCalendar = () => {
+    const lectureData = {
+      lecturename: name,
+      start_date: sign_up_starting,
+      ending_date: sign_up_deadline,
+      lecture_date: lecture_date,
+      starting_time: starting_time,
+      ending_time: ending_time,
+      isAddedtoCalendar: isAddedtoCalendar,
+    }
+    setCardData(lectureData)
+    setIsAddedtoCalendar(!isAddedtoCalendar)
+  }
+
+  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const { addCollection, removeCollection } = useColloections()
+
+  //切換商品的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    toast.success(message)
+    if (lecture && lecture.id) {
+      if (isCollected) {
+        removeCollection(lecture.id)
+      } else {
+        addCollection(lecture.id)
+      }
+    } else {
+      console.error('lecture is undefined or has no id property')
+    }
+  }
+
+  useEffect(() => {
+    // 檢查當前商品是否在收藏列表中
+    setIsCollected(
+      collections.find(
+        (item) => item.product_id == lecture.id && item.valid == 1
+      )
+    )
+  }, [collections, lecture.id])
+
   return (
     <>
       <div className={styles.card}>
-        <img
-          loading="lazy"
-          srcSet="https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/79e0ae364049cd60a3e49c593e4a7f0708340458641d5e605d73b998c6ada8df?apiKey=5675ca76094a4dbb93b999b9c5c7677d&"
-          className={styles.img}
-        />
-        <div className={styles.cardBody}>
-          <div className={styles.cardBodyName}>
-            <div className={styles.lecturName}>梅開五福-採摘體驗</div>
-            <button className="btn btn-like"><FaRegHeart /></button>
-          </div>
-          <div className={styles.cardBodyArea}>
-            <div className={styles.lecturText}>教師名字</div>
-            <div className={styles.lecturText}>2024/5/20</div>
-          </div>
-          <div className={styles.cardBodyArea}>
-            <div className={styles.lecturText}>
-              評價 : 4.8 <AiFillStar />
+        <div className={styles.cardBodyName}>
+          <div className={styles.lectureName}>{name}</div>
+          <button className="btn btn-like">
+            {isCollected ? (
+              <FaHeart
+                style={{
+                  fontSize: '23px',
+                  cursor: 'pointer',
+                  color: '#ff4136',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  toggleCollection(lecture)
+                }}
+              />
+            ) : (
+              <FaRegHeart
+                style={{
+                  fontSize: '23px',
+                  cursor: 'pointer',
+                  color: '#ff4136',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  toggleCollection(lecture)
+                }}
+              />
+            )}
+          </button>
+        </div>
+        <div className={styles.cardBodyArea}>
+          <div className={styles.lectureText}>{teacher_name}</div>
+          <div className={styles.lectureText}>{lecture_date}</div>
+        </div>
+        <div className={styles.cardBodyArea}>
+          <div className="flex gap-2.5 font-medium">
+            <div className={styles.lectureText}>
+              <img
+                loading="lazy"
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/d3c2f7f38bd5ecac06bed75055428d2f11131e5b875663805124a8c6c6b704c4?"
+                className={styles.img}
+              />{' '}
+              體驗人數：{amount}
             </div>
           </div>
           <div className={styles.cardBodyArea}>
-            <div className={styles.lecturText}>體驗人數：1000人</div>
-            <div className="btn btn-detail">課程詳細資訊</div>
+            <div className={styles.lectureText}>
+              評價 : {star}{' '}
+              <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
+            </div>
           </div>
+        </div>
+        <div className={styles.cardBodyPrice}>
+          <div className={styles.priceText}>NT：{price}</div>
+          {/* 根據日期是否在今天之前來決定按鈕樣式 */}
+          {isAddedtoCalendar ? (
+              <button
+                className="btn btn-main"
+                style={{ maxWidth: '106px' }}
+                onClick={handleAddtoCalendar}
+              >
+                加入行事曆
+              </button>
+            ) : (
+              <button
+                className="btn btn-danger"
+                style={{ maxWidth: '106px' }}
+                onClick={handleAddtoCalendar}
+              >
+                刪除
+              </button>
+            )}
         </div>
       </div>
     </>
