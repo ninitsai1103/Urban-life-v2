@@ -1,10 +1,14 @@
-import * as React from 'react'
+import { useState, useEffect } from 'react'
 import styles from './card-np.module.css'
+import toast, { Toaster } from 'react-hot-toast'
 import { TbStarFilled } from 'react-icons/tb'
+import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
+import useColloections from '@/hooks/product/useCollections'
 
-export default function LectureMyCardNp({ lecture, setCardData }) {
+export default function LectureMyCardNp({ lecture, setCardData, collections , }) {
   const {
+    id,
     content,
     name,
     star,
@@ -24,8 +28,13 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
     sign_up_deadline,
   } = lecture
 
+  // 確認日期是否在今天之前
+  const isBeforeToday = new Date(sign_up_deadline) < new Date()
+
+  // 新增一個狀態，切換商品是否有加入行事曆，進而去改變它的按鈕
+  const [isAddedtoCalendar, setIsAddedtoCalendar] = useState(true)
   // 點擊加入行事曆
-  const handleAddtoCalandar = () => {
+  const handleAddtoCalendar = () => {
     const lectureData = {
       lecturename: name,
       start_date: sign_up_starting,
@@ -33,10 +42,39 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
       lecture_date: lecture_date,
       starting_time: starting_time,
       ending_time: ending_time,
+      isAddedtoCalendar: isAddedtoCalendar,
     }
-    // console.log(lectureData)
     setCardData(lectureData)
+    setIsAddedtoCalendar(!isAddedtoCalendar)
   }
+
+  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const { addCollection, removeCollection } = useColloections()
+
+  //切換商品的收藏狀態
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    toast.success(message)
+    if (lecture && lecture.id) {
+      if (isCollected) {
+        removeCollection(lecture.id)
+      } else {
+        addCollection(lecture.id)
+      }
+    } else {
+      console.error('lecture is undefined or has no id property')
+    }
+  }
+
+  useEffect(() => {
+    // 檢查當前商品是否在收藏列表中
+    setIsCollected(
+      collections.find(
+        (item) => item.product_id == lecture.id && item.valid == 1
+      )
+    )
+  }, [collections, lecture.id])
 
   return (
     <>
@@ -44,7 +82,31 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
         <div className={styles.cardBodyName}>
           <div className={styles.lectureName}>{name}</div>
           <button className="btn btn-like">
-            <FaRegHeart />
+            {isCollected ? (
+              <FaHeart
+                style={{
+                  fontSize: '23px',
+                  cursor: 'pointer',
+                  color: '#ff4136',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  toggleCollection(lecture)
+                }}
+              />
+            ) : (
+              <FaRegHeart
+                style={{
+                  fontSize: '23px',
+                  cursor: 'pointer',
+                  color: '#ff4136',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  toggleCollection(lecture)
+                }}
+              />
+            )}
           </button>
         </div>
         <div className={styles.cardBodyArea}>
@@ -71,14 +133,24 @@ export default function LectureMyCardNp({ lecture, setCardData }) {
         </div>
         <div className={styles.cardBodyPrice}>
           <div className={styles.priceText}>NT：{price}</div>
-          <button
-            className="btn btn-main"
-            onClick={() => {
-              handleAddtoCalandar()
-            }}
-          >
-            加入行事曆
-          </button>
+          {/* 根據日期是否在今天之前來決定按鈕樣式 */}
+          {isAddedtoCalendar ? (
+              <button
+                className="btn btn-main"
+                style={{ maxWidth: '106px' }}
+                onClick={handleAddtoCalendar}
+              >
+                加入行事曆
+              </button>
+            ) : (
+              <button
+                className="btn btn-danger"
+                style={{ maxWidth: '106px' }}
+                onClick={handleAddtoCalendar}
+              >
+                刪除
+              </button>
+            )}
         </div>
       </div>
     </>

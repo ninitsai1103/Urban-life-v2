@@ -8,9 +8,13 @@ export default function ArticleCard({ article,identityId }) {
   //   return null; // 不符合條件，不顯示該文章
   // }
 
+  const handleCardClick = () => {
+    window.location.href = `/article/${article.id}`;
+  };
+
   return (
     <>
-      <div className="article_card_styles w-100 d-flex" key={article.id}>
+      <div className="article_card_styles w-100 d-flex" key={article.id} onClick={handleCardClick}>
         <img alt='' src={`http://localhost:3005/images/article/${article.img}`}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
@@ -29,11 +33,11 @@ export default function ArticleCard({ article,identityId }) {
             <div className="article_card_left_bottom d-flex">
               <div className="article_card_bottom_collect d-flex align-items-center">
                 <CiHeart style={{ color: 'red' }} />
-                <div className="article_card_bottom_left_margin">收藏數</div>
+                <div className="article_card_bottom_left_margin">{article.total_collections}</div>
               </div>
               <div className="d-flex align-items-center">
                 <FaCommentDots style={{ color: '#9EA78B' }} />
-                <div className="article_card_bottom_left_margin">評論數</div>
+                <div className="article_card_bottom_left_margin">{article.total_comments}</div>
               </div>
             </div>
             <div className="d-flex">
@@ -67,6 +71,7 @@ export default function ArticleCard({ article,identityId }) {
           height: 170px;
           margin-bottom: 20px;
           background-color: #ffffff;
+          cursor:pointer;
         }
         img {
           width: 150px;

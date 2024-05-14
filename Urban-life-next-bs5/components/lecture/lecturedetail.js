@@ -1,27 +1,28 @@
 import * as React from 'react'
 import styles from './lecturedetail.module.css'
 
-export default function Lecturedetail() {
+export default function Lecturedetail({lecture}) {
     return (
         <>
             <div className={styles.infogroup}>
                 <div className={styles.imginfo}>
                     <div>
-                    <img src="/images/lecture/lecture_1.jpg" />
+                    <img src={`http://localhost:3005/lecture_img/${lecture.cover}`} />
                     </div>
                     <div>
-                    <img src="/images/lecture/lecture_2.jpg" />
+                    <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`} />
                     </div>
                     <div>
-                    <img src="/images/lecture/lecture_3.jpg" />
+                    <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`} />
                     </div>
                     <div>
-                    <img src="/images/lecture/lecture_4.jpg" />
+                    <img src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`} />
                     </div>
                 </div>
                 <div className={styles.lectureinfo}>
                     <div className={styles.infotext}>
-                        一、認識稻米稻子的一生<br/>
+                    <div className={styles.infotext}>{lecture.content}</div>
+                        {/* 一、認識稻米稻子的一生<br/>
                         1.春天插秧體驗。<br/>
                         2.夏天割稻體驗。<br/>
                         3.秋天及冬天採果，休耕農事體驗。<br/>
@@ -53,7 +54,7 @@ export default function Lecturedetail() {
                         <br/>
                         五、手做紀念品：愛的榖粒~許願瓶DIY<br/>
                         活動目的<br/>
-                        1.運用莊園裡收成的榖粒許下自己的願望，然後努力實現<br/>
+                        1.運用莊園裡收成的榖粒許下自己的願望，然後努力實現<br/> */}
                     </div>
                 </div>
             </div>

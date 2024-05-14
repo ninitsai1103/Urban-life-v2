@@ -5,7 +5,8 @@ const router = express.Router()
 import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
-  // user_coupon資料庫 SQL
+  const id = req.query.user_id
+  // order_detail資料庫 SQL
   const sqlOrder = `SELECT 
   order_detail.*,
   cart.*,
@@ -19,10 +20,11 @@ router.get('/', async function (req, res) {
   JOIN 
   cart ON order_detail.order_id = cart.order_id
   JOIN 
-  product_lecture ON cart.product_id = product_lecture.id; `
+  product_lecture ON cart.product_id = product_lecture.id
+  WHERE order_detail.user_id = ?;`
 
   try {
-    const [rows, fields] = await db.query(sqlOrder)
+    const [rows, fields] = await db.query(sqlOrder,[id])
 
     // 標準回傳JSON
     return res.json({

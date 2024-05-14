@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
 
-export default function TeacherCardInfo() {
-  const { teachers } = UseTeacherInfo()
+export default function TeacherCardInfo({ teachers = []}) {
 
   return (
     <>
@@ -37,7 +36,8 @@ export default function TeacherCardInfo() {
           border-radius: 8px;
           width: 309px;
           height: 422px;
-          min-width: 309px;
+          min-width: 250px;
+          max-width: 309px;
         }
 
         img {

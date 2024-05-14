@@ -20,14 +20,39 @@ export default function CalendarBody({ calendarMain, cardData }) {
   // console.log(typeof moment(cardData.lecture_date).format('DD'))
 
   // 接收到cardData存在後就加進課程的一個資料裡面
-  const [myCalandarLecture, setMyCalandarLecture] = useState([])
-  useEffect(() => {
+  const [myCalendarLectures, setMyCalendarLectures] = useState([])
+  const handleAddtoCalandar = () => {
     if (cardData.lecturename !== undefined) {
-      const newMyCalendarLecture = [...myCalandarLecture, cardData.lecturename]
-      setMyCalandarLecture(newMyCalendarLecture)
-      console.log(newMyCalendarLecture)
+      setMyCalendarLectures((prevLectures) => {
+        // 檢查是否重複
+        const isExist = prevLectures.some(
+          (prevLecture) => prevLecture.lecturename === cardData.lecturename
+        )
+
+        // 不會新增相同的東西
+        // if (!isExist) {
+        //   return [...prevLectures, cardData]
+        // }
+        // return prevLectures
+
+        // 做到新增刪除的功能
+        if (isExist) {
+          // 存在的話，就把他filter掉
+          // filter跟他日期不一樣的資料
+          return prevLectures.filter(
+            (prevLecture) => prevLecture.lecturename !== cardData.lecturename
+          )
+        } else {
+          // 不存在的話加入
+          return [...prevLectures, cardData]
+        }
+      })
     }
+  }
+  useEffect(() => {
+    handleAddtoCalandar()
   }, [cardData])
+
   return (
     <>
       <div className="body mt-4">
@@ -59,9 +84,22 @@ export default function CalendarBody({ calendarMain, cardData }) {
                 <div>{day}</div>
                 {/* 在這裡渲染 cardData */}
                 <div>
-                  {day == moment(cardData.lecture_date).format('DD') ? (
-                    <>{cardData.lecturename}</>
-                  ) : null}
+                  {/* 先filter月份的東西在渲染 */}
+                  {myCalendarLectures
+                    .filter((myCalendarLecture) =>
+                      moment(myCalendarLecture.lecture_date).isSame(
+                        calendarMain,
+                        'month'
+                      )
+                    )
+                    .map((myCalendarLecture, lIdx) =>
+                      myCalendarLecture.isAddedtoCalendar &&
+                      day === moment(myCalendarLecture.lecture_date).date() ? (
+                        <div key={lIdx} className="myCalendarLecture fade-in">
+                          {myCalendarLecture.lecturename}
+                        </div>
+                      ) : null
+                    )}
                 </div>
               </div>
             ))}
@@ -72,11 +110,27 @@ export default function CalendarBody({ calendarMain, cardData }) {
         .day-block {
           width: 80px;
           height: 50px;
+          
         }
         .date-block {
           width: 80px;
           height: 100px;
         }
+        .myCalendarLecture {
+          background-color: #f3b454;
+          border-radius: 1rem;
+          text-align: center;
+          animation: fadeIn 0.5s ease-in-out;
+        }
+
+         {/* @keyframes fadeIn {
+          0% {
+            opacity: 0.7;
+          }
+          100% {
+            opacity: 1;
+          }
+        }  */}
       `}</style>
     </>
   )

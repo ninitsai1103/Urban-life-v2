@@ -129,10 +129,10 @@ export default function ArticleManagement() {
             <div className="d-flex justify-content-between align-items-center teacher-margin-bottom">
               <div className="teacher-text-title">我的文章</div>
               <div className="add-article-btn">
-                <button className="btn btn-main">
+                <a className="btn btn-main" href="/article/add">
                   <IoAdd />
                   新增文章
-                </button>
+                </a>
               </div>
             </div>
             <div className="dropdown">

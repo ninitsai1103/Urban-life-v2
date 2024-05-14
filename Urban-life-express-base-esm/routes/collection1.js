@@ -3,13 +3,13 @@ const router = express.Router()
 
 import db from '#configs/mysql.js'
 
-
 router.get('/', async (req, res) => {
   // res.send(`獲取特定id使用者 ${req.params.id}`)
   // const user_id = req.params.id
   const user_id = req.query.user_id
 
-  const sqlUserCollection = `SELECT 
+  const sqlUserCollection = `
+SELECT 
   collection.id,
   collection.user_id,
   collection.product_id,
@@ -19,12 +19,22 @@ router.get('/', async (req, res) => {
   product_lecture.cover AS product_image,
   collection.pdltat_id,
   collection.article_id,
-  user_teacher.name AS article_author ,
+  user_teacher.name AS article_author,
   article.title AS article_title,
   article.content AS article_content,
   article.img AS article_image,
   article.created_at AS article_date,
-  collection.valid
+  collection.valid,
+  (
+    SELECT COUNT(*)
+    FROM collection AS c
+    WHERE c.article_id = article.id
+  ) AS article_collects,
+  (
+    SELECT COUNT(*)
+    FROM article_comment AS ac
+    WHERE ac.article_id = article.id AND ac.valid = 1
+  ) AS article_comments
 FROM 
   collection 
 LEFT JOIN 
@@ -34,8 +44,9 @@ LEFT JOIN
 LEFT JOIN 
   user_teacher ON article.user_id = user_teacher.id 
 WHERE 
-collection.valid = 1 AND collection.user_id = ?;
+  collection.valid = 1 AND collection.user_id = ?;
 `
+
   try {
     const [collects] = await db.query(sqlUserCollection, [user_id])
 
@@ -48,21 +59,20 @@ collection.valid = 1 AND collection.user_id = ?;
     console.log(error)
   }
 })
-router.delete('/:id', async  (req, res)=> {
+router.delete('/:id', async (req, res) => {
   try {
-    const collectionID= req.params.id
+    const collectionID = req.params.id
     // const collectionID = req.body.id
 
     let deleteUserCollect = `UPDATE collection
     SET valid = 0
     WHERE id = ? ;`
-    await db.query(deleteUserCollect, [collectionID ])
+    await db.query(deleteUserCollect, [collectionID])
     return res.json({
       status: 'success',
       data: {
         message: '使用者的collection被刪除成功',
       },
-      
     })
   } catch (error) {
     return res.json({

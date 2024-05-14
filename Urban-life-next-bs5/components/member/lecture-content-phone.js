@@ -4,7 +4,6 @@ export default function LectureContentPhone({
   lecture,
   identityId,
   deleteLecture,
-  updateLecture,
 }) {
   // 處理時間字符串，僅顯示到秒
   function formatTime(timeString) {
@@ -95,53 +94,131 @@ export default function LectureContentPhone({
     formatTimeForInput(lecture.ending_time)
   )
 
+  const [showTimeError, setShowTimeError] = useState(false) // 控制錯誤訊息顯示
+
   // 處理時間輸入變化
   const handleTimeChange = (e, setTimeFunction) => {
     const formattedTime = e.target.value
-    setTimeFunction(formattedTime)
+    setTimeFunction(formattedTime) // 更新時間狀態
+  }
 
-    // 確保第二個時間選擇器的值不早於第一個時間選擇器
-    if (setTimeFunction === setEndingTime) {
-      // 如果當前設置的是第二個時間選擇器
-      if (formattedTime < startingTime) {
-        // 如果第二個時間選擇器的值早於第一個時間選擇器，則將第二個時間選擇器設置為與第一個相同
-        setTimeFunction(startingTime)
+  useEffect(() => {
+    // 確保 startTime 和 endTime 都已設置才進行時間合法性檢查
+    if (startingTime && endingTime) {
+      let isValidTime = true
+
+      if (endingTime < startingTime) {
+        isValidTime = false
+        // 清空第二個選擇器的內容
+        setEndingTime('') // 將對應的時間設為空字串
       }
-    } else if (setTimeFunction === setStartingTime) {
-      // 如果當前設置的是第一個時間選擇器
-      if (formattedTime > endingTime) {
-        // 如果第一個時間選擇器的值晚於第二個時間選擇器，則將第二個時間選擇器設置為與第一個相同
-        setEndingTime(formattedTime)
+
+      // 更新顯示錯誤訊息的狀態
+      setShowTimeError(!isValidTime)
+    }
+  }, [startingTime, endingTime])
+
+  
+  // 定義選擇的報名開始日期時間狀態變數，初始值為 sign_up_starting 或空字串
+  const [signUpStart, setSignUpStart] = useState(
+    lecture && lecture.sign_up_starting ? lecture.sign_up_starting : ''
+  )
+  // 定義選擇的報名截止日期時間狀態變數，初始值為 sign_up_deadline 或空字串
+  const [signUpEnd, setSignUpEnd] = useState(
+    lecture && lecture.sign_up_deadline ? lecture.sign_up_deadline : ''
+  )
+
+  const [showSignUpStartDateError, setShowSignUpStartDateError] = useState(false)
+  const [showSignUpEndDateError, setShowSignUpEndDateError] = useState(false)
+
+  // 取得明天的日期和時間，格式為 YYYY-MM-DDTHH:mm （datetime-local 需要此格式）
+  const getTomorrowDateTime = () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+
+    tomorrow.setDate(tomorrow.getDate() + 1) // 加一天
+    tomorrow.setHours(tomorrow.getHours() + 8) // 加8小時
+
+    // 格式化日期和時間
+    const formattedTomorrowDateTime = tomorrow.toISOString().slice(0, 16)
+    return formattedTomorrowDateTime
+
+    // return tomorrow.toISOString().slice(0, 16) // 格式化日期和時間
+  }
+
+  // 處理報名日期輸入變化
+  const handleSignUpDateChange = (e, setSignUpDateFunction) => {
+    const formattedSignUpDateTime = e.target.value
+
+    // 取得明天日期和時間
+    const tomorrowDateTime = getTomorrowDateTime()
+
+    // 確保報名開始時間不早於當前日期和時間
+    if (setSignUpDateFunction === setSignUpStart) {
+      if (formattedSignUpDateTime < tomorrowDateTime) {
+        setSignUpDateFunction('')
+        setShowSignUpStartDateError(true)
+        return
+      }
+      setShowSignUpStartDateError(false)
+    }
+
+    // 更新報名日期狀態
+    setSignUpDateFunction(formattedSignUpDateTime)
+
+    // 確保報名截止時間不早於報名開始時間
+    if (setSignUpDateFunction === setSignUpEnd) {
+      if (formattedSignUpDateTime < signUpStart) {
+        setSignUpDateFunction('')
+        setShowSignUpEndDateError(true)
+      } else {
+        setShowSignUpEndDateError(false)
       }
     }
   }
 
   // 定義選擇的日期狀態變數，初始值為 lecture_date 或空字串
-  const [selectedDate, setSelectedDate] = useState(
+  const [lectureDate, setLectureDate] = useState(
     lecture && lecture.lecture_date ? lecture.lecture_date : ''
   )
-  // 定義選擇的報名開始日期時間狀態變數，初始值為 sign_up_starting 或空字串
-  const [selectedStartingDateTime, setSelectedStartingDateTime] = useState(
-    lecture && lecture.sign_up_starting ? lecture.sign_up_starting : ''
-  )
-  // 定義選擇的報名截止日期時間狀態變數，初始值為 sign_up_deadline 或空字串
-  const [selectedEndingDateTime, setSelectedEndingDateTime] = useState(
-    lecture && lecture.sign_up_deadline ? lecture.sign_up_deadline : ''
-  )
+  const [lectureDateError, setLectureDateError] = useState(false)
 
   // 處理日期或日期時間變化的函數
-  const handleDateChange = (e) => {
-    const formattedDate = e.target.value
-    setSelectedDate(formattedDate)
+  const handleLectureDateChange = (e) => {
+    const formattedLectureDate = e.target.value
+
+    // 更新 lectureDate 狀態
+    setLectureDate(formattedLectureDate)
+
+    // 確認 lectureDate 是否早於 signUpEnd
+    if (signUpEnd && formattedLectureDate < signUpEnd) {
+      setLectureDateError(true)
+    } else {
+      setLectureDateError(false)
+    }
   }
+
+  useEffect(() => {
+    // 提取 signUpEnd 的日期部分並增加兩天
+    if (signUpEnd) {
+      const signUpEndDate = new Date(signUpEnd)
+      signUpEndDate.setDate(signUpEndDate.getDate() + 2) // 增加兩天
+      const signUpEndDateOnly = signUpEndDate.toISOString().slice(0, 10) // 只取日期部分
+
+      // 確保 lectureDate 不早於 signUpEnd + 2 天
+      if (lectureDate && lectureDate < signUpEndDateOnly) {
+        setLectureDate('')
+      }
+    }
+  }, [signUpEnd, lectureDate])
 
   const handleStartingDateTimeChange = (e) => {
     const formattedDateTime = e.target.value
-    setSelectedStartingDateTime(formattedDateTime)
+    setSignUpStart(formattedDateTime)
   }
   const handleEndingDateTimeChange = (e) => {
     const formattedDateTime = e.target.value
-    setSelectedEndingDateTime(formattedDateTime)
+    setSignUpEnd(formattedDateTime)
   }
 
   // 狀態變量
@@ -192,11 +269,11 @@ export default function LectureContentPhone({
         description,
         content,
         location_id: locationId,
-        lecture_date: selectedDate,
+        lecture_date: lectureDate,
         starting_time: startingTime,
         ending_time: endingTime,
-        sign_up_starting: selectedStartingDateTime,
-        sign_up_deadline: selectedEndingDateTime,
+        sign_up_starting: signUpStart,
+        sign_up_deadline: signUpEnd,
         price,
         amount,
       };
@@ -223,19 +300,6 @@ export default function LectureContentPhone({
     if (selectedFile4) {
       formData.append('selectedFiles4', selectedFile4);
     }
-    // if (selectedFile1 || existingFile1) {
-    //   formData.append('selectedFiles1', selectedFile1 || existingFile1);
-    // }
-    // if (selectedFile2 || existingFile2) {
-    //   formData.append('selectedFiles2', selectedFile2 || existingFile2);
-    // }
-    // if (selectedFile3 || existingFile3) {
-    //   formData.append('selectedFiles3', selectedFile3 || existingFile3);
-    // }
-    // if (selectedFile4 || existingFile4) {
-    //   formData.append('selectedFiles4', selectedFile4 || existingFile4);
-    // }
-
 
     // 發送請求到後端，處理課程資料和圖片的更新
     const response = await fetch(`http://localhost:3005/api/teacher-lecture`, {
@@ -342,11 +406,11 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名開始時間：</th>
+                          <th>報名<br />開始時間：</th>
                           <td>{lecture.sign_up_starting}</td>
                         </tr>
                         <tr>
-                          <th>報名截止時間：</th>
+                          <th>報名<br />截止時間：</th>
                           <td>{lecture.sign_up_deadline}</td>
                         </tr>
                         <tr>
@@ -359,14 +423,14 @@ export default function LectureContentPhone({
                         </tr>
                         <tr>
                           <th>已報名人數：</th>
-                          <td>15</td>
+                          <td>{lecture.total_bought}</td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <th>已報名學員：</th>
                           <td>
                             許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、許栩栩、
                           </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <th>簡短介紹：</th>
                           <td>{lecture.description}</td>
@@ -508,20 +572,16 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>上課日期：</th>
-                          <td>
-                            <input
-                              type="date"
-                              id="start"
-                              className="form-control"
-                              value={selectedDate}
-                              onChange={handleDateChange}
-                            />
-                          </td>
-                        </tr>
-                        <tr>
                           <th>上課時間：</th>
                           <td>
+                          {showTimeError && ( // 如果 showTimeError 為 true，顯示錯誤訊息
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *結束時間不能早於開始時間
+                              </div>
+                            )}
                             <input
                               type="time"
                               id="appt"
@@ -543,26 +603,68 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名開始時間：</th>
+                          <th>報名<br />開始時間：</th>
                           <td>
+                          {showSignUpStartDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *請至少設定於一日之後
+                              </div>
+                            )}
                             <input
                               type="datetime-local"
                               id="meeting-time"
                               className="form-control"
-                              value={selectedStartingDateTime}
-                              onChange={handleStartingDateTimeChange}
+                              value={signUpStart}
+                              onChange={(e) =>
+                                handleSignUpDateChange(e, setSignUpStart)
+                              }
+                              step="600" // 步長設置為 600 秒（10 分鐘）
                             />
                           </td>
                         </tr>
                         <tr>
-                          <th>報名截止時間：</th>
+                          <th>報名<br />截止時間：</th>
                           <td>
+                          {showSignUpEndDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *不能早於報名開始時間
+                              </div>
+                            )}
                             <input
                               type="datetime-local"
                               id="meeting-time"
                               className="form-control"
-                              value={selectedEndingDateTime}
-                              onChange={handleEndingDateTimeChange}
+                              value={signUpEnd}
+                              onChange={(e) =>
+                                handleSignUpDateChange(e, setSignUpEnd)
+                              }
+                              step="600" // 步長設置為 600 秒（10 分鐘）
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>上課日期：</th>
+                          <td>
+                          {lectureDateError && (
+                              <div
+                                className="fw-bold"
+                                style={{ fontSize: '12px', color: 'red' }}
+                              >
+                                *不能早於報名結束時間
+                              </div>
+                            )}
+                            <input
+                              type="date"
+                              id="start"
+                              className="form-control"
+                              value={lectureDate}
+                              onChange={handleLectureDateChange}
                             />
                           </td>
                         </tr>
@@ -617,7 +719,7 @@ export default function LectureContentPhone({
                         <tr>
                           <th>課程圖片：</th>
                           <td>
-                            <div>*第一章圖為封面圖</div>
+                            <div className="fw-bold">*第一張圖為封面圖</div>
                             <img
                               className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.cover}`}
@@ -639,8 +741,9 @@ export default function LectureContentPhone({
                               )}
                             </div>
 
+                            <div className="mt-4 fw-bold">第二張：</div>
                             <img
-                              className="originImg mt-4"
+                              className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.lecture_img1}`}
                             ></img>
                             <div>
@@ -660,8 +763,9 @@ export default function LectureContentPhone({
                               )}
                             </div>
 
+                            <div className="mt-4 fw-bold">第三張：</div>
                             <img
-                              className="originImg mt-4"
+                              className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.lecture_img2}`}
                             ></img>
                             <div>
@@ -681,8 +785,9 @@ export default function LectureContentPhone({
                               )}
                             </div>
 
+                            <div className="mt-4 fw-bold">第四張：</div>
                             <img
-                              className="originImg mt-4"
+                              className="originImg"
                               src={`http://localhost:3005/lecture_img/${lecture.lecture_img3}`}
                             ></img>
                             <input
@@ -822,21 +927,23 @@ export default function LectureContentPhone({
         }
 
         .textarea2{
-          height: 200px;
+          height: 300px;
         }
 
 
         .modal-table {
           th {
             border: 1px solid #ccc;
-            padding: 5px 10px;
-            width: 40%;
+            padding: 5px 2px;
+            width: 25%;
+            vertical-align: middle; /* 讓字垂直置中 */
+            text-align: center;
           }
 
           td {
             border: 1px solid #ccc;
             padding: 5px 10px;
-            width: 60%;
+            width: 75%;
           }
           input {
             margin: 3px;
