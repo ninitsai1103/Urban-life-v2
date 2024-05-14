@@ -9,7 +9,7 @@ import { getIdParam } from '#db-helpers/db-tool.js'
 
 // 資料庫使用
 import sequelize from '#configs/db.js'
-const { User } = sequelize.models
+const { UserTeacher } = sequelize.models
 
 // 驗証加密密碼字串用
 import { compareHash } from '#db-helpers/password-hash.js'
@@ -36,7 +36,7 @@ const upload = multer({ storage: storage })
 
 // GET - 得到所有會員資料
 router.get('/', async function (req, res) {
-  const users = await User.findAll({ logging: console.log })
+  const users = await UserTeacher.findAll({ logging: console.log })
   // 處理如果沒找到資料
 
   // 標準回傳JSON
@@ -44,22 +44,21 @@ router.get('/', async function (req, res) {
 })
 
 // GET - 得到單筆資料(注意，有動態參數時要寫在GET區段最後面)
-router.get('/:id', authenticate, async function (req, res) {
+router.get('/:id', async function (req, res) {
   // 轉為數字
   const id = getIdParam(req)
 
   // 檢查是否為授權會員，只有授權會員可以存取自己的資料
-  if (req.user.id !== id) {
-    return res.json({ status: 'error', message: '存取會員資料失敗' })
-  }
+  // if (req.user.id !== id) {
+  //   return res.json({ status: 'error', message: '存取會員資料失敗' })
+  // }
 
-  const user = await User.findByPk(id, {
+  const user = await UserTeacher.findByPk(id, {
     raw: true, // 只需要資料表中資料
   })
 
   // 不回傳密碼
   delete user.password
-
   return res.json({ status: 'success', data: { user } })
 })
 

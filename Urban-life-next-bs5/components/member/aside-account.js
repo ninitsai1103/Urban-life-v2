@@ -40,7 +40,7 @@ export default function AsideAccount() {
       })
       // 上传成功后提示上传成功
       alert('檔案上傳成功')
-      window.location.reload();
+      window.location.reload()
     } catch (error) {
       console.error('上傳錯誤：', error)
       alert(error.message)
@@ -90,16 +90,26 @@ export default function AsideAccount() {
           <div className="user d-flex flex-column align-items-center">
             <div className="d-flex justify-content-center position-relative">
               <div className="avatar">
-                <Image
-                  src={
-                    `http://localhost:3005/avatar/${member?.img}`
-                  }
-                  alt=""
-                  width={80}
-                  height={80}
-                  style={{ borderRadius: '100px' }}
-                  priority
-                />
+                {member?.img ? (
+                  <Image
+                    src={`http://localhost:3005/avatar/${member?.img}`}
+                    alt=""
+                    width={80}
+                    height={80}
+                    style={{ borderRadius: '100px' }}
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src={`${member?.photo_url}`}
+                    alt=""
+                    width={80}
+                    height={80}
+                    style={{ borderRadius: '100px' }}
+                    priority
+                  />
+                )}
+
                 <div className="icon-box position-absolute d-flex justify-content-center">
                   {/* 點擊圖標後觸發 handleIconClick 事件 */}
                   <MdOutlineAddAPhoto
