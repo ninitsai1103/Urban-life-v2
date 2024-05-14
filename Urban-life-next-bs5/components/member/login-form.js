@@ -55,32 +55,31 @@ export default function LoginForm() {
           },
           body: JSON.stringify(user),
         })
-        const data = await response.json()// 建立一個包含使用者資訊的物件
+        const data = await response.json() // 建立一個包含使用者資訊的物件
 
-        console.log(data);
+        console.log(data)
         const memberInfo = {
           id: data.user.id,
           name: data.user.name,
           // user: data.user,
           identity_id: data.user.identity_id,
-          token:data.token
-        };
-        
-        
+          token: data.token,
+        }
+
         // 將 JSON 字串存儲到 localStorage 中
-        
+
         if (response.ok) {
           console.log('登入成功')
           console.log('使用者資訊：', data.user) // 這裡是使用者的所有資訊
           console.log('Token：', data.token) // 這裡是登入後返回的 token
-          localStorage.setItem('member-info', JSON.stringify(memberInfo));
+          localStorage.setItem('member-info', JSON.stringify(memberInfo))
           // storage.clear();
 
           // 登录成功，重定向到用户资料页面或其他页面
-          window.location.href = '/';
+          window.location.href = '/'
         } else {
           // 登录失败，显示错误消息
-          
+
           setErrors({ ...errors, loginError: '信箱或密碼錯誤' })
         }
       } catch (error) {
@@ -142,7 +141,7 @@ export default function LoginForm() {
             </div>
           </div>
 
-          <div className="mb-3 d-flex justify-content-center align-items-center">
+          <div className="mb-3 d-flex justify-content-between align-items-center">
             <button
               type="submit"
               className="btn btn-add-r"
@@ -195,6 +194,11 @@ export default function LoginForm() {
               還不是會員？
               <Link className={`${styles['link']}`} href="/member/register">
                 立即免費註冊
+              </Link>
+            </p>
+            <p className="notice">
+              <Link className={`${styles['link']}`} href="/member/forget-password">
+                忘記密碼？
               </Link>
             </p>
           </div>
