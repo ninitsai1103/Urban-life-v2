@@ -32,6 +32,7 @@ export default function InfoPayPage() {
             value="cash"
             disabled={!cod}
             onChange={handleCod}
+            required
           />
           <label className="form-check-label" htmlFor="cash">
             貨到付款
@@ -47,6 +48,7 @@ export default function InfoPayPage() {
             name="pay"
             id="linepay"
             value="linepay"
+            required
           />
           <label className="form-check-label" htmlFor="linepay">
             LINE Pay

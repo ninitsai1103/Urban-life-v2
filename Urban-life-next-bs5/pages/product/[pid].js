@@ -3,7 +3,7 @@ import Carousel from '@/components/product/carousel'
 import Link from 'next/link'
 import toast, { Toaster } from 'react-hot-toast'
 import { useRouter } from 'next/router'
-import { useNavigate} from 'react-router-dom';
+// import { useNavigate} from 'react-router-dom';
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import { AiOutlineShopping } from 'react-icons/ai'
 import { BsCart3 } from 'react-icons/bs'

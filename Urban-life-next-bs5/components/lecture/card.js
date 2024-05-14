@@ -8,17 +8,22 @@ import { FaRegHeart } from 'react-icons/fa'
 import { UseLecture } from '@/hooks/use-lecture'
 import useColloections from '@/hooks/product/useCollections'
 
-export default function LectureMyCard({lecture, collections }) {
+export default function LectureMyCard({ lecture, collections=[] }) {
   const [isCollected, setIsCollected] = useState(false)
   const { addCollection, removeCollection } = useColloections()
 
   useEffect(() => {
     // 檢查當前講座是否在收藏列表中
-    setIsCollected(
-      collections.some(
-        (item) => item.product_id === lecture.id && item.valid === 1
-      )
+    console.log('collections', collections)
+    console.log('0000000000000000000000', typeof collections)
+    const obj = collections
+    const arr =  Object.keys(obj).map((id) => obj[id])
+    console.log("arrrrrr", arr);
+    console.log("arrrrrr00000000", typeof arr);
+    const data = arr.some(
+      (item) => item.product_id === lecture.id && item.valid === 1
     )
+    setIsCollected(data)
   }, [collections, lecture.id])
 
   const toggleCollection = () => {
@@ -35,6 +40,8 @@ export default function LectureMyCard({lecture, collections }) {
       console.error('Lecture is undefined or has no id property')
     }
   }
+
+  
 
   return (
     <>
@@ -82,7 +89,7 @@ export default function LectureMyCard({lecture, collections }) {
             <div className={styles.lectureText}>
               體驗人數：{lecture.amount}人
             </div>
-            <Link href={`/lecture/detail/${lecture.id}`}>
+            <Link key={lecture.id} href={`/lecture/${lecture.id}`}>
               <button className="btn btn-detail">課程詳細資訊</button>
             </Link>
           </div>

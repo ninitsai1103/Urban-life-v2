@@ -72,9 +72,9 @@ export default function TeacherAsideAccount() {
     const selectedValue = event.target.value
     // 根據選項值進行頁面跳轉
     if (selectedValue === '1') {
-      router.push('/member/...') // 個人資料頁面路徑
+      router.push('/member/teacherInformation') // 個人資料頁面路徑
     } else if (selectedValue === '2') {
-      router.push('/member/...') // 收藏頁面路徑
+      router.push('/member/teacherCollect') // 收藏頁面路徑
     } else if (selectedValue === '3') {
       router.push('/member/article-management') // 文章管理頁面路徑
     } else if (selectedValue === '4') {
@@ -138,10 +138,10 @@ export default function TeacherAsideAccount() {
             aria-label="Default select example"
             value={
               // 網址待修
-              currentPath === '/member/index'
+              currentPath === '/member/teacherInformation'
                 ? '1'
                 : // 網址待修
-                currentPath === '/favorites'
+                currentPath === '/member/teacherCollect'
                 ? '2'
                 : currentPath === '/member/article-management'
                 ? '3'
@@ -162,7 +162,7 @@ export default function TeacherAsideAccount() {
             <li>
               <a
                 className={currentPath === '/member/index' ? 'active' : ''}
-                href="/member/..."
+                href="/member/teacherInformation"
               >
                 <BiIdCard /> 個人資料
               </a>
@@ -171,7 +171,7 @@ export default function TeacherAsideAccount() {
             <li>
               <a
                 className={currentPath === '/favorites' ? 'active' : ''}
-                href="/member/..."
+                href="/member/teacherCollect"
               >
                 <MdFavoriteBorder /> 我的收藏
               </a>

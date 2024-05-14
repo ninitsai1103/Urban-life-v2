@@ -20,7 +20,7 @@ export default function Calendar({ setNowTime, cardData }) {
   // console.log(cardData)
   return (
     <>
-      <div className="container">
+      <div className="container bg-white">
         <CalendarHeader setCalendarMain={setCalendarMain} />
         <CalendarBody calendarMain={calendarMain} cardData={cardData} />
       </div>
@@ -28,6 +28,8 @@ export default function Calendar({ setNowTime, cardData }) {
       <style jsx>{`
         .container {
           border: 1px solid black;
+          padding-top:10px;
+          padding-left:40px
         }
       `}</style>
     </>
