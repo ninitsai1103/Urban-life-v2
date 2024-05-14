@@ -1,6 +1,5 @@
 .card {
     display: flex;
-    display: flex;
     align-items: flex-start;
     gap: 67px;
     flex: 1 0 0;
@@ -13,8 +12,8 @@
     height: 313px;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
-    gap: auto;
+    /* justify-content: space-between; */
+    gap: 50px;
     flex: 1 0 0;
 }
 
@@ -30,7 +29,7 @@
     color: #000;
 
     font-family: Roboto;
-    font-size: 16px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -40,7 +39,7 @@
     color: #000;
 
     font-family: Roboto;
-    font-size: 16px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -50,7 +49,7 @@
     color: #000;
 
     font-family: Roboto;
-    font-size: 24px;
+    font-size: 30px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -61,7 +60,7 @@
     color: #000;
 
     font-family: Roboto;
-    font-size: 16px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;

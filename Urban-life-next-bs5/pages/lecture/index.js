@@ -328,7 +328,7 @@ export default function LectureHome() {
         </section> */}
         <section className="section6">
           <h1 className="sectiontitle">講師陣容</h1>
-          <p className="teachertext">Teacher</p>
+          <p className="teachertext">Our Teachers</p>
           <div style={{ maxWidth: '1296px', overflow: 'hidden' }}>
             <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
               <TeacherCardInfo teachers={randomTeachers} />
