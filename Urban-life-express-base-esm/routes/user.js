@@ -58,7 +58,7 @@ router.post('', upload.none(), async (req, res) => {
   const sqlCheckEmail =
     'SELECT COUNT(*) AS count FROM `user_teacher` WHERE `email` = ?'
   const sqlInsertUser =
-    'INSERT INTO `user_teacher` (`name`, `email`, `password`, `identity_id`, `img`, `birthday`, `address`, `gender`, `valid`) VALUES (NULL, ?, ?, 3,"default.jpg", NULL , NULL , NULL , 1)'
+    'INSERT INTO `user_teacher` (`name`, `email`, `password`, `identity_id`, `img`, `birthday`, `address`, `phone`, `valid`) VALUES (NULL, ?, ?, 3,"default.jpg", NULL , NULL , NULL , 1)'
   try {
     const [rows] = await db.execute(sqlCheckEmail, [email])
     const count = rows[0].count

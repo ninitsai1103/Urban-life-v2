@@ -270,7 +270,7 @@ export default function LoginForm() {
           </p>
         </div>
         </form>
-        <button onClick={() => loginGoogleRedirect()}>
+        <button className='row' onClick={() => loginGoogleRedirect()}>
         Google登入
       </button>
         <Toaster />

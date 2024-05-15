@@ -109,7 +109,7 @@ export default function Information() {
         } else {
           console.error('更新失敗:', data.message)
         }
-        alert(data.message)
+        toast.success('更新成功')
       } catch (error) {
         console.error('更新失敗:', error)
       }
