@@ -117,6 +117,8 @@ export default function AsideAccount() {
                     priority
                   />
                 )}
+
+            
                 <div className="icon-box position-absolute d-flex justify-content-center">
                   {/* 點擊圖標後觸發 handleIconClick 事件 */}
                   <MdOutlineAddAPhoto

@@ -5,6 +5,7 @@ import { useCheckout } from '@/hooks/use-checkout'
 import Image from 'next/image'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import toast, { Toaster } from 'react-hot-toast'
 import Page from '../product/pagination'
 export default function CollectProducts({ collect }) {
   //加入購物車
@@ -34,7 +35,7 @@ export default function CollectProducts({ collect }) {
         }
       )
       const data = await response.json()
-      alert('刪除成功')
+      toast.success('刪除成功')
       window.location.reload()
     } catch (error) {
       console.error('移除失敗:', error)
@@ -75,7 +76,7 @@ export default function CollectProducts({ collect }) {
                   )}
                 </div>
                 <div className="text-size product-name">
-                <Link href={`/product/${collect.product_id}`}>
+                <Link href={`/lecture/${collect.product_id}`}>
                   {collect.product_name}
                   </Link>
                 </div>
@@ -105,6 +106,7 @@ export default function CollectProducts({ collect }) {
           </tr>
         </tbody>
       </table>
+      <Toaster />
       <style jsx>{`
         .img {
           width: 80px;

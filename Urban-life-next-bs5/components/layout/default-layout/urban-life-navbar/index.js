@@ -36,7 +36,7 @@ export default function MyNavbar() {
           break
         case 2:
           setUser(newUser)
-          setMemberUrl('/article-management')
+          setMemberUrl('/teacherInformation')
           break
         case 3:
           setUser(newUser)

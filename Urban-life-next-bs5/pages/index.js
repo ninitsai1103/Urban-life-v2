@@ -254,9 +254,12 @@ export default function Home() {
           <h1 className="text-center">商品分類</h1>
           <p className="text-center">Categories of Product</p>
           <div className="row">
-            <div className="col category-card" onClick={handleCategoryClick} style={{cursor: 'pointer'}}>
-              <div className={`card ${styles.card}`}
+            <div
+              className="col category-card"
+              onClick={handleCategoryClick}
+              style={{ cursor: 'pointer' }}
             >
+              <div className={`card ${styles.card}`}>
                 <div className={`card-img ${styles.cardImg}`}>
                   <img
                     src="/images/home_page/seeds.png"
@@ -272,8 +275,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="col category-card " onClick={handleCategoryClick} style={{cursor: 'pointer'}}>
-              <div className={`card d-flex justify-content-center  ${styles.card}`}>
+            <div
+              className="col category-card "
+              onClick={handleCategoryClick}
+              style={{ cursor: 'pointer' }}
+            >
+              <div
+                className={`card d-flex justify-content-center  ${styles.card}`}
+              >
                 <div className={`card-img ${styles.cardImg}`}>
                   <img
                     src="/images/home_page/seedings.png"
@@ -289,7 +298,11 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="col category-card" onClick={handleCategoryClick} style={{cursor: 'pointer'}}>
+            <div
+              className="col category-card"
+              onClick={handleCategoryClick}
+              style={{ cursor: 'pointer' }}
+            >
               <div className={`card ${styles.card}`}>
                 <div className={`card-img ${styles.cardImg}`}>
                   <img
@@ -302,12 +315,15 @@ export default function Home() {
                   className={`card-body text-white ${styles.cardBody} text-center`}
                 >
                   <h5 className="card-title">農藥</h5>
-                  <p className="card-text">agrochemical
-</p>
+                  <p className="card-text">agrochemical</p>
                 </div>
               </div>
             </div>
-            <div className="col category-card" onClick={handleCategoryClick} style={{cursor: 'pointer'}}>
+            <div
+              className="col category-card"
+              onClick={handleCategoryClick}
+              style={{ cursor: 'pointer' }}
+            >
               <div className={`card ${styles.card}`}>
                 <div className={`card-img ${styles.cardImg}`}>
                   <img
@@ -324,7 +340,11 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="col category-card" onClick={handleCategoryClick} style={{cursor: 'pointer'}}>
+            <div
+              className="col category-card"
+              onClick={handleCategoryClick}
+              style={{ cursor: 'pointer' }}
+            >
               <div className={`card ${styles.card}`}>
                 <div className={`card-img ${styles.cardImg}`}>
                   <img
@@ -341,7 +361,11 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="col category-card" onClick={handleCategoryClick} style={{cursor: 'pointer'}}>
+            <div
+              className="col category-card"
+              onClick={handleCategoryClick}
+              style={{ cursor: 'pointer' }}
+            >
               <div className={`card ${styles.card}`}>
                 <div className={`card-img ${styles.cardImg}`}>
                   <img
@@ -374,20 +398,26 @@ export default function Home() {
             />
           </div>
           <div className="d-flex justify-content-center">
-            <button className="btn btn-detail w-auto d-flex justify-content-center align-items-center gap-2" onClick={handleMemberClick}>
+            <button
+              className="btn btn-detail w-auto d-flex justify-content-center align-items-center gap-2"
+              onClick={handleMemberClick}
+            >
               立即加入 <FaRunning />
             </button>
           </div>
           {/* ann */}
         </Container>
       </section>
-      
+
       <section className="課程">
         <Container>
           <h1 className="text-center">相關課程</h1>
           <p className="text-center">Lecture</p>
           <div className="row mb-4 ">
-            <div className="col-12 col-sm-6 pointer-cursor" onClick={handleLectureCard1Click} >
+            <div
+              className="col-12 col-sm-6 pointer-cursor"
+              onClick={handleLectureCard1Click}
+            >
               <div className="card Lectureard1">
                 <div className="card-img Lectureard1-img">
                   <img
@@ -495,7 +525,10 @@ export default function Home() {
           </div>
 
           <div className="d-flex justify-content-end">
-            <a className="btn btn-icon d-flex align-items-center" href="/lecture">
+            <a
+              className="btn btn-icon d-flex align-items-center"
+              href="/lecture"
+            >
               查看更多
               <IoIosArrowForward className="ms-1" />
             </a>
@@ -590,7 +623,10 @@ export default function Home() {
           </div>
 
           <div className="d-flex justify-content-end">
-            <a className="btn btn-icon d-flex align-items-center" href="/teacher">
+            <a
+              className="btn btn-icon d-flex align-items-center"
+              href="/teacher"
+            >
               查看更多
               <IoIosArrowForward className="ms-1" />
             </a>
@@ -600,6 +636,11 @@ export default function Home() {
 
       <style jsx>
         {`
+          .btn-detail:hover {
+            background-color: #445c2d;
+            color: white;
+          }
+
           .pointer-cursor {
             cursor: pointer;
           }
