@@ -11,11 +11,15 @@ export default function ArticleCard({ article,identityId }) {
   const handleCardClick = () => {
     window.location.href = `/article/${article.id}`;
   };
+  const handleArticleClick = () => {
+    // event.stopPropagation(); // 阻止事件冒泡
+    window.location.href = `/article/edit/${article.id}`;
+  };
 
   return (
     <>
-      <div className="article_card_styles w-100 d-flex" key={article.id} onClick={handleCardClick}>
-        <img alt='' src={`http://localhost:3005/images/article/${article.img}`}></img>
+      <div className="article_card_styles w-100 d-flex" key={article.id}>
+        <img alt='' src={`http://localhost:3005/images/article/${article.img}`} onClick={handleCardClick}></img>
         <div className="article_card_text_group">
           <div className="d-flex article_card_text_time_group article_card_margin_bottom">
             <div className="article_card_text_time_time">{article.created_at}</div>
@@ -23,7 +27,7 @@ export default function ArticleCard({ article,identityId }) {
               {article.author_name}
             </div>
           </div>
-          <div className="article_card_title article_card_margin_bottom">
+          <div className="article_card_title article_card_margin_bottom" onClick={handleCardClick}>
             {article.title}
           </div>
           <div className="article_card_content article_card_margin_bottom">
@@ -53,12 +57,12 @@ export default function ArticleCard({ article,identityId }) {
               <button className="article_card_right_bottom d-flex align-items-center">
                 <div className="article_update_text">刪除</div>
               </button> */}
-              <button className="btn btn-detail d-flex align-items-center article_more_margin">
+              <button className="btn btn-detail d-flex align-items-center article_more_margin" onClick={handleArticleClick}>
                 <div className="article_update_text">修改</div>
               </button>
-              <button className="btn btn-main d-flex align-items-center">
+              {/* <button className="btn btn-main d-flex align-items-center">
                 <div className="article_update_text">刪除</div>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -71,12 +75,12 @@ export default function ArticleCard({ article,identityId }) {
           height: 170px;
           margin-bottom: 20px;
           background-color: #ffffff;
-          cursor:pointer;
         }
         img {
           width: 150px;
           height: 100%;
           border-radius: 8px 0px 0px 8px;
+          cursor:pointer;
         }
         .article_card_text_group {
           padding: 15px 20px;
@@ -97,6 +101,7 @@ export default function ArticleCard({ article,identityId }) {
           color: #445c2d;
           font-size: 16px;
           font-weight: bold;
+          cursor:pointer;
           white-space: nowrap; /* 防止文字換行 */
           overflow: hidden; /* 隱藏超出範圍的文字 */
           text-overflow: ellipsis; /* 顯示省略號 */
