@@ -4,7 +4,7 @@ import styles from './star.module.css'
 
 import Image from 'next/image'
 
-export default function Order({ order }) {
+export default function OrderList({ order }) {
   const {
     id,
     order_id,
@@ -163,6 +163,10 @@ export default function Order({ order }) {
       console.error('Error submitting comment:', error.message)
     }
   }
+  const realTotal = items.reduce(
+    (total, item) => (total += item.price * item.amount),
+    0
+  )
   // 統計訂單所有商品
   const totalAmount = items.reduce((acc, item) => {
     return acc + 1
@@ -610,24 +614,24 @@ export default function Order({ order }) {
                   <div className="">
                     <div className="mb-1 d-flex justify-content-between">
                       <div>小計：</div>
-                      <div>{total}元</div>
+                      <div>{realTotal} 元</div>
                     </div>
 
                     <div className="mb-1 d-flex justify-content-between">
                       <div>運費：</div>
                       {total < 1000 ? (
                         <>
-                          <div> 60元</div>
+                          <div> 60 元</div>
                         </>
                       ) : (
-                        <div>0元</div>
+                        <div>0 元</div>
                       )}
                     </div>
                     <div className="mb-2 d-flex justify-content-between">
                       {coupon_id !== 0 ? (
                         <>
                           <div>優惠券折扣：</div>
-                          <div> - 60元</div>
+                          <div> -{total - realTotal} 元</div>
                         </>
                       ) : (
                         <div></div>
@@ -637,7 +641,7 @@ export default function Order({ order }) {
                     <hr />
                     <div className="mb-1 d-flex justify-content-between">
                       <div>總金額： </div>
-                      <div>{total}</div>
+                      <div>{total} 元</div>
                     </div>
                   </div>
                 </div>

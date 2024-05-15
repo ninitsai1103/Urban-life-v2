@@ -8,11 +8,16 @@ import { RiCoupon2Line } from 'react-icons/ri'
 import { IoIosLogOut } from 'react-icons/io'
 import { useMemberInfo } from '@/hooks/use-member-info'
 import { useRouter } from 'next/router'
+import useFirebase from '@/hooks/use-firebase'
+import { googleLogin, logout, parseJwt, getUserById } from '@/services/user'
+import toast, { Toaster } from 'react-hot-toast'
 export default function AsideAccount() {
   const router = useRouter()
 
   // hooks
   const { member } = useMemberInfo()
+
+  const { logoutFirebase, loginGoogleRedirect, initApp } = useFirebase()
 
   // 上傳大頭照
   const [selectedFile, setSelectedFile] = useState('')
@@ -39,11 +44,11 @@ export default function AsideAccount() {
         body: formData,
       })
       // 上传成功后提示上传成功
-      alert('檔案上傳成功')
-      window.location.reload();
+      toast.success('檔案上傳成功')
+      window.location.reload()
     } catch (error) {
       console.error('上傳錯誤：', error)
-      alert(error.message)
+      toast.error(error.message)
     }
   }
   // 登出
@@ -58,10 +63,12 @@ export default function AsideAccount() {
       })
       const data = await response.json()
       console.log(data)
+      logoutFirebase()
       localStorage.removeItem('member-info')
+      toast.success('已成功登出')
       window.location.href = '/'
     } catch (error) {
-      console.error('登出失敗:', error)
+      toast.error(`登出失敗`)
     }
   }
 
@@ -90,16 +97,26 @@ export default function AsideAccount() {
           <div className="user d-flex flex-column align-items-center">
             <div className="d-flex justify-content-center position-relative">
               <div className="avatar">
-                <Image
-                  src={
-                    `http://localhost:3005/avatar/${member?.img}`
-                  }
-                  alt=""
-                  width={80}
-                  height={80}
-                  style={{ borderRadius: '100px' }}
-                  priority
-                />
+                {member?.img && (
+                  <Image
+                    src={`http://localhost:3005/avatar/${member?.img}`}
+                    alt=""
+                    width={80}
+                    height={80}
+                    style={{ borderRadius: '100px' }}
+                    priority
+                  />
+                )}
+                {member?.photo_url && (
+                  <Image
+                    src={`${member?.photo_url}`}
+                    alt=""
+                    width={80}
+                    height={80}
+                    style={{ borderRadius: '100px' }}
+                    priority
+                  />
+                )}
                 <div className="icon-box position-absolute d-flex justify-content-center">
                   {/* 點擊圖標後觸發 handleIconClick 事件 */}
                   <MdOutlineAddAPhoto
@@ -203,6 +220,7 @@ export default function AsideAccount() {
             </li>
           </ul>
         </div>
+        <Toaster />
       </aside>
 
       <style jsx>{`

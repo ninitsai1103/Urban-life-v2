@@ -89,6 +89,29 @@ export default function List() {
       <div className="container bg-color g-3 mt-4 ">
         <div className="row d-flex">
           {/*   類別按鈕列表  */}
+
+          <div
+            class="offcanvas offcanvas-start"
+            data-bs-scroll="true"
+            data-bs-backdrop="false"
+            tabindex="-1"
+            id="offcanvasScrolling"
+            aria-labelledby="offcanvasScrollingLabel"
+          >
+            <div class="offcanvas-header">
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div className="col d-sm-block ">
+              <Sidebar filter={filter} setFilter={setFilter} />
+            </div>
+          </div>
+
           <div className="col-2 d-none d-lg-block d-md-none">
             <Sidebar filter={filter} setFilter={setFilter} />
           </div>
@@ -117,7 +140,11 @@ export default function List() {
                     </div>
                     <div className="d-flex ">
                       <button
-                        className="btn btn-main mx-3 rounded-circle d-lg-none d-md-block"
+                        className="btn btn-main mx-3 rounded-circle d-lg-none d-md-block "
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasScrolling"
+                        aria-controls="offcanvasScrolling"
                         style={{ width: '40px', height: '40px' }}
                       >
                         <FaFilter />
