@@ -175,17 +175,17 @@ export default function OrderCard({ order }) {
       <div className="col-12 ">
         <div className="card mb-3">
           <div className="row px-3 pt-3 pb-2">
-            <div className="col-6">訂單ID</div>
+            <div className="col-6 fw-bold">訂單ID</div>
             <div className="col-6">{order_id}</div>
           </div>
           <div className="row pb-2 px-3">
-            <div className="col-6">訂單日期</div>
+            <div className="col-6 fw-bold">訂單日期</div>
             <div className="col-6">
               {new Date(date).toISOString().slice(0, 19).replace('T', ' ')}
             </div>
           </div>
           <div className="row pb-2 px-3">
-            <div className="col-6">金額</div>
+            <div className="col-6 fw-bold">金額</div>
             <div className="col-6">{total}</div>
           </div>
           <div className="button mt-3 mb-2 d-flex justify-content-end">
@@ -228,13 +228,14 @@ export default function OrderCard({ order }) {
               </p>
               {/*訂單資訊 */}
               {/* ----------------商品TABLE START---------------- */}
-              <table className="table">
+              <table className="table mb-0">
                 <thead>
                   <tr className="productTR border-bottom border-black">
                     <th className="p-0 px-2 ">商品</th>
                     <th className=" p-0 px-2 ">單價</th>
                     <th className=" p-0 px-2 text-center">數量</th>
                     <th className=" p-0 px-2 text-center">小計</th>
+                    <th></th>
                   </tr>
                 </thead>
                 {/* 訂單購買商品 */}
@@ -254,18 +255,18 @@ export default function OrderCard({ order }) {
                                 />
                               </div>
                               <div className="ps-sm-2">
-                                <div>{item.name}</div>
+                                <span>{item.name}</span>
                               </div>
                             </div>
                           </td>
                           <td>
-                            <div>NTD {item.price}</div>
+                            <span>{item.price}</span>
                           </td>
                           <td className="text-center">
                             <span> {item.amount} </span>
                           </td>
                           <td className="text-center">
-                            NTD {item.price * item.amount}
+                            <span>{item.price * item.amount}</span>
                           </td>
                           {/* 把商品評論導入近來 */}
                           <td>
@@ -283,7 +284,12 @@ export default function OrderCard({ order }) {
                                   <>
                                     <div key={comment.id}>
                                       <div className="rate-star mb-1">
-                                        <div className="body-title">評價</div>
+                                        <div
+                                          className="body-title"
+                                          style={{ fontSize: '12px' }}
+                                        >
+                                          評價
+                                        </div>
                                         {Array(5)
                                           .fill(1)
                                           .map((v, i) => {
@@ -302,6 +308,7 @@ export default function OrderCard({ order }) {
                                                       ? styles['on']
                                                       : styles['off']
                                                   }
+                                                  style={{ fontSize: '12px' }}
                                                 >
                                                   &#9733;
                                                 </span>
@@ -311,6 +318,10 @@ export default function OrderCard({ order }) {
                                       </div>
                                       <div className="rate-comment">
                                         <input
+                                          style={{
+                                            fontSize: '12px',
+                                            overFlow: 'hidden',
+                                          }}
                                           className="form-control p-0"
                                           disabled
                                           defaultValue={
@@ -323,6 +334,7 @@ export default function OrderCard({ order }) {
                                 ))
                             ) : !currentProduct[item.name] ? (
                               <button
+                                style={{ fontSize: '12px' }}
                                 className="btn btn-main"
                                 onClick={() => {
                                   handleShowrating(item.name)
@@ -333,7 +345,12 @@ export default function OrderCard({ order }) {
                             ) : (
                               <div className="rate">
                                 <div className="rate-star mb-1">
-                                  <div className="body-title">評價</div>
+                                  <div
+                                    className="body-title"
+                                    style={{ fontSize: '12px' }}
+                                  >
+                                    評價
+                                  </div>
                                   {Array(5)
                                     .fill(1)
                                     .map((v, i) => {
@@ -361,6 +378,7 @@ export default function OrderCard({ order }) {
                                           }}
                                         >
                                           <span
+                                            style={{ fontSize: '12px' }}
                                             className={
                                               score <=
                                                 productRatings[item.name] ||
@@ -378,6 +396,7 @@ export default function OrderCard({ order }) {
                                 <div>
                                   {/* <div className="body-title">詳細評價</div> */}
                                   <input
+                                    style={{ fontSize: '12px' }}
                                     className="form-control p-0"
                                     defaultValue={productComments[item.name]}
                                     onChange={(e) => {
@@ -389,6 +408,7 @@ export default function OrderCard({ order }) {
                                   ></input>
                                 </div>
                                 <button
+                                  style={{ fontSize: '12px' }}
                                   className="btn btn-main"
                                   onClick={() =>
                                     handleSubmit(
@@ -417,7 +437,7 @@ export default function OrderCard({ order }) {
                   <tr className="productTR border-bottom border-black">
                     <th className="p-0 px-2">課程</th>
                     <th className=" p-0 px-2 ">單價</th>
-                    <th className="p-0 px-2 text-center">數</th>
+                    <th className="p-0 px-2 text-center">數量</th>
                     <th className="p-0 px-2 text-center">小計</th>
                     <th></th>
                   </tr>
@@ -439,18 +459,18 @@ export default function OrderCard({ order }) {
                                 />
                               </div>
                               <div className="ps-sm-2">
-                                <div>{item.name}</div>
+                                <span>{item.name}</span>
                               </div>
                             </div>
                           </td>
                           <td className="text-center">
-                            <div>NTD {item.price}</div>
+                            <span>{item.price}</span>
                           </td>
                           <td className="text-center">
                             <span> {item.amount} </span>
                           </td>
                           <td className="text-center">
-                            NTD {item.price * item.amount}
+                            <span>{item.price * item.amount}</span>
                           </td>
                           <td>
                             {comments.some(
@@ -467,7 +487,12 @@ export default function OrderCard({ order }) {
                                   <>
                                     <div key={comment.id}>
                                       <div className="rate-star mb-1">
-                                        <div className="body-title">評價</div>
+                                        <div
+                                          className="body-title"
+                                          style={{ fontSize: '12px' }}
+                                        >
+                                          評價
+                                        </div>
                                         {Array(5)
                                           .fill(1)
                                           .map((v, i) => {
@@ -480,6 +505,7 @@ export default function OrderCard({ order }) {
                                                 className={styles['star-btn']}
                                               >
                                                 <span
+                                                  style={{ fontSize: '12px' }}
                                                   className={
                                                     score <=
                                                     lectureRatings[item.name]
@@ -495,6 +521,10 @@ export default function OrderCard({ order }) {
                                       </div>
                                       <div className="rate-comment">
                                         <input
+                                          style={{
+                                            fontSize: '12px',
+                                            overFlow: 'hidden',
+                                          }}
                                           className="form-control p-0"
                                           disabled
                                           defaultValue={
@@ -517,7 +547,12 @@ export default function OrderCard({ order }) {
                               </button>
                             ) : (
                               <div className="rate-star mb-1">
-                                <div className="body-title">評價</div>
+                                <div
+                                  className="body-title"
+                                  style={{ fontSize: '12px' }}
+                                >
+                                  評價
+                                </div>
                                 {Array(5)
                                   .fill(1)
                                   .map((v, i) => {
@@ -545,6 +580,7 @@ export default function OrderCard({ order }) {
                                         }}
                                       >
                                         <span
+                                          style={{ fontSize: '12px' }}
                                           className={
                                             score <=
                                               lectureRatings[item.name] ||
@@ -561,6 +597,7 @@ export default function OrderCard({ order }) {
                                 <div>
                                   {/* <div className="body-title">詳細評價</div> */}
                                   <input
+                                    style={{ fontSize: '12px' }}
                                     className="form-control p-0"
                                     value={lectureComments[item.name]}
                                     onChange={(e) =>
@@ -571,6 +608,7 @@ export default function OrderCard({ order }) {
                                     }
                                   ></input>
                                   <button
+                                    style={{ fontSize: '12px' }}
                                     className="btn btn-main"
                                     onClick={() =>
                                       handleSubmit(
@@ -594,47 +632,55 @@ export default function OrderCard({ order }) {
               </table>
               {/* ----------------課程TABLE END------------------ */}
               <div className="d-flex justify-content-end">
-                <div>共 {totalAmount} 件</div>
+                <div style={{ fontSize: '12px' }}>共 {totalAmount} 件</div>
               </div>
               <div className="row my-3">
                 <div className="col-5">
                   <div
                     className="fw-bold  px-2 mb-1"
-                    style={{ fontSize: '20px' }}
+                    style={{ fontSize: '12px' }}
                   >
                     選擇送貨及付款方式
                   </div>
-                  <div className=" px-2 mb-1">送貨地點 </div>
-                  <div className=" px-2 mb-2">{address}</div>
-                  <div className=" px-2 mb-1">付款方式</div>
-                  <div className=" px-2 mb-2">{pay}</div>
+                  <div className=" px-2 mb-1" style={{ fontSize: '12px' }}>
+                    送貨地點{' '}
+                  </div>
+                  <div className=" px-2 mb-2" style={{ fontSize: '12px' }}>
+                    {address}
+                  </div>
+                  <div className=" px-2 mb-1" style={{ fontSize: '12px' }}>
+                    付款方式
+                  </div>
+                  <div className=" px-2 mb-2" style={{ fontSize: '12px' }}>
+                    {pay}
+                  </div>
                 </div>
                 <div className="col-2"></div>
                 <div className="col-5">
-                  <div className="fw-bold mb-1" style={{ fontSize: '20px' }}>
+                  <div className="fw-bold mb-1" style={{ fontSize: '12px' }}>
                     訂單總額
                   </div>
                   <div className="">
                     <div className="mb-1 d-flex justify-content-between">
-                      <div>小計：</div>
-                      <div>{realTotal} 元</div>
+                      <div style={{ fontSize: '12px' }}>小計：</div>
+                      <div style={{ fontSize: '12px' }}>{realTotal} 元</div>
                     </div>
 
                     <div className="mb-1 d-flex justify-content-between">
-                      <div>運費：</div>
+                      <div style={{ fontSize: '12px' }}>運費：</div>
                       {total < 1000 ? (
                         <>
-                          <div> 60 元</div>
+                          <div style={{ fontSize: '12px' }}> 60 元</div>
                         </>
                       ) : (
-                        <div>0 元</div>
+                        <div style={{ fontSize: '12px' }}>0 元</div>
                       )}
                     </div>
                     <div className="mb-2 d-flex justify-content-between">
                       {coupon_id !== 0 ? (
                         <>
-                          <div>優惠券折扣：</div>
-                          <div> -{total - realTotal} 元</div>
+                          <div style={{ fontSize: '12px' }}>優惠券折扣：</div>
+                          <div style={{ fontSize: '12px' }}> {total - realTotal} 元</div>
                         </>
                       ) : (
                         <div></div>
@@ -643,8 +689,8 @@ export default function OrderCard({ order }) {
 
                     <hr />
                     <div className="mb-1 d-flex justify-content-between">
-                      <div>總金額： </div>
-                      <div>{total} 元</div>
+                      <div style={{ fontSize: '12px' }}>總金額： </div>
+                      <div style={{ fontSize: '12px' }}>{total} 元</div>
                     </div>
                   </div>
                 </div>
@@ -706,6 +752,20 @@ export default function OrderCard({ order }) {
           th {
             font-size: 12px;
           }
+        }
+        div > span {
+          font-size: 12px;
+        }
+        td > span {
+          font-size: 12px;
+        }
+
+         {
+          /* @media (max-width: 992px) {
+          .img{
+            display: none;
+          }
+        } */
         }
       `}</style>
     </>
