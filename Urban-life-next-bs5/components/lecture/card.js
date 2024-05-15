@@ -18,7 +18,8 @@ export default function LectureMyCard({ lecture, collections = [] }) {
     if (!lecture) return
 
     const { id } = lecture
-    const { product_id, valid } = collections[id] || {}
+    const { product_id, valid } =
+      collections.find((item) => item.product_id === id) || {}
 
     setIsCollected(product_id === id && valid === 1)
   }, [collections, lecture])
