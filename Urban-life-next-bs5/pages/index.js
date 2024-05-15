@@ -12,10 +12,7 @@ import LectureCard1 from '@/components/home-page/lecture-card1'
 import LectureCard2 from '@/components/home-page/lecture-card2'
 import TeacherCard from '@/components/home-page/teacher-card'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
-<<<<<<< HEAD
 import Herosection from '@/components/lecture/herosection'
-=======
->>>>>>> 4890e5f851bcbe117593c6cf4216dc06b576e3e7
 
 // CALENDER
 // import Calendar from '@/components/calandar/calendar'
@@ -76,16 +73,11 @@ export default function Home() {
 
   return (
     <>
-<<<<<<< HEAD
       <section className="slider">
         <Container fluid className="p-0">
           <Herosection />
         </Container>
       </section>
-=======
-      <section className="slider"></section>
-
->>>>>>> 4890e5f851bcbe117593c6cf4216dc06b576e3e7
       <section className="本月主打">
         <Container>
           <h1 className="text-center">本月主打!</h1>
