@@ -93,6 +93,12 @@ export default function ArticleManagement() {
           (a, b) => new Date(a.updated_at) - new Date(b.updated_at)
         )
         break
+      case 'TotalCollectionsMost':
+        filteredArticles.sort((a,b) => b.total_collections - a.total_collections);
+        break
+      case 'TotalCommentsMost':
+        filteredArticles.sort((a,b) => b.total_comments - a.total_comments);
+        break
       default:
         break
     }
@@ -191,6 +197,28 @@ export default function ArticleManagement() {
                           }
                         >
                           更新時間由舊到新
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleArticleSortChange('TotalCollectionsMost')
+                          }
+                        >
+                          收藏數最多
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={() =>
+                            handleArticleSortChange('TotalCommentsMost')
+                          }
+                        >
+                          留言數最多
                         </a>
                       </li>
                     </ul>

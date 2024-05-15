@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
 import ZipCode from '@/components/member/zip-code'
 import { useMemberInfo } from '@/hooks/use-member-info'
-
+import toast, { Toaster } from 'react-hot-toast'
 export default function Information() {
   // hooks
   const { member } = useMemberInfo()
@@ -41,7 +41,8 @@ export default function Information() {
     // 检查手机号码格式
     const phonePattern = /^09\d{8}$/
     if (user.phone && !phonePattern.test(user.phone)) {
-      alert('請輸入正確的手機號碼')
+      toast.error(`請輸入正確的手機號碼`)
+      // alert('請輸入正確的手機號碼')
       hasErrors = true
     }
 
@@ -57,7 +58,8 @@ export default function Information() {
 
         // 檢查是否有要更新的資料
         if (Object.keys(updatedUser).length === 0) {
-          alert('沒有要更新的資料')
+          toast.error(`沒有要更新的資料`)
+          // alert('沒有要更新的資料')
           return
         }
 
@@ -96,7 +98,8 @@ export default function Information() {
                 Authorization: `Bearer ${localStorage.getItem('access-token')}`, // 假设你有保存 token 到 localStorage 中
               },
             })
-            alert('密碼更新成功，需重新登入')
+            toast.success('密碼更新成功，需重新登入')
+            // alert('密碼更新成功，需重新登入')
             localStorage.removeItem('member-info')
             window.location.href = '/member'
             return // 重要：在这里返回，避免执行下面的 window.location.reload()
@@ -106,7 +109,7 @@ export default function Information() {
         } else {
           console.error('更新失敗:', data.message)
         }
-        alert(data.message)
+        toast.success('更新成功')
       } catch (error) {
         console.error('更新失敗:', error)
       }
