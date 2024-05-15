@@ -8,11 +8,21 @@ import { RiCoupon2Line } from 'react-icons/ri'
 import { IoIosLogOut } from 'react-icons/io'
 import { useMemberInfo } from '@/hooks/use-member-info'
 import { useRouter } from 'next/router'
+import useFirebase from '@/hooks/use-firebase'
+import {
+  googleLogin,
+  logout,
+  parseJwt,
+  getUserById,
+} from '@/services/user'
+import toast, { Toaster } from 'react-hot-toast'
 export default function AsideAccount() {
   const router = useRouter()
 
   // hooks
   const { member } = useMemberInfo()
+
+  const { logoutFirebase, loginGoogleRedirect, initApp } = useFirebase()
 
   // 上傳大頭照
   const [selectedFile, setSelectedFile] = useState('')
@@ -58,10 +68,12 @@ export default function AsideAccount() {
       })
       const data = await response.json()
       console.log(data)
+      logoutFirebase()
       localStorage.removeItem('member-info')
+      toast.success('已成功登出')
       window.location.href = '/'
     } catch (error) {
-      console.error('登出失敗:', error)
+      toast.error(`登出失敗`)
     }
   }
 
@@ -213,6 +225,7 @@ export default function AsideAccount() {
             </li>
           </ul>
         </div>
+        <Toaster />
       </aside>
 
       <style jsx>{`

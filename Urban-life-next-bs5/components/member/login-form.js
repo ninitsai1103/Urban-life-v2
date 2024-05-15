@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import useFirebase from '@/hooks/use-firebase'
+import { googleLogin, logout, parseJwt, getUserById } from '@/services/user'
 import Link from 'next/link'
 import styles from './member.module.css'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function LoginForm() {
   // 用物件狀態對應整個表單欄位
@@ -76,6 +79,7 @@ export default function LoginForm() {
           // storage.clear();
 
           // 登录成功，重定向到用户资料页面或其他页面
+          toast.success('已成功登入')
           window.location.href = '/'
         } else {
           // 登录失败，显示错误消息
@@ -88,7 +92,67 @@ export default function LoginForm() {
       }
     }
   }
+  const { logoutFirebase, loginGoogleRedirect, initApp } = useFirebase()
 
+  const initUserData = {
+    id: 0,
+    name: '',
+    google_uid: '',
+    email: '',
+    identity: 3,
+  }
+
+  // 這裡要設定initApp，讓這個頁面能監聽firebase的google登入狀態
+  useEffect(() => {
+    initApp(callbackGoogleLoginRedirect)
+  }, [])
+
+  // 處理google登入後，要向伺服器進行登入動作
+  const callbackGoogleLoginRedirect = async (providerData) => {
+    console.log(providerData)
+
+    // 如果目前react(next)已經登入中，不需要再作登入動作
+
+    // 向伺服器進行登入動作
+    const res = await googleLogin(providerData)
+
+    console.log(res.data)
+
+    if (res.data.status === 'success') {
+      // 從JWT存取令牌中解析出會員資料
+      // 注意JWT存取令牌中只有id, username, google_uid, line_uid在登入時可以得到
+      const jwtUser = parseJwt(res.data.data.accessToken)
+      // console.log(jwtUser)
+
+      const res1 = await getUserById(jwtUser.id)
+      //console.log(res1.data)
+
+      if (res1.data.status === 'success') {
+        // 只需要initUserData中的定義屬性值，詳見use-auth勾子
+        const dbUser = res1.data.data.user
+        const userData = { ...initUserData }
+
+        for (const key in userData) {
+          if (Object.hasOwn(dbUser, key)) {
+            userData[key] = dbUser[key] || ''
+          }
+        }
+        const memberInfo = {
+          id: res1.data.data.user.id,
+          name: res1.data.data.user.name,
+          identity_id: res1.data.data.user.identity_id,
+        }
+        localStorage.setItem('member-info', JSON.stringify(memberInfo))
+        toast.success('已成功登入')
+        window.location.href = '/'
+      } else {
+        toast.error('登入後無法得到會員資料')
+        // 這裡可以讓會員登出，因為這也算登入失敗，有可能會造成資料不統一
+      }
+    } else {
+      toast.error(`登入失敗`)
+    }
+  }
   return (
     <>
       <div
@@ -188,21 +252,29 @@ export default function LoginForm() {
               講師
             </button>
           </div>
-
-          <div className="row mt-2 text-center">
-            <p className="notice">
-              還不是會員？
-              <Link className={`${styles['link']}`} href="/member/register">
-                立即免費註冊
-              </Link>
-            </p>
-            <p className="notice">
-              <Link className={`${styles['link']}`} href="/member/forget-password">
-                忘記密碼？
-              </Link>
-            </p>
-          </div>
+          
+        <div className="row mt-2 text-center">
+          <p className="notice">
+            還不是會員？
+            <Link className={`${styles['link']}`} href="/member/register">
+              立即免費註冊
+            </Link>
+          </p>
+          <p className="notice">
+            <Link
+              className={`${styles['link']}`}
+              href="/member/forget-password"
+            >
+              忘記密碼？
+            </Link>
+          </p>
+        </div>
         </form>
+        <button onClick={() => loginGoogleRedirect()}>
+        Google登入
+      </button>
+        <Toaster />
+        
       </div>
 
       <style jsx>{`
