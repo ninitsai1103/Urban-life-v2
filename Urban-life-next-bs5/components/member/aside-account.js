@@ -65,6 +65,13 @@ export default function AsideAccount() {
       console.log(data)
       logoutFirebase()
       localStorage.removeItem('member-info')
+      localStorage.removeItem('selectedCoupon')
+      localStorage.removeItem('warning')
+      localStorage.removeItem('items')
+      localStorage.removeItem('pricePayable')
+      localStorage.removeItem('Checked-info')
+      localStorage.removeItem('discount')
+
       toast.success('已成功登出')
       window.location.href = '/'
     } catch (error) {
