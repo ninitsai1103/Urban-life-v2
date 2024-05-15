@@ -45,7 +45,10 @@ export default function LectureDetail() {
   // 檢查當前課程是否在收藏列表中
   useEffect(() => {
     setIsCollected(
-      collections.find((item) => item.product_id == tid && item.valid == 1)
+      collections.filter(
+        (item) =>
+          (item.product_id == tid || item.article_id == tid) && item.valid == 1
+      )
     )
   }, [collections])
 
@@ -103,11 +106,17 @@ export default function LectureDetail() {
             <div className="mb-3">
               {activeIndex === '開授的課程' ? (
                 <div className="list">
-                  <TeacherLectureCard lectures={teacherLectures} collections={collections} />
+                  <TeacherLectureCard
+                    lectures={teacherLectures}
+                    collections={collections}
+                  />
                 </div>
               ) : (
                 <div className="list">
-                  <ArticleCard articlesList={articlesList} />
+                  <ArticleCard
+                    articlesList={articlesList}
+                    collections={collections}
+                  />
                 </div>
               )}
             </div>

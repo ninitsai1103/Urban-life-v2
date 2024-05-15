@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import styles from './card.module.css'
 import Link from 'next/link'
-import toast from 'react-hot-toast'
 import { TbStarFilled } from 'react-icons/tb'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
