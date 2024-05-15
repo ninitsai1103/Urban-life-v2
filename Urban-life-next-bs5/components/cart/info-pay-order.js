@@ -27,7 +27,7 @@ export default function InfoPayOrder() {
               <div className="d-flex align-items-center">
                 <div className={styles.d_img}>
                   <img
-                    src={item.cover}
+                    src={`/images/product/product_cover/${item.cover}`}
                     className="img-fluid"
                   />
                 </div>
@@ -69,12 +69,12 @@ export default function InfoPayOrder() {
               <div className="d-flex align-items-center">
                 <div className={styles.d_img}>
                   <img
-                    src={item.cover}
+                    src={`http://localhost:3005/lecture_img/${item.cover}`}
                     className="img-fluid"
                   />
                 </div>
                 <div className="ps-sm-2">
-                  <div className={styles.name}>{item.name} ({item.starting_date})</div>
+                  <div className={styles.name}>{item.name} ({item.lecture_date})</div>
                   <div className={styles.d_cell_price}>單價：NTD {item.price}</div>
                   <div className={styles.d_cell_amount}>
                     <span>數量 {item.qty} </span>
