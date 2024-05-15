@@ -47,7 +47,9 @@ export default function ProductCard({
               alt={product.name}
             />
           </div>
-          <div className="card-body" data-tooltip={product.name}>
+          <div className="card-body" data-tooltip={product.id > 440 && product.id < 451
+                  ? product.name
+                  : `${product.name}(${product.size})`}>
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
                 {product.id > 440 && product.id < 451
