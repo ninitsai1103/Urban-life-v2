@@ -107,19 +107,24 @@ export default function MyNavbar() {
         <div className="header-phone-nav">
           <div className="container-fluid header-phone-nav-container">
             <div className="nav-down">
-              <p>首頁</p>
+              <a href="http://localhost:3000/">首頁</a>
             </div>
             <div className="nav-down">
-              <p>商品總覽</p>
+              <a className='phone-link' href="http://localhost:3000/product/list">商品總覽</a>
             </div>
             <div className="nav-down">
-              <p>課程</p>
+              <a href="http://localhost:3000/lecture">課程</a>
             </div>
             <div className="nav-down">
-              <p>文章分享</p>
+              <a href="http://localhost:3000/article">文章分享</a>
             </div>
             <div className="nav-down">
-              <p>講師陣容</p>
+              <a href="http://localhost:3000/teacher">講師陣容</a>
+            </div>
+            <div className="nav-down">
+              <a href={`http://localhost:3000/member${memberUrl}`}>
+                會員專區
+              </a>
             </div>
           </div>
         </div>
@@ -255,10 +260,15 @@ export default function MyNavbar() {
           }
         }
 
-        .nav-down p:hover {
+        .nav-down a {
+          text-decoration: none; /* 去掉裝飾 */
+          color: inherit; /* 繼承父元素顏色，確保文本顏色正常 */
+          transition: color 0.2s, border-bottom 0.2s; /* 過渡效果 */
+        }
+
+        .nav-down a:hover {
           color: #f3b454;
           border-bottom: 1px solid #f3b454;
-          transition: 0.2s;
         }
       `}</style>
     </>

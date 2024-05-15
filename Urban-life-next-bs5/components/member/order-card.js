@@ -169,6 +169,14 @@ export default function OrderCard({ order }) {
   const totalAmount = items.reduce((acc, item) => {
     return acc + 1
   }, 0)
+
+  const renderProductTHead = () => {
+    return items.some((item) => item.pdlt_id === 1)
+  }
+
+  const renderLectureTHead = () => {
+    return items.some((item) => item.pdlt_id === 2)
+  }
   return (
     <>
       {/* 訂單card */}
@@ -223,21 +231,25 @@ export default function OrderCard({ order }) {
               </div>
             </div>
             <div className="modal-body px-1 py-1">
-              <p className="m-0" style={{ fontSize: '12px' }}>
+              <p className="m-0  pb-2" style={{ fontSize: '12px' }}>
                 訂單資訊
               </p>
               {/*訂單資訊 */}
               {/* ----------------商品TABLE START---------------- */}
               <table className="table mb-0">
-                <thead>
-                  <tr className="productTR border-bottom border-black">
-                    <th className="p-0 px-2 ">商品</th>
-                    <th className=" p-0 px-2 ">單價</th>
-                    <th className=" p-0 px-2 text-center">數量</th>
-                    <th className=" p-0 px-2 text-center">小計</th>
-                    <th></th>
-                  </tr>
-                </thead>
+                {renderProductTHead() && (
+                  <thead>
+                    <tr className="productTR border-bottom border-black">
+                      <th className="p-0 px-2 ">
+                        商<br />品
+                      </th>
+                      <th className=" p-0 px-2 ">單價</th>
+                      <th className=" p-0 px-2 text-center">數量</th>
+                      <th className=" p-0 px-2 text-center">小計</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                )}
                 {/* 訂單購買商品 */}
                 {items.map((item) => {
                   if (item.pdlt_id === 1) {
@@ -407,19 +419,21 @@ export default function OrderCard({ order }) {
                                     }}
                                   ></input>
                                 </div>
-                                <button
-                                  style={{ fontSize: '12px' }}
-                                  className="btn btn-main"
-                                  onClick={() =>
-                                    handleSubmit(
-                                      productRatings[item.name],
-                                      productComments[item.name],
-                                      item.product_id
-                                    )
-                                  }
-                                >
-                                  送出
-                                </button>
+                                <div className="d-flex justify-content-end mt-2">
+                                  <button
+                                    style={{ fontSize: '8px' }}
+                                    className="btn btn-main-submit"
+                                    onClick={() =>
+                                      handleSubmit(
+                                        productRatings[item.name],
+                                        productComments[item.name],
+                                        item.product_id
+                                      )
+                                    }
+                                  >
+                                    送出
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </td>
@@ -433,15 +447,19 @@ export default function OrderCard({ order }) {
 
               {/* ----------------課程TABLE START---------------- */}
               <table className="table">
-                <thead>
-                  <tr className="productTR border-bottom border-black">
-                    <th className="p-0 px-2">課程</th>
-                    <th className=" p-0 px-2 ">單價</th>
-                    <th className="p-0 px-2 text-center">數量</th>
-                    <th className="p-0 px-2 text-center">小計</th>
-                    <th></th>
-                  </tr>
-                </thead>
+                {renderLectureTHead() && (
+                  <thead className="mt-2">
+                    <tr className="productTR border-bottom border-black ">
+                      <th className="p-0 px-2">
+                        課<br />程
+                      </th>
+                      <th className=" p-0 px-2 ">單價</th>
+                      <th className="p-0 px-2 text-center">數量</th>
+                      <th className="p-0 px-2 text-center">小計</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                )}
                 {/* 訂單購買課程 */}
                 {items.map((item) => {
                   if (item.pdlt_id === 2) {
@@ -537,6 +555,7 @@ export default function OrderCard({ order }) {
                                 ))
                             ) : !currentLecture[item.name] ? (
                               <button
+                                style={{ fontSize: '12px' }}
                                 className="btn btn-main"
                                 type="button"
                                 onClick={() => {
@@ -607,19 +626,21 @@ export default function OrderCard({ order }) {
                                       )
                                     }
                                   ></input>
-                                  <button
-                                    style={{ fontSize: '12px' }}
-                                    className="btn btn-main"
-                                    onClick={() =>
-                                      handleSubmit(
-                                        lectureRatings[item.name],
-                                        lectureComments[item.name],
-                                        item.product_id
-                                      )
-                                    }
-                                  >
-                                    送出評論
-                                  </button>
+                                  <div className="d-flex justify-content-end mt-2">
+                                    <button
+                                      style={{ fontSize: '8px' }}
+                                      className="btn btn-main-submit"
+                                      onClick={() =>
+                                        handleSubmit(
+                                          lectureRatings[item.name],
+                                          lectureComments[item.name],
+                                          item.product_id
+                                        )
+                                      }
+                                    >
+                                      送出
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -680,7 +701,10 @@ export default function OrderCard({ order }) {
                       {coupon_id !== 0 ? (
                         <>
                           <div style={{ fontSize: '12px' }}>優惠券折扣：</div>
-                          <div style={{ fontSize: '12px' }}> {total - realTotal} 元</div>
+                          <div style={{ fontSize: '12px' }}>
+                            {' '}
+                            {total - realTotal} 元
+                          </div>
                         </>
                       ) : (
                         <div></div>
@@ -718,11 +742,6 @@ export default function OrderCard({ order }) {
           justify-content: center;
         }
 
-        .button {
-          display: flex;
-          gap: 1rem;
-          justify-content: center;
-        }
         .modal-content-padding {
           padding: 10px 20px;
         }
@@ -760,12 +779,8 @@ export default function OrderCard({ order }) {
           font-size: 12px;
         }
 
-         {
-          /* @media (max-width: 992px) {
-          .img{
-            display: none;
-          }
-        } */
+        .btn-main {
+          padding: 5px 10px;
         }
       `}</style>
     </>

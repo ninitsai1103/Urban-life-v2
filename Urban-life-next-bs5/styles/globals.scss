@@ -33,8 +33,8 @@ $button-default: #bd9250;
 $button-hover: #f3b454;
 
 $grey-300: #d6d6d6;
-$grey-500: #A9A6A6;
-$grey-700: #6B6B6B;
+$grey-500: #a9a6a6;
+$grey-700: #6b6b6b;
 
 $delete: #e53939;
 
@@ -69,8 +69,9 @@ $delete: #e53939;
 // }
 
 body {
-  font-family: 'Zen Kaku Gothic New', 'Noto Sans TC Regular', Helvetica, Arial, 'PingFang TC',
-    '苹方-繁', 'Heiti TC', '黑體-繁', 'Microsoft JhengHei', '微軟正黑體',
+  font-family: 'Zen Kaku Gothic New', 'Noto Sans TC Regular', Helvetica, Arial,
+    'PingFang TC', '苹方-繁', 'Heiti TC', '黑體-繁', 'Microsoft JhengHei',
+    '微軟正黑體',
     // Cross-platform generic font family (default user interface font)
     system-ui,
     // Safari for macOS and iOS (San Francisco)
@@ -114,6 +115,20 @@ img {
   background-color: $primary2;
   border-radius: 1.2rem;
   color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: $primary2;
+    border-radius: 1.2rem;
+    color: white;
+  }
+}
+
+.btn-main-submit {
+  background-color: $primary2;
+  border-radius: 1.2rem;
+  color: white;
+  cursor: pointer;
+  padding: 3px 5px;
   &:hover {
     background-color: $primary2;
     border-radius: 1.2rem;
@@ -133,6 +148,7 @@ img {
   border-radius: 1.2rem;
   background-color: transparent;
   color: $primary4;
+  cursor: pointer;
   &:hover {
     border: 1px solid $primary4;
     border-radius: 1.2rem;
@@ -145,6 +161,7 @@ img {
   background-color: $delete;
   border-radius: 1.2rem;
   color: white;
+  cursor: pointer;
   &:hover {
     background-color: $delete;
     border-radius: 1.2rem;
@@ -158,6 +175,7 @@ img {
   border-radius: 1.2rem;
   background-color: white;
   color: $primary4;
+  cursor: pointer;
   &:hover {
     border: 1px solid $grey-300;
     border-radius: 1.2rem;
@@ -170,6 +188,7 @@ img {
   background-color: $button-default;
   color: white;
   border-radius: 1.2rem;
+  cursor: pointer;
   &:hover {
     background-color: $button-default;
     color: white;
@@ -181,6 +200,7 @@ img {
   background-color: $primary2;
   border-radius: 0.5rem;
   color: white;
+  cursor: pointer;
   &:hover {
     background-color: $primary2;
     border-radius: 0.5rem;
@@ -194,6 +214,7 @@ img {
   border-radius: 0.5rem;
   background-color: transparent;
   color: $primary4;
+  cursor: pointer;
   &:hover {
     border: 1px solid $primary4;
     border-radius: 0.5rem;
@@ -206,6 +227,7 @@ img {
   background-color: $delete;
   border-radius: 0.5rem;
   color: white;
+  cursor: pointer;
   &:hover {
     background-color: $delete;
     border-radius: 0.5rem;
@@ -219,6 +241,7 @@ img {
   border-radius: 0.5rem;
   background-color: white;
   color: $primary4;
+  cursor: pointer;
   &:hover {
     border: 1px solid $grey-300;
     border-radius: 0.5rem;
@@ -231,6 +254,7 @@ img {
   background-color: $button-default;
   color: white;
   border-radius: 0.5rem;
+  cursor: pointer;
   &:hover {
     background-color: $button-default;
     color: white;
@@ -242,6 +266,7 @@ img {
   background-color: transparent;
   color: $danger;
   font-size: 30px;
+  cursor: pointer;
   &:hover {
     background-color: transparent;
     color: $danger;
@@ -308,4 +333,3 @@ img {
 .bg-primary5 {
   background-color: $primary5;
 }
-

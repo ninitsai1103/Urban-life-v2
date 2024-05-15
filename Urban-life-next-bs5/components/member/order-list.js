@@ -172,6 +172,14 @@ export default function OrderList({ order }) {
     return acc + 1
   }, 0)
 
+  const renderProductTHead = () => {
+    return items.some((item) => item.pdlt_id === 1)
+  }
+
+  const renderLectureTHead = () => {
+    return items.some((item) => item.pdlt_id === 2)
+  }
+
   return (
     <>
       <tbody>
@@ -225,15 +233,18 @@ export default function OrderList({ order }) {
               {/*訂單資訊 */}
               {/* ----------------商品TABLE START---------------- */}
               <table className="table">
-                <thead>
-                  <tr className="border-bottom border-black">
-                    <th className="p-0 px-2 ">商品</th>
-                    <th className=" p-0 px-2 ">單價</th>
-                    <th className=" p-0 px-2 text-center">數量</th>
-                    <th className=" p-0 px-2 text-center">小計</th>
-                    <th></th>
-                  </tr>
-                </thead>
+                {renderProductTHead() && (
+                  <thead>
+                    <tr className="border-bottom border-black">
+                      <th className="p-0 px-1 ">商品</th>
+                      <th className=" p-0 px-1 ">單價</th>
+                      <th className=" p-0 px-1 text-center">數量</th>
+                      <th className=" p-0 px-1 text-center">小計</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                )}
+
                 {/* 訂單購買商品 */}
                 {items.map((item) => {
                   if (item.pdlt_id === 1) {
@@ -319,14 +330,16 @@ export default function OrderList({ order }) {
                                   </>
                                 ))
                             ) : !currentProduct[item.name] ? (
-                              <button
-                                className="btn btn-main"
-                                onClick={() => {
-                                  handleShowrating(item.name)
-                                }}
-                              >
-                                商品評價
-                              </button>
+                              <div className="text-center">
+                                <button
+                                  className="btn btn-main"
+                                  onClick={() => {
+                                    handleShowrating(item.name)
+                                  }}
+                                >
+                                  商品評價
+                                </button>
+                              </div>
                             ) : (
                               <div className="rate">
                                 <div className="rate-star mb-1">
@@ -385,18 +398,20 @@ export default function OrderList({ order }) {
                                     }}
                                   ></input>
                                 </div>
-                                <button
-                                  className="btn btn-main"
-                                  onClick={() =>
-                                    handleSubmit(
-                                      productRatings[item.name],
-                                      productComments[item.name],
-                                      item.product_id
-                                    )
-                                  }
-                                >
-                                  送出評論
-                                </button>
+                                <div className="d-flex justify-content-end mt-2">
+                                  <button
+                                    className="btn btn-main"
+                                    onClick={() =>
+                                      handleSubmit(
+                                        productRatings[item.name],
+                                        productComments[item.name],
+                                        item.product_id
+                                      )
+                                    }
+                                  >
+                                    送出評論
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </td>
@@ -410,15 +425,17 @@ export default function OrderList({ order }) {
 
               {/* ----------------課程TABLE START---------------- */}
               <table className="table">
-                <thead>
-                  <tr className="border-bottom border-black">
-                    <th className="p-0 px-2">課程</th>
-                    <th className=" p-0 px-2 ">單價</th>
-                    <th className="p-0 px-2 text-center">數量</th>
-                    <th className="p-0 px-2 text-center">小計</th>
-                    <th></th>
-                  </tr>
-                </thead>
+                {renderLectureTHead() && (
+                  <thead>
+                    <tr className="border-bottom border-black">
+                      <th className="p-0 px-1">課程</th>
+                      <th className=" p-0 px-1 ">單價</th>
+                      <th className="p-0 px-1 text-center">數量</th>
+                      <th className="p-0 px-1 text-center">小計</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                )}
                 {/* 訂單購買課程 */}
                 {items.map((item) => {
                   if (item.pdlt_id === 2) {
@@ -440,7 +457,7 @@ export default function OrderList({ order }) {
                               </div>
                             </div>
                           </td>
-                          <td className="text-center">
+                          <td>
                             <div>NTD {item.price}</div>
                           </td>
                           <td className="text-center">
@@ -503,15 +520,17 @@ export default function OrderList({ order }) {
                                   </>
                                 ))
                             ) : !currentLecture[item.name] ? (
-                              <button
-                                className="btn btn-main"
-                                type="button"
-                                onClick={() => {
-                                  handleShowrating(item.name)
-                                }}
-                              >
-                                課程評價
-                              </button>
+                              <div className="text-center">
+                                <button
+                                  className="btn btn-main"
+                                  type="button"
+                                  onClick={() => {
+                                    handleShowrating(item.name)
+                                  }}
+                                >
+                                  課程評價
+                                </button>
+                              </div>
                             ) : (
                               <div className="rate-star mb-1">
                                 <div className="body-title">評價</div>
@@ -567,18 +586,20 @@ export default function OrderList({ order }) {
                                       )
                                     }
                                   ></input>
-                                  <button
-                                    className="btn btn-main"
-                                    onClick={() =>
-                                      handleSubmit(
-                                        lectureRatings[item.name],
-                                        lectureComments[item.name],
-                                        item.product_id
-                                      )
-                                    }
-                                  >
-                                    送出評論
-                                  </button>
+                                  <div className="d-flex justify-content-end mt-2">
+                                    <button
+                                      className="btn btn-main"
+                                      onClick={() =>
+                                        handleSubmit(
+                                          lectureRatings[item.name],
+                                          lectureComments[item.name],
+                                          item.product_id
+                                        )
+                                      }
+                                    >
+                                      送出評論
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -628,14 +649,10 @@ export default function OrderList({ order }) {
                       )}
                     </div>
                     <div className="mb-2 d-flex justify-content-between">
-                      {coupon_id !== 0 ? (
+                      {coupon_id !== null ? (
                         <>
                           <div>優惠券折扣：</div>
-<<<<<<< HEAD
-                          <div> -{total - realTotal} 元</div>
-=======
-                          <div> { realTotal-total } 元</div>
->>>>>>> 4890e5f851bcbe117593c6cf4216dc06b576e3e7
+                          <div> {total - realTotal} 元</div>
                         </>
                       ) : (
                         <div></div>
