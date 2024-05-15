@@ -139,6 +139,7 @@ export default function CheckoutCounter({ selectedCoupon }) {
   // useEffect(() => {
   //   window.localStorage.getItem("pricePayable")
   // }, [])
+  //
 
   const [showWarning, setShowWarning] = useState(false)
   useEffect(() => {
