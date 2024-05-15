@@ -120,8 +120,11 @@ export default function OrderMainPage() {
                 </div>
                 {/* 手機版顯示卡片 */}
                 <div className="d-lg-none">
-                  <OrderCard />
-                  <OrderCard />
+                  
+                  {orders.map((order) => {
+                      return <OrderCard order={order} key={order.order_id} />
+                    })}
+                  
                 </div>
               </div>
             </div>
