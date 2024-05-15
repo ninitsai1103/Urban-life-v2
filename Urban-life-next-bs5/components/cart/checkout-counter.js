@@ -45,10 +45,11 @@ export default function CheckoutCounter({ selectedCoupon }) {
         // setPricePayable(updatedPrice)
       }
     }
-    // else {
-    //   updatedDiscount = 0
-    //   updatedPrice = totalPriceChecked + shippingFee
-    // }
+    else {
+      updatedDiscount = 0
+      setDiscount(updatedDiscount)
+      // updatedPrice = totalPriceChecked + shippingFee
+    }
 
     // setDiscount(updatedDiscount)
     // setPricePayable(updatedPrice)
