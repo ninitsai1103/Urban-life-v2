@@ -11,11 +11,9 @@ export default function OrderMainPage() {
 
   // 利用use-member-info的hooks抓取localStorage的會員資訊
   const { member } = useMemberInfo()
-  
 
   // 連線至order_detail
   const getOrderDetail = async (id) => {
-    
     const url = `http://localhost:3005/api/order?user_id=${id}`
 
     // fetch抓資料
@@ -120,17 +118,23 @@ export default function OrderMainPage() {
                 </div>
                 {/* 手機版顯示卡片 */}
                 <div className="d-lg-none">
+<<<<<<< HEAD
                   
                   {orders.map((order) => {
                       return <OrderCard order={order} key={order.order_id} />
                     })}
                   
+=======
+                  {orders.map((order) => {
+                    return <OrderCard order={order} key={order.order_id} />
+                  })}
+>>>>>>> 4890e5f851bcbe117593c6cf4216dc06b576e3e7
                 </div>
               </div>
             </div>
-            <div>
+            {/* <div>
               <Page />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

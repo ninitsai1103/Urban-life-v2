@@ -14,7 +14,7 @@ import db from '#configs/mysql.js'
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
   // DEMO
-   const user_id = 42
+  const user_id = 42
   // 實際要連線登入者的ID
   // const user_id = req.query.user_id
 
