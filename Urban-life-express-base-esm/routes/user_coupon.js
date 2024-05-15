@@ -14,9 +14,15 @@ import db from '#configs/mysql.js'
 router.get('/', async function (req, res) {
   // user_coupon資料庫 SQL
   // DEMO
-  const user_id = 42
+  // const user_id = 42
   // 實際要連線登入者的ID
   // const user_id = req.query.user_id
+  let user_id
+  if (req.query.user_id) {
+    user_id = req.query.user_id
+  } else {
+    user_id = 42
+  }
 
   const sqlUserCoupons = `SELECT * FROM user_coupon 
   JOIN coupon ON user_coupon.coupon_id =coupon.id 
@@ -59,6 +65,33 @@ router.post('/', async function (req, res) {
         error: error,
       },
     })
+  }
+})
+
+router.put('/', async function (req, res) {
+  try {
+    const couponID = req.query.coupon_id;
+  
+    const changeCouponStatus = `UPDATE user_coupon 
+                                SET status = '已使用' 
+                                WHERE coupon_id = ?`;
+  
+    
+    const [rows, fields] = await db.query(changeCouponStatus, [couponID]);
+  
+    return res.json({
+      status: 'success',
+      data: {
+        user_coupon: rows,
+      },
+    });
+  } catch (error) {
+    return res.json({
+      status: 'error',
+      data: {
+        error: error.message,  
+      },
+    });
   }
 })
 

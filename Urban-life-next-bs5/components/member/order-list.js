@@ -631,11 +631,7 @@ export default function OrderList({ order }) {
                       {coupon_id !== 0 ? (
                         <>
                           <div>優惠券折扣：</div>
-<<<<<<< HEAD
-                          <div> -{total - realTotal} 元</div>
-=======
                           <div> { realTotal-total } 元</div>
->>>>>>> 4890e5f851bcbe117593c6cf4216dc06b576e3e7
                         </>
                       ) : (
                         <div></div>
