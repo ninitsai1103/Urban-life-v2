@@ -218,7 +218,8 @@ export default function Detail() {
               />
             </div>
 
-            <p className="m-5">{article?.content}</p>
+            {/* <p className="m-5">{article?.content}</p> */}
+            <div className="m-5" dangerouslySetInnerHTML={{ __html: article?.content }}></div>
           </div>
         </div>
         <div className="col-sm-12 ">

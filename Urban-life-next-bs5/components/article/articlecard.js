@@ -31,7 +31,11 @@ export default function ArticleCard({ article }) {
             </span>
             <h5 className="card-title fs-6 text-overflow">{article.title}</h5>
           </div>
-          <span className="card-text text-overflow">{article.content}</span>
+          {/* <span className="card-text text-overflow">{article.content}</span> */}
+          <div
+            className="card-text text-overflow"
+            dangerouslySetInnerHTML={{ __html: article?.content }}
+          ></div>
           <div className="card-end d-flex gap-3">
             <div>
               <FaRegHeart />
