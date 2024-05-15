@@ -234,6 +234,8 @@ export default function Information() {
                     />
                   )}
                 </div>
+                {!member || !member.google_uid && (
+                  <div>
                 <div className="mb-3 section-font text-primary2 ">密碼變更</div>
                 <div className="mb-3">
                   <label
@@ -287,6 +289,8 @@ export default function Information() {
                     onChange={handleFieldChange}
                   />
                 </div>
+                </div>
+              )}
                 <div
                   className="modal fade"
                   id="confirm"

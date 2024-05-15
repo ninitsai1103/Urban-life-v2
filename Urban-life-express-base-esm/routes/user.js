@@ -235,7 +235,6 @@ router.post('/logout', checkToken, (req, res) => {
   )
   // 在回應中設置存取令牌的 cookie，並將其設置為過期
   res.cookie('accessToken', '', { expires: new Date(0), httpOnly: true })
-
   res.status(200).json({
     status: 'success',
     message: '登出成功',
