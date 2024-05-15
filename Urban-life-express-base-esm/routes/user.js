@@ -152,20 +152,21 @@ router.put('/:id', upload.none(), async (req, res) => {
     const [result] = await db.execute(sqlUpdate, sqlParams)
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ status: 'error', message: 'User not found' })
+      return res
+        .status(404)
+        .json({ status: 'error', message: 'User not found' })
     }
-     // 成功更新使用者資訊
-     const userInfoSql = 'SELECT * FROM user_teacher WHERE id = ?';
-     const [userInfoRows] = await db.execute(userInfoSql, [id]);
-     const user = userInfoRows[0];
-    
+    // 成功更新使用者資訊
+    const userInfoSql = 'SELECT * FROM user_teacher WHERE id = ?'
+    const [userInfoRows] = await db.execute(userInfoSql, [id])
+    const user = userInfoRows[0]
+
     // 成功更新使用者資訊
     res.status(200).json({
       status: 'success',
       message: '更新成功',
       logout: password ? true : false,
-      user
-     
+      user,
     })
   } catch (err) {
     console.error(err)
@@ -173,7 +174,6 @@ router.put('/:id', upload.none(), async (req, res) => {
     res.status(500).json({ status: 'error', message })
   }
 })
-
 
 router.delete('/:id', (req, res) => {
   res.send(`刪除特定id使用者 ${req.params.id}`)
@@ -233,6 +233,9 @@ router.post('/logout', checkToken, (req, res) => {
     secretKey,
     { expiresIn: '-10s' }
   )
+  // 在回應中設置存取令牌的 cookie，並將其設置為過期
+  res.cookie('accessToken', '', { expires: new Date(0), httpOnly: true })
+
   res.status(200).json({
     status: 'success',
     message: '登出成功',
