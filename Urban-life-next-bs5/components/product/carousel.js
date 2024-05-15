@@ -34,8 +34,7 @@ export default function Carousel({ productId }) {
       }
     }
   }, [productId, products])
-  console.log(cover)
-  console.log(img);
+
   // 條件渲染，確保 productId 和 products 都已經準備好
   if (!productId || !products.length) return null;
   const getCover = () => {

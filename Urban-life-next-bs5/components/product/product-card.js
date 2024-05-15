@@ -5,12 +5,16 @@ import { TbStarFilled, TbStar } from 'react-icons/tb'
 import useColloections from '@/hooks/product/useCollections'
 import toast, { Toaster } from 'react-hot-toast'
 
-export default function ProductCard({ product, collections, products }) {
+export default function ProductCard({
+  product,
+  collections,
+  isIconChange,
+}) {
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
-  const [istable, setIstable] = useState(false)
+  // const [istable, setIstable] = useState(false)
   const { addCollection, removeCollection } = useColloections()
 
-  const hasSearchResults = products && products.length > 0
+  // const hasSearchResults = products && products.length > 0
 
   // init IsCollected by collection -> valid
   useEffect(() => {
@@ -29,10 +33,7 @@ export default function ProductCard({ product, collections, products }) {
     const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
     toast.success(message, {})
   }
-  //切換手機檢視
-  const toggleMobile = () => {
-    setIstable(!istable)
-  }
+
 
   return (
     <>
@@ -48,7 +49,7 @@ export default function ProductCard({ product, collections, products }) {
           </div>
           <div className="card-body" data-tooltip={product.name}>
             <div className="product-name d-flex justify-content-between">
-              <h5 className="card-title fs-6" >
+              <h5 className="card-title fs-6">
                 {product.id > 440 && product.id < 451
                   ? product.name
                   : `${product.name}(${product.size})`}
@@ -89,7 +90,6 @@ export default function ProductCard({ product, collections, products }) {
                           'Failed to add collection:',
                           error.message
                         )
-                        // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
                       })
                   }}
                 />
@@ -110,95 +110,106 @@ export default function ProductCard({ product, collections, products }) {
           </div>
         </div>
       </div>
-      {/* 手機版:1 */}
-      <div className="col d-lg-none gy-3" key={`mobile1-${product.id}`} id='mobile1'>
-        <div className="card h-100">
-          <div className="imgWrap">
-            <img
-              src={`/images/product/product_cover/${product.cover}`}
-              className="img-fluid card-img-top"
-              alt="..."
-            />
-          </div>
-          <div className="card-body ">
-            <div className="product-name d-flex justify-content-between">
-              <h5 className="card-title fs-6">
-                {product.name}({product.size})
-              </h5>
-              <FaRegHeart
-                className="d-none d-lg-block"
-                style={{ fontSize: '25px' }}
-              />
-            </div>
-            <div className="star d-lg-flex d-none d-lg-block ">
-              <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} onClick={toggleMobile} />
-              <p className="ms-1 mb-0 fs-15">{product.star}</p>
-            </div>
-            <div className="price d-flex align-items-center mt-1">
-              <p className="card-text newPrice mb-0 me-3 text-color2-nohover">
-                NTD {product.price}
-              </p>
-              <p className="card-text oldPrice text-through set-text-color3">
-                NTD {product.price + 200}
-              </p>
-            </div>
-            <div className="d-flex justify-content-between d-lg-none mt-2">
-              <div className="star d-flex">
-                <TbStarFilled style={{ color: '#F6A404', fontSize: '19px' }} />
-                <p className="ms-1 mb-0 fs-15">{product.star}</p>
+      {isIconChange ? (
+        <div div className="col d-lg-none" id="mobile2">
+          <div className="card mb-3" key={`mobile2-${product.id}`}>
+            <div className="row g-0 ">
+              <div className="col-6 imgWrap">
+                <img
+                  src={`/images/product/product_cover/${product.cover}`}
+                  className="img-fluid rounded-start"
+                  alt="..."
+                />
               </div>
-              {isCollected ? (
-                <FaHeart
-                  style={{
-                    fontSize: '20px',
-                    cursor: 'pointer',
-                    color: '#ff4136',
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    toggleCollection()
-                    removeCollection(product.id)
-                  }}
-                />
-              ) : (
-                <FaRegHeart
-                  style={{ fontSize: '20px', cursor: 'pointer' }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    toggleCollection()
-                    addCollection(product.id)
-                  }}
-                />
-              )}
+              {/* <div className="col-7 d-flex align-items-center position-relative "> */}
+                <div className="card-body col-6 pb-0  position-relative">
+                  <h5 className="card-title fs-6 mb-2">
+                    {product.name}({product.size})
+                  </h5>
+                  <div className="price d-flex align-items-center mt-1 mb-2">
+                    <p className="card-text newPrice mb-0 me-3 text-color2-nohover">
+                      NTD {product.price}
+                    </p>
+                    <p className="card-text oldPrice text-through set-text-color3">
+                      NTD {product.price + 200}
+                    </p>
+                  </div>
+                  <div className="star d-flex">
+                    <TbStarFilled
+                      style={{ color: '#F6A404', fontSize: '19px' }}
+                    />
+                    <p className="ms-1 mb-0 fs-15">{product.star}</p>
+                  </div>
+                  {isCollected ? (
+                    <FaHeart
+                    className='position-absolute'
+                      style={{
+                        fontSize: '20px',
+                        cursor: 'pointer',
+                        color: '#ff4136',
+                        bottom:'20px',
+                        right:'20px'
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        toggleCollection()
+                        removeCollection(product.id)
+                      }}
+                    />
+                  ) : (
+                    <FaRegHeart
+                    className='position-absolute '
+                      style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136', bottom:'20px',
+                        right:'20px' }}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        toggleCollection()
+                        addCollection(product.id)
+                      }}
+                    />
+                  )}
+                </div>
+              {/* </div> */}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* 手機版:2 */}
-      <div div className="container d-none d-lg-none" id='mobile2'>
-        <div className="card mb-3" key={`mobile2-${product.id}`}>
-          <div className="row g-0">
-            <div className="col-5 imgWrap">
+      ) : (
+        <div
+          className="col  d-lg-none gy-3"
+          key={`mobile1-${product.id}`}
+          id="mobile1"
+        >
+          <div className="card h-100">
+            <div className="imgWrap2">
               <img
                 src={`/images/product/product_cover/${product.cover}`}
-                className="img-fluid rounded-start"
+                className="img-fluid card-img-top"
                 alt="..."
               />
             </div>
-            <div className="col-7 d-flex align-items-center position-relative ">
-              <div className="card-body pb-0">
-                <h5 className="card-title fs-6 mb-2">
+            <div className="card-body ">
+              <div className="product-name d-flex justify-content-between">
+                <h5 className="card-title fs-6">
                   {product.name}({product.size})
                 </h5>
-                <div className="price d-flex align-items-center mt-1 mb-2">
-                  <p className="card-text newPrice mb-0 me-3 text-color2-nohover">
-                    NTD {product.price}
-                  </p>
-                  <p className="card-text oldPrice text-through set-text-color3">
-                    NTD {product.price + 200}
-                  </p>
-                </div>
+                <FaRegHeart
+                  className="d-none d-lg-block"
+                  style={{ fontSize: '25px', color: '#ff4136' }}
+                />
+              </div>
+              <div className="star d-lg-flex d-none d-lg-block ">
+                <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
+                <p className="ms-1 mb-0 fs-15">{product.star}</p>
+              </div>
+              <div className="price d-flex align-items-center mt-1">
+                <p className="card-text newPrice mb-0 me-3 text-color2-nohover">
+                  NTD {product.price}
+                </p>
+                <p className="card-text oldPrice text-through set-text-color3">
+                  NTD {product.price + 200}
+                </p>
+              </div>
+              <div className="d-flex justify-content-between d-lg-none mt-2">
                 <div className="star d-flex">
                   <TbStarFilled
                     style={{ color: '#F6A404', fontSize: '19px' }}
@@ -206,34 +217,33 @@ export default function ProductCard({ product, collections, products }) {
                   <p className="ms-1 mb-0 fs-15">{product.star}</p>
                 </div>
                 {isCollected ? (
-                <FaHeart
-                  style={{
-                    fontSize: '20px',
-                    cursor: 'pointer',
-                    color: '#ff4136',
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    toggleCollection()
-                    removeCollection(product.id)
-                  }}
-                />
-              ) : (
-                <FaRegHeart
-                  style={{ fontSize: '20px', cursor: 'pointer' }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    toggleCollection()
-                    addCollection(product.id)
-                  }}
-                />
-              )}
+                  <FaHeart
+                    style={{
+                      fontSize: '20px',
+                      cursor: 'pointer',
+                      color: '#ff4136',
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      removeCollection(product.id)
+                    }}
+                  />
+                ) : (
+                  <FaRegHeart
+                    style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136' }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      addCollection(product.id)
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
         </div>
-      </div>
-
+      )}
       <style jsx>{`
         .card {
           border-radius: 8px;
@@ -264,8 +274,8 @@ export default function ProductCard({ product, collections, products }) {
         .imgWrap {
           width: 243px;
           height: 243px;
-          background-color:black;
-          display:flex;
+          background-color: black;
+          display: flex;
           justify-content: center;
         }
         .imgWrap img {
@@ -291,6 +301,11 @@ export default function ProductCard({ product, collections, products }) {
         .set-text-color3 {
           color: $grey-700;
         }
+        {/* .heart {
+          bottom:20px;
+          right:0;
+        } */}
+       
         @media (max-width: 1200px) {
           .imgWrap {
             width: 168px;
@@ -301,13 +316,15 @@ export default function ProductCard({ product, collections, products }) {
           .card-text {
             font-size: 14px;
           }
-          .fs-15 {
+          {/* .fs-15 {
             font-size: 14px;
-          }
+          } */}
           .imgWrap {
             width: 177px;
             height: 177px;
           }
+
+        
         }
       `}</style>
     </>

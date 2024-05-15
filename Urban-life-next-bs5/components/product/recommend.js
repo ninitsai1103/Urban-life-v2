@@ -146,7 +146,7 @@ export default function Recommend({ product,collections }) {
                 />
               ) : (
                 <FaRegHeart
-                  style={{ fontSize: '20px', cursor: 'pointer' }}
+                  style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136' }}
                   onClick={(e) => {
                     e.preventDefault()
                     toggleCollection()
@@ -159,45 +159,7 @@ export default function Recommend({ product,collections }) {
         </div>
       </div>
 
-      {/* 手機版:2 */}
-      <div div className="container d-none d-lg-none ">
-        <div className="card mb-3" key={`mobile2-${product.id}`}>
-          <div className="row g-0">
-            <div className="col-5 imgWrap">
-              <img
-                src={`/images/product/product_cover/${product.cover}`}
-                className="img-fluid rounded-start"
-                alt="..."
-              />
-            </div>
-            <div className="col-7 d-flex align-items-center position-relative ">
-              <div className="card-body pb-0">
-                <h5 className="card-title fs-6 mb-2">
-                  {product.name}({product.size})
-                </h5>
-                <div className="price d-flex align-items-center mt-1 mb-2">
-                  <p className="card-text newPrice mb-0 me-3 text-color2-nohover">
-                    NTD {product.price}
-                  </p>
-                  <p className="card-text oldPrice text-through set-text-color3">
-                    NTD {product.price + 200}
-                  </p>
-                </div>
-                <div className="star d-flex">
-                  <TbStarFilled
-                    style={{ color: '#F6A404', fontSize: '19px' }}
-                  />
-                  <p className="ms-1 mb-0 fs-15">{product.star}</p>
-                </div>
-                <FaRegHeart
-                  className="position-absolute"
-                  style={{ fontSize: '25px', right: 10, bottom: 10 }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       <style jsx>{`
         .card {
@@ -269,8 +231,8 @@ export default function Recommend({ product,collections }) {
             font-size: 14px;
           }
           .imgWrap {
-            width: 177px;
-            height: 177px;
+            width: 169px;
+            height: 169px;
           }
         }
       `}</style>
