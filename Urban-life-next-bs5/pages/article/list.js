@@ -18,7 +18,7 @@ export default function List() {
   console.log(articles)
   const [filter, setFilter] = useState('ALL')
   const [sort, setSort] = useState('')
-  
+
   // member的hooks
   const { member } = useMemberInfo()
 
@@ -35,7 +35,7 @@ export default function List() {
   }, [])
 
   // 設定按鈕是否顯示的狀態
-  const shouldShowButton = identityId === 2;
+  const shouldShowButton = identityId === 2
 
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
@@ -86,24 +86,20 @@ export default function List() {
   console.log('39', list)
   return (
     <>
-      <div className="container bg-color g-3 mt-5 my-2">
+      <div className="container bg-color g-3 mt-4 ">
         <div className="row d-flex">
           {/*   類別按鈕列表  */}
           <div className="col-2 d-none d-lg-block d-md-none">
             <Sidebar filter={filter} setFilter={setFilter} />
           </div>
-          {/* 搜尋與文章列表  */}
+          {/* 文章列表  */}
 
-          <div className="col col-lg-10  col-sm-12">
-            <div className="product-list">
-              <div className="search mx-2">
-                <Search />
-              </div>
-
-              <div className="breadcrumb-amount-arrange-bar mx-2">
+          <div className="col col-lg-10  col-sm-12 ">
+            <div className="product-list ">
+              <div className="breadcrumb-amount-arrange-bar ">
                 <div className="">
-                  <div className="d-flex justify-content-between my-3">
-                    <div className="breadcrumb-amount-bar mt-3">
+                  <div className="d-flex justify-content-between my-2">
+                    <div className="breadcrumb-amount-bar ">
                       <h6>文章列表/{filter}</h6>
                       <h6 style={{ color: '#bd9250' }}>
                         共{' '}
@@ -146,7 +142,10 @@ export default function List() {
                 </div>
               </div>
               <div className="mx-2 ">
-                <Link href="/article/add" className={`btn btn-main ${shouldShowButton ? '' : 'd-none'}`}>
+                <Link
+                  href="/article/add"
+                  className={`btn btn-main ${shouldShowButton ? '' : 'd-none'}`}
+                >
                   <IoAdd />
                   新增文章
                 </Link>
