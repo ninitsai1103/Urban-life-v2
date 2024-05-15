@@ -5,7 +5,7 @@ import LectureWish from '@/components/lecture/wish'
 import Herosection from '@/components/lecture/herosection'
 
 // CALENDER
-import Calendar from '@/components/calandar/calendar'
+import Calendar from '@/components/calendar/calendar'
 
 // REACT BOOTSTRAP
 import { Container } from 'react-bootstrap'
