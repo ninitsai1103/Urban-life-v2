@@ -1,3 +1,4 @@
+//文章細節頁
 import { useState, useEffect } from 'react'
 import Comment from '@/components/article/comment'
 import { SlArrowLeft } from 'react-icons/sl'
@@ -30,18 +31,18 @@ export default function Detail() {
     }
   })
 
-    // 檢查當前文章是否在收藏列表中
-    // const isFound = collections.find(
-    //   (item) => item.article_id === parseInt(aid, 10) && item.valid === 1
-    // )
+  // 檢查當前文章是否在收藏列表中
+  // const isFound = collections.find(
+  //   (item) => item.article_id === parseInt(aid, 10) && item.valid === 1
+  // )
 
-    useEffect(() => {
-      // 檢查當前文章是否在收藏列表中
-      setIsCollected(
-        collections.find((item) => item.article_id == aid && item.valid == 1)
-      )
-    }, [collections])
-  
+  useEffect(() => {
+    // 檢查當前文章是否在收藏列表中
+    setIsCollected(
+      collections.find((item) => item.article_id == aid && item.valid == 1)
+    )
+  }, [collections])
+
   //   const isFound = collections.find((id) => id === parseInt(aid, 10))
   //   setIsCollected(Boolean(isFound))
   // }, [aid, articles, collections])
@@ -131,77 +132,103 @@ export default function Detail() {
         <div className="row mt-2 mx-2">
           <Toaster position="top-center" reverseOrder={false} />
 
-          <div className="col-sm-12">
-            <SlArrowLeft onClick={() => router.back()} />
-            <span className="text-decoration-none mx-2">返回上一頁</span>
+          <div className="col-sm-12 mt-3" onClick={() => router.back()} >
+            <SlArrowLeft />
+            <span className="text-decoration-none mx-2" >返回上一頁</span>
           </div>
+
           <div className="col-sm-12 black-bottom-border">
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-center mt-3">
                 <h1>{article?.title}</h1>
               </div>
-              {/* Toggle collection button */}
-              {isCollected ? (
-                <button
-                  className="btn btn-add btn-hover2"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    toggleCollection()
-                    removeArticleCollection(article.id)
-                  }}
-                >
-                  <GoHeartFill
-                    className="me-1 mb-1"
-                    style={{ fontSize: '19px', color: '#ff4136' }}
-                  />
-                  取消收藏
-                </button>
-              ) : (
-                <Link
-                  href="#"
-                  className="btn-hover2"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    toggleCollection()
-                    addArticleCollection(article.id)
-                  }}
-                >
-                  <GoHeart className="me-1 mb-1" style={{ fontSize: '19px' }} />
-                  加入收藏
-                </Link>
-              )}
             </div>
-            <div className="d-flex align-items-center ">
-              <button className="btn btn-add mx-3">
-                {article?.category_name}
-              </button>
+            <div className="d-flex  justify-content-between align-items-center ">
+              <div className="d-flex align-items-center mt-2">
+                <h6
+                  className="mx-3  col"
+                  style={{ fontSize: '19px', fontWeight: 300 }}
+                >
+                  {article?.category_name}
+                </h6>
 
-              <h6 className="me-3">{article?.created_at}</h6>
-              <h6>作者:{article?.author_name}</h6>
-              <button className="btn btn-add mx-3" onClick={del_article}>
+                <h6
+                  className="me-3  col"
+                  style={{ fontSize: '14px', fontWeight: 400 }}
+                >
+                  {article?.created_at}
+                </h6>
+                <h6
+                  className=" col"
+                  style={{ fontSize: '19px', fontWeight: 200 }}
+                >
+                  作者:{article?.author_name}
+                </h6>
+              </div>
+              <div className="d-flex align-items-center  ">
+                {/* Toggle collection button */}
+                {isCollected ? (
+                  <span
+                    className="btn-hover2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      removeArticleCollection(article.id)
+                    }}
+                  >
+                    <GoHeartFill
+                      className="me-1 mb-1"
+                      style={{ fontSize: '25px', color: '#ff4136' }}
+                    />
+                    
+                  </span>
+                ) : (
+                  <span
+                    className=" "
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      addArticleCollection(article.id)
+                    }}
+                  >
+                    <GoHeart
+                      className="me-1 mb-1"
+                      style={{ fontSize: '25px', color: '#ff4136' }}
+                    />
+                    
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="d-flex justify-content-end align-items-center mt-1">
+              <button className="btn btn-add-r me-3" onClick={del_article}>
                 刪除文章
               </button>
-              <Link className="btn btn-add mx-3" href={`/article/edit/${aid}`}>
+              <Link className="btn btn-add-r " href={`/article/edit/${aid}`}>
                 編輯文章
               </Link>
             </div>
           </div>
-          <div className="col">
-            <img
-              src={`http://localhost:3005/images/article/${article?.img}`}
-              className="my-3 h-50"
-              alt={article?.title || 'Article Image'}
-            />
-            <p>{article?.content}</p>
+          <div className="col-sm-12">
+            <div className="d-flex justify-content-center vh-100">
+              <img
+                src={`http://localhost:3005/images/article/${article?.img}`}
+                className="m-3 "
+                alt={article?.title || 'Article Image'}
+              />
+            </div>
+
+            {/* <p className="m-5">{article?.content}</p> */}
+            <div className="m-5" dangerouslySetInnerHTML={{ __html: article?.content }}></div>
           </div>
         </div>
-        <div className="row my-3 bg-light">
-          <div className="col-sm-12  border-radius border">
-            <h4 className="text-center mb-5 mt-3">留言</h4>
+        <div className="col-sm-12 ">
+          <div className="border-radius border bg-light m-3">
+            <h4 className="text-start m-5">留言</h4>
             {articleComments.map((comment) => (
               <Comment key={comment.id} comment={comment} />
             ))}
-            <div className="mx-5">
+            <div className="m-5">
               <textarea
                 className="form-control"
                 id="exampleFormControlTextarea1"
@@ -209,12 +236,11 @@ export default function Detail() {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
               />
-              <button
-                className="btn btn-primary mx-5 my-3"
-                onClick={add_comment}
-              >
-                新增留言
-              </button>
+              <div className="d-flex justify-content-end">
+                <button className="btn btn-main  m-3" onClick={add_comment}>
+                  新增留言
+                </button>
+              </div>
             </div>
           </div>
         </div>

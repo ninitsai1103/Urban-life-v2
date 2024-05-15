@@ -16,7 +16,6 @@ export default function TeacherCardInfo({ teachers = [] }) {
                   alt="Card image cap"
                 />
               </div>
-
               <div className="card-body">
                 <h5 className="name">{teachers.name} 講師</h5>
                 <p className="teacherinfo">{teachers.intro}</p>
@@ -25,6 +24,7 @@ export default function TeacherCardInfo({ teachers = [] }) {
           </Link>
         )
       })}
+
       <style jsx>{`
         .card {
           display: flex;

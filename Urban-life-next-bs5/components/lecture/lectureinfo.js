@@ -88,16 +88,16 @@ export default function LectureInfo({ lecture, collections = [] }) {
           </div>
           <div className={styles.info}>
             <div className={styles.infotext}>
-              開始報名：{lecture.sign_up_starting}
+              開始報名：{lecture.sign_up_starting.split(' ')[0]}
             </div>
             <div className={styles.infotext}>
-              報名截止：{lecture.sign_up_deadline}
+              報名截止：{lecture.sign_up_deadline.split(' ')[0]}
             </div>
             <div className={styles.infotext}>
-              上課日期：{lecture.lecture_date}
+              上課日期：{lecture.lecture_date.split(' ')[0]}
             </div>
             <div className={styles.infotext}>
-              上課時間：{lecture.starting_time}
+              上課時間：{lecture.starting_time.split('.')[0]}
             </div>
           </div>
         </div>

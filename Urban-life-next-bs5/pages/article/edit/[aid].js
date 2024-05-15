@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Myeditor from '@/components/article/Myeditor'
-import useArticles from '@/hooks/use-articles';
+import useArticles from '@/hooks/use-articles'
 import { useMemberInfo } from '@/hooks/use-member-info'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 
 export default function Edit() {
-  const router = useRouter();
-  const { aid } = router.query;  // 從 URL 獲取文章ID
+  const router = useRouter()
+  const { aid } = router.query // 從 URL 獲取文章ID
   const { articles } = useArticles()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -120,7 +120,7 @@ export default function Edit() {
     <>
       <div className="container">
         <div className="row">
-          <div className="container bg-color g-3 mt-5 my-2">
+          <div className="container-fluid bg-color g-3 mt-5 my-2">
             <Link href="/add-article" className="text-decoration-none">
               文章分享
             </Link>
@@ -139,7 +139,6 @@ export default function Edit() {
                   name="title"
                   value={title}
                   onChange={handleInputChange}
-                  // defaultValue={article.title}
                 />
                 {errors.title && <div className="error">{errors.title}</div>}
               </div>
@@ -166,7 +165,14 @@ export default function Edit() {
             </div>
             <div className="add-content my-3">
               <p>內容</p>
-              <div style={{ height: '300px' }}>
+              <div
+                style={{
+                  height: 'auto',
+                  maxHeight: '500px',
+                  overflowY: 'auto',
+                }}
+              >
+               {/* Myeditor需要吃到html */}
                 <Myeditor
                   name="content"
                   onChange={handleContentChange}
@@ -179,7 +185,7 @@ export default function Edit() {
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-center my-3">
+          <div className="d-flex justify-content-center my-3 col-sm-12">
             <button className="btn btn-detail me-3">取消</button>
             <button className="btn btn-main" onClick={testEdit}>
               確認編輯

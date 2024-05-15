@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import useArticlesComment from '@/hooks/use-article-comment';
+import useArticlesComment from '@/hooks/use-article-comment'
 
 export default function Comment({ comment }) {
   console.log(comment)
   return (
     <>
-      <div className="d-flex  mx-5 " key={comment.id}>
+      <div className="d-flex  mx-5" key={comment.id}>
         {/* userimg  */}
         <div className="col-lg-1 col-md-1 userimg-col-12 ">
           <div className="img-container ">
@@ -15,17 +15,25 @@ export default function Comment({ comment }) {
             />
           </div>
 
-        <span className=" ">{comment.user_id}</span>
+          <span className=" ">{comment.user_id}</span>
         </div>
         {/* usercontent  */}
-        <div className="col-10 ms-3 d-none d-sm-none d-lg-block">
-          <h5 className="div-7">{comment.date}</h5>
-          <p className="">
-          {comment.comment}
+        <div className="col-10 ms-3 d-md-block d-lg-block">
+          <h5
+            className=""
+            style={{ fontSize: '16px', color: '#6b6b6b', fontWeight: '400' }}
+          >
+            {comment.date}
+          </h5>
+          <p
+            className=""
+            style={{ fontSize: '16px', color: '#000', fontWeight: '400' }}
+          >
+            {comment.comment}
           </p>
         </div>
-        
       </div>
+      <hr style={{ margin: '1rem 40px', borderTop: '1px solid #D6D6D6' }} />
 
       <style jsx>{`
         .container {

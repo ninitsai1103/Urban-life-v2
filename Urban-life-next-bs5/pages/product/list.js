@@ -25,6 +25,7 @@ export default function List() {
     location: false,
   })
 
+  //設定金額輸入狀態
   const [minPriceValue, setMinPriceValue] = useState('')
   const handleMinPriceValue = (e) => {
     setMinPriceValue(() => e.target.value)
@@ -35,8 +36,15 @@ export default function List() {
   }
 
   const [list, setList] = useState([])
-  const { products } = useProducts()
+  const { products } = useProducts();
   const { collections } = useColloections()
+  const [secProducts, setSecProducts] = useState(products);
+  
+  useEffect(() => {
+    setSecProducts(products);
+  }, [products]);
+
+ 
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -45,16 +53,23 @@ export default function List() {
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
 
+  //設定讀取時狀態
   const [flag, setFlag] = useState(false)
 
-  // const [searchResults, setSearchResults] = useState([]);
+  //手機版檢視切換icon狀態
+  const [isIconChange, setIsIconChange] = useState(false)
 
+
+ useEffect(() => {
+  setSecProducts(products.filter((product) => product.category === selectCategory))
+}, [selectCategory])
+  
   //分類後的產品(如果沒有點選分類就返回原本的產品列表)
-  const secProducts = useMemo(() => {
-    return selectCategory
-      ? products.filter((product) => product.category === selectCategory)
-      : products
-  })
+  // const secProducts = useMemo(() => {
+  //   return selectCategory
+  //     ? products.filter((product) => product.category === selectCategory)
+  //     : products
+  // })
 
   //排序狀態和邏輯(初始值代入分類後的產品)
   const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
@@ -85,17 +100,18 @@ export default function List() {
   const [inputText, setInputText] = useState('')
   const [searchResults, setSearchResults] = useState([])
 
+  
   const searchedProducts = () => {
     if (inputText) {
       let result = filteredProducts.filter((product) =>
         product.name.toLowerCase().includes(inputText.toLowerCase())
       )
       setSearchResults(result)
-    }else {
-    setSearchResults( filteredProducts) //沒有輸入搜尋時
-     
+      handlePageChange(1)
+    } else {
+      setSearchResults(filteredProducts) //沒有輸入搜尋時
+    }
   }
-}
 
   useEffect(() => {
     searchedProducts() // 每次 inputText 改變時重新計算搜尋結果
@@ -130,8 +146,10 @@ export default function List() {
 
   //頁面刷新為全部商品
   const allProducts = () => {
-    setSelectCategory(null)
-    setList(products)
+    
+    setSelectCategory(null);
+    setSearchResults(filteredProducts);
+    setCurrentPage(1);
   }
 
   //排序控制
@@ -185,6 +203,14 @@ export default function List() {
     setCurrentPage(1)
   }
 
+  //切換手機檢視
+  const toggleMobile = () => {
+    setIsIconChange(!isIconChange)
+  }
+
+  // useEffect(() => {
+  //   console.log(isIconChange)
+  // }, [isIconChange])
 
   // Toggle the side navigation
   // useEffect(() => {
@@ -947,7 +973,10 @@ export default function List() {
                     aria-current="page"
                     href="/product/list"
                   >
-                    <Link className="text-decoration-none" href="/product/list">
+                    <Link className="text-decoration-none" href="/product/list"
+                    onClick={()=>{
+                     allProducts()}
+                    } >
                       商品總覽
                     </Link>
                   </li>
@@ -959,19 +988,23 @@ export default function List() {
                   共 {searchResults.length} 筆商品
                 </p>
                 <div className="d-flex align-items-center">
-                  <CiViewTable
-                    className="d-lg-none"
-                    style={{
-                      fontSize: '31px',
-                      color: '#6B6B6B',
-                      strokeWidth: '0.4',
-                    }}
-                  />
-                  <RxTable
-                    className="d-none d-lg-none"
-                    style={{ fontSize: '27px', color: '#6B6B6B' }}
-                  />
-
+                  {isIconChange ? (
+                    <RxTable
+                      onClick={toggleMobile}
+                      className="d-lg-none"
+                      style={{ fontSize: '27px', color: '#6B6B6B' }}
+                    />
+                  ) : (
+                    <CiViewTable
+                      onClick={toggleMobile}
+                      className="d-lg-none"
+                      style={{
+                        fontSize: '31px',
+                        color: '#6B6B6B',
+                        strokeWidth: '0.4',
+                      }}
+                    />
+                  )}
                   {/* 手機版篩選 */}
                   <button
                     className="btn px-0 d-lg-none"
@@ -1729,8 +1762,9 @@ export default function List() {
                           className="dropdown-item"
                           href="#"
                           onClick={(e) => {
-                            e.preventDefault()
-                            allProducts()
+                            e.preventDefault();
+                            changeSort('id', 'ascending')
+                            allProducts();
                           }}
                         >
                           全部商品
@@ -1795,25 +1829,65 @@ export default function List() {
                 <h4>未有符合篩選條件的商品</h4>
               </div>
             ) : (
-              <div div className="container ">
-                <div className="row row-cols-2 row-cols-lg-4 g-4">
-                  {list.map((product) => (
-                    <Link
-                      className="text-decoration-none"
-                      key={product.id}
-                      href={`/product/${product.id}`}
-                    >
-                      <ProductCard
+              <>
+                <div div className="container d-none d-lg-block ">
+                  <div className="row row-cols-lg-4 g-4">
+                    {list.map((product) => (
+                      <Link
+                        className="text-decoration-none"
                         key={product.id}
-                        product={product}
-                        // products={searchResults}
-                        collections={collections}
-                        // searchedProducts={searchedProducts}
-                      />
-                    </Link>
-                  ))}
+                        href={`/product/${product.id}`}
+                      >
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          collections={collections}
+                          isIconChange={isIconChange}
+                        />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
+                {isIconChange ? 
+                  (<div div className="container  d-lg-none ">
+                  <div className="row row-cols-1 g-4">
+                    {list.map((product) => (
+                      <Link
+                        className="text-decoration-none"
+                        key={product.id}
+                        href={`/product/${product.id}`}
+                      >
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          collections={collections}
+                          isIconChange={isIconChange}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>)
+                :
+                (<div div className="container  d-lg-none ">
+                  <div className="row row-cols-2 g-4">
+                    {list.map((product) => (
+                      <Link
+                        className="text-decoration-none"
+                        key={product.id}
+                        href={`/product/${product.id}`}
+                      >
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          collections={collections}
+                          isIconChange={isIconChange}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>)
+              }
+              </>
             )}
             {/* 分頁 */}
             {filteredProducts.length !== 0 ? (

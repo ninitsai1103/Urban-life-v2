@@ -342,7 +342,7 @@ export default function LectureHome() {
               }}
             >
               <button className="btn btn-add" onClick={generateRandomTeachers}>
-                發現還有哪些老師
+                發現其他講師
               </button>
             </div>
           </div>
@@ -397,7 +397,6 @@ export default function LectureHome() {
 
           .section6 {
             display: flex;
-            padding: 0px 20px;
             flex-direction: column;
             justify-content: center;
             align-items: center;
