@@ -17,7 +17,7 @@ export default function Herosection() {
           '--swiper-navigation-color': '#fff',
           '--swiper-pagination-color': '#fff',
           width: '100vw',
-          height: '100vh',
+          height: '90vh',
         }}
         autoplay={{
           delay: 5000,
