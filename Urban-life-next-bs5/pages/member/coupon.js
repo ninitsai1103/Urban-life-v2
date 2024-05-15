@@ -246,9 +246,9 @@ export default function CouponMainPage() {
                   })}
               </div>
             </div>
-            <div>
+            {/* <div>
               <Page />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
