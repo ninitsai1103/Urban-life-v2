@@ -107,7 +107,9 @@ export default function Recommend({ product,collections }) {
           <div className="card-body ">
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
-                {product.name}({product.size})
+              {product.id > 440 && product.id < 451
+                  ? product.name
+                  : `${product.name}(${product.size})`}
               </h5>
               <FaRegHeart
                 className="d-none d-lg-block"

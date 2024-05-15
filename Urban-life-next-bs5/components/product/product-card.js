@@ -5,13 +5,8 @@ import { TbStarFilled, TbStar } from 'react-icons/tb'
 import useColloections from '@/hooks/product/useCollections'
 import toast, { Toaster } from 'react-hot-toast'
 
-export default function ProductCard({
-  product,
-  collections,
-  isIconChange,
-}) {
+export default function ProductCard({ product, collections, isIconChange }) {
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
-  // const [istable, setIstable] = useState(false)
   const { addCollection, removeCollection } = useColloections()
 
   // const hasSearchResults = products && products.length > 0
@@ -34,7 +29,6 @@ export default function ProductCard({
     toast.success(message, {})
   }
 
-
   return (
     <>
       {/* 桌機版*/}
@@ -47,9 +41,14 @@ export default function ProductCard({
               alt={product.name}
             />
           </div>
-          <div className="card-body" data-tooltip={product.id > 440 && product.id < 451
-                  ? product.name
-                  : `${product.name}(${product.size})`}>
+          <div
+            className="card-body"
+            data-tooltip={
+              product.id > 440 && product.id < 451
+                ? product.name
+                : `${product.name}(${product.size})`
+            }
+          >
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
                 {product.id > 440 && product.id < 451
@@ -58,7 +57,7 @@ export default function ProductCard({
               </h5>
               <Toaster position="top-center" reverseOrder={false} />
 
-              {isCollected ? (
+              {/* {isCollected ? (
                 <FaHeart
                   style={{
                     fontSize: '23px',
@@ -67,8 +66,9 @@ export default function ProductCard({
                   }}
                   onClick={(e) => {
                     e.preventDefault()
-                    toggleCollection()
                     removeCollection(product.id)
+                    toggleCollection()
+                    // console.log(isCollected)
                   }}
                 />
               ) : (
@@ -82,8 +82,63 @@ export default function ProductCard({
                     e.preventDefault()
                     addCollection(product.id)
                       .then((updatedData) => {
-                        toggleCollection()
                         console.log('Collection added:', updatedData)
+                        toggleCollection()
+                        // console.log(isCollected)
+                      })
+                      .catch((error) => {
+                        alert('請先登入會員再進行收藏功能')
+                        window.location.href = '/member/login'
+                        console.error(
+                          'Failed to add collection:',
+                          error.message
+                        )
+                      })
+                  }}
+                />
+              )} */}
+            </div>
+            <div className="star d-flex">
+              <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
+              <p className="ms-1 mb-0 fs-15">{product.star}</p>
+            </div>
+            <div className="price d-flex align-items-center justify-content-between mt-1">
+              <div className='d-flex'>
+                <p className="card-text mb-0 me-3 text-color2-nohover">
+                  NTD {product.price}
+                </p>
+                <p className="card-text text-through set-text-color3">
+                  NTD {product.price + 200}
+                </p>
+              </div>
+              {isCollected ? (
+                <FaHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    removeCollection(product.id)
+                    toggleCollection()
+                    // console.log(isCollected)
+                  }}
+                />
+              ) : (
+                <FaRegHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    addCollection(product.id)
+                      .then((updatedData) => {
+                        console.log('Collection added:', updatedData)
+                        toggleCollection()
+                        // console.log(isCollected)
                       })
                       .catch((error) => {
                         alert('請先登入會員再進行收藏功能')
@@ -97,18 +152,6 @@ export default function ProductCard({
                 />
               )}
             </div>
-            <div className="star d-flex">
-              <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
-              <p className="ms-1 mb-0 fs-15">{product.star}</p>
-            </div>
-            <div className="price d-flex align-items-center mt-1">
-              <p className="card-text mb-0 me-3 text-color2-nohover">
-                NTD {product.price}
-              </p>
-              <p className="card-text text-through set-text-color3">
-                NTD {product.price + 200}
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -116,7 +159,7 @@ export default function ProductCard({
         <div div className="col d-lg-none" id="mobile2">
           <div className="card mb-3" key={`mobile2-${product.id}`}>
             <div className="row g-0 ">
-              <div className="col-6 imgWrap">
+              <div className="col-6 imgWrap2">
                 <img
                   src={`/images/product/product_cover/${product.cover}`}
                   className="img-fluid rounded-start"
@@ -124,53 +167,58 @@ export default function ProductCard({
                 />
               </div>
               {/* <div className="col-7 d-flex align-items-center position-relative "> */}
-                <div className="card-body col-6 pb-0  position-relative">
-                  <h5 className="card-title fs-6 mb-2">
-                    {product.name}({product.size})
-                  </h5>
-                  <div className="price d-flex align-items-center mt-1 mb-2">
-                    <p className="card-text newPrice mb-0 me-3 text-color2-nohover">
-                      NTD {product.price}
-                    </p>
-                    <p className="card-text oldPrice text-through set-text-color3">
-                      NTD {product.price + 200}
-                    </p>
-                  </div>
-                  <div className="star d-flex">
-                    <TbStarFilled
-                      style={{ color: '#F6A404', fontSize: '19px' }}
-                    />
-                    <p className="ms-1 mb-0 fs-15">{product.star}</p>
-                  </div>
-                  {isCollected ? (
-                    <FaHeart
-                    className='position-absolute'
-                      style={{
-                        fontSize: '20px',
-                        cursor: 'pointer',
-                        color: '#ff4136',
-                        bottom:'20px',
-                        right:'20px'
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        toggleCollection()
-                        removeCollection(product.id)
-                      }}
-                    />
-                  ) : (
-                    <FaRegHeart
-                    className='position-absolute '
-                      style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136', bottom:'20px',
-                        right:'20px' }}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        toggleCollection()
-                        addCollection(product.id)
-                      }}
-                    />
-                  )}
+              <div className="card-body col-6 pb-0  position-relative">
+                <h5 className="card-title fs-6 my-2">
+                  {product.name}({product.size})
+                </h5>
+                <div className="price d-flex align-items-center mt-1 my-3 ">
+                  <p className="card-text newPrice mb-0 me-3 text-color2-nohover fs-6">
+                    NTD {product.price}
+                  </p>
+                  <p className="card-text oldPrice text-through set-text-color3 fs-6">
+                    NTD {product.price + 200}
+                  </p>
                 </div>
+                <div className="star d-flex">
+                  <TbStarFilled className='mt-1'
+                    style={{ color: '#F6A404', fontSize: '19px' }}
+                  />
+                  <p className="ms-1 mb-0 fs-6">{product.star}</p>
+                </div>
+                {isCollected ? (
+                  <FaHeart
+                    className="position-absolute"
+                    style={{
+                      fontSize: '22px',
+                      cursor: 'pointer',
+                      color: '#ff4136',
+                      bottom: '20px',
+                      right: '20px',
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      removeCollection(product.id)
+                    }}
+                  />
+                ) : (
+                  <FaRegHeart
+                    className="position-absolute "
+                    style={{
+                      fontSize: '22px',
+                      cursor: 'pointer',
+                      color: '#ff4136',
+                      bottom: '20px',
+                      right: '20px',
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toggleCollection()
+                      addCollection(product.id)
+                    }}
+                  />
+                )}
+              </div>
               {/* </div> */}
             </div>
           </div>
@@ -233,7 +281,11 @@ export default function ProductCard({
                   />
                 ) : (
                   <FaRegHeart
-                    style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136' }}
+                    style={{
+                      fontSize: '20px',
+                      cursor: 'pointer',
+                      color: '#ff4136',
+                    }}
                     onClick={(e) => {
                       e.preventDefault()
                       toggleCollection()
@@ -280,6 +332,7 @@ export default function ProductCard({
           display: flex;
           justify-content: center;
         }
+      
         .imgWrap img {
           width: auto;
           height: 100%;
@@ -303,11 +356,13 @@ export default function ProductCard({
         .set-text-color3 {
           color: $grey-700;
         }
-        {/* .heart {
+         {
+          /* .heart {
           bottom:20px;
           right:0;
-        } */}
-       
+        } */
+        }
+
         @media (max-width: 1200px) {
           .imgWrap {
             width: 168px;
@@ -318,15 +373,16 @@ export default function ProductCard({
           .card-text {
             font-size: 14px;
           }
-          {/* .fs-15 {
+           {
+            /* .fs-15 {
             font-size: 14px;
-          } */}
+          } */
+          }
           .imgWrap {
             width: 177px;
             height: 177px;
           }
-
-        
+          
         }
       `}</style>
     </>

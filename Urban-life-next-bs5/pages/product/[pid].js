@@ -134,17 +134,17 @@ export default function Detail() {
     <>
       <div className="container ">
         <div className="row mt-5 mx-2">
-          {/* <div className="col-12">
-            <button className="text-decoration-none fs-5" href="#"
-            onClick={handleBack}
+          <div className="col-12">
+            <Link className="text-decoration-none fs-5" href="/product/list"
+  
             >
               <MdArrowBackIosNew
                 className="me-1 mb-1"
                 style={{ fontSize: '18px' }}
               />
               返回上一頁
-            </button>
-          </div> */}
+            </Link>
+          </div>
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb mt-3">
               <li className="breadcrumb-item">
