@@ -41,28 +41,13 @@ export default function LectureDetail() {
       setLecture(fetchLecture)
     }
   }, [lectures, lid])
-
+  
+  // 檢查當前課程是否在收藏列表中
   useEffect(() => {
-    // 檢查當前課程是否在收藏列表中
     setIsCollected(
       collections.find((item) => item.product_id == lid && item.valid == 1)
     )
   }, [collections])
-
-  //切換課程的收藏狀態
-  const toggleCollection = () => {
-    setIsCollected(!isCollected)
-    const message = isCollected ? '課程已取消收藏!' : '課程已加入收藏!'
-    toast.success(message, {})
-  }
-
-  const notifySA = (lecture) => {
-    MySwal.fire({
-      title: '成功加入',
-      text: lecture.name + '已成功加入購物車!',
-      icon: 'success',
-    })
-  }
 
   //根據lid動態路由對應課程評論
   useEffect(() => {

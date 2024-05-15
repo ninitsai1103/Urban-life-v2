@@ -1,42 +1,53 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import styles from './card.module.css'
 import Link from 'next/link'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { TbStarFilled } from 'react-icons/tb'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import useColloections from '@/hooks/product/useCollections'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 
-export default function LectureMyCard({ lecture, collections=[] }) {
+export default function LectureMyCard({ lecture, collections = [] }) {
   const [isCollected, setIsCollected] = useState(false)
   const { addCollection, removeCollection } = useColloections()
+  const MySwal = withReactContent(Swal)
 
   useEffect(() => {
-    // 檢查當前講座是否在收藏列表中
-    const obj = collections
-    const arr =  Object.keys(obj).map((id) => obj[id])
-    const data = arr.some(
-      (item) => item.product_id === lecture.id && item.valid === 1
-    )
-    setIsCollected(data)
-  }, [collections, lecture.id])
+    if (!lecture) return
 
-  const toggleCollection = () => {
-    setIsCollected(!isCollected)
-    const message = isCollected ? '講座已取消收藏!' : '講座已加入收藏!'
-    toast.success(message)
+    const { id } = lecture
+    const { product_id, valid } = collections[id] || {}
+
+    setIsCollected(product_id === id && valid === 1)
+  }, [collections, lecture])
+
+  const notifySA = useCallback(
+    (title, text, icon) => {
+      MySwal.fire({
+        title,
+        text,
+        icon,
+      })
+    },
+    [MySwal]
+  )
+
+  const toggleCollection = useCallback(() => {
+    setIsCollected((prev) => !prev)
     if (lecture && lecture.id) {
       if (isCollected) {
         removeCollection(lecture.id)
+        notifySA('取消收藏', `${lecture.name}已成功取消收藏!`, 'error')
       } else {
         addCollection(lecture.id)
+        notifySA('成功收藏', `${lecture.name}已成功加入您的收藏!`, 'success')
       }
     } else {
       console.error('Lecture is undefined or has no id property')
     }
-  }
-
-  
+  }, [isCollected, lecture, addCollection, removeCollection, notifySA])
 
   return (
     <>

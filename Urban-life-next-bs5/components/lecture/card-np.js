@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import styles from './card-np.module.css'
 import toast, { Toaster } from 'react-hot-toast'
 import { TbStarFilled } from 'react-icons/tb'
 import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import useColloections from '@/hooks/product/useCollections'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 
-export default function LectureMyCardNp({ lecture, setCardData, collections , }) {
+export default function LectureMyCardNp({
+  lecture,
+  setCardData,
+  collections = [],
+}) {
   const {
     id,
     content,
@@ -50,22 +56,34 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
 
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
   const { addCollection, removeCollection } = useColloections()
+  const MySwal = withReactContent(Swal)
 
   //切換商品的收藏狀態
-  const toggleCollection = () => {
-    setIsCollected(!isCollected)
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-    toast.success(message)
+  const notifySA = useCallback(
+    (title, text, icon) => {
+      MySwal.fire({
+        title,
+        text,
+        icon,
+      })
+    },
+    [MySwal]
+  )
+
+  const toggleCollection = useCallback(() => {
+    setIsCollected((prev) => !prev)
     if (lecture && lecture.id) {
       if (isCollected) {
         removeCollection(lecture.id)
+        notifySA('取消收藏', `${lecture.name}已成功取消收藏!`, 'error')
       } else {
         addCollection(lecture.id)
+        notifySA('成功收藏', `${lecture.name}已成功加入您的收藏!`, 'success')
       }
     } else {
-      console.error('lecture is undefined or has no id property')
+      console.error('Lecture is undefined or has no id property')
     }
-  }
+  }, [isCollected, lecture, addCollection, removeCollection, notifySA])
 
   useEffect(() => {
     // 檢查當前商品是否在收藏列表中
@@ -135,22 +153,22 @@ export default function LectureMyCardNp({ lecture, setCardData, collections , })
           <div className={styles.priceText}>NT：{price}</div>
           {/* 根據日期是否在今天之前來決定按鈕樣式 */}
           {isAddedtoCalendar ? (
-              <button
-                className="btn btn-main"
-                style={{ maxWidth: '106px' }}
-                onClick={handleAddtoCalendar}
-              >
-                加入行事曆
-              </button>
-            ) : (
-              <button
-                className="btn btn-danger"
-                style={{ maxWidth: '106px' }}
-                onClick={handleAddtoCalendar}
-              >
-                刪除
-              </button>
-            )}
+            <button
+              className="btn btn-main"
+              style={{ maxWidth: '106px' }}
+              onClick={handleAddtoCalendar}
+            >
+              加入行事曆
+            </button>
+          ) : (
+            <button
+              className="btn btn-danger"
+              style={{ maxWidth: '106px' }}
+              onClick={handleAddtoCalendar}
+            >
+              刪除
+            </button>
+          )}
         </div>
       </div>
     </>
