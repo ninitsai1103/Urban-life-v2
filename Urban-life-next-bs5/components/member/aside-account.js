@@ -9,6 +9,7 @@ import { IoIosLogOut } from 'react-icons/io'
 import { useMemberInfo } from '@/hooks/use-member-info'
 import { useRouter } from 'next/router'
 import useFirebase from '@/hooks/use-firebase'
+import { logout } from '@/services/user'
 import toast, { Toaster } from 'react-hot-toast'
 export default function AsideAccount() {
   const router = useRouter()
@@ -53,6 +54,10 @@ export default function AsideAccount() {
   // 登出
   const handleLogout = async () => {
     try {
+      logoutFirebase()
+
+      await logout()
+
       const response = await fetch('http://localhost:3005/api/user/logout', {
         method: 'POST',
         headers: {
@@ -60,9 +65,7 @@ export default function AsideAccount() {
           Authorization: `Bearer ${member?.token}`, // 替換為有效的 JWT
         },
       })
-      await response.json()
-
-      logoutFirebase()
+      await await response.json()
       localStorage.removeItem('member-info')
       localStorage.removeItem('selectedCoupon')
       localStorage.removeItem('warning')
@@ -70,9 +73,10 @@ export default function AsideAccount() {
       localStorage.removeItem('pricePayable')
       localStorage.removeItem('Checked-info')
       localStorage.removeItem('discount')
-
-      toast.success('已成功登出')
-      window.location.href = '/'
+      toast.success('已成功登出，將重新導向首頁，請等待3秒')
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 3000)
     } catch (error) {
       toast.error(`登出失敗`)
     }
@@ -103,33 +107,30 @@ export default function AsideAccount() {
           <div className="user d-flex flex-column align-items-center">
             <div className="d-flex justify-content-center position-relative">
               <div className="avatar">
-                {member?.img && (
-                  <div>
-                    <Image
-                      src={`http://localhost:3005/avatar/${member?.img}`}
-                      alt=""
-                      width={80}
-                      height={80}
-                      style={{ borderRadius: '100px' }}
-                      priority
-                    />
-                    <div className="icon-box position-absolute d-flex justify-content-center">
-                      {/* 點擊圖標後觸發 handleIconClick 事件 */}
-                      <MdOutlineAddAPhoto
-                        style={{ color: 'white', cursor: 'pointer' }}
-                        onClick={handleIconClick}
-                      />
-                      {/* 隱藏的文件選擇器 */}
-                      <input
-                        id="fileInput"
-                        type="file"
-                        name="avatar"
-                        onChange={handleFileChange}
-                        style={{ display: 'none' }}
-                      />
-                    </div>
-                  </div>
-                )}
+                <Image
+                  src={`http://localhost:3005/avatar/${member?.img}`}
+                  alt=""
+                  width={80}
+                  height={80}
+                  style={{ borderRadius: '100px' }}
+                  priority
+                />
+                <div className="icon-box position-absolute d-flex justify-content-center">
+                  {/* 點擊圖標後觸發 handleIconClick 事件 */}
+                  <MdOutlineAddAPhoto
+                    style={{ color: 'white', cursor: 'pointer' }}
+                    onClick={handleIconClick}
+                  />
+                  {/* 隱藏的文件選擇器 */}
+                  <input
+                    id="fileInput"
+                    type="file"
+                    name="avatar"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                </div>
+
                 {member?.photo_url && (
                   <Image
                     src={`${member?.photo_url}`}
