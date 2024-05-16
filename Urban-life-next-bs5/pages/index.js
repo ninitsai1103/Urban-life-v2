@@ -236,11 +236,6 @@ export default function Home() {
           </div>
         </Container>
       </section>
-      {/* <section>
-        <Container>
-          <Calendar />
-        </Container>
-      </section> */}
       <section className="商品分類">
         <Container>
           <h1 className="text-center">商品分類</h1>
@@ -532,85 +527,77 @@ export default function Home() {
           <h1 className="text-center">講師</h1>
           <p className="text-center">Teacher</p>
           <div className="row mb-4 d-flex justify-content-center">
-            <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/2`} className="text-decoration-none">
-                <div className="card TeacherCard">
-                  <div className="card-top">
-                    <img
-                      className="card-img TeacherImg"
-                      src="/images/teacher/T1706078211.jpg"
-                      alt="Card image cap"
-                    />
-                  </div>
-
-                  <div className="card-body TeacherCard-body">
-                    <h5 className="TeacherName">黃湘苗</h5>
-                    <p className="teacherinfo">
-                      黃湘苗擁有超過25年的農業種植經驗，專精於有機農業和可持續發展。畢業於國際知名的農業科學院，在土壤管理、作物輪作及自然農法方面有深入研究。致力於推廣環保農業，黃教授經常舉辦工作坊，並在多個國際會議上發表論文。
-                    </p>
-                  </div>
+            <div className=" col-3  teacher-card">
+              <div className="card TeacherCard" href={`/teacher/2`}>
+                <div className="card-top">
+                  <img
+                    className="card-img TeacherImg"
+                    src="/images/teacher/T1706078211.jpg"
+                    alt="Card image cap"
+                  />
                 </div>
-              </Link>
+
+                <div className="card-body TeacherCard-body">
+                  <h5 className="TeacherName">黃湘苗</h5>
+                  <p className="teacherinfo">
+                    黃湘苗擁有超過25年的農業種植經驗，專精於有機農業和可持續發展。畢業於國際知名的農業科學院，在土壤管理、作物輪作及自然農法方面有深入研究。致力於推廣環保農業，黃教授經常舉辦工作坊，並在多個國際會議上發表論文。
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/3`} className="text-decoration-none">
-                <div className="card TeacherCard">
-                  <div className="card-top">
-                    <img
-                      className="card-img TeacherImg"
-                      src="/images/teacher/T1706078212.jpg"
-                      alt="Card image cap"
-                    />
-                  </div>
-
-                  <div className="card-body TeacherCard-body">
-                    <h5 className="TeacherName">黃甄芸</h5>
-                    <p className="teacherinfo">
-                      黃甄芸是一位資深園藝學家，專業領域涵蓋果樹栽培和植物病蟲害管理。她在果樹種植方面擁有豐富的實踐經驗，並積極參與國內外園藝研討會。黃女士熱衷於教育工作，致力於將她的知識傳授給新一代的園藝愛好者。
-                    </p>
-                  </div>
+            <div className="col-3  teacher-card">
+              <div className="card TeacherCard" href={`/teacher/3`}>
+                <div className="card-top">
+                  <img
+                    className="card-img TeacherImg"
+                    src="/images/teacher/T1706078212.jpg"
+                    alt="Card image cap"
+                  />
                 </div>
-              </Link>
+
+                <div className="card-body TeacherCard-body">
+                  <h5 className="TeacherName">黃甄芸</h5>
+                  <p className="teacherinfo">
+                    黃甄芸是一位資深園藝學家，專業領域涵蓋果樹栽培和植物病蟲害管理。她在果樹種植方面擁有豐富的實踐經驗，並積極參與國內外園藝研討會。黃女士熱衷於教育工作，致力於將她的知識傳授給新一代的園藝愛好者。
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/4`} className="text-decoration-none">
-                <div className="card TeacherCard">
-                  <div className="card-top">
-                    <img
-                      className="card-img TeacherImg"
-                      src="/images/teacher/T1706078213.jpg"
-                      alt="Card image cap"
-                    />
-                  </div>
-
-                  <div className="card-body TeacherCard-body">
-                    <h5 className="TeacherName">鍾家鋒</h5>
-                    <p className="teacherinfo">
-                      鍾家鋒是一位在蔬菜栽培領域具有豐富經驗的專家，尤其擅長使用現代溫室技術種植各種蔬菜。他的教學風格實用且互動性強，注重實地操作和技術演示，幫助學生深入理解先進的農業技術。
-                    </p>
-                  </div>
+            <div className="col-3  teacher-card">
+              <div className="card TeacherCard" href={`/teacher/4`}>
+                <div className="card-top">
+                  <img
+                    className="card-img TeacherImg"
+                    src="/images/teacher/T1706078213.jpg"
+                    alt="Card image cap"
+                  />
                 </div>
-              </Link>
+
+                <div className="card-body TeacherCard-body">
+                  <h5 className="TeacherName">鍾家鋒</h5>
+                  <p className="teacherinfo">
+                    鍾家鋒是一位在蔬菜栽培領域具有豐富經驗的專家，尤其擅長使用現代溫室技術種植各種蔬菜。他的教學風格實用且互動性強，注重實地操作和技術演示，幫助學生深入理解先進的農業技術。
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/5`} className="text-decoration-none">
-                <div className="card TeacherCard">
-                  <div className="card-top">
-                    <img
-                      className="card-img TeacherImg"
-                      src="/images/teacher/T1706078214.jpg"
-                      alt="Card image cap"
-                    />
-                  </div>
-
-                  <div className="card-body TeacherCard-body">
-                    <h5 className="TeacherName">薛昱靜</h5>
-                    <p className="teacherinfo">
-                      薛昱靜博士在種子科技和植物育種領域有著豐富的研究經驗。她專注於作物的遺傳改良和品種改進，致力於開發更高產量和環境適應性更強的新品種。薛博士樂於分享她的研究成果，並鼓勵學生參與創新項目。
-                    </p>
-                  </div>
+            <div className="col-3  teacher-card">
+              <div className="card TeacherCard" href={`/teacher/5`}>
+                <div className="card-top">
+                  <img
+                    className="card-img TeacherImg"
+                    src="/images/teacher/T1706078214.jpg"
+                    alt="Card image cap"
+                  />
                 </div>
-              </Link>
+
+                <div className="card-body TeacherCard-body">
+                  <h5 className="TeacherName">薛昱靜</h5>
+                  <p className="teacherinfo">
+                    薛昱靜博士在種子科技和植物育種領域有著豐富的研究經驗。她專注於作物的遺傳改良和品種改進，致力於開發更高產量和環境適應性更強的新品種。薛博士樂於分享她的研究成果，並鼓勵學生參與創新項目。
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -803,6 +790,11 @@ export default function Home() {
             justify-content: center;
             padding: 0;
             margin: 10px 0;
+          }
+          @media (max-width: 768px) {
+            .teacher-card {
+              width: 100%;
+            }
           }
 
           @media (max-width: 768px) {

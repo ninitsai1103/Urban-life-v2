@@ -20,11 +20,26 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
   }
   const handleNoCouponSelected = () => {
     // window.localStorage.setItem('discount', 0)
-    
+
     setSelectedCoupon([])
     // sendSelectedCoupon([])
     // setSelectedCoupon({"id":1,"user_id":43,"coupon_id":1,"valid":1,"name":"註冊優惠券","code":"VIP666","amount":0.1,"started_at":"2024-04-24","deadline":"2024-05-31","created_at":"2024-01-01 00:00:00","updated_at":"2024-01-19 00:00:00","status":"可使用","min_price":500,"condition":"資材"})
-    sendSelectedCoupon({"id":99,"user_id":43,"coupon_id":99,"valid":1,"name":"不選擇優券","code":"NOCOUPON","amount":Number(0),"started_at":"2024-04-24","deadline":"2024-05-31","created_at":"2024-01-01 00:00:00","updated_at":"2024-01-19 00:00:00","status":"可使用","min_price":0,"condition":"資材"})
+    sendSelectedCoupon({
+      id: 99,
+      user_id: 43,
+      coupon_id: 99,
+      valid: 1,
+      name: '不選擇優券',
+      code: 'NOCOUPON',
+      amount: Number(0),
+      started_at: '2024-04-24',
+      deadline: '2024-05-31',
+      created_at: '2024-01-01 00:00:00',
+      updated_at: '2024-01-19 00:00:00',
+      status: '可使用',
+      min_price: 0,
+      condition: '資材',
+    })
     // window.localStorage.setItem('coupon', JSON.stringify([]))
   }
   // const [couponCanUse, setCouponCanUse] = useState(couponNotExpired)
@@ -72,12 +87,12 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
   //   }
   // }, [])
   useEffect(() => {
-    if(totalPriceChecked>=selectedCoupon.min_price) {
+    if (totalPriceChecked >= selectedCoupon.min_price) {
       window.localStorage.setItem(
         'selectedCoupon',
         JSON.stringify(selectedCoupon)
       )
-    }else{
+    } else {
       window.localStorage.setItem('selectedCoupon', JSON.stringify([]))
     }
   }, [selectedCoupon])

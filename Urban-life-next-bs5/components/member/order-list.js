@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import styles from './star.module.css'
 
 import Image from 'next/image'
+import { useMemberInfo } from '@/hooks/use-member-info'
 
 export default function OrderList({ order }) {
   const {
@@ -23,6 +24,9 @@ export default function OrderList({ order }) {
 
   // 商品課程評論的資料
   const [comments, setComments] = useState([])
+
+    // 利用use-member-info的hooks抓取localStorage的會員資訊
+    const { member } = useMemberInfo()
 
   // 每個商品與課程都有獨立的評分狀態
   const [productRatings, setProductRatings] = useState({})
@@ -146,7 +150,7 @@ export default function OrderList({ order }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: 43,
+          user_id: 42,
           star: rating,
           comment: comment,
           product_lecture_id: id,
@@ -652,7 +656,7 @@ export default function OrderList({ order }) {
                       {coupon_id !== null ? (
                         <>
                           <div>優惠券折扣：</div>
-                          <div> { realTotal-total } 元</div>
+                          <div> -{ realTotal-total } 元</div>
                         </>
                       ) : (
                         <div></div>
@@ -662,7 +666,14 @@ export default function OrderList({ order }) {
                     <hr />
                     <div className="mb-1 d-flex justify-content-between">
                       <div>總金額： </div>
-                      <div>{total} 元</div>
+                      {total < 1000 ? (
+                        <>
+                        <div>{total+60} 元</div>
+                        </>
+                      ) : (
+                        <div>{total} 元</div>
+                      )}
+                      
                     </div>
                   </div>
                 </div>

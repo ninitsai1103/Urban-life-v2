@@ -49,7 +49,7 @@ router.post('/', async function (req, res) {
     const couponID = req.body.newCoupon.id
     let userID = req.body.user_id
 
-    let addtoUserCoupon = `INSERT INTO user_coupon (user_id,coupon_id,valid)VALUES(?,?,1)`
+    let addtoUserCoupon = `INSERT INTO user_coupon (user_id,coupon_id,status,valid)VALUES(?,?,"可使用",1)`
     const values = [userID, couponID]
     const [rows, fields] = await db.query(addtoUserCoupon, values)
     return res.json({

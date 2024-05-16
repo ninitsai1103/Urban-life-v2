@@ -1,6 +1,4 @@
 // utils.js
-import React from 'react'
-import moment from 'moment'
 
 // GLobal Vars
 const SEVENDAYS = 7 // 建立一個通用變數，存放一週有7天
