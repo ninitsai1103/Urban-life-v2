@@ -222,6 +222,8 @@ export default function CouponMainPage() {
                       code,
                       amount,
                       started_at,
+                      created_at,
+                      updated_at,
                       deadline,
                       status,
                       min_price,
@@ -235,6 +237,8 @@ export default function CouponMainPage() {
                           code={code}
                           amount={amount}
                           started_at={started_at}
+                          created_at={created_at}
+                          updated_at={updated_at}
                           deadline={deadline}
                           status={status}
                           min_price={min_price}

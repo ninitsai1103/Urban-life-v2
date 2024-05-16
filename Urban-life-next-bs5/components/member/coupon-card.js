@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 // 取用localStorage裡的member-info
 import { useMemberInfo } from '@/hooks/use-member-info'
 
+import Link from 'next/link'
 // REACT ICON
 import { MdCancel } from 'react-icons/md'
 import { CiHeart } from 'react-icons/ci'
@@ -23,6 +24,41 @@ export default function CouponCard({
 }) {
   // 利用use-member-info的hooks抓取localStorage的會員資訊
   const { member } = useMemberInfo()
+
+  // 按下"立即使用"存入localStorage並且轉到購物車頁面
+  const handleUseCoupon = (
+    id,
+    name,
+    code,
+    amount,
+    started_at,
+    deadline,
+    updated_at,
+    created_at,
+    status,
+    min_price,
+    condition
+  ) => {
+    const selectedCoupon = {
+      id: id,
+      user_id: member.id,
+      name: name,
+      code: code,
+      amount: amount,
+      started_at: started_at,
+      deadline: deadline,
+      created_at: created_at,
+      updated_at: updated_at,
+      status: status,
+      min_price: min_price,
+      condition: condition,
+    }
+    window.localStorage.setItem(
+      'selectedCoupon',
+      JSON.stringify(selectedCoupon)
+    )
+  }
+
   return (
     <>
       <div
@@ -40,7 +76,26 @@ export default function CouponCard({
                     已使用、已過期:灰色的 */}
             {status === '可使用' ? (
               <>
-                <button className="btn btn-main">立即使用</button>
+                <Link
+                  href="/cart"
+                  className="btn btn-main"
+                  onClick={() => {
+                    handleUseCoupon(
+                      id,
+                      name,
+                      code,
+                      amount,
+                      started_at,
+                      deadline,
+                      status,
+                      min_price,
+                      condition,
+                      deleteCoupon
+                    )
+                  }}
+                >
+                  立即使用
+                </Link>
                 {/* 出現刪除按鈕的判斷式: 已使用不會出現
                                     已過期會出現*/}
               </>
