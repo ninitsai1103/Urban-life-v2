@@ -100,7 +100,7 @@ export default function ForgetPassword() {
                   onClick={handleRequestOtpToken}
                   disabled={disableBtn}
                 >
-                  取得驗證碼。
+                  取得驗證碼
                 </button>
               </div>
             </div>
@@ -117,9 +117,10 @@ export default function ForgetPassword() {
                 onChange={(e) => setPassword(e.target.value)}
                 className={`form-control w-100 `}
                 placeholder="密碼"
+                minLength={6}
               />
             </div>
-            <div className={`my-2 text-start`}>請輸入新密碼。</div>
+            <div className={`my-2 text-start`}>請輸入新密碼</div>
           </div>
           <div className="row mb-3">
             <div className="col-sm-12">
@@ -129,12 +130,13 @@ export default function ForgetPassword() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={`form-control w-100 `}
                 placeholder="密碼"
+                minLength={6}
               />
             </div>
-            <div className={` my-2 text-start`}>請輸入確認密碼。</div>
+            <div className={` my-2 text-start`}>請輸入確認密碼</div>
           </div>
 
-          <button onClick={handleResetPassword} className="btn btn-primary w-100">
+          <button onClick={handleResetPassword} className="btn btn-add w-100">
             確定
           </button>
         </form>
