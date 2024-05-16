@@ -6,7 +6,7 @@ import useColloections from '@/hooks/product/useCollections'
 import toast, { Toaster } from 'react-hot-toast'
 
 export default function ProductCard({ product, collections, isIconChange }) {
-  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const [isCollected, setIsCollected] = useState(false) //商品是否有被收藏
   const { addCollection, removeCollection } = useColloections()
 
   // const hasSearchResults = products && products.length > 0
@@ -19,7 +19,6 @@ export default function ProductCard({ product, collections, isIconChange }) {
         (item) => item.product_id == product.id && item.valid == 1
       )
     )
-    // console.log(isCollected);
   }, [collections])
 
   //切換商品的收藏狀態
@@ -32,7 +31,9 @@ export default function ProductCard({ product, collections, isIconChange }) {
   return (
     <>
       {/* 桌機版*/}
+
       <div className="col  d-none d-lg-block" key={`desktop-${product.id}`}>
+       
         <div className="card h-100">
           <div className="imgWrap">
             <img
@@ -55,7 +56,6 @@ export default function ProductCard({ product, collections, isIconChange }) {
                   ? product.name
                   : `${product.name}(${product.size})`}
               </h5>
-              
             </div>
             <div className="star d-flex">
               <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
@@ -63,7 +63,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
             </div>
             <div className="price d-flex align-items-center justify-content-between mt-1">
             <Toaster position="top-center" reverseOrder={false} />
-              <div className='d-flex'>
+              <div className="d-flex">
                 <p className="card-text mb-0 me-3 text-color2-nohover">
                   NTD {product.price}
                 </p>
@@ -140,7 +140,8 @@ export default function ProductCard({ product, collections, isIconChange }) {
                   </p>
                 </div>
                 <div className="star d-flex">
-                  <TbStarFilled className='mt-1'
+                  <TbStarFilled
+                    className="mt-1"
                     style={{ color: '#F6A404', fontSize: '19px' }}
                   />
                   <p className="ms-1 mb-0 fs-6">{product.star}</p>
@@ -292,7 +293,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
           display: flex;
           justify-content: center;
         }
-      
+
         .imgWrap img {
           width: auto;
           height: 100%;
@@ -342,7 +343,6 @@ export default function ProductCard({ product, collections, isIconChange }) {
             width: 177px;
             height: 177px;
           }
-          
         }
       `}</style>
     </>
