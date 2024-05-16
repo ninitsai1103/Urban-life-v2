@@ -2,26 +2,30 @@ import { useState, useEffect } from 'react'
 import useArticlesComment from '@/hooks/use-article-comment'
 
 export default function Comment({ comment }) {
-  console.log(comment)
   return (
     <>
       <div className="d-flex  mx-5" key={comment.id}>
         {/* userimg  */}
         <div className="col-lg-1 col-md-1 userimg-col-12 ">
-          <div className="img-container ">
+          <div className="imgsize">
             <img
-              className="w-100  img-thumbnail"
-              src="/images/article/usercomment.png"
+              className="rounded-circle w-100"
+              src={`http://localhost:3005/avatar/${comment.img}`}
             />
           </div>
 
-          <span className=" ">{comment.user_id}</span>
+          <span
+            className=" "
+            style={{ fontSize: '14px', color: '#6b6b6b', fontWeight: '400' }}
+          >
+            {comment.name}
+          </span>
         </div>
         {/* usercontent  */}
         <div className="col-10 ms-3 d-md-block d-lg-block">
           <h5
             className=""
-            style={{ fontSize: '16px', color: '#6b6b6b', fontWeight: '400' }}
+            style={{ fontSize: '12px', color: '#6b6b6b', fontWeight: '400' }}
           >
             {comment.date}
           </h5>
@@ -48,18 +52,14 @@ export default function Comment({ comment }) {
         }
 
         .img-container {
-          
-           
-          position: relative; 
-          
+          position: relative;
+
           border-radius: 50%; /* 圓角 */
         }
 
-        .img-thumbnail {
-           {
-            width: 100%;
-          height: 100%; */
-          }
+        .imgsize {
+          width: 45px;
+          height: 45px;
 
           object-fit: cover; /* 保證圖像覆蓋整個容器，但不變形 */
           border-radius: 50%; /* 圓角 */

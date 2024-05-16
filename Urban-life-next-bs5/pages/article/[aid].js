@@ -9,6 +9,7 @@ import useArticlesComment from '../../hooks/use-article-comment'
 import { useRouter } from 'next/router'
 import useCollections from '@/hooks/product/useCollections' // Import useCollections hook
 import toast, { Toaster } from 'react-hot-toast'
+import { useMemberInfo } from '@/hooks/use-member-info'
 import Link from 'next/link'
 
 export default function Detail() {
@@ -19,6 +20,26 @@ export default function Detail() {
   const [commentText, setCommentText] = useState('') // 绑定输入框用于新增评论
   const { articleComments } = useArticlesComment(aid) // 使用 Hook 获取评论
   const [isCollected, setIsCollected] = useState(null)
+  const [comments, setComments] = useState([]) //存放當前文章留言
+
+  // member的hooks
+  const { member } = useMemberInfo()
+
+  // 判斷user是誰
+  const [identityId, setUserIdentityId] = useState()
+  useEffect(() => {
+    const { identity_id, name, id } = JSON.parse(
+      localStorage.getItem('member-info')
+    )
+    setUserIdentityId(identity_id)
+    console.log(name)
+    console.log(identity_id)
+    console.log(id)
+  }, [])
+
+  // 設定按鈕是否顯示的狀態
+  const shouldShowButton = identityId === 2
+
   const { collections, addArticleCollection, removeArticleCollection } =
     useCollections()
 
@@ -30,6 +51,15 @@ export default function Detail() {
       setArticle(fetchArticle) // 設置當前文章
     }
   })
+
+  useEffect(() => {
+    if (aid && articles.length > 0) {
+      const fetchComment = articleComments.find(
+        (item) => item.id === parseInt(aid, 10)
+      )
+      setComments(fetchComment) // 設置當前文章
+    }
+  }, [comments, aid])
 
   // 檢查當前文章是否在收藏列表中
   // const isFound = collections.find(
@@ -132,9 +162,9 @@ export default function Detail() {
         <div className="row mt-2 mx-2">
           <Toaster position="top-center" reverseOrder={false} />
 
-          <div className="col-sm-12 mt-3" onClick={() => router.back()} >
+          <div className="col-sm-12 mt-3" onClick={() => router.back()}>
             <SlArrowLeft />
-            <span className="text-decoration-none mx-2" >返回上一頁</span>
+            <span className="text-decoration-none mx-2">返回上一頁</span>
           </div>
 
           <div className="col-sm-12 black-bottom-border">
@@ -180,7 +210,6 @@ export default function Detail() {
                       className="me-1 mb-1"
                       style={{ fontSize: '25px', color: '#ff4136' }}
                     />
-                    
                   </span>
                 ) : (
                   <span
@@ -195,16 +224,23 @@ export default function Detail() {
                       className="me-1 mb-1"
                       style={{ fontSize: '25px', color: '#ff4136' }}
                     />
-                    
                   </span>
                 )}
               </div>
             </div>
             <div className="d-flex justify-content-end align-items-center mt-1">
-              <button className="btn btn-add-r me-3" onClick={del_article}>
+              <button
+                className={`btn btn-add-r me-3 ${
+                  shouldShowButton ? '' : 'd-none'
+                }`}
+                onClick={del_article}
+              >
                 刪除文章
               </button>
-              <Link className="btn btn-add-r " href={`/article/edit/${aid}`}>
+              <Link
+                className={`btn btn-add-r ${shouldShowButton ? '' : 'd-none'}`}
+                href={`/article/edit/${aid}`}
+              >
                 編輯文章
               </Link>
             </div>
@@ -219,7 +255,10 @@ export default function Detail() {
             </div>
 
             {/* <p className="m-5">{article?.content}</p> */}
-            <div className="m-5" dangerouslySetInnerHTML={{ __html: article?.content }}></div>
+            <div
+              className="m-5"
+              dangerouslySetInnerHTML={{ __html: article?.content }}
+            ></div>
           </div>
         </div>
         <div className="col-sm-12 ">

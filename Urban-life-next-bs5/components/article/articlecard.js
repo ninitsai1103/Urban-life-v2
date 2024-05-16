@@ -7,7 +7,7 @@ import { TbStarFilled, TbStar, TbMessage } from 'react-icons/tb'
 import useArticles from '@/hooks/use-articles'
 
 export default function ArticleCard({ article }) {
-  console.log(article)
+  // console.log(article)
   return (
     <>
       {/* 列表1*/}
