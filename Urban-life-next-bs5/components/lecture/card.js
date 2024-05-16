@@ -52,15 +52,17 @@ export default function LectureMyCard({ lecture, collections = [] }) {
   return (
     <>
       <div className={styles.card}>
-        <img
-          loading="lazy"
-          src={`http://localhost:3005/lecture_img/${lecture.cover}`}
-          alt={lecture.name}
-          className={styles.img}
-        />
+        <a className={styles.img} href={`/lecture/${lecture.id}`}>
+          <img
+            loading="lazy"
+            src={`http://localhost:3005/lecture_img/${lecture.cover}`}
+            alt={lecture.name}
+            className={styles.img}
+          />
+        </a>
         <div className={styles.cardBody}>
           <div className={styles.cardBodyName}>
-            <div className={styles.lectureName}>{lecture.name}</div>
+            <div className={styles.lectureName} ><a href={`/lecture/${lecture.id}`} style={{ textDecoration: 'none' }}>{lecture.name}</a></div>
             <button className="btn btn-like" onClick={toggleCollection}>
               {isCollected ? (
                 <FaHeart
@@ -82,7 +84,7 @@ export default function LectureMyCard({ lecture, collections = [] }) {
             </button>
           </div>
           <div className={styles.cardBodyArea}>
-            <div className={styles.lectureText}>{lecture.teacher_name}</div>
+            <div className={styles.lectureText}><a href={`/teacher/${lecture.teacher_id}`} style={{ textDecoration: 'none' }}>{lecture.teacher_name}</a></div>
             <div className={styles.lectureText}>{lecture.lecture_date}</div>
           </div>
           <div className={styles.cardBodyArea}>

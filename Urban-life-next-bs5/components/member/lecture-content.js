@@ -314,6 +314,16 @@ export default function LectureContentTbody({
     }
   }
 
+  const text2jsx = (text) => {
+    return text.split('\n\n').map((v, i) => (
+      <div className="article-section" key={i}>
+        {v.split('\n').map((v2, i2) => (
+          <div className="article-p" key={`${i}-${i2}`}>{v2}</div>
+        ))}
+      </div>
+    ))
+  }
+
   return (
     <>
       <tbody className="text-center align-middle" key={lecture.id}>
@@ -419,7 +429,7 @@ export default function LectureContentTbody({
                         </tr>
                         <tr>
                           <th>詳細介紹：</th>
-                          <td>{lecture.content}</td>
+                          <td>{text2jsx(lecture.content)}</td>
                         </tr>
                         <tr>
                           <th>課程圖片：</th>

@@ -7,7 +7,7 @@ export default function TeacherCardInfo({ teachers = [] }) {
     <>
       {teachers.map((teachers) => {
         return (
-          <Link key={teachers.id} href={`/teacher/${teachers.id}`}>
+          <Link key={teachers.id} href={`/teacher/${teachers.id}`} style={{ textDecoration: 'none' }}>
             <div className="card" key={teachers.id}>
               <div className="card-top">
                 <img

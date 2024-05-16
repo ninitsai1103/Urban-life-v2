@@ -15,13 +15,13 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
       // 檢查這個講座是否在收藏列表中
       const isCollected = collections.some(
         (item) => item.product_id === lecture.id && item.valid === 1
-      );
+      )
       // 根據檢查結果更新初始收藏狀態
-      map[lecture.id] = isCollected;
-      return map;
-    }, {});
-    setIsCollectedMap(initialCollectedMap);
-  }, [lectures, collections]);
+      map[lecture.id] = isCollected
+      return map
+    }, {})
+    setIsCollectedMap(initialCollectedMap)
+  }, [lectures, collections])
 
   const { addCollection, removeCollection } = useColloections()
   const MySwal = withReactContent(Swal)
@@ -40,24 +40,28 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
   const toggleCollection = useCallback(
     (lectureId) => {
       setIsCollectedMap((prevMap) => {
-        const newMap = { ...prevMap };
-        const newCollected = !newMap[lectureId];
-        newMap[lectureId] = newCollected;
-        const lecture = lectures.find((item) => item.id === lectureId);
+        const newMap = { ...prevMap }
+        const newCollected = !newMap[lectureId]
+        newMap[lectureId] = newCollected
+        const lecture = lectures.find((item) => item.id === lectureId)
         if (lecture) {
           if (newCollected) {
-            addCollection(lectureId);
-            notifySA('成功收藏', `${lecture.name}已成功加入您的收藏!`, 'success');
+            addCollection(lectureId)
+            notifySA(
+              '成功收藏',
+              `${lecture.name}已成功加入您的收藏!`,
+              'success'
+            )
           } else {
-            removeCollection(lectureId);
-            notifySA('取消收藏', `${lecture.name}已成功取消收藏!`, 'error');
+            removeCollection(lectureId)
+            notifySA('取消收藏', `${lecture.name}已成功取消收藏!`, 'error')
           }
         }
-        return newMap;
-      });
+        return newMap
+      })
     },
     [lectures, addCollection, removeCollection, notifySA]
-  );
+  )
 
   return (
     <>
@@ -65,15 +69,25 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
         lectures.map((lecture) => (
           <div className={styles.card}>
             <div className="flex">
-              <img
-                loading="lazy"
-                src={`http://localhost:3005/lecture_img/${lecture.cover}`}
-                className={styles.img}
-              />
+              <a className={styles.img} href={`/lecture/${lecture.id}`}>
+                <img
+                  loading="lazy"
+                  src={`http://localhost:3005/lecture_img/${lecture.cover}`}
+                  alt={lecture.name}
+                  className={styles.img}
+                />
+              </a>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardBodyName}>
-                <div className={styles.lectureName}>{lecture.name}</div>
+                <div className={styles.lectureName}>
+                  <a
+                    href={`/lecture/${lecture.id}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {lecture.name}
+                  </a>
+                </div>
                 <button
                   className="width-25 btn btn-like"
                   onClick={() => toggleCollection(lecture.id)}

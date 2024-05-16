@@ -1,27 +1,27 @@
-import { useState, useEffect, useCallback } from 'react';
-import styles from './article-card.module.css';
-import Link from 'next/link';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import useCollections from '@/hooks/product/useCollections';
-import withReactContent from 'sweetalert2-react-content';
-import Swal from 'sweetalert2';
+import { useState, useEffect, useCallback } from 'react'
+import styles from './article-card.module.css'
+import Link from 'next/link'
+import { FaHeart, FaRegHeart } from 'react-icons/fa'
+import useCollections from '@/hooks/product/useCollections'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 
 export default function ArticleCard({ articlesList, collections = [] }) {
-  const [isCollectedMap, setIsCollectedMap] = useState({});
+  const [isCollectedMap, setIsCollectedMap] = useState({})
 
   useEffect(() => {
     const initialCollectedMap = articlesList.reduce((map, article) => {
       const isCollected = collections.some(
         (item) => item.product_id === article.id && item.valid === 1
-      );
-      map[article.id] = isCollected;
-      return map;
-    }, {});
-    setIsCollectedMap(initialCollectedMap);
-  }, [articlesList, collections]);
+      )
+      map[article.id] = isCollected
+      return map
+    }, {})
+    setIsCollectedMap(initialCollectedMap)
+  }, [articlesList, collections])
 
-  const { addCollection, removeCollection } = useCollections();
-  const MySwal = withReactContent(Swal);
+  const { addCollection, removeCollection } = useCollections()
+  const MySwal = withReactContent(Swal)
 
   const notifySA = useCallback(
     (title, text, icon) => {
@@ -29,33 +29,37 @@ export default function ArticleCard({ articlesList, collections = [] }) {
         title,
         text,
         icon,
-      });
+      })
     },
     [MySwal]
-  );
+  )
 
   const toggleCollection = useCallback(
     (articleId) => {
       setIsCollectedMap((prevMap) => {
-        const newMap = { ...prevMap };
-        const newCollected = !newMap[articleId];
-        newMap[articleId] = newCollected;
+        const newMap = { ...prevMap }
+        const newCollected = !newMap[articleId]
+        newMap[articleId] = newCollected
 
-        const article = articlesList.find((item) => item.id === articleId);
+        const article = articlesList.find((item) => item.id === articleId)
         if (article) {
           if (newCollected) {
-            addCollection(articleId);
-            notifySA('成功收藏', `${article.title} 已成功加入您的收藏!`, 'success');
+            addCollection(articleId)
+            notifySA(
+              '成功收藏',
+              `${article.title} 已成功加入您的收藏!`,
+              'success'
+            )
           } else {
-            removeCollection(articleId);
-            notifySA('取消收藏', `${article.title} 已成功取消收藏!`, 'error');
+            removeCollection(articleId)
+            notifySA('取消收藏', `${article.title} 已成功取消收藏!`, 'error')
           }
         }
-        return newMap;
-      });
+        return newMap
+      })
     },
     [articlesList, addCollection, removeCollection, notifySA]
-  );
+  )
 
   return (
     <>
@@ -63,17 +67,22 @@ export default function ArticleCard({ articlesList, collections = [] }) {
         articlesList.map((article) => (
           <div key={article.id} className={styles.card}>
             <div className="flex">
-              <img
-                loading="lazy"
-                src={`http://localhost:3005/images/article/${article.img}`}
-                alt={article.title}
-                className={styles.img}
-              />
+              <a className={styles.img} href={`/article/${article.id}`}>
+                <img
+                  loading="lazy"
+                  src={`http://localhost:3005/images/article/${article.img}`}
+                  alt={article.title}
+                  className={styles.img}
+                />
+              </a>
             </div>
             <div className={styles.cardBody}>
               <div className={styles.cardBodyName}>
                 <div className={styles.articleText}>{article.created_at}</div>
-                <button className="btn btn-like" onClick={() => toggleCollection(article.id)}>
+                <button
+                  className="btn btn-like"
+                  onClick={() => toggleCollection(article.id)}
+                >
                   {isCollectedMap[article.id] ? (
                     <FaHeart
                       style={{
@@ -94,7 +103,14 @@ export default function ArticleCard({ articlesList, collections = [] }) {
                 </button>
               </div>
               <div className={styles.cardBodyArea}>
-                <div className={styles.articleName}>{article.title}</div>
+                <div className={styles.articleName}>
+                  <a
+                    href={`/article/${article.id}`}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {article.title}
+                  </a>
+                </div>
               </div>
               <div className={styles.cardBodyPrice}>
                 <div></div>
@@ -109,5 +125,5 @@ export default function ArticleCard({ articlesList, collections = [] }) {
         <p className={styles.articleName}>目前沒有文章</p>
       )}
     </>
-  );
+  )
 }

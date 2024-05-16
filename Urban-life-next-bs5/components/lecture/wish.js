@@ -1,11 +1,25 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import styles from './wish.module.css'
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
 
 export default function LectureWish({ teachers }) {
   const [content, setContent] = useState('')
   const [teacherId, setTeacherId] = useState('')
   const [date, setDate] = useState('')
   const [price, setPrice] = useState('')
+  const MySwal = withReactContent(Swal)
+
+  const notifySA = useCallback(
+    (title, text, icon) => {
+      MySwal.fire({
+        title,
+        text,
+        icon,
+      })
+    },
+    [MySwal]
+  )
 
   const submitWish = async () => {
     const response = await fetch('http://localhost:3005/api/teacher-wish', {
@@ -17,9 +31,9 @@ export default function LectureWish({ teachers }) {
     })
     const result = await response.json()
     if (result.status === 'success') {
-      alert('您的願望我們收到了！')
+      notifySA('許願成功', `您的願望我們收到了！`, 'success');
     } else {
-      alert(`Failed to add wish: ${result.message}`)
+      notifySA('許願失敗', `願望不完整，請再檢查一下！`, 'warning');
     }
   }
 

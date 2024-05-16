@@ -19,6 +19,7 @@ export default function LectureMyCardNp({
     name,
     star,
     description,
+    teacher_id,
     teacher_name,
     lecture_date,
     starting_time,
@@ -98,7 +99,7 @@ export default function LectureMyCardNp({
     <>
       <div className={styles.card}>
         <div className={styles.cardBodyName}>
-          <div className={styles.lectureName}>{name}</div>
+          <div className={styles.lectureName}><a href={`/lecture/${lecture.id}`} style={{ textDecoration: 'none' }}>{lecture.name}</a></div>
           <button className="btn btn-like">
             {isCollected ? (
               <FaHeart
@@ -128,7 +129,7 @@ export default function LectureMyCardNp({
           </button>
         </div>
         <div className={styles.cardBodyArea}>
-          <div className={styles.lectureText}>{teacher_name}</div>
+          <div className={styles.lectureText}><a href={`/teacher/${lecture.teacher_id}`} style={{ textDecoration: 'none' }}>{lecture.teacher_name}</a></div>
           <div className={styles.lectureText}>{lecture_date}</div>
         </div>
         <div className={styles.cardBodyArea}>
@@ -162,7 +163,7 @@ export default function LectureMyCardNp({
             </button>
           ) : (
             <button
-              className="btn btn-danger"
+              className="btn btn-delete"
               style={{ maxWidth: '106px' }}
               onClick={handleAddtoCalendar}
             >

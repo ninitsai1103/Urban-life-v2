@@ -12,6 +12,16 @@ export default function LectureContentPhone({
     return timeWithoutMilliseconds
   }
 
+  const text2jsx = (text) => {
+    return text.split('\n\n').map((v, i) => (
+      <div className="article-section" key={i}>
+        {v.split('\n').map((v2, i2) => (
+          <div className="article-p" key={`${i}-${i2}`}>{v2}</div>
+        ))}
+      </div>
+    ))
+  }
+
   // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
   const [selectedFile1, setSelectedFile1] = useState(null)
   const [selectedFile2, setSelectedFile2] = useState(null)
@@ -437,7 +447,7 @@ export default function LectureContentPhone({
                         </tr>
                         <tr>
                           <th>詳細介紹：</th>
-                          <td>{lecture.content}</td>
+                          <td>{text2jsx(lecture.content)}</td>
                         </tr>
                         <tr>
                           <th>課程圖片：</th>

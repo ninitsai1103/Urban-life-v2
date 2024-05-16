@@ -94,7 +94,7 @@ router.post('/', async function (req, res) {
   if (!content || !teacher_id || !date || !price) {
     return res.status(400).json({
       status: 'error',
-      message: 'Missing required fields: content, teacher_id, date, price'
+      message: '許願要完整喔!'
     })
   }
 

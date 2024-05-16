@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import MessageCard from '@/components/lecture/message-card'
 import TeacherAllInfo from '@/components/lecture/teacherallInfo'
 import TeacherLectureCard from '@/components/lecture/teacherlecture'
 import ArticleCard from '@/components/lecture/article-card'
@@ -120,26 +119,6 @@ export default function LectureDetail() {
                 </div>
               )}
             </div>
-          </div>
-        </section>
-        <section className="section3">
-          <h1 className="sectiontitle">在這裡和老師互動</h1>
-          <div className="comment">
-            <MessageCard />
-            <MessageCard />
-            <MessageCard />
-          </div>
-          <div className="form">
-            <textarea
-              name=""
-              id=""
-              className=""
-              cols="150"
-              rows="10"
-              maxlength="5000"
-              placeholder="留個言吧~"
-            ></textarea>
-            <button className="btn btn-add">送出</button>
           </div>
         </section>
       </div>
