@@ -20,7 +20,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
       )
     )
     // console.log(isCollected);
-  }, [collections, product.id])
+  }, [collections])
 
   //切換商品的收藏狀態
   const toggleCollection = () => {
@@ -55,54 +55,14 @@ export default function ProductCard({ product, collections, isIconChange }) {
                   ? product.name
                   : `${product.name}(${product.size})`}
               </h5>
-              <Toaster position="top-center" reverseOrder={false} />
-
-              {/* {isCollected ? (
-                <FaHeart
-                  style={{
-                    fontSize: '23px',
-                    cursor: 'pointer',
-                    color: '#ff4136',
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    removeCollection(product.id)
-                    toggleCollection()
-                    // console.log(isCollected)
-                  }}
-                />
-              ) : (
-                <FaRegHeart
-                  style={{
-                    fontSize: '23px',
-                    cursor: 'pointer',
-                    color: '#ff4136',
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    addCollection(product.id)
-                      .then((updatedData) => {
-                        console.log('Collection added:', updatedData)
-                        toggleCollection()
-                        // console.log(isCollected)
-                      })
-                      .catch((error) => {
-                        alert('請先登入會員再進行收藏功能')
-                        window.location.href = '/member/login'
-                        console.error(
-                          'Failed to add collection:',
-                          error.message
-                        )
-                      })
-                  }}
-                />
-              )} */}
+              
             </div>
             <div className="star d-flex">
               <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
               <p className="ms-1 mb-0 fs-15">{product.star}</p>
             </div>
             <div className="price d-flex align-items-center justify-content-between mt-1">
+            <Toaster position="top-center" reverseOrder={false} />
               <div className='d-flex'>
                 <p className="card-text mb-0 me-3 text-color2-nohover">
                   NTD {product.price}

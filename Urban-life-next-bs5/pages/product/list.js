@@ -144,20 +144,20 @@ export default function List() {
     setCurrentPage(1) //重新設定為第一頁
   }
 
-  //頁面刷新為全部商品
-  const allProducts = () => {
-      // 取消分類
-  setSelectCategory(null);
-  // 取消排序，假設 `handleSortDatas` 支持 null 或特定值來重設排序
-  handleSortDatas(null);
-  // 設定 searchResults 為所有產品，並且不經過任何過濾或排序
-  setSearchResults(products);
-  // 重設頁面到第一頁
-  setCurrentPage(1);
-    // setSelectCategory(null);
-    // setSearchResults(filteredProducts);
-    // setCurrentPage(1);
-  }
+  // //頁面刷新為全部商品
+  // const allProducts = () => {
+  //     // 取消分類
+  // setSelectCategory(null);
+  // // 取消排序，假設 `handleSortDatas` 支持 null 或特定值來重設排序
+  // handleSortDatas(null);
+  // // 設定 searchResults 為所有產品，並且不經過任何過濾或排序
+  // setSearchResults(products);
+  // // 重設頁面到第一頁
+  // setCurrentPage(1);
+  //   // setSelectCategory(null);
+  //   // setSearchResults(filteredProducts);
+  //   // setCurrentPage(1);
+  // }
 
   //排序控制
   const changeSort = (key, order) => {
