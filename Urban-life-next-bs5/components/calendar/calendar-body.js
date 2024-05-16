@@ -120,17 +120,20 @@ export default function CalendarBody({ calendarMain, cardData }) {
           background-color: #f3b454;
           border-radius: 1rem;
           text-align: center;
+          padding: 2px;
           animation: fadeIn 0.5s ease-in-out;
         }
 
-         {/* @keyframes fadeIn {
+         {
+          /* @keyframes fadeIn {
           0% {
-            opacity: 0.7;
+            opacity: 0;
           }
           100% {
             opacity: 1;
-          }
-        }  */}
+          } 
+        }  */
+        }
       `}</style>
     </>
   )

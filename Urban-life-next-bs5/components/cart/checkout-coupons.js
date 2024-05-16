@@ -5,7 +5,7 @@ import { useCheckout } from '@/hooks/use-checkout'
 // import category from '@/data/products-lectures-test/product-category.json'
 
 export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
-  // const { items, totalPrice } = useCheckout()
+  const { totalPriceChecked } = useCheckout()
 
   // 過濾出未過期且可使用的優惠券
   const couponNotExpired = coupons.filter(
@@ -71,10 +71,14 @@ export default function CheckoutCouponsSelect({ coupons, sendSelectedCoupon }) {
   //   }
   // }, [])
   useEffect(() => {
-    window.localStorage.setItem(
-      'selectedCoupon',
-      JSON.stringify(selectedCoupon)
-    )
+    if(totalPriceChecked>=selectedCoupon.min_price) {
+      window.localStorage.setItem(
+        'selectedCoupon',
+        JSON.stringify(selectedCoupon)
+      )
+    }else{
+      window.localStorage.setItem('selectedCoupon', JSON.stringify([]))
+    }
   }, [selectedCoupon])
 
   return (

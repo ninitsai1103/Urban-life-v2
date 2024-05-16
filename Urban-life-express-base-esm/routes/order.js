@@ -5,7 +5,11 @@ const router = express.Router()
 import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
-  const id = req.query.user_id
+
+  let id 
+  if( req.query.user_id){
+    id = req.query.user_id
+  }else{id=42}
   // order_detail資料庫 SQL
   const sqlOrder = `SELECT 
   order_detail.*,

@@ -1,25 +1,23 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 import MessageCard from '@/components/lecture/message-card'
 import TeacherAllInfo from '@/components/lecture/teacherallInfo'
 import TeacherLectureCard from '@/components/lecture/teacherlecture'
 import ArticleCard from '@/components/lecture/article-card'
-import useCollections from '@/hooks/product/useCollections'
-import withReactContent from 'sweetalert2-react-content'
-import Swal from 'sweetalert2'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
 import { UseLecture } from '@/hooks/use-lecture'
 import useTeacherArticles from '@/hooks/use-teacherarticle'
+import useColloections from '@/hooks/product/useCollections'
 
 export default function LectureDetail() {
   const { teachers } = UseTeacherInfo()
   const { lectures } = UseLecture()
   const { articles } = useTeacherArticles()
+  const { collections } = useColloections([])
 
   const router = useRouter()
   const { tid } = router.query
-
+  const [isCollected, setIsCollected] = useState([])
   const [teacher, setTeacher] = useState(null)
   const [teacherLectures, setTeacherLectures] = useState([])
   const [articlesList, setArticlesList] = useState([])
@@ -27,25 +25,38 @@ export default function LectureDetail() {
   // 根據 tid 獲取講師信息
   useEffect(() => {
     if (tid && teachers.length > 0) {
-      const fetchedTeacher = teachers.find(item => item.id === parseInt(tid, 10))
+      const fetchedTeacher = teachers.find(
+        (item) => item.id === parseInt(tid, 10)
+      )
       setTeacher(fetchedTeacher)
     }
   }, [teachers, tid])
 
-  // 根據 tid 獲取講師的講座信息
+  // 根據 tid 獲取講師的講座
   useEffect(() => {
     if (tid && lectures.length > 0) {
       const fetchedLectures = lectures
-        .filter(lecture => lecture.teacher_id === parseInt(tid, 10))
+        .filter((lecture) => lecture.teacher_id === parseInt(tid, 10))
         .sort((a, b) => new Date(a.lecture_date) - new Date(b.lecture_date)) // 根據 lecture_date 進行排序
       setTeacherLectures(fetchedLectures)
     }
   }, [lectures, tid])
 
-  // 根據 tid 獲取講師的文章信息
+  // 檢查當前課程是否在收藏列表中
+  useEffect(() => {
+    setIsCollected(
+      collections.filter(
+        (item) =>
+          (item.product_id == tid || item.article_id == tid) && item.valid == 1
+      )
+    )
+  }, [collections])
+
+  // 根據 tid 獲取講師的文章
   useEffect(() => {
     if (tid && articles.length > 0) {
-      const fetchedArticles = articles.filter(article => article.user_id === parseInt(tid, 10))
+      const fetchedArticles = articles
+        .filter((article) => article.user_id === parseInt(tid, 10))
         .sort((a, b) => new Date(b.date) - new Date(a.date))
       setArticlesList(fetchedArticles)
     }
@@ -67,8 +78,9 @@ export default function LectureDetail() {
           <div className="alllist">
             <ul className="nav nav-underline ul-margin">
               <li
-                className={`nav-item col ${activeIndex === '開授的課程' ? 'active' : ''
-                  }`}
+                className={`nav-item col ${
+                  activeIndex === '開授的課程' ? 'active' : ''
+                }`}
               >
                 <button
                   className="nav-link"
@@ -78,8 +90,9 @@ export default function LectureDetail() {
                 </button>
               </li>
               <li
-                className={`nav-item col ${activeIndex === '發布的文章' ? 'active' : ''
-                  }`}
+                className={`nav-item col ${
+                  activeIndex === '發布的文章' ? 'active' : ''
+                }`}
               >
                 <button
                   className="nav-link"
@@ -93,16 +106,21 @@ export default function LectureDetail() {
             <div className="mb-3">
               {activeIndex === '開授的課程' ? (
                 <div className="list">
-                  <TeacherLectureCard lectures={teacherLectures} />
+                  <TeacherLectureCard
+                    lectures={teacherLectures}
+                    collections={collections}
+                  />
                 </div>
               ) : (
                 <div className="list">
-                  <ArticleCard articlesList={articlesList} />
+                  <ArticleCard
+                    articlesList={articlesList}
+                    collections={collections}
+                  />
                 </div>
               )}
             </div>
           </div>
-
         </section>
         <section className="section3">
           <h1 className="sectiontitle">在這裡和老師互動</h1>
@@ -156,7 +174,7 @@ export default function LectureDetail() {
             gap: 50px;
           }
 
-          .alllist {            
+          .alllist {
             padding: 0px 20px;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -167,14 +185,14 @@ export default function LectureDetail() {
             margin-top: 10px;
             margin-bottom: 20px;
           }
-  
+
           .nav-item {
             text-align: center;
           }
           .nav-link {
             width: 100%;
             color: var(--primary-5, #2f4715);
-  
+
             /* ZenKaku-h3 */
             font-family: 'Zen Kaku Gothic New';
             font-size: 36px;

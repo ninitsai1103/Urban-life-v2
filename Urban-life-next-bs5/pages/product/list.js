@@ -146,10 +146,17 @@ export default function List() {
 
   //頁面刷新為全部商品
   const allProducts = () => {
-    
-    setSelectCategory(null);
-    setSearchResults(filteredProducts);
-    setCurrentPage(1);
+      // 取消分類
+  setSelectCategory(null);
+  // 取消排序，假設 `handleSortDatas` 支持 null 或特定值來重設排序
+  handleSortDatas(null);
+  // 設定 searchResults 為所有產品，並且不經過任何過濾或排序
+  setSearchResults(products);
+  // 重設頁面到第一頁
+  setCurrentPage(1);
+    // setSelectCategory(null);
+    // setSearchResults(filteredProducts);
+    // setCurrentPage(1);
   }
 
   //排序控制
@@ -201,6 +208,8 @@ export default function List() {
       location: false,
     })
     setCurrentPage(1)
+    setMinPriceValue('')
+    setMaxPriceValue('')
   }
 
   //切換手機檢視
@@ -974,9 +983,11 @@ export default function List() {
                     href="/product/list"
                   >
                     <Link className="text-decoration-none" href="/product/list"
-                    onClick={()=>{
-                     allProducts()}
-                    } >
+                    onClick={(e) => {
+                            e.preventDefault();
+                            changeSort('', 'ascending')
+                            setSecProducts(products)
+                          }} >
                       商品總覽
                     </Link>
                   </li>
@@ -1763,8 +1774,8 @@ export default function List() {
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            changeSort('id', 'ascending')
-                            allProducts();
+                            changeSort('', 'ascending')
+                            setSecProducts(products)
                           }}
                         >
                           全部商品

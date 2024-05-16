@@ -5,6 +5,7 @@ import Page from '@/components/product/pagination'
 import { IoAdd } from 'react-icons/io5'
 import useTeacherArticles from '@/hooks/use-teacherarticle'
 import { useMemberInfo } from '@/hooks/use-member-info'
+import Link from 'next/link'
 
 export default function ArticleManagement() {
   const [ArticlesList, setArticlesList] = useState([])
@@ -135,10 +136,10 @@ export default function ArticleManagement() {
             <div className="d-flex justify-content-between align-items-center teacher-margin-bottom">
               <div className="teacher-text-title">我的文章</div>
               <div className="add-article-btn">
-                <a className="btn btn-main" href="/article/add">
+                <Link className="btn btn-main" href="/article/add">
                   <IoAdd />
                   新增文章
-                </a>
+                </Link>
               </div>
             </div>
             <div className="dropdown">

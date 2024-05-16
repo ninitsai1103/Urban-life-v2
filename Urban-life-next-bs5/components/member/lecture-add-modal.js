@@ -260,7 +260,7 @@ export default function LectureAddModal({ identityId }) {
             <form>
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  這裡是課程名稱
+                  新增課程
                 </h1>
                 <button
                   type="button"

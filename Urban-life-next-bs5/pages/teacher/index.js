@@ -1,10 +1,8 @@
-import React from 'react'
-import { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import Herosection from '@/components/lecture/herosection'
 import { Container } from 'react-bootstrap'
 import Search from '@/components/lecture/search'
 import Page from '@/components/product/pagination'
-import Link from 'next/link'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
 
@@ -15,33 +13,35 @@ export default function LectureHome() {
   // 搜尋
   const handleSearch = (keyword) => {
     const filteredTeachers = teachers.filter((teacher) =>
-        teacher.name.toLowerCase().includes(keyword.toLowerCase()) ||
-        teacher.email.toLowerCase().includes(keyword.toLowerCase()) ||
-        teacher.phone.toLowerCase().includes(keyword.toLowerCase()) ||
-        teacher.intro.toLowerCase().includes(keyword.toLowerCase())
+      teacher.name.toLowerCase().includes(keyword.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(keyword.toLowerCase()) ||
+      teacher.phone.toLowerCase().includes(keyword.toLowerCase()) ||
+      teacher.intro.toLowerCase().includes(keyword.toLowerCase())
     )
 
-    setRenderTeachers(filteredTeachers) // 直接設置 renderTeachers 的狀態
+    // 設定 renderTeachers 並根據 id 進行排序
+    setRenderTeachers(filteredTeachers.sort((a, b) => a.id - b.id))
   }
 
   // 分頁相關狀態
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const perPage = 16 //一頁幾筆資料
+  const perPage = 16 // 一頁幾筆資料
   const [displayedTeachers, setDisplayedTeachers] = useState([])
 
-  //sync
+  // 同步 teachers 狀態
   useEffect(() => {
-    if (teachers.length) setRenderTeachers(teachers)
+    if (teachers.length) {
+      // 設定 renderTeachers 並根據 id 進行排序
+      setRenderTeachers(teachers.sort((a, b) => a.id - b.id))
+    }
   }, [teachers])
 
   useEffect(() => {
     // 計算總頁數
-    const totalPageCount = Math.ceil(teachers.length / perPage)
+    const totalPageCount = Math.ceil(renderTeachers.length / perPage)
     setTotalPages(totalPageCount)
-  }, [teachers])
-
-  const sortedTeachers = [...teachers].sort((a, b) => a.id - b.id)
+  }, [renderTeachers])
 
   useEffect(() => {
     // 當頁碼改變時，根據當前頁碼更新顯示的教師卡片
@@ -72,7 +72,7 @@ export default function LectureHome() {
             <TeacherCardInfo teachers={displayedTeachers} />
           </div>
         </section>
-        <div className="container ">
+        <div className="container">
           <Page
             perpages={perPage}
             currentPage={currentPage}

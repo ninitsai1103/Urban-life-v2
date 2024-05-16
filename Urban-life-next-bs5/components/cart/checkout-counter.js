@@ -45,10 +45,11 @@ export default function CheckoutCounter({ selectedCoupon }) {
         // setPricePayable(updatedPrice)
       }
     }
-    // else {
-    //   updatedDiscount = 0
-    //   updatedPrice = totalPriceChecked + shippingFee
-    // }
+    else {
+      updatedDiscount = 0
+      setDiscount(updatedDiscount)
+      // updatedPrice = totalPriceChecked + shippingFee
+    }
 
     // setDiscount(updatedDiscount)
     // setPricePayable(updatedPrice)
@@ -138,6 +139,7 @@ export default function CheckoutCounter({ selectedCoupon }) {
   // useEffect(() => {
   //   window.localStorage.getItem("pricePayable")
   // }, [])
+  //
 
   const [showWarning, setShowWarning] = useState(false)
   useEffect(() => {

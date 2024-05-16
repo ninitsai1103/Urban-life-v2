@@ -29,13 +29,13 @@ export default function Information() {
 
     let hasErrors = false
     if (user.password && (!user.newPassword || !user.confirmPassword)) {
-      alert('新密碼和確認密碼為必填')
+      toast.error('新密碼和確認密碼為必填')
       hasErrors = true
     } else if (user.newPassword !== user.confirmPassword) {
-      alert('新密碼和確認密碼不匹配')
+      toast.error('新密碼和確認密碼不匹配')
       hasErrors = true
     }else if(user.password && user.newPassword.length < 6){
-      alert('密碼長度至少六位數')
+      toast.error('密碼長度至少六位數')
       hasErrors = true
     }
     // 检查手机号码格式

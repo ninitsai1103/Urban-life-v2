@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react'
 import { CiHeart } from 'react-icons/ci'
 import { FaCommentDots, FaArrowRight } from 'react-icons/fa6'
@@ -57,9 +58,9 @@ export default function ArticleCard({ article,identityId }) {
               <button className="article_card_right_bottom d-flex align-items-center">
                 <div className="article_update_text">刪除</div>
               </button> */}
-              <button className="btn btn-detail d-flex align-items-center article_more_margin" onClick={handleArticleClick}>
+              <Link className="btn btn-detail d-flex align-items-center article_more_margin" href={`/article/edit/${article.id}`}>
                 <div className="article_update_text">修改</div>
-              </button>
+              </Link>
               {/* <button className="btn btn-main d-flex align-items-center">
                 <div className="article_update_text">刪除</div>
               </button> */}
