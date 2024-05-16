@@ -99,9 +99,11 @@ export default function Information() {
               },
             })
             toast.success('密碼更新成功，需重新登入')
-            // alert('密碼更新成功，需重新登入')
             localStorage.removeItem('member-info')
-            window.location.href = '/member'
+            setTimeout(() => {
+              window.location.href = '/member'
+            }, 1000)
+          
             return // 重要：在这里返回，避免执行下面的 window.location.reload()
           }
           // 如果没有提供新密码，则重新加载页面
@@ -109,7 +111,7 @@ export default function Information() {
         } else {
           console.error('更新失敗:', data.message)
         }
-        toast.success('更新成功')
+        toast.success(data.message)
       } catch (error) {
         console.error('更新失敗:', error)
       }
@@ -317,14 +319,14 @@ export default function Information() {
                       <div className="modal-footer">
                         <button
                           type="button"
-                          className="btn btn-main"
+                          className="btn btn-detail"
                           data-bs-dismiss="modal"
                         >
                           關閉
                         </button>
                         <button
                           type="button"
-                          className="btn btn-detail"
+                          className="btn  btn-main"
                           onClick={handleSubmit}
                         >
                           確定

@@ -4,7 +4,7 @@ import { googleLogin, logout, parseJwt, getUserById } from '@/services/user'
 import Link from 'next/link'
 import styles from './member.module.css'
 import toast, { Toaster } from 'react-hot-toast'
-
+import { FcGoogle } from "react-icons/fc";
 export default function LoginForm() {
   // 用物件狀態對應整個表單欄位
   const [user, setUser] = useState({
@@ -155,7 +155,8 @@ export default function LoginForm() {
       <div
         className={`box d-flex justify-content-center align-items-center bg-primary4 ${styles.box}`}
       >
-        <form>
+      <div>
+        
           <div className="text-center mb-2" style={{ fontSize: '24px' }}>
             會員登入
           </div>
@@ -266,17 +267,18 @@ export default function LoginForm() {
               </Link>
             </p>
           </div>
-          </form>
+          
+          
           <hr/>
           <div className="d-flex justify-content-center mt-3">
             <button
               className="btn btn-icon"
               onClick={() => loginGoogleRedirect()}
             >
-              Google登入
+              <FcGoogle /> Google登入
             </button>
           </div>
-        
+          </div>
 
         <Toaster />
       </div>
