@@ -134,7 +134,7 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
           </div>
         ))
       ) : (
-        <p>目前沒有課程</p>
+        <p className={styles.lectureName}>目前沒有課程</p>
       )}
     </>
   )

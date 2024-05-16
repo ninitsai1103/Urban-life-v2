@@ -20,6 +20,7 @@ export default function TeacherAllInfo({ teacher }) {
             <div className={styles.teacherinfo}>
               講師簡介：
               <br />
+              <hr />
               {teacher.intro}
             </div>
           </div>
