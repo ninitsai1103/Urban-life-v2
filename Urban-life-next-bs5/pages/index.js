@@ -533,7 +533,7 @@ export default function Home() {
           <p className="text-center">Teacher</p>
           <div className="row mb-4 d-flex justify-content-center">
             <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/2`}>
+              <Link href={`/teacher/2`} className="text-decoration-none">
                 <div className="card TeacherCard">
                   <div className="card-top">
                     <img
@@ -553,7 +553,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/3`}>
+              <Link href={`/teacher/3`} className="text-decoration-none">
                 <div className="card TeacherCard">
                   <div className="card-top">
                     <img
@@ -573,7 +573,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/4`}>
+              <Link href={`/teacher/4`} className="text-decoration-none">
                 <div className="card TeacherCard">
                   <div className="card-top">
                     <img
@@ -593,7 +593,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="col-6 col-sm-3 teacher-card">
-              <Link href={`/teacher/5`}>
+              <Link href={`/teacher/5`} className="text-decoration-none">
                 <div className="card TeacherCard">
                   <div className="card-top">
                     <img
