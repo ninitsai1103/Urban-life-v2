@@ -107,31 +107,7 @@ export default function AsideAccount() {
           <div className="user d-flex flex-column align-items-center">
             <div className="d-flex justify-content-center position-relative">
               <div className="avatar">
-                <Image
-                  src={`http://localhost:3005/avatar/${member?.img}`}
-                  alt=""
-                  width={80}
-                  height={80}
-                  style={{ borderRadius: '100px' }}
-                  priority
-                />
-                <div className="icon-box position-absolute d-flex justify-content-center">
-                  {/* 點擊圖標後觸發 handleIconClick 事件 */}
-                  <MdOutlineAddAPhoto
-                    style={{ color: 'white', cursor: 'pointer' }}
-                    onClick={handleIconClick}
-                  />
-                  {/* 隱藏的文件選擇器 */}
-                  <input
-                    id="fileInput"
-                    type="file"
-                    name="avatar"
-                    onChange={handleFileChange}
-                    style={{ display: 'none' }}
-                  />
-                </div>
-
-                {member?.photo_url && (
+                {member?.photo_url ? (
                   <Image
                     src={`${member?.photo_url}`}
                     alt=""
@@ -140,6 +116,32 @@ export default function AsideAccount() {
                     style={{ borderRadius: '100px' }}
                     priority
                   />
+                ) : (
+                  <Image
+                    src={`http://localhost:3005/avatar/${member?.img}`}
+                    alt=""
+                    width={80}
+                    height={80}
+                    style={{ borderRadius: '100px' }}
+                    priority
+                  />
+                )}
+                {!member?.photo_url && (
+                  <div className="icon-box position-absolute d-flex justify-content-center">
+                    {/* 點擊圖標後觸發 handleIconClick 事件 */}
+                    <MdOutlineAddAPhoto
+                      style={{ color: 'white', cursor: 'pointer' }}
+                      onClick={handleIconClick}
+                    />
+                    {/* 隱藏的文件選擇器 */}
+                    <input
+                      id="fileInput"
+                      type="file"
+                      name="avatar"
+                      onChange={handleFileChange}
+                      style={{ display: 'none' }}
+                    />
+                  </div>
                 )}
               </div>
             </div>
