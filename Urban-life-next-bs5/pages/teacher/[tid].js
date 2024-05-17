@@ -136,7 +136,6 @@ export default function LectureDetail() {
             display: flex;
             width: 1320px;
             padding: 50px 20px;
-            justify-content: space-between;
             align-items: flex-start;
             align-content: flex-start;
             row-gap: 100px;
@@ -229,6 +228,104 @@ export default function LectureDetail() {
             flex: 1 0 0;
             align-self: stretch;
           }
+
+          @media (max-width: 1200px) {
+            .section1 {
+              display: flex;
+              width: 398px;
+              padding: 20px 5px;
+              align-items: flex-start;
+            }
+  
+            .section2 {
+              display: flex;
+              width: 398px;
+              padding: 0px;
+              justify-content: space-between;
+              align-items: flex-start;
+              align-content: flex-start;
+              row-gap: 100px;
+              flex: 1 0 0;
+              flex-wrap: wrap;
+            }
+  
+            .section3 {
+              display: flex;
+              width: 1320px;
+              padding: 50px 20px;
+              flex-direction: column;
+              align-items: center;
+              gap: 50px;
+            }
+  
+            .alllist {
+              padding: 0px 5px;
+              border-radius: 8px;
+              border: 1px solid #ccc;
+              width: 406px;
+            }
+  
+            .ul-margin {
+              margin-top: 10px;
+              margin-bottom: 20px;
+            }
+  
+            .nav-item {
+              text-align: center;
+            }
+            .nav-link {
+              font-size: 28px;
+            }
+            .nav-item button:hover {
+              color: #bd9250;
+            }
+            .nav-item.active .nav-link {
+              color: #bd9250 !important;
+              border-bottom-color: #bd9250 !important;
+            }
+  
+            .list {
+              display: flex;
+              flex-direction: row;
+              align-items: flex-start;
+              gap: 40px;
+              flex-wrap: wrap;
+              justify-content: space-between;
+            }
+  
+            .list .card {
+              flex: 1;
+            }
+  
+            .comment {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              gap: 50px;
+              align-self: stretch;
+            }
+  
+            .sectiontitle {
+              text-align: center;
+              color: var(--primary-5, #2f4715);
+  
+              /* ZenKaku-h3 */
+              font-family: 'Zen Kaku Gothic New';
+              font-size: 36px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+              margin-bottom: 0px;
+            }
+  
+            .form {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-end;
+              gap: 20px;
+              flex: 1 0 0;
+              align-self: stretch;
+            }
         `}
       </style>
     </>

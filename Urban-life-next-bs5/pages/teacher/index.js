@@ -107,6 +107,14 @@ export default function LectureHome() {
             gap: 20px;
             flex-wrap: wrap;
           }
+
+          @media (max-width: 1200px) {
+            .cardgrp {
+              display: flex;
+              gap: 10px;
+              flex-wrap: wrap;
+            }
+          }
         `}
       </style>
     </>

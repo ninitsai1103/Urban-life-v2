@@ -154,8 +154,8 @@ export default function LectureDetail() {
                   &nbsp;&nbsp;&nbsp;轉乘市內公車
                   <br />
                   <br />
-                  3. 自行開車者可於國道一號中壢交流
-                  &nbsp;&nbsp;&nbsp;道下交流道後往市區方向行駛
+                  3. 自行開車者可於國道一號中壢交&nbsp;&nbsp;&nbsp;
+                  流道下交流道後往市區方向行駛
                 </div>
               </div>
               <div className="con">
@@ -377,6 +377,103 @@ export default function LectureDetail() {
             font-style: normal;
             font-weight: 700;
             line-height: normal;
+          }
+
+          @media (max-width: 1200px) {
+            .lectureinfo {
+              display: flex;
+              align-items: flex-start;
+              align-content: flex-start;
+              gap: 20px;
+              align-self: stretch;
+              flex-wrap: wrap;
+            }
+  
+            .slider {
+              width: 406px;
+            }
+
+            .detail {
+              width: 406px;
+            }
+  
+            .cardgrp {
+              display: flex;
+              justify-content: center; /* 水平置中 */
+              align-items: center; /* 垂直置中 */
+              gap: 10px;
+              flex-wrap: wrap;
+            }
+  
+            .meetingpoint {
+              padding: 15px;
+              gap: 20px;
+              display: flex;
+              flex-direction: column;
+            }
+  
+            .info {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 15px;
+              max-width: 552px;
+            }
+  
+            .name {
+              gap: 10px;
+            }
+  
+            .subtitle {
+              font-size: 20px;
+            }
+  
+            .subinfo {
+              font-size: 20px;
+              width: 280px;
+            }
+  
+            .con {
+              font-size: 20px;
+            }
+
+            .section2 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+  
+            .section3 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+  
+            .section4 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+  
+            .section5 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+
+            .section6 {
+              gap: 20px;
+              margin-top: 30px;
+              margin-bottom: 30px;
+            }
+
+            .sectiontitle {
+              font-size: 28px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+              margin-bottom: 0px;
+            }
+            iframe {
+              width: 376px;
+              height: 376px;
+            }
           }
         `}
       </style>

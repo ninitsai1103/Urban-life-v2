@@ -173,7 +173,7 @@ export default function LectureHome() {
             </button>
           </div>
           <div className="bar">
-            <div className="lecnum">共 {lectureCount} 門課程</div>
+            <div className="lecnum">找到 {lectureCount} 門課程</div>
             <div className="dropdown">
               <button
                 className="btn dropdown-toggle fs-6 sort-btn d-flex justify-content-center align-items-center sort-btn-size"
@@ -187,12 +187,12 @@ export default function LectureHome() {
                     {selectedSortOptionDD === 'priceHighToLow'
                       ? '價格由高到低'
                       : selectedSortOptionDD === 'priceLowToHigh'
-                      ? '價格由低到高'
-                      : selectedSortOptionDD === 'starHighToLow'
-                      ? '評價由高到低'
-                      : selectedSortOptionDD === 'starLowToHigh'
-                      ? '評價由低到高'
-                      : ''}
+                        ? '價格由低到高'
+                        : selectedSortOptionDD === 'starHighToLow'
+                          ? '評價由高到低'
+                          : selectedSortOptionDD === 'starLowToHigh'
+                            ? '評價由低到高'
+                            : ''}
                   </>
                 ) : (
                   '排序'
@@ -314,7 +314,6 @@ export default function LectureHome() {
               以上說明還請您詳細參閱，未竟之處請詳閱購課之合約，如可接受再購買課程。
             </div>
           </div>
-
           <div className="wish">
             <LectureWish teachers={teachers} />
           </div>
@@ -330,7 +329,7 @@ export default function LectureHome() {
           <h1 className="sectiontitle">講師陣容</h1>
           <p className="teachertext">Our Teachers</p>
           <div style={{ maxWidth: '1296px', overflow: 'hidden' }}>
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+            <div className="teachers">
               <TeacherCardInfo teachers={randomTeachers} />
             </div>
             {/* 刷新按鈕 */}
@@ -529,6 +528,92 @@ export default function LectureHome() {
             line-height: normal;
             text-align: center;
             margin-top: 10px;
+          }
+
+          .teachers {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+          }
+
+          @media (max-width: 1200px) {
+            .cardgrp {
+              align-items: center; /* 垂直置中 */
+              justify-content: center; /* 水平置中 */
+              gap: 20px;
+          }
+            .calendercard {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: flex-start;
+              gap: 10px;
+              align-self: stretch;
+            }
+            .calender {
+              width: 390px;
+              justify-content: center; /* 水平置中 */
+              align-items: center; /* 垂直置中 */
+            }
+
+            .cardgrpnp {
+              align-items: center; /* 垂直置中 */
+              justify-content: center; /* 水平置中 */
+              gap: 20px;
+              width: 390px;
+            }
+
+            .section3 {
+              flex-direction: column;
+            }
+
+            .notice {
+              align-items: center; /* 垂直置中 */
+              justify-content: center; /* 水平置中 */
+              gap: 10px;
+              width: 390px;
+            }
+
+            .wish {
+              width: 390px;
+              justify-content: center; /* 水平置中 */
+              align-items: center; /* 垂直置中 */
+            }
+
+            .teachers {
+              display: flex;
+              gap: 10px;
+              flex-wrap: wrap;
+            }
+
+            .section2 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+  
+            .section3 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+  
+            .section4 {
+              gap: 10px;
+              margin-top: 30px;
+            }
+  
+            .section6 {
+              gap: 10px;
+              margin-top: 30px;
+              margin-bottom: 30px;
+            }
+
+            .sectiontitle {
+              font-size: 28px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+              margin-bottom: 0px;
+            }
           }
         `}
       </style>

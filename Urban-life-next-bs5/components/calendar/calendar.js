@@ -31,6 +31,13 @@ export default function Calendar({ setNowTime, cardData }) {
           padding-top:10px;
           padding-left:40px
         }
+        @media (max-width: 1200px) {
+          .container {
+            width: 390px;
+            padding-left:20px;
+            height: 620px;
+          }
+        }
       `}</style>
     </>
   )

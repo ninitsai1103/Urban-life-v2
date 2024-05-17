@@ -71,3 +71,84 @@
     width: 313px;
     height: 313px;
 }
+
+@media (max-width: 1200px) {
+    .card {
+        display: flex;
+        align-items: flex-start;
+        align-items: center;
+        /* 子元素在交叉軸（水平）方向居中對齊 */
+        justify-content: center;
+        /* 子元素在主軸（垂直）方向居中對齊 */
+        gap: 20px;
+        flex: 1 0 0;
+        align-self: stretch;
+        flex-direction: column;
+    }
+
+    .cardBody {
+        display: flex;
+        width: 398px;
+        height: 313px;
+        flex-direction: column;
+        align-items: flex-start;
+        /* justify-content: space-between; */
+        gap: 10px;
+        flex: 1 0 0;
+    }
+
+    .cardBodyArea {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        align-self: stretch;
+    }
+
+    .email {
+        color: #000;
+
+        font-family: Roboto;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+    .phone {
+        color: #000;
+
+        font-family: Roboto;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+    .teachername {
+        color: #000;
+
+        font-family: Roboto;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+    .teacherinfo {
+        width: 398px;
+        color: #000;
+
+        font-family: Roboto;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        line-height: 24px;
+    }
+
+    .img {
+        width: 313px;
+        height: 313px;
+    }
+}

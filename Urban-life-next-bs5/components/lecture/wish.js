@@ -53,7 +53,6 @@ export default function LectureWish({ teachers }) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className={styles.textarea}
-          cols="80"
           rows="5"
           maxLength="200"
           placeholder="請以最多200字內稍微描述課程內容（0/200）"
@@ -96,7 +95,7 @@ export default function LectureWish({ teachers }) {
         </div>
         <div className="shrink-0 h-px bg-black border border-black border-solid max-md:max-w-full" />
         <div className={styles.wishArea}>
-          希望課程費用設定在多少？
+          希望的課程費用？
           <div className="arrange-select">
             <select
               value={price}

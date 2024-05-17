@@ -139,8 +139,8 @@ export default function Feedback({ comments = [] }) {
               </div>
             </div>
           ) : (
-            <div className="col-12 mb-5">
-              <div className="bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+            <div className="col-12">
+              <div className="bg py-2 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
                 <hr />
                 本課程尚未有學員評論
                 <hr />

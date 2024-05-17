@@ -37,7 +37,7 @@ export default function TeacherCardInfo({ teachers = [] }) {
           border-radius: 8px;
           width: 309px;
           height: 422px;
-          min-width: 250px;
+          min-width: 210px;
           max-width: 309px;
         }
 
@@ -90,6 +90,35 @@ export default function TeacherCardInfo({ teachers = [] }) {
           line-height: normal;
           margin-bottom: 0px;
         }
+
+        @media (max-width: 1200px) {
+          .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border: 1px solid var(--grey-300, #d6d6d6);
+            background: #fff;
+            border-radius: 8px;
+            width: 198px;
+            height: 410px;
+            min-width: 198px;
+        }
+
+        .card-body {
+          display: flex;
+          padding: 10px 15px 15px;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 10px;
+          align-self: stretch;
+        }
+
+        .card-top {
+          height: 100%;
+        }
+      }
       `}</style>
     </>
   )

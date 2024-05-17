@@ -33,10 +33,9 @@ export default function Herosection() {
       <div className="heroMContainer">
         <img className="centeredImageM" src="/images/heroes/heroM.jpg" />
         <span className="slideTextM">
-                嚴選優質農場
+                走，
                 <br />
-                <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;享受當季的新鮮
+                往自然出發
               </span>
       </div>
     ) : (
@@ -163,6 +162,25 @@ export default function Herosection() {
             right: 350px;
             font-family: 'Zen Kaku Gothic New';
             font-size: 48px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+            padding: 5px 10px;
+            border-radius: 5px;
+            z-index: 1;
+          }
+
+          .heroMContainer {
+            position: relative; /* 使用相對定位 */
+            display: inline-block; /* 讓容器根據內容大小調整寬度 */
+          }
+
+          .slideTextM {
+            position: absolute;
+            left: 33px;
+            bottom: 30px;
+            font-family: 'Zen Kaku Gothic New';
+            font-size: 20px;
             font-style: normal;
             font-weight: 700;
             line-height: normal;
