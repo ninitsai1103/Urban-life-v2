@@ -189,7 +189,7 @@ export default function OrderCard({ order }) {
           <div className="row pb-2 px-3">
             <div className="col-6 fw-bold">訂單日期</div>
             <div className="col-6">
-              {new Date(date).toISOString().slice(0, 19).replace('T', ' ')}
+              {(date).slice(0, 19).replace('T', ' ')}
             </div>
           </div>
           <div className="row pb-2 px-3">
