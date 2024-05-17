@@ -76,9 +76,9 @@ export default function TeacherAsideAccount() {
     if (selectedValue === '1') {
       router.push('/member/teacherInformation') // 個人資料頁面路徑
     } else if (selectedValue === '2') {
-      router.push('/member/...') // 課程管理頁面路徑
+      router.push('/member/teacherOrder') // 訂單頁面路徑
     } else if (selectedValue === '3') {
-      router.push('/member/...') // 文章管理頁面路徑
+      router.push('/member/teacherCoupon') // 優惠券頁面路徑
     } else if (selectedValue === '4') {
       router.push('/member/teacherCollect') // 收藏頁面路徑
     } else if (selectedValue === '5') {
@@ -144,10 +144,10 @@ export default function TeacherAsideAccount() {
             aria-label="Default select example"
             value={
               currentPath === '/member/teacherInformation'
-                ? '1' // 網址待修
-                : currentPath === '/member/...'
-                ? '2'  // 網址待修
-                : currentPath === '/member/...'
+                ? '1' 
+                : currentPath === '/member/teacherOrder'
+                ? '2'  
+                : currentPath === '/member/teacherCoupon'
                 ? '3'
                 : currentPath === '/member/teacherCollect'
                 ? '4'
@@ -177,20 +177,18 @@ export default function TeacherAsideAccount() {
                 <BiIdCard /> 個人資料
               </a>
             </li>
-            {/* 網址待修 */}
             <li>
               <a
-                className={currentPath === '/member/...' ? 'active' : ''}
-                href="/member/..."
+                className={currentPath === '/member/teacherOrder' ? 'active' : ''}
+                href="/member/teacherOrder"
               >
                 <BiFile /> 訂單記錄
               </a>
             </li>
-            {/* 網址待修 */}
             <li>
               <a
-                className={currentPath === '/member/...' ? 'active' : ''}
-                href="/member/..."
+                className={currentPath === '/member/teacherCoupon' ? 'active' : ''}
+                href="/member/teacherCoupon"
               >
                 <RiCoupon2Line /> 我的優惠券
               </a>
