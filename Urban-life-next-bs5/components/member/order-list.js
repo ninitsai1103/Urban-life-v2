@@ -189,7 +189,7 @@ export default function OrderList({ order }) {
       <tbody>
         <tr className="align-middle tab">
           <td>{order_id}</td>
-          <td>{new Date(date).toISOString().slice(0, 19).replace('T', ' ')}</td>
+          <td>{(date).slice(0, 19).replace('T', ' ')}</td>
           <td>{total}</td>
           <td>
             <div className="button">
