@@ -332,7 +332,14 @@ export default function LectureContentTbody({
       <tbody className="text-center align-middle" key={lecture.id}>
         <tr>
           <td scope="row" className="setup-max-width">
-            {lecture.name}
+            <a
+              href={`/lecture/${lecture.id}`}
+              title={`前往「${lecture.name}」頁面`}
+              className="text-decoration-none title-link"
+            >
+              {lecture.name}
+            </a>
+            {/* {lecture.name} */}
           </td>
           <td>{lecture.lecture_date}</td>
           <td className="nodisplay_992px">
@@ -947,6 +954,9 @@ export default function LectureContentTbody({
       </div>
 
       <style jsx>{`
+        a:hover {
+          font-weight: 600;
+        }
         .custom-modal-width {
           max-width: 700px; /* modal寬度 */
         }
@@ -993,6 +1003,7 @@ export default function LectureContentTbody({
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 75%;
+            vertical-align: middle; /* 讓字垂直置中 */
           }
           input {
             margin: 3px;

@@ -342,7 +342,16 @@ export default function LectureContentPhone({
           <tbody className="w-100" key={lecture.id}>
             <tr>
               <th>課程名稱：</th>
-              <td>{lecture.name}</td>
+              <td>
+                <a
+                  href={`/lecture/${lecture.id}`}
+                  title={`前往「${lecture.name}」頁面`}
+                  className="text-decoration-none title-link"
+                >
+                  {lecture.name}
+                </a>
+                {/* {lecture.name} */}
+              </td>
             </tr>
             <tr>
               <th>上課日期：</th>
@@ -938,6 +947,9 @@ export default function LectureContentPhone({
       </div>
 
       <style jsx>{`
+        a:hover {
+          font-weight: 600;
+        }
         .lecture_phone_card {
           background-color: #ffffff;
           border-radius: 8px;
@@ -987,6 +999,7 @@ export default function LectureContentPhone({
             border: 1px solid #ccc;
             padding: 5px 10px;
             width: 75%;
+            vertical-align: middle; /* 讓字垂直置中 */
           }
           input {
             margin: 3px;
