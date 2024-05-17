@@ -66,7 +66,7 @@ export default function Detail() {
   //切換商品的收藏狀態
   const toggleCollection = () => {
     setIsCollected(!isCollected)
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    const message = isCollected ? `${product.name}已取消收藏!` : `${product.name}已加入收藏!`
     toast.success(message, {})
   }
 
