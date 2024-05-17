@@ -387,9 +387,17 @@ export default function LectureContentPhone({
           <div className="modal-content">
             <form>
               <div className="modal-header">
-                <h1 className="modal-title fs-5" id="exampleModalLabel">
-                  {lecture.name}
-                </h1>
+                <div className="d-flex align-items-center">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">
+                    {lecture.name}
+                  </h1>
+                  <a
+                    className="btn btn-detail ms-3"
+                    href={`/lecture/${lecture.id}`}
+                  >
+                    前往課程頁面
+                  </a>
+                </div>
                 <button
                   type="button"
                   className="btn-close"
