@@ -5,6 +5,19 @@ export default function LectureContentTbody({
   identityId,
   deleteLecture,
 }) {
+  // 處理content正常顯示換行
+  const text2jsx = (text) => {
+    return text.split('\n\n').map((v, i) => (
+      <div className="article-section" key={i}>
+        {v.split('\n').map((v2, i2) => (
+          <div className="article-p" key={`${i}-${i2}`}>
+            {v2}
+          </div>
+        ))}
+      </div>
+    ))
+  }
+
   // 處理時間字符串，僅顯示到秒
   function formatTime(timeString) {
     // 切割字符串，只保留時分秒部分
@@ -312,16 +325,6 @@ export default function LectureContentTbody({
     } catch (error) {
       console.log('Error updating lecture:', error)
     }
-  }
-
-  const text2jsx = (text) => {
-    return text.split('\n\n').map((v, i) => (
-      <div className="article-section" key={i}>
-        {v.split('\n').map((v2, i2) => (
-          <div className="article-p" key={`${i}-${i2}`}>{v2}</div>
-        ))}
-      </div>
-    ))
   }
 
   return (
@@ -996,7 +999,7 @@ export default function LectureContentTbody({
           .originImg {
             height: 120px;
             width: auto;
-            margin-top: 5px; 
+            margin-top: 5px;
              {
               /* margin-bottom: 10px;
             margin: 5px;

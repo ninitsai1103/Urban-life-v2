@@ -5,21 +5,24 @@ export default function LectureContentPhone({
   identityId,
   deleteLecture,
 }) {
+  // 處理content正常顯示換行
+  const text2jsx = (text) => {
+    return text.split('\n\n').map((v, i) => (
+      <div className="article-section" key={i}>
+        {v.split('\n').map((v2, i2) => (
+          <div className="article-p" key={`${i}-${i2}`}>
+            {v2}
+          </div>
+        ))}
+      </div>
+    ))
+  }
+
   // 處理時間字符串，僅顯示到秒
   function formatTime(timeString) {
     // 切割字符串，只保留時分秒部分
     const timeWithoutMilliseconds = timeString.split('.')[0]
     return timeWithoutMilliseconds
-  }
-
-  const text2jsx = (text) => {
-    return text.split('\n\n').map((v, i) => (
-      <div className="article-section" key={i}>
-        {v.split('\n').map((v2, i2) => (
-          <div className="article-p" key={`${i}-${i2}`}>{v2}</div>
-        ))}
-      </div>
-    ))
   }
 
   // 代表選中的檔案(null代表沒選中檔案，或取消檔案選擇)
@@ -128,7 +131,6 @@ export default function LectureContentPhone({
     }
   }, [startingTime, endingTime])
 
-  
   // 定義選擇的報名開始日期時間狀態變數，初始值為 sign_up_starting 或空字串
   const [signUpStart, setSignUpStart] = useState(
     lecture && lecture.sign_up_starting ? lecture.sign_up_starting : ''
@@ -138,7 +140,8 @@ export default function LectureContentPhone({
     lecture && lecture.sign_up_deadline ? lecture.sign_up_deadline : ''
   )
 
-  const [showSignUpStartDateError, setShowSignUpStartDateError] = useState(false)
+  const [showSignUpStartDateError, setShowSignUpStartDateError] =
+    useState(false)
   const [showSignUpEndDateError, setShowSignUpEndDateError] = useState(false)
 
   // 取得明天的日期和時間，格式為 YYYY-MM-DDTHH:mm （datetime-local 需要此格式）
@@ -286,44 +289,47 @@ export default function LectureContentPhone({
         sign_up_deadline: signUpEnd,
         price,
         amount,
-      };
+      }
 
       // 創建一個新的 FormData 物件
-    const formData = new FormData();
-    formData.append('id', lectureId); // 將課程 ID 加入 FormData
+      const formData = new FormData()
+      formData.append('id', lectureId) // 將課程 ID 加入 FormData
 
-    // 加入課程欄位資訊到 FormData
-    Object.entries(updatedFields).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+      // 加入課程欄位資訊到 FormData
+      Object.entries(updatedFields).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
 
-    // 加入圖片檔案到 FormData，只加入有選擇的新檔案，或者加入原有的檔案名稱
-    if (selectedFile1) {
-      formData.append('selectedFiles1', selectedFile1);
-    }
-    if (selectedFile2) {
-      formData.append('selectedFiles2', selectedFile2);
-    }
-    if (selectedFile3) {
-      formData.append('selectedFiles3', selectedFile3);
-    }
-    if (selectedFile4) {
-      formData.append('selectedFiles4', selectedFile4);
-    }
+      // 加入圖片檔案到 FormData，只加入有選擇的新檔案，或者加入原有的檔案名稱
+      if (selectedFile1) {
+        formData.append('selectedFiles1', selectedFile1)
+      }
+      if (selectedFile2) {
+        formData.append('selectedFiles2', selectedFile2)
+      }
+      if (selectedFile3) {
+        formData.append('selectedFiles3', selectedFile3)
+      }
+      if (selectedFile4) {
+        formData.append('selectedFiles4', selectedFile4)
+      }
 
-    // 發送請求到後端，處理課程資料和圖片的更新
-    const response = await fetch(`http://localhost:3005/api/teacher-lecture`, {
-      method: 'PUT',
-      body: formData,
-    });
+      // 發送請求到後端，處理課程資料和圖片的更新
+      const response = await fetch(
+        `http://localhost:3005/api/teacher-lecture`,
+        {
+          method: 'PUT',
+          body: formData,
+        }
+      )
 
-    if (response.ok) {
-      console.log('課程和圖片更新成功');
-      window.location.reload(); // 重新加載當前頁面或進行其他相關操作
-    } else {
-      const responseData = await response.json();
-      console.error('更新失敗:', responseData);
-    }
+      if (response.ok) {
+        console.log('課程和圖片更新成功')
+        window.location.reload() // 重新加載當前頁面或進行其他相關操作
+      } else {
+        const responseData = await response.json()
+        console.error('更新失敗:', responseData)
+      }
     } catch (error) {
       console.log('Error updating lecture:', error)
     }
@@ -416,11 +422,19 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名<br />開始時間：</th>
+                          <th>
+                            報名
+                            <br />
+                            開始時間：
+                          </th>
                           <td>{lecture.sign_up_starting}</td>
                         </tr>
                         <tr>
-                          <th>報名<br />截止時間：</th>
+                          <th>
+                            報名
+                            <br />
+                            截止時間：
+                          </th>
                           <td>{lecture.sign_up_deadline}</td>
                         </tr>
                         <tr>
@@ -584,7 +598,7 @@ export default function LectureContentPhone({
                         <tr>
                           <th>上課時間：</th>
                           <td>
-                          {showTimeError && ( // 如果 showTimeError 為 true，顯示錯誤訊息
+                            {showTimeError && ( // 如果 showTimeError 為 true，顯示錯誤訊息
                               <div
                                 className="fw-bold"
                                 style={{ fontSize: '12px', color: 'red' }}
@@ -613,9 +627,13 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名<br />開始時間：</th>
+                          <th>
+                            報名
+                            <br />
+                            開始時間：
+                          </th>
                           <td>
-                          {showSignUpStartDateError && (
+                            {showSignUpStartDateError && (
                               <div
                                 className="fw-bold"
                                 style={{ fontSize: '12px', color: 'red' }}
@@ -636,9 +654,13 @@ export default function LectureContentPhone({
                           </td>
                         </tr>
                         <tr>
-                          <th>報名<br />截止時間：</th>
+                          <th>
+                            報名
+                            <br />
+                            截止時間：
+                          </th>
                           <td>
-                          {showSignUpEndDateError && (
+                            {showSignUpEndDateError && (
                               <div
                                 className="fw-bold"
                                 style={{ fontSize: '12px', color: 'red' }}
@@ -661,7 +683,7 @@ export default function LectureContentPhone({
                         <tr>
                           <th>上課日期：</th>
                           <td>
-                          {lectureDateError && (
+                            {lectureDateError && (
                               <div
                                 className="fw-bold"
                                 style={{ fontSize: '12px', color: 'red' }}
@@ -737,7 +759,8 @@ export default function LectureContentPhone({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 1)} name="selectedFiles1"
+                                onChange={(e) => handleFileChange(e, 1)}
+                                name="selectedFiles1"
                               />
                               {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
                                 <>
@@ -759,7 +782,8 @@ export default function LectureContentPhone({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 2)} name="selectedFiles2"
+                                onChange={(e) => handleFileChange(e, 2)}
+                                name="selectedFiles2"
                               />
                               {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
                                 <>
@@ -781,7 +805,8 @@ export default function LectureContentPhone({
                             <div>
                               <input
                                 type="file"
-                                onChange={(e) => handleFileChange(e, 3)} name="selectedFiles3"
+                                onChange={(e) => handleFileChange(e, 3)}
+                                name="selectedFiles3"
                               />
                               {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
                                 <>
@@ -802,7 +827,8 @@ export default function LectureContentPhone({
                             ></img>
                             <input
                               type="file"
-                              onChange={(e) => handleFileChange(e, 4)} name="selectedFiles4"
+                              onChange={(e) => handleFileChange(e, 4)}
+                              name="selectedFiles4"
                             />
                             {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
                               <>
@@ -932,14 +958,13 @@ export default function LectureContentPhone({
           width: 80%;
           margin: 3px;
         }
-        .textarea1{
+        .textarea1 {
           height: 100px;
         }
 
-        .textarea2{
+        .textarea2 {
           height: 300px;
         }
-
 
         .modal-table {
           th {

@@ -275,11 +275,11 @@ export default function LectureAddModal({ identityId }) {
                       '在參訪城市都市農業中心的課程中，學員將有機會深入探索都市農業的創新和科技應用，以及推動城市永續農業的發展。課程將介紹最新的都市農業科技，如垂直種植、智能溫室、水培技術等，並探討這些技術在提高農業生產效率和環境友好性方面的應用。學員將透過參觀示範區和參與實驗活動，親身體驗這些技術的應用和效果，從而加深對永續農業的理解和認識。同時，課程也將討論都市農業所面臨的挑戰，如土地利用、資源管理等，並探索可行的解決方案，以推動城市永續農業的發展。'
                     )
                     setLocationId('5')
-                    setLectureDate('2024-06-10')
+                    setLectureDate('2024-06-20')
                     setStartTime('08:00:00')
                     setEndTime('17:00:00')
-                    setSignUpStart('2024-05-10 00:00:00')
-                    setSignUpEnd('2024-05-20 00:00:00')
+                    setSignUpStart('2024-05-25 00:00:00')
+                    setSignUpEnd('2024-05-31 00:00:00')
                     setPrice('800')
                     setAmount('20')
                   }}
