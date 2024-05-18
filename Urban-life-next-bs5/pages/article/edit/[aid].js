@@ -158,7 +158,6 @@ export default function Edit() {
       .then((data) => {
         console.log('成功:', data)
         router.push(`/article/${aid}`)
-
       })
       .catch((error) => {
         console.error('錯誤:', error)
@@ -213,8 +212,7 @@ export default function Edit() {
               )}
             </div>
             <div className="add-content my-3">
-              <p>內容</p>
-              <h1>圖片上傳與預覽</h1>
+              <h5>圖片上傳與預覽</h5>
               <input type="file" onChange={handleFileChange} />
               <hr />
               {/* <button onClick={handleFileUpload}>上傳</button> */}
@@ -226,9 +224,11 @@ export default function Edit() {
                   <p>大小(size): {selectedFile.size}</p>
                 </>
               )}
-              <h2>預覽</h2>
+              <h5>預覽</h5>
               {/* if has previewURL, render it */}
               {previewURL && <img src={previewURL} alt="" />}
+              <p className="mt-3">內容</p>
+
               <div
                 style={{
                   height: 'auto',
