@@ -13,6 +13,12 @@ import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
 import { filter } from 'lodash'
 import api from '@/services/axios-with-token'
+import dynamic from 'next/dynamic';
+// import Toaster from 'react-hot-toast'
+const Toaster = dynamic(() => import('react-hot-toast').then((mod) => mod.Toaster), {
+  ssr: false // 這表示 Toaster 組件不會在服務器端渲染
+});
+
 
 export default function List() {
   //設定篩選狀態
@@ -48,7 +54,7 @@ export default function List() {
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const perpages = 48 //一頁幾筆資料
+  const perpages = 36 //一頁幾筆資料
 
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
@@ -249,6 +255,7 @@ export default function List() {
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="container mt-5">
         <div className="row d-flex justify-content-center">
           {/* sidenav */}
@@ -1644,7 +1651,7 @@ export default function List() {
                             <MdKeyboardArrowRight className="text-white" />
                           </button>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">商品尺寸</p>
+                        <p className="set-fw700 mt-2 mb-0">商品尺寸</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1683,7 +1690,7 @@ export default function List() {
                             小
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">免運</p>
+                        <p className="set-fw700 mt-2 mb-0">免運</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1705,7 +1712,7 @@ export default function List() {
                             一件即達免運
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">24小時快速到貨</p>
+                        <p className="set-fw700 mt-2 mb-0">24小時快速到貨</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1728,7 +1735,7 @@ export default function List() {
                             可快速到貨的商品
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">可寄往離島</p>
+                        <p className="set-fw700 mt-2 mb-0">可寄往離島</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1902,7 +1909,7 @@ export default function List() {
             )}
             {/* 分頁 */}
             {filteredProducts.length !== 0 ? (
-              <div className="container ">
+              <div className="container px-0">
                 <Page
                   perpages={perpages}
                   currentPage={currentPage}
