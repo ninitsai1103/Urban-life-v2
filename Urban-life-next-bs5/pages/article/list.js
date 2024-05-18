@@ -62,10 +62,10 @@ export default function List() {
     const sortedArticles = filteredArticles.sort((a, b) => {
       if (sort === '4') {
         // Sort by date
-        return new Date(a.date) - new Date(b.date)
+        return new Date(a.created_at) - new Date(b.created_at)
       } else if (sort === '3') {
         // Sort by date
-        return -(new Date(a.date) - new Date(b.date))
+        return -(new Date(a.created_at) - new Date(b.created_at))
       } else if (sort === '2') {
         // Sort by total comments
         return b.total_comments - a.total_comments

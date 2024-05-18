@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Myeditor from '@/components/article/Myeditor'
 import { useMemberInfo } from '@/hooks/use-member-info'
-
+import { useRouter } from 'next/router'
 
 export default function Add() {
+  const router = useRouter()
 
   // member的hooks
   const { member } = useMemberInfo()
@@ -26,12 +27,16 @@ export default function Add() {
     title: '',
     content: '',
     categoryId: '',
+    img: '', // 新增圖片URL字段
   })
   const [errors, setErrors] = useState({
     title: '',
     content: '',
     categoryId: '',
   })
+
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [previewURL, setPreviewURL] = useState(null)
 
   useEffect(() => {
     setEditorLoaded(true)
@@ -42,7 +47,17 @@ export default function Add() {
     setArticle({ ...article, [name]: value })
   }
 
+  function updateImageSrc(htmlContent) {
+    // 使用正則表達式匹配img標籤並更新src屬性
+    return htmlContent.replace(
+      /(<img\s+[^>]*src=")(\/[^"]*)(")/g,
+      '$1http://localhost:3005$2$3'
+    )
+  }
+
   const handleContentChange = (content) => {
+    content = updateImageSrc(content)
+    console.log(content)
     setArticle({ ...article, content: content })
   }
 
@@ -54,6 +69,43 @@ export default function Add() {
     return newErrors
   }
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    setSelectedFile(file)
+    setPreviewURL(URL.createObjectURL(file))
+    handleFileUpload(file)
+  }
+
+  const handleFileUpload = (file = null) => {
+    if (!file) {
+      if (!selectedFile) {
+        alert('請選擇一個檔案')
+        return
+      }
+      file = selectedFile
+    }
+    console.log('upload')
+
+    const formData = new FormData()
+    formData.append('articleImage', file)
+
+    fetch('http://localhost:3005/api/upload2', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('成功上傳:', data)
+        // 假設data.url是後端返回的圖片URL
+        const file_name = data.url.split('/').pop()
+        console.log(file_name)
+        setArticle({ ...article, img: file_name })
+      })
+      .catch((error) => {
+        console.error('上傳錯誤:', error)
+      })
+  }
+
   const testAdd = () => {
     const formErrors = validateForm()
     if (Object.keys(formErrors).length > 0) {
@@ -61,23 +113,25 @@ export default function Add() {
       return
     }
     console.log(article)
-    const htmlString = article.content
-    const match = htmlString.match(/<img src="([^"]+)"/)
-    const firstImgSrc = match ? match[1] : null
-    console.log(firstImgSrc)
-    const url = firstImgSrc.split('/')[3]
-    console.log(url)
+    // const htmlString = article.content
+    // article.content = updateImageSrc(htmlString)
+    // const match = htmlString.match(/<img src="([^"]+)"/)
+    // const firstImgSrc = match ? match[1] : null
+    // console.log(firstImgSrc)
+    // const url = firstImgSrc ? firstImgSrc.split('/')[3] : ''
+
     // 沒有錯誤，繼續提交
     fetch('http://localhost:3005/api/articleUpload', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...article, userId: userId, img: url }), // 假設的用戶 ID
+      body: JSON.stringify({ ...article, userId: userId }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log('成功:', data)
+        router.push('/article/list')
       })
       .catch((error) => {
         console.error('錯誤:', error)
@@ -133,11 +187,36 @@ export default function Add() {
             </div>
             <div className="add-content my-3">
               <p>內容</p>
-              <div style={{ height: '300px' }}>
+              <h1>圖片上傳與預覽</h1>
+              <input type="file" onChange={handleFileChange} />
+              <hr />
+              {/* <button onClick={handleFileUpload}>上傳</button> */}
+              {selectedFile && (
+                <>
+                  <h3>檔案資訊</h3>
+                  <p>檔名(filename): {selectedFile.name}</p>
+                  <p>類型(type): {selectedFile.type}</p>
+                  <p>大小(size): {selectedFile.size}</p>
+                </>
+              )}
+              <h2>預覽</h2>
+              {/* if has previewURL, render it */}
+              {previewURL && <img src={previewURL} alt="" />}
+
+              {/* <img src={previewURL || article.img} alt="" /> */}
+
+              <div
+                style={{
+                  height: 'auto',
+                  maxHeight: '500px',
+                  overflowY: 'auto',
+                }}
+              >
                 <Myeditor
                   name="content"
                   onChange={handleContentChange}
                   editorLoaded={editorLoaded}
+                  value={article.content}
                 />
                 {errors.content && (
                   <div className="error">{errors.content}</div>
