@@ -123,16 +123,10 @@ export default function Detail() {
       setRecommended(shuffled.slice(0, 4)) // 隨機從products選取四個商品
     }
   }, [products])
-  
 
-  //返回上一頁
-  // function handleBack() {
-  //   navigate(-1);  
-  // }
-
-  useEffect(() => {
-    console.log(comment)
-  }, [comment])
+  // useEffect(() => {
+  //   console.log(comment)
+  // }, [comment])
 
   return (
     <>
@@ -265,7 +259,7 @@ export default function Detail() {
                       addCollection(pid)
                       .then(updatedData => {
                         toggleCollection();
-                        console.log('Collection added:', updatedData);
+                        // console.log('Collection added:', updatedData);
                       })
                       .catch(error => {
                         alert("請先登入會員再進行收藏功能")

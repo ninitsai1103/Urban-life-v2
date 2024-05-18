@@ -70,13 +70,6 @@ export default function List() {
   setSecProducts(products.filter((product) => product.category === selectCategory))
 }, [selectCategory])
   
-  //分類後的產品(如果沒有點選分類就返回原本的產品列表)
-  // const secProducts = useMemo(() => {
-  //   return selectCategory
-  //     ? products.filter((product) => product.category === selectCategory)
-  //     : products
-  // })
-
   //排序狀態和邏輯(初始值代入分類後的產品)
   const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
 
@@ -149,21 +142,6 @@ export default function List() {
     setSelectCategory(category)
     setCurrentPage(1) //重新設定為第一頁
   }
-
-  // //頁面刷新為全部商品
-  // const allProducts = () => {
-  //     // 取消分類
-  // setSelectCategory(null);
-  // // 取消排序，假設 `handleSortDatas` 支持 null 或特定值來重設排序
-  // handleSortDatas(null);
-  // // 設定 searchResults 為所有產品，並且不經過任何過濾或排序
-  // setSearchResults(products);
-  // // 重設頁面到第一頁
-  // setCurrentPage(1);
-  //   // setSelectCategory(null);
-  //   // setSearchResults(filteredProducts);
-  //   // setCurrentPage(1);
-  // }
 
   //排序控制
   const changeSort = (key, order) => {
@@ -978,14 +956,14 @@ export default function List() {
                 searchedProducts={searchedProducts}
               />
               <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mt-3">
-                  <li class="breadcrumb-item">
+                <ol className="breadcrumb mt-3">
+                  <li className="breadcrumb-item">
                     <Link className="text-decoration-none" href="/">
                       首頁
                     </Link>
                   </li>
                   <li
-                    class="breadcrumb-item active"
+                    className="breadcrumb-item active"
                     aria-current="page"
                     href="/product/list"
                   >

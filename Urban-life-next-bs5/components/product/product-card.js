@@ -100,7 +100,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
                     e.preventDefault()
                     addCollection(product.id)
                       .then((updatedData) => {
-                        console.log('Collection added:', updatedData)
+                        // console.log('Collection added:', updatedData)
                         toggleCollection()
                         // console.log(isCollected)
                       })

@@ -8,7 +8,7 @@ export default function useCommment() {
                 const url = `http://localhost:3005/api/product_lecture_comment`
                 const res = await fetch(url);
                 const data = await res.json();
-                console.log(data);
+                // console.log(data);
                 if(comments){
                     const res_comments = data.data.comments
                         setComments(res_comments)
