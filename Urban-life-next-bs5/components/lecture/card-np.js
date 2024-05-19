@@ -135,11 +135,6 @@ export default function LectureMyCardNp({
         <div className={styles.cardBodyArea}>
           <div className="flex gap-2.5 font-medium">
             <div className={styles.lectureText}>
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/d3c2f7f38bd5ecac06bed75055428d2f11131e5b875663805124a8c6c6b704c4?"
-                className={styles.img}
-              />{' '}
               體驗人數：{amount}
             </div>
           </div>

@@ -7,6 +7,7 @@ import { UseTeacherInfo } from '@/hooks/use-teacher'
 import { UseLecture } from '@/hooks/use-lecture'
 import useTeacherArticles from '@/hooks/use-teacherarticle'
 import useColloections from '@/hooks/product/useCollections'
+import Link from 'next/link'
 
 export default function LectureDetail() {
   const { teachers } = UseTeacherInfo()
@@ -46,7 +47,7 @@ export default function LectureDetail() {
     setIsCollected(
       collections.filter(
         (item) =>
-          (item.product_id == tid || item.article_id == tid) && item.valid == 1
+          item.article_id == tid && item.valid == 1
       )
     )
   }, [collections])
@@ -70,6 +71,23 @@ export default function LectureDetail() {
   return (
     <>
       <div className="container">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb mt-3">
+            <li className="breadcrumb-item">
+              <Link className="text-decoration-none" href="/">
+                首頁
+              </Link>
+            </li>
+            <li className="breadcrumb-item " aria-current="page">
+              <Link className="text-decoration-none" href="/teacher">
+                講師陣容
+              </Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              講師個人頁
+            </li>
+          </ol>
+        </nav>
         <section className="section1">
           {teacher && <TeacherAllInfo teacher={teacher} />}
         </section>
@@ -77,9 +95,8 @@ export default function LectureDetail() {
           <div className="alllist">
             <ul className="nav nav-underline ul-margin">
               <li
-                className={`nav-item col ${
-                  activeIndex === '開授的課程' ? 'active' : ''
-                }`}
+                className={`nav-item col ${activeIndex === '開授的課程' ? 'active' : ''
+                  }`}
               >
                 <button
                   className="nav-link"
@@ -89,9 +106,8 @@ export default function LectureDetail() {
                 </button>
               </li>
               <li
-                className={`nav-item col ${
-                  activeIndex === '發布的文章' ? 'active' : ''
-                }`}
+                className={`nav-item col ${activeIndex === '發布的文章' ? 'active' : ''
+                  }`}
               >
                 <button
                   className="nav-link"
@@ -128,7 +144,7 @@ export default function LectureDetail() {
           .section1 {
             display: flex;
             width: 1320px;
-            padding: 50px 20px;
+            padding: 0px 20px 20px;
             align-items: flex-start;
           }
 
@@ -229,6 +245,23 @@ export default function LectureDetail() {
             align-self: stretch;
           }
 
+          .breadcrumb{
+            display: flex;
+            padding: 15px 0px 10px;
+            align-items: flex-start;
+            align-self: stretch;
+            margin: 20px;
+          }
+
+          .breadcrumb-item {
+            color: var(--grey-700, #6b6b6b);
+            font-family: 'Zen Kaku Gothic New';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
+
           @media (max-width: 1200px) {
             .section1 {
               display: flex;
@@ -326,6 +359,15 @@ export default function LectureDetail() {
               flex: 1 0 0;
               align-self: stretch;
             }
+
+            .breadcrumb{
+              display: flex;
+              padding: 15px 0px 10px;
+              align-items: flex-start;
+              align-self: stretch;
+              margin: 10px;
+            }
+           }
         `}
       </style>
     </>

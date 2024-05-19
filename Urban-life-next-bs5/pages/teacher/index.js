@@ -5,6 +5,7 @@ import Search from '@/components/lecture/search'
 import Page from '@/components/product/pagination'
 import TeacherCardInfo from '@/components/lecture/teacher-infocard'
 import { UseTeacherInfo } from '@/hooks/use-teacher'
+import Link from 'next/link'
 
 export default function LectureHome() {
   const { teachers } = UseTeacherInfo()
@@ -56,6 +57,11 @@ export default function LectureHome() {
     setCurrentPage(page)
   }
 
+  const resetSearch = () => {
+    // 清空搜索關鍵字
+    handleSearch("");
+  };
+
   return (
     <>
       <section className="slider">
@@ -65,9 +71,23 @@ export default function LectureHome() {
       </section>
       <div className="container">
         <section className="section1">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb mt-3">
+              <li className="breadcrumb-item">
+                <Link className="text-decoration-none" href="/">
+                  首頁
+                </Link>
+              </li>
+              <li className="breadcrumb-item activt" aria-current="page">
+                <Link className="text-decoration-none" href="/teacher" onClick={resetSearch}>
+                  <span style={{ color: '#87917d' }}>講師陣容</span>
+                </Link>
+              </li>
+            </ol>
+          </nav>
           <div className="search">
             <Search handleSearch={handleSearch} />
-          </div>
+          </div><hr />
           <div className="cardgrp">
             <TeacherCardInfo teachers={displayedTeachers} />
           </div>
@@ -87,8 +107,6 @@ export default function LectureHome() {
           .section1 {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             align-self: stretch;
           }
 
@@ -106,6 +124,23 @@ export default function LectureHome() {
             align-content: flex-start;
             gap: 20px;
             flex-wrap: wrap;
+          }
+
+          .breadcrumb{
+            display: flex;
+            padding: 15px 12px 10px 12px !important;
+            align-items: flex-start;
+            align-self: stretch;
+            margin: 0px;
+          }
+
+          .breadcrumb-item {
+            color: var(--grey-700, #6b6b6b);
+            font-family: 'Zen Kaku Gothic New';
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
           }
 
           @media (max-width: 1200px) {
