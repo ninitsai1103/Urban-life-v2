@@ -13,6 +13,12 @@ import { CiViewTable } from 'react-icons/ci'
 import { RxTable } from 'react-icons/rx'
 import { filter } from 'lodash'
 import api from '@/services/axios-with-token'
+import dynamic from 'next/dynamic';
+// import Toaster from 'react-hot-toast'
+const Toaster = dynamic(() => import('react-hot-toast').then((mod) => mod.Toaster), {
+  ssr: false // 這表示 Toaster 組件不會在服務器端渲染
+});
+
 
 export default function List() {
   //設定篩選狀態
@@ -48,7 +54,7 @@ export default function List() {
   //分頁
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const perpages = 48 //一頁幾筆資料
+  const perpages = 36 //一頁幾筆資料
 
   //分類狀態
   const [selectCategory, setSelectCategory] = useState(null)
@@ -64,13 +70,6 @@ export default function List() {
   setSecProducts(products.filter((product) => product.category === selectCategory))
 }, [selectCategory])
   
-  //分類後的產品(如果沒有點選分類就返回原本的產品列表)
-  // const secProducts = useMemo(() => {
-  //   return selectCategory
-  //     ? products.filter((product) => product.category === selectCategory)
-  //     : products
-  // })
-
   //排序狀態和邏輯(初始值代入分類後的產品)
   const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
 
@@ -143,21 +142,6 @@ export default function List() {
     setSelectCategory(category)
     setCurrentPage(1) //重新設定為第一頁
   }
-
-  // //頁面刷新為全部商品
-  // const allProducts = () => {
-  //     // 取消分類
-  // setSelectCategory(null);
-  // // 取消排序，假設 `handleSortDatas` 支持 null 或特定值來重設排序
-  // handleSortDatas(null);
-  // // 設定 searchResults 為所有產品，並且不經過任何過濾或排序
-  // setSearchResults(products);
-  // // 重設頁面到第一頁
-  // setCurrentPage(1);
-  //   // setSelectCategory(null);
-  //   // setSearchResults(filteredProducts);
-  //   // setCurrentPage(1);
-  // }
 
   //排序控制
   const changeSort = (key, order) => {
@@ -249,6 +233,7 @@ export default function List() {
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="container mt-5">
         <div className="row d-flex justify-content-center">
           {/* sidenav */}
@@ -971,14 +956,14 @@ export default function List() {
                 searchedProducts={searchedProducts}
               />
               <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mt-3">
-                  <li class="breadcrumb-item">
+                <ol className="breadcrumb mt-3">
+                  <li className="breadcrumb-item">
                     <Link className="text-decoration-none" href="/">
                       首頁
                     </Link>
                   </li>
                   <li
-                    class="breadcrumb-item active"
+                    className="breadcrumb-item active"
                     aria-current="page"
                     href="/product/list"
                   >
@@ -1644,7 +1629,7 @@ export default function List() {
                             <MdKeyboardArrowRight className="text-white" />
                           </button>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">商品尺寸</p>
+                        <p className="set-fw700 mt-2 mb-0">商品尺寸</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1683,7 +1668,7 @@ export default function List() {
                             小
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">免運</p>
+                        <p className="set-fw700 mt-2 mb-0">免運</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1705,7 +1690,7 @@ export default function List() {
                             一件即達免運
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">24小時快速到貨</p>
+                        <p className="set-fw700 mt-2 mb-0">24小時快速到貨</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1728,7 +1713,7 @@ export default function List() {
                             可快速到貨的商品
                           </label>
                         </div>
-                        <p className="set-fw700 mt-1 mb-0">可寄往離島</p>
+                        <p className="set-fw700 mt-2 mb-0">可寄往離島</p>
                         <div className="form-check">
                           <input
                             className="form-check-input"
@@ -1902,7 +1887,7 @@ export default function List() {
             )}
             {/* 分頁 */}
             {filteredProducts.length !== 0 ? (
-              <div className="container ">
+              <div className="container px-0">
                 <Page
                   perpages={perpages}
                   currentPage={currentPage}

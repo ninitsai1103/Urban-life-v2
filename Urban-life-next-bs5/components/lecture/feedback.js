@@ -42,8 +42,7 @@ export default function Feedback({ comments = [] }) {
       <div className="container">
         <div className="row">
           {sortedComments && sortedComments.length > 0 ? (
-            <div className="col-12">
-              <div className=" bg py-4 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+              <div className="feeback">
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="mt-3">共 {sortedComments.length} 則評論</p>
                   <div className="dropdown">
@@ -137,18 +136,42 @@ export default function Feedback({ comments = [] }) {
                   </Link>
                 )}
               </div>
-            </div>
           ) : (
-            <div className="col-12">
-              <div className="bg py-2 px-2 py-lg-2 px-lg-4 fw-400 border-rd">
+              <div className="feeback">
                 <hr />
                 本課程尚未有學員評論
                 <hr />
               </div>
-            </div>
           )}
         </div>
       </div>
+
+      <style jsx>
+        {`
+          .feeback {
+            background-color: #f8f9fa; /* 假设的背景颜色 */
+            padding-top: 1rem; /* py-4 */
+            padding-bottom: 1rem; /* py-4 */
+            padding-left: 0.5rem; /* px-2 */
+            padding-right: 0.5rem; /* px-2 */
+            font-weight: 400; /* fw-400 */
+            border-radius: 0.25rem; /* border-rd */
+            border-radius: 8px;
+            background: var(--white, #fbfbfb);
+          }
+          
+          /* 为了响应式调整，在大屏幕下应用特定的内边距 */
+          @media (min-width: 992px) {
+            .feeback {
+              padding-top: 0.5rem; /* py-lg-2 */
+              padding-bottom: 0.5rem; /* py-lg-2 */
+              padding-left: 1rem; /* px-lg-4 */
+              padding-right: 1rem; /* px-lg-4 */
+            }
+          }
+          
+        `}
+      </style>
     </>
   )
 }

@@ -12,6 +12,13 @@ export default function Search({ handleSearch }) {
     handleSearch(keyword);
   };
 
+  const handleKeyDown = (event) => {
+    // 如果按下的是 Enter 鍵，並且關鍵字不為空，則執行搜索
+    if (event.key === 'Enter' && keyword.trim() !== '') {
+      handleSearch(keyword);
+    }
+  };
+
   return (
     <>
       <div className="search col-12 col-lg-5 ">
@@ -23,6 +30,7 @@ export default function Search({ handleSearch }) {
             placeholder="請輸入關鍵字"
             value={keyword}
             onChange={handleChange}
+            onKeyDown={handleKeyDown} // 新增 onKeyDown 事件監聽器
           />
           <button className="btn p-1 " type="button" onClick={handleClick}>
             <CiSearch style={{ fontSize: '30px' }} />

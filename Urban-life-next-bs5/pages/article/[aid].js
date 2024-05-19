@@ -251,8 +251,8 @@ export default function Detail() {
               </Link>
             </div>
           </div>
-          <div className="col-sm-12">
-            <div className="d-flex justify-content-center vh-100">
+          <div className="">
+            <div className="d-flex justify-content-center  w-auto">
               <img
                 src={`http://localhost:3005/images/article/${article?.img}`}
                 className="m-3 "
@@ -262,7 +262,7 @@ export default function Detail() {
 
             {/* <p className="m-5">{article?.content}</p> */}
             <div
-              className="m-5 article-content"
+              className="m-5 article-content "
               style={{
                 maxWidth: '100%',
                 wordWrap: 'break-word',

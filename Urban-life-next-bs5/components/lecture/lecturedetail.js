@@ -4,9 +4,9 @@ import styles from './lecturedetail.module.css'
 export default function Lecturedetail({ lecture }) {
   const text2jsx = (text) => {
     return text.split('\n\n').map((v, i) => (
-      <div className="article-section" key={i}>
+      <div className={styles['article-section']} key={i}>
         {v.split('\n').map((v2, i2) => (
-          <div className="article-p" key={`${i}-${i2}`}>{v2}</div>
+          <div className={styles['article-p']} key={`${i}-${i2}`}>{v2}</div>
         ))}
       </div>
     ))
@@ -36,9 +36,7 @@ export default function Lecturedetail({ lecture }) {
           </div>
         </div>
         <div className={styles.lectureinfo}>
-          <div className={styles.infotext}>
             <div className={styles.infotext}>{text2jsx(lecture.content)}</div>
-          </div>
         </div>
       </div>
     </>

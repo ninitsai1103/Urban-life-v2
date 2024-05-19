@@ -3,7 +3,7 @@ import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 import useColloections from '@/hooks/product/useCollections'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 export default function ProductCard({ product, collections, isIconChange }) {
   const [isCollected, setIsCollected] = useState(false) //商品是否有被收藏
@@ -24,8 +24,12 @@ export default function ProductCard({ product, collections, isIconChange }) {
   //切換商品的收藏狀態
   const toggleCollection = () => {
     setIsCollected(!isCollected)
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-    toast.success(message, {})
+   // 定義顯示名稱，如果pid在441至450之間，則只顯示product.name，否則顯示product.name和product.size
+   const displayName = (product.id > 440 && product.id < 451) ? product.name : `${product.name}(${product.size})`;
+
+   // 根據isCollected的狀態來決定是加入收藏還是取消收藏的訊息
+   const message = isCollected ? `${displayName}已取消收藏!` : `${displayName}已加入收藏!`;
+   toast.success(message);
   }
 
   return (
@@ -43,7 +47,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
             />
           </div>
           <div
-            className="card-body"
+            className="card-body set-border-top"
             data-tooltip={
               product.id > 440 && product.id < 451
                 ? product.name
@@ -62,7 +66,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
               <p className="ms-1 mb-0 fs-15">{product.star}</p>
             </div>
             <div className="price d-flex align-items-center justify-content-between mt-1">
-            <Toaster position="top-center" reverseOrder={false} />
+            {/* <Toaster position="top-center" reverseOrder={false} /> */}
               <div className="d-flex">
                 <p className="card-text mb-0 me-3 text-color2-nohover">
                   NTD {product.price}
@@ -96,7 +100,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
                     e.preventDefault()
                     addCollection(product.id)
                       .then((updatedData) => {
-                        console.log('Collection added:', updatedData)
+                        // console.log('Collection added:', updatedData)
                         toggleCollection()
                         // console.log(isCollected)
                       })
@@ -119,7 +123,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
         <div div className="col d-lg-none" id="mobile2">
           <div className="card mb-3" key={`mobile2-${product.id}`}>
             <div className="row g-0 ">
-              <div className="col-6 imgWrap2">
+              <div className="col-5 imgWrap2">
                 <img
                   src={`/images/product/product_cover/${product.cover}`}
                   className="img-fluid rounded-start"
@@ -127,11 +131,11 @@ export default function ProductCard({ product, collections, isIconChange }) {
                 />
               </div>
               {/* <div className="col-7 d-flex align-items-center position-relative "> */}
-              <div className="card-body col-6 pb-0  position-relative">
+              <div className="card-body col-7 pb-0  position-relative set-border-left">
                 <h5 className="card-title fs-6 my-2">
                   {product.name}({product.size})
                 </h5>
-                <div className="price d-flex align-items-center mt-1 my-3 ">
+                <div className="price d-flex align-items-center  my-3 ">
                   <p className="card-text newPrice mb-0 me-3 text-color2-nohover fs-6">
                     NTD {product.price}
                   </p>
@@ -198,7 +202,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
                 alt="..."
               />
             </div>
-            <div className="card-body ">
+            <div className="card-body set-border-top">
               <div className="product-name d-flex justify-content-between">
                 <h5 className="card-title fs-6">
                   {product.name}({product.size})
@@ -283,7 +287,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
           z-index: 1000; /* 確保顯示在最上層 */
         }
 
-        .card-body {
+        .set-border-top {
           border-top: 1px solid #a9a6a6;
         }
         .imgWrap {
@@ -342,6 +346,9 @@ export default function ProductCard({ product, collections, isIconChange }) {
           .imgWrap {
             width: 177px;
             height: 177px;
+          }
+          .set-border-left{
+            border-left: 1px solid #a9a6a6;
           }
         }
       `}</style>

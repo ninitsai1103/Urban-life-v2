@@ -186,25 +186,24 @@ export default function Add() {
               )}
             </div>
             <div className="add-content my-3">
-              <p>內容</p>
-              <h1>圖片上傳與預覽</h1>
+              <h5>封面圖片上傳</h5>
               <input type="file" onChange={handleFileChange} />
               <hr />
               {/* <button onClick={handleFileUpload}>上傳</button> */}
               {selectedFile && (
                 <>
-                  <h3>檔案資訊</h3>
+                  <h5>檔案資訊</h5>
                   <p>檔名(filename): {selectedFile.name}</p>
                   <p>類型(type): {selectedFile.type}</p>
                   <p>大小(size): {selectedFile.size}</p>
                 </>
               )}
-              <h2>預覽</h2>
+              <h5>預覽</h5>
               {/* if has previewURL, render it */}
               {previewURL && <img src={previewURL} alt="" />}
 
               {/* <img src={previewURL || article.img} alt="" /> */}
-
+              <p className="mt-3">內容</p>
               <div
                 style={{
                   height: 'auto',

@@ -13,12 +13,13 @@ export default function ArticleCard({ article }) {
       {/* 列表1*/}
       <div className="card " key={article.id}>
         {/* 卡片上 */}
-        <div className="h-50">
+        <div className="h-50 ">
           {' '}
           <img
             src={`http://localhost:3005/images/article/${article.img}`}
             alt="..."
-            className="card-img-top  object-fit-cover "
+            className="card-img-top  object-fit-cover w-100 h-100"
+            // style={{ }}
           />
         </div>
 
@@ -33,7 +34,8 @@ export default function ArticleCard({ article }) {
           </div>
           {/* <span className="card-text text-overflow">{article.content}</span> */}
           <div
-            className="card-text text-overflow"
+            className="card-text text-overflow card-width "
+            style={{}}
             dangerouslySetInnerHTML={{ __html: article?.content }}
           ></div>
           <div className="card-end d-flex gap-3">
@@ -108,8 +110,18 @@ export default function ArticleCard({ article }) {
           .card-text {
             font-size: 14px;
           }
+          .card-width {
+            width: 365px;
+          }
           .fs-15 {
             font-size: 14px;
+          }
+
+          .text-overflow {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
           }
         }
       `}</style>
