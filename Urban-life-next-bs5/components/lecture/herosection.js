@@ -43,7 +43,7 @@ export default function Herosection() {
           style={{
             '--swiper-navigation-color': '#fff',
             '--swiper-pagination-color': '#fff',
-            width: '100vw',
+            width: '100%',
             height: '90vh',
           }}
           autoplay={{

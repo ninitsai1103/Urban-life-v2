@@ -25,13 +25,15 @@ export default function List() {
   // 判斷user是誰
   const [identityId, setUserIdentityId] = useState()
   useEffect(() => {
-    const { identity_id, name, id } = JSON.parse(
-      localStorage.getItem('member-info')
-    )
-    setUserIdentityId(identity_id)
-    console.log(name)
-    console.log(identity_id)
-    console.log(id)
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    if (memberInfo) {
+      const { identity_id, name, id } = memberInfo
+
+      setUserIdentityId(identity_id)
+      console.log(name)
+      console.log(identity_id)
+      console.log(id)
+    }
   }, [])
 
   // 設定按鈕是否顯示的狀態
