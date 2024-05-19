@@ -188,9 +188,7 @@ export default function OrderCard({ order }) {
           </div>
           <div className="row pb-2 px-3">
             <div className="col-6 fw-bold">訂單日期</div>
-            <div className="col-6">
-              {(date).slice(0, 19).replace('T', ' ')}
-            </div>
+            <div className="col-6">{date.slice(0, 19).replace('T', ' ')}</div>
           </div>
           <div className="row pb-2 px-3">
             <div className="col-6 fw-bold">金額</div>
@@ -714,7 +712,13 @@ export default function OrderCard({ order }) {
                     <hr />
                     <div className="mb-1 d-flex justify-content-between">
                       <div style={{ fontSize: '12px' }}>總金額： </div>
-                      <div style={{ fontSize: '12px' }}>{total} 元</div>
+                      {total < 1000 ? (
+                        <div style={{ fontSize: '12px' }}>{total +60} 元</div>
+                      ) : (
+                        <>
+                          <div style={{ fontSize: '12px' }}>{total} 元</div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
