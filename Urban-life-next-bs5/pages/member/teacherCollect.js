@@ -51,7 +51,7 @@ export default function Collect({}) {
       <div className="container">
         <div className="row margin-padding">
           <div className="col-lg-3 col-md-12 aside">
-            <TeacherAsideAccount />
+            <AsideAccount />
           </div>
           <div className="col-lg-9 col-md-12 main-content">
             <div className="d-flex align-items-center justify-content-between title-margin mb-3">
@@ -60,25 +60,16 @@ export default function Collect({}) {
             <TopNavItemCollect setCollectFilter={setCollectFilter} />
             {userCollects.map((collect) => {
               const { id, pdltat_id } = collect
-              switch (pdltat_id) {
-                case 1:
-                  if (collectFilter === '收藏商品') {
-                    return <CollectProducts key={id} collect={collect} />
-                  }
-                  break
-                case 2:
-                  if (collectFilter === '收藏課程') {
-                    return <CollectProducts key={id} collect={collect} />
-                  }
-                  break
-                case 3:
-                  if (collectFilter === '收藏文章') {
-                    return <CollectArticleCard key={id} collect={collect} />
-                  }
-                  break
+              if (
+                (pdltat_id === 1 || pdltat_id === 2) && 
+                collectFilter === '收藏的商品與課程'
+              ) {
+                return <CollectProducts key={id} collect={collect} />
+              }
+              if (pdltat_id === 3 && collectFilter === '收藏文章') {
+                return <CollectArticleCard key={id} collect={collect} />
               }
             })}
-        
           </div>
         </div>
       </div>
@@ -109,6 +100,9 @@ export default function Collect({}) {
           .aside {
             padding: 0px;
             margin-bottom: 40px;
+          }
+          .main-content {
+            padding: 30px 30px;
           }
         }
       `}</style>
