@@ -95,11 +95,30 @@ export default function LectureMyCardNp({
     )
   }, [collections, lecture.id])
 
+    //兆妮修正
+    const [canCollect, setCanCollect] = useState(false)
+
+    useEffect(() => {
+      const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+      if (memberInfo !== null && memberInfo !== undefined) {
+        setCanCollect(true)
+      } else {
+        setCanCollect(false)
+      }
+    })
+  
+    const handleReminder = () => {
+      alert('請先登入會員')
+    }
+    
+    //兆妮修正完畢
+
   return (
     <>
       <div className={styles.card}>
         <div className={styles.cardBodyName}>
           <div className={styles.lectureName}><a href={`/lecture/${lecture.id}`} style={{ textDecoration: 'none' }}>{lecture.name}</a></div>
+          {canCollect ? (
           <button className="btn btn-like">
             {isCollected ? (
               <FaHeart
@@ -127,6 +146,17 @@ export default function LectureMyCardNp({
               />
             )}
           </button>
+          ):(
+            <button className="btn btn-like" onClick={handleReminder}>
+            <FaRegHeart
+                style={{
+                  fontSize: '23px',
+                  cursor: 'pointer',
+                  color: '#ff4136',
+                }}
+              />
+            </button>
+          )}
         </div>
         <div className={styles.cardBodyArea}>
           <div className={styles.lectureText}><a href={`/teacher/${lecture.teacher_id}`} style={{ textDecoration: 'none' }}>{lecture.teacher_name}</a></div>
