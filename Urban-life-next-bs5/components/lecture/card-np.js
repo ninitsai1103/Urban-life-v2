@@ -108,8 +108,11 @@ export default function LectureMyCardNp({
     })
   
     const handleReminder = () => {
-      alert('請先登入會員')
-    }
+      notifySA('尚未登入', '幫您轉跳登入頁面，登入後才能使用收藏功能喔！', 'error');
+      setTimeout(() => {
+          window.location.href = '/member/login';
+      }, 3000); // 等待3秒（3000毫秒）
+  }
     
     //兆妮修正完畢
 
