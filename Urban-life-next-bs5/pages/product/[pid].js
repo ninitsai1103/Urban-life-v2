@@ -44,6 +44,29 @@ export default function Detail() {
 
   const [recommended, setRecommended] = useState([])
 
+  //未登入加入購物車跳轉
+  const [canAddCart, setCanAddCart] = useState(false)
+
+  useEffect(() => {
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    if (memberInfo !== null && memberInfo !== undefined) {
+      setCanAddCart(true)
+    } else {
+      setCanAddCart(false)
+    }
+  },[])
+
+  useEffect(() => {
+   console.log(canAddCart);
+  },[canAddCart])
+
+
+  const handleReminder = () => {
+    alert('尚未登入 ,幫您轉跳登入頁面，登入後才能使用加入購物車功能喔！', 'error');
+    setTimeout(() => {
+        window.location.href = '/member/login';
+    }, 3000); // 等待3秒（3000毫秒）
+}
 
   useEffect(() => {
     //根據pid動態路由對應商品資料
@@ -205,6 +228,7 @@ export default function Detail() {
                 {product && product.star}
               </p>
             </div>
+            {canAddCart ? (
             <div>
               <Link
                 className="btn btn-main btn-hover w-100 mb-3"
@@ -278,6 +302,59 @@ export default function Detail() {
                 )}
               </div>
             </div>
+            ):(
+              <div>
+              <button
+                className="btn btn-main btn-hover w-100 mb-3"
+               
+                onClick={() => {
+                  handleReminder()
+                }}
+              >
+                <AiOutlineShopping
+                  className="me-1 mb-1"
+                  style={{ fontSize: '21px' }}
+                />
+                立即購買
+              </button>
+              <div className="d-flex justify-content-between">
+                <Toaster position="top-center" reverseOrder={false} />
+                <button
+                  className="btn btn-add btn-hover2 "
+                  onClick={() => {
+                    handleReminder()
+                  }}
+                >
+                  <BsCart3 className="me-1 mb-1" style={{ fontSize: '17px' }} />
+                  加入購物車
+                </button>
+                  <button
+                    className="btn btn-add btn-hover2"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      addCollection(pid)
+                      .then(updatedData => {
+                        toggleCollection();
+                        // console.log('Collection added:', updatedData);
+                      })
+                      .catch(error => {
+                        alert("請先登入會員再進行收藏功能，為您導向登入畫面。")
+                        window.location.href = "/member/login";
+                        console.error('Failed to add collection:', error.message);
+                        // 在這裡根據 error.message 顯示適當的錯誤消息給用戶
+                      });
+                    }}
+                  >
+                    <GoHeart
+                      className="me-1 mb-1"
+                      style={{ fontSize: '19px' }}
+                    />
+                    加入收藏
+                  </button>
+                
+              </div>
+            </div>
+            )}
           </div>
         </div>
         <div className="row mt-5 mx-2">
