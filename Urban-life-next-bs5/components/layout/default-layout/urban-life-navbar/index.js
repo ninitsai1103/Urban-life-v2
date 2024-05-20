@@ -90,6 +90,21 @@ export default function MyNavbar() {
       console.log(error)
     }
   }
+
+  //要登入才能進入購物車
+  const [intoCart, setIntoCart] = useState(false)
+  useEffect(() => {
+    // 把localStorage裡的member-info拉出來
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    if (memberInfo !== null && memberInfo !== undefined) {
+      setIntoCart(true)
+    } else {
+      setIntoCart(false)
+    }
+  })
+  const handleReminder = () => {
+    alert('請先登入會員')
+  }
   return (
     <>
       <div className="header">
@@ -133,7 +148,7 @@ export default function MyNavbar() {
             <div>
               {member ? (
                 <a
-                  className="d-block py-2 px-2 text-decoration-none d-flex align-items-center"
+                  className="d-block py-2 px-2 text-decoration-none d-flex align-items-center signOut_text"
                   style={{ color: 'white' }}
                   onClick={handleLogout}
                 >
@@ -149,10 +164,22 @@ export default function MyNavbar() {
               <FaUser style={{ color: 'white', fontSize: '24px' }} />
             </div>
             <div className="cart">
-              <Link href="http://localhost:3000/cart">
-                <FaShoppingCart style={{ color: 'white', fontSize: '24px' }} />
-                <span>{totalItems}</span>
-              </Link>
+              {intoCart ? (
+                <Link href="http://localhost:3000/cart">
+                  <FaShoppingCart
+                    style={{ color: 'white', fontSize: '24px' }}
+                  />
+                  <span>{totalItems}</span>
+                </Link>
+              ) : (
+                <>
+                  <FaShoppingCart
+                    style={{ color: 'white', fontSize: '24px' }}
+                    onClick={handleReminder}
+                  />
+                  <span>{totalItems}</span>
+                </>
+              )}
             </div>
           </div>
         </div>

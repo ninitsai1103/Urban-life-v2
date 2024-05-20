@@ -43,7 +43,7 @@ export default function CollectProducts({ collect }) {
   }
   return (
     <>
-      <table className="table ">
+      <table className="table">
         <tbody className="table-group-divider border-top-0">
           <tr className="align-middle">
             <td className="delete-btn">
@@ -53,14 +53,14 @@ export default function CollectProducts({ collect }) {
               <div className="d-flex align-items-center">
                 <div className="img me-3">
                   {collect.pdltat_id === 1 && (
-                    <div className="img me-3 ">
-                        <Image
-                          src={`/images/product/product_cover/${collect.product_image}`}
-                          width={30}
-                          height={30}
-                          property="true"
-                          alt=""
-                        />
+                    <div className="img me-3">
+                      <Image
+                        src={`/images/product/product_cover/${collect.product_image}`}
+                        width={30}
+                        height={30}
+                        property="true"
+                        alt=""
+                      />
                     </div>
                   )}
                   {collect.pdltat_id === 2 && (
@@ -76,37 +76,39 @@ export default function CollectProducts({ collect }) {
                   )}
                 </div>
                 <div className="text-size product-name">
-                <Link href={`/lecture/${collect.product_id}`} style={{ textDecoration: 'none' }}>
-                  {collect.product_name}
+                  <Link
+                    href={
+                      collect.pdltat_id === 1 && collect.product_id < 451
+                        ? `/product/${collect.product_id}`
+                        : `/lecture/${collect.product_id}`
+                    }
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {collect.product_name}
                   </Link>
                 </div>
               </div>
             </td>
             <td className="price-container">NTD {collect.product_price}</td>
             <td className="align-middle detail-btn">
-              <div className="d-flex align-items-center ">
-              {collect.pdltat_id === 1 && (
+              <div className="d-flex align-items-center">
                 <Link
-                  className="btn btn-main me-2 "
-                  href={`/product/${collect.product_id}`}
+                  className="btn btn-main me-2"
+                  href={
+                    collect.pdltat_id === 1 && collect.product_id < 451
+                      ? `/product/${collect.product_id}`
+                      : `/lecture/${collect.product_id}`
+                  }
                 >
                   查看細節
                 </Link>
-              )}
-              {collect.pdltat_id === 2 && (
-                <Link
-                  className="btn btn-main me-2 "
-                  href={`/article/detail/${collect.product_id}`}
-                >
-                  查看細節
-                </Link>
-              )}
               </div>
             </td>
           </tr>
         </tbody>
       </table>
       <Toaster />
+
       <style jsx>{`
         .img {
           width: 80px;

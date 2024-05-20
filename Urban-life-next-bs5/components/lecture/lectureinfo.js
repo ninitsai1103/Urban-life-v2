@@ -68,6 +68,43 @@ export default function LectureInfo({ lecture, collections = [] }) {
     }
   }, [isPastDeadline, lecture, addItem, MySwal]);
 
+    //兆妮修正
+    const [canCollect, setCanCollect] = useState(false)
+    const [canBuy, setCanBuy] = useState(false)
+
+    useEffect(() => {
+      const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+      if (memberInfo !== null && memberInfo !== undefined) {
+        setCanCollect(true)
+      } else {
+        setCanCollect(false)
+      }
+    })
+
+    useEffect(() => {
+      const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+      if (memberInfo !== null && memberInfo !== undefined) {
+        setCanBuy(true)
+      } else {
+        setCanBuy(false)
+      }
+    })
+  
+    const handleReminder = () => {
+      notifySA('尚未登入', '幫您轉跳登入頁面，登入後才能使用收藏功能喔！', 'error');
+      setTimeout(() => {
+          window.location.href = '/member/login';
+      }, 3000); // 等待3秒（3000毫秒）
+  }
+
+  const youCantBuy = () => {
+    notifySA('尚未登入', '幫您轉跳登入頁面，登入後才能購買喔！', 'error');
+    setTimeout(() => {
+        window.location.href = '/member/login';
+    }, 3000); // 等待3秒（3000毫秒）
+}
+    
+    //兆妮修正完畢
   return (
     <div className={styles.infocard}>
       <div className={styles.lecturename}>{lecture.name}</div>
@@ -102,10 +139,18 @@ export default function LectureInfo({ lecture, collections = [] }) {
       </div>
       <div>
         <div className={styles.btnarea}>
-          <button className="btn btn-add " onClick={handleAddToCart}>
-            <BsCart3 className="me-2" style={{ fontSize: '20px' }} />
-            {isPastDeadline ? '已過報名日期' : '加入購物車'}
-          </button>
+          {canBuy ? (
+            <button className="btn btn-add " onClick={handleAddToCart}>
+              <BsCart3 className="me-2" style={{ fontSize: '20px' }} />
+              {isPastDeadline ? '已過報名日期' : '加入購物車'}
+            </button>
+          ) : (
+            <button className="btn btn-add " onClick={youCantBuy}>
+              <BsCart3 className="me-2" style={{ fontSize: '20px' }} />
+              {isPastDeadline ? '已過報名日期' : '加入購物車'}
+            </button>
+          )}
+          {canCollect ? (
           <button className="btn btn-add " onClick={toggleCollection}>
             {isCollected ? (
               <FaHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }} />
@@ -114,6 +159,11 @@ export default function LectureInfo({ lecture, collections = [] }) {
             )}
             加入收藏
           </button>
+          ):(
+            <button className='btn btn-add ' onClick={handleReminder}>
+              <FaRegHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }} /> 加入收藏
+            </button>
+          )}
         </div>
       </div>
     </div>

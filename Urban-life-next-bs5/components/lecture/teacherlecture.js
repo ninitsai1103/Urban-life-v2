@@ -63,6 +63,24 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
     [lectures, addCollection, removeCollection, notifySA]
   )
 
+  //兆妮修正
+  const [canCollect, setCanCollect] = useState(false)
+
+  useEffect(() => {
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    if (memberInfo !== null && memberInfo !== undefined) {
+      setCanCollect(true)
+    } else {
+      setCanCollect(false)
+    }
+  })
+
+  const handleReminder = () => {
+    alert('請先登入會員')
+  }
+
+  //兆妮修正完畢
+
   return (
     <>
       {lectures && lectures.length > 0 ? (
@@ -88,19 +106,31 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
                     {lecture.name}
                   </a>
                 </div>
-                <button
-                  className="width-25 btn btn-like"
-                  onClick={() => toggleCollection(lecture.id)}
-                >
-                  {isCollectedMap[lecture.id] ? (
-                    <FaHeart
-                      style={{
-                        fontSize: '23px',
-                        cursor: 'pointer',
-                        color: '#ff4136',
-                      }}
-                    />
-                  ) : (
+                {canCollect ? (
+                  <button
+                    className="width-25 btn btn-like"
+                    onClick={() => toggleCollection(lecture.id)}
+                  >
+                    {isCollectedMap[lecture.id] ? (
+                      <FaHeart
+                        style={{
+                          fontSize: '23px',
+                          cursor: 'pointer',
+                          color: '#ff4136',
+                        }}
+                      />
+                    ) : (
+                      <FaRegHeart
+                        style={{
+                          fontSize: '23px',
+                          cursor: 'pointer',
+                          color: '#ff4136',
+                        }}
+                      />
+                    )}
+                  </button>
+                ) : (
+                  <button className="width-25 btn btn-like" onClick={handleReminder}>
                     <FaRegHeart
                       style={{
                         fontSize: '23px',
@@ -108,8 +138,8 @@ export default function TeacherLectureCard({ lectures, collections = [] }) {
                         color: '#ff4136',
                       }}
                     />
-                  )}
-                </button>
+                  </button>
+                )}
               </div>
               <div className={styles.cardBodyArea}>
                 <div className="flex gap-2.5 font-medium">

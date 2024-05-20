@@ -13,6 +13,27 @@ export default function LectureMyCard({ lecture, collections = [] }) {
   const { addCollection, removeCollection } = useColloections()
   const MySwal = withReactContent(Swal)
 
+  //兆妮修正
+  const [canCollect, setCanCollect] = useState(false)
+
+  useEffect(() => {
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    if (memberInfo !== null && memberInfo !== undefined) {
+      setCanCollect(true)
+    } else {
+      setCanCollect(false)
+    }
+  })
+
+  const handleReminder = () => {
+    notifySA('尚未登入', '幫您轉跳登入頁面，登入後才能使用收藏功能喔！', 'error');
+    setTimeout(() => {
+        window.location.href = '/member/login';
+    }, 3000); // 等待3秒（3000毫秒）
+}
+  
+  //兆妮修正完畢
+
   useEffect(() => {
     if (!lecture) return
 
@@ -62,7 +83,15 @@ export default function LectureMyCard({ lecture, collections = [] }) {
         </a>
         <div className={styles.cardBody}>
           <div className={styles.cardBodyName}>
-            <div className={styles.lectureName} ><a href={`/lecture/${lecture.id}`} style={{ textDecoration: 'none' }}>{lecture.name}</a></div>
+            <div className={styles.lectureName}>
+              <a
+                href={`/lecture/${lecture.id}`}
+                style={{ textDecoration: 'none' }}
+              >
+                {lecture.name}
+              </a>
+            </div>
+            {canCollect ? (
             <button className="btn btn-like" onClick={toggleCollection}>
               {isCollected ? (
                 <FaHeart
@@ -82,9 +111,29 @@ export default function LectureMyCard({ lecture, collections = [] }) {
                 />
               )}
             </button>
+            ):(
+              <>
+              <button className="btn btn-like" onClick={handleReminder}>
+              <FaRegHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
+                />
+              </button>
+              </>
+            )}
           </div>
           <div className={styles.cardBodyArea}>
-            <div className={styles.lectureText}><a href={`/teacher/${lecture.teacher_id}`} style={{ textDecoration: 'none' }}>{lecture.teacher_name}</a></div>
+            <div className={styles.lectureText}>
+              <a
+                href={`/teacher/${lecture.teacher_id}`}
+                style={{ textDecoration: 'none' }}
+              >
+                {lecture.teacher_name}
+              </a>
+            </div>
             <div className={styles.lectureText}>{lecture.lecture_date}</div>
           </div>
           <div className={styles.cardBodyArea}>
