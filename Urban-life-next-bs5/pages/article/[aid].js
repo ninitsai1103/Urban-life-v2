@@ -26,15 +26,23 @@ export default function Detail() {
   const { member } = useMemberInfo()
 
   // 判斷user是誰
-  const [identityId, setUserIdentityId] = useState()
+  const [identityId, setUserIdentityId] = useState('')
   useEffect(() => {
-    const { identity_id, name, id } = JSON.parse(
-      localStorage.getItem('member-info')
-    )
-    setUserIdentityId(identity_id)
-    console.log(name)
-    console.log(identity_id)
-    console.log(id)
+    const canAddNewArticle = localStorage.getItem('member-info')
+    // const { identity_id, name, id } = JSON.parse(
+    //   localStorage.getItem('member-info')
+    // )
+    if (canAddNewArticle !== null && canAddNewArticle !== undefined) {
+      const { identity_id, name, id } = JSON.parse(
+        localStorage.getItem('member-info')
+      )
+      setUserIdentityId(identity_id)
+    } else {
+      setUserIdentityId('')
+    }
+    // console.log(name)
+    // console.log(identity_id)
+    // console.log(id)
   }, [])
 
   // 設定按鈕是否顯示的狀態
