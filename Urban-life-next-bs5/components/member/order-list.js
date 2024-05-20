@@ -451,7 +451,7 @@ export default function OrderList({ order }) {
                               <div className="img me-3">
                                 <Image
                                   alt="product"
-                                  src={`/images/lecture/lecture_img/${item.cover}`}
+                                  src={`/images/product/product_cover/${item.cover}`}
                                   width={30}
                                   height={30}
                                 />
