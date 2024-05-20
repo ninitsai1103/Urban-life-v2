@@ -144,7 +144,7 @@ export default function LectureMyCard({ lecture, collections = [] }) {
           </div>
           <div className={styles.cardBodyArea}>
             <div className={styles.lectureText}>
-              體驗人數：{lecture.amount}人
+              報名人數上限：{lecture.amount}人
             </div>
             <Link key={lecture.id} href={`/lecture/${lecture.id}`}>
               <button className="btn btn-detail">課程詳細資訊</button>
