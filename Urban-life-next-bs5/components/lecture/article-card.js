@@ -12,7 +12,7 @@ export default function ArticleCard({ articlesList, collections = [] }) {
   useEffect(() => {
     const initialCollectedMap = articlesList.reduce((map, article) => {
       const isCollected = collections.some(
-        (item) => item.product_id === article.id && item.valid === 1
+        (item) => article.id && item.valid === 1
       )
       map[article.id] = isCollected
       return map
@@ -20,7 +20,7 @@ export default function ArticleCard({ articlesList, collections = [] }) {
     setIsCollectedMap(initialCollectedMap)
   }, [articlesList, collections])
 
-  const { addCollection, removeCollection } = useCollections()
+  const { addArticleCollection, removeArticleCollection } = useCollections()
   const MySwal = withReactContent(Swal)
 
   const notifySA = useCallback(
@@ -44,21 +44,21 @@ export default function ArticleCard({ articlesList, collections = [] }) {
         const article = articlesList.find((item) => item.id === articleId)
         if (article) {
           if (newCollected) {
-            addCollection(articleId)
+            addArticleCollection(articleId)
             notifySA(
               '成功收藏',
               `${article.title} 已成功加入您的收藏!`,
               'success'
             )
           } else {
-            removeCollection(articleId)
+            removeArticleCollection(articleId)
             notifySA('取消收藏', `${article.title} 已成功取消收藏!`, 'error')
           }
         }
         return newMap
       })
     },
-    [articlesList, addCollection, removeCollection, notifySA]
+    [articlesList, addArticleCollection, removeArticleCollection, notifySA]
   )
 
   return (

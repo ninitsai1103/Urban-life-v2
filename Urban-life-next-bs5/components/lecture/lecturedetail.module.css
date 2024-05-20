@@ -29,9 +29,34 @@
 
   .infogroup {
       display: flex;
-      /* flex-direction: column; */
       align-items: center;
       gap: 40px;
       align-self: stretch;
-      /* justify-content: space-between; */
+  }
+
+  @media (max-width: 1200px) {
+    .infotext {
+        font-size: 18px;
+        width: 386px;
+    }
+  
+    .imginfo {
+        display: none;
+    }
+  
+    .lectureinfo {
+        width: 386px;
+        padding: 0px;  
+    }
+  
+    .infogroup {
+        gap: 1px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .article-p,
+    .article-section {
+      width: 386px;
+    }
   }

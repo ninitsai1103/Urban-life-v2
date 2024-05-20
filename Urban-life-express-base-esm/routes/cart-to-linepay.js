@@ -254,6 +254,11 @@ router.get(`/confirm`, async function (req, res) {
     const updateSql = `UPDATE order_detail SET status = ? WHERE transaction_id = ?`
     const result = await db.query(updateSql, [status, transactionId])
 
+    //更新資料庫中的優惠券狀態
+    const updateCouponSql = `UPDATE user_coupon SET status = ? WHERE coupon_id = ?`
+    const result2 = await db.query(updateCouponSql, ["已使用", dbOrder[0].coupon_id])
+    console.log("result2", result2);
+    console.log("dbOrder[0].coupon_id", dbOrder[0].coupon_id);
     return res.json({ status: 'success', data: [linePayResponse.body, order_info] })
   } catch (error) {
     return res.json({ status: 'fail', data: error.data })

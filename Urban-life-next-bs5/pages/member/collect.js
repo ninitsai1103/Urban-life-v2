@@ -11,7 +11,6 @@ export default function Collect({}) {
 
   const [userCollects, setUserCollects] = useState([])
 
-
   // collect資料表
   const getCollects = async (id) => {
     // fetch抓資料
@@ -20,13 +19,15 @@ export default function Collect({}) {
       const res = await fetch(url)
       const data = await res.json()
       // 所有此user擁有的collect
-      const userCollect = data.collects
-      data.collects.forEach((item) => {
+      let userCollect = data.collects
+      userCollect.forEach((item) => {
         const pdltat_id = item.pdltat_id
         // console.log(pdltat_id);
       })
-      console.log(data.collects)
+      console.log(userCollect)
       if (Array.isArray(userCollect)) {
+        // 排列以id做降冪排列
+        userCollect.sort((a, b) => b.id - a.id)
         setUserCollects(userCollect)
       } else {
         alert('伺服器回傳資料類型錯誤，無法設定到狀態中')
@@ -41,10 +42,9 @@ export default function Collect({}) {
     }
   }, [member])
 
-  // top-nav-item 篩選資料的狀態: 收藏商品、收藏課程、收藏文章
-  const [collectFilter, setCollectFilter] = useState('收藏商品')
+  // top-nav-item 篩選資料的狀態: 收藏的商品與課程、收藏文章
+  const [collectFilter, setCollectFilter] = useState('收藏的商品與課程')
 
- 
   return (
     <>
       <div className="container">
@@ -59,25 +59,16 @@ export default function Collect({}) {
             <TopNavItemCollect setCollectFilter={setCollectFilter} />
             {userCollects.map((collect) => {
               const { id, pdltat_id } = collect
-              switch (pdltat_id) {
-                case 1:
-                  if (collectFilter === '收藏商品') {
-                    return <CollectProducts key={id} collect={collect} />
-                  }
-                  break
-                case 2:
-                  if (collectFilter === '收藏課程') {
-                    return <CollectProducts key={id} collect={collect} />
-                  }
-                  break
-                case 3:
-                  if (collectFilter === '收藏文章') {
-                    return <CollectArticleCard key={id} collect={collect} />
-                  }
-                  break
+              if (
+                (pdltat_id === 1 || pdltat_id === 2) && 
+                collectFilter === '收藏的商品與課程'
+              ) {
+                return <CollectProducts key={id} collect={collect} />
+              }
+              if (pdltat_id === 3 && collectFilter === '收藏文章') {
+                return <CollectArticleCard key={id} collect={collect} />
               }
             })}
-        
           </div>
         </div>
       </div>
@@ -108,6 +99,9 @@ export default function Collect({}) {
           .aside {
             padding: 0px;
             margin-bottom: 40px;
+          }
+          .main-content {
+            padding: 30px 30px;
           }
         }
       `}</style>

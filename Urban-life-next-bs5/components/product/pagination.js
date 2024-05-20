@@ -99,7 +99,7 @@ export default function Page({ totalPages, currentPage,  onPageChange}) {
           @media (max-width: 500px) {
             .pagination {
             display: grid;
-            grid-gap: 6px;
+            grid-gap: 1px;
           }
             
             .page-link {

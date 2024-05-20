@@ -66,8 +66,12 @@ export default function Detail() {
   //切換商品的收藏狀態
   const toggleCollection = () => {
     setIsCollected(!isCollected)
-    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-    toast.success(message, {})
+   // 定義顯示名稱，如果pid在441至450之間，則只顯示product.name，否則顯示product.name和product.size
+   const displayName = (pid > 440 && pid < 451) ? product.name : `${product.name}(${product.size})`;
+
+   // 根據isCollected的狀態來決定是加入收藏還是取消收藏的訊息
+   const message = isCollected ? `${displayName}已取消收藏!` : `${displayName}已加入收藏!`;
+   toast.success(message);
   }
 
   // useEffect(()=>{
@@ -119,16 +123,10 @@ export default function Detail() {
       setRecommended(shuffled.slice(0, 4)) // 隨機從products選取四個商品
     }
   }, [products])
-  
 
-  //返回上一頁
-  // function handleBack() {
-  //   navigate(-1);  
-  // }
-
-  useEffect(() => {
-    console.log(comment)
-  }, [comment])
+  // useEffect(() => {
+  //   console.log(comment)
+  // }, [comment])
 
   return (
     <>
@@ -160,7 +158,10 @@ export default function Detail() {
               <li className="breadcrumb-item active" aria-current="page">
               {product ? (
                 <Link className="text-decoration-none" href={`/product/${pid}`}>
-                  {product.name}
+                  {product &&
+                (pid > 440 && pid < 451
+                  ? product.name
+                  : `${product.name}(${product.size})`)}
                 </Link>
               ) : (
                 <span>商品細節頁</span>)
@@ -258,7 +259,7 @@ export default function Detail() {
                       addCollection(pid)
                       .then(updatedData => {
                         toggleCollection();
-                        console.log('Collection added:', updatedData);
+                        // console.log('Collection added:', updatedData);
                       })
                       .catch(error => {
                         alert("請先登入會員再進行收藏功能")

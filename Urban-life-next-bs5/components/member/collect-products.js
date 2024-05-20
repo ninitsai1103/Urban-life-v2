@@ -76,7 +76,7 @@ export default function CollectProducts({ collect }) {
                   )}
                 </div>
                 <div className="text-size product-name">
-                <Link href={`/lecture/${collect.product_id}`}>
+                <Link href={`/lecture/${collect.product_id}`} style={{ textDecoration: 'none' }}>
                   {collect.product_name}
                   </Link>
                 </div>

@@ -1,40 +1,27 @@
 import React, { useEffect, useState } from 'react'
 
 export default function TopNavItemCollect(props) {
-  const [activeStatus, setActiveStatus] = useState('收藏商品')
+  const [activeStatus, setActiveStatus] = useState('收藏的商品與課程')
   const handleStatusClick = (status) => {
     setActiveStatus(status)
-    
   }
   useEffect(() => {
     props.setCollectFilter(activeStatus)
-  },[activeStatus])
+  }, [activeStatus])
 
   return (
     <>
       <ul className="nav nav-underline mb-3">
         <li
           className={`nav-item col ${
-            activeStatus === '收藏商品' ? 'active' : ''
+            activeStatus === '收藏的商品與課程' ? 'active' : ''
           }`}
         >
           <button
             className="nav-link"
-            onClick={() => handleStatusClick('收藏商品')}
+            onClick={() => handleStatusClick('收藏的商品與課程')}
           >
-            收藏商品
-          </button>
-        </li>
-        <li
-          className={`nav-item col ${
-            activeStatus === '收藏課程' ? 'active' : ''
-          }`}
-        >
-          <button
-            className="nav-link"
-            onClick={() => handleStatusClick('收藏課程')}
-          >
-            收藏課程
+            收藏的商品與課程
           </button>
         </li>
         <li
@@ -46,7 +33,7 @@ export default function TopNavItemCollect(props) {
             className="nav-link"
             onClick={() => handleStatusClick('收藏文章')}
           >
-           收藏文章
+            收藏文章
           </button>
         </li>
       </ul>

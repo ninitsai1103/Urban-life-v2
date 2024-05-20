@@ -10,11 +10,10 @@
    
     @media (min-width: 752px) {
       .lectureSliderBig {
-        width: 752px;
-        height: 530px;
+        width: 700px;
       }
       .lectureSlider {
-        width: 752px;
+        width: 700px;
         height: 127px;
       }
     }

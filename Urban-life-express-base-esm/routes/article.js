@@ -12,11 +12,7 @@ import { QueryTypes, Op } from 'sequelize'
 import db from '#configs/mysql.js'
 
 router.get('/', async function (req, res) {
-  // let sqlArticles = 'SELECT * FROM article WHERE valid = 1';
-  // const sqlArticles = `SELECT * FROM article JOIN user_teacher ON article.user_id =user_teacher.id
-  // WHERE article.valid = 1
-  // `
-
+ 
   try {
     // 使用 SQL 查詢關聯 article 和 user_teacher 表格
     const sqlArticles = `

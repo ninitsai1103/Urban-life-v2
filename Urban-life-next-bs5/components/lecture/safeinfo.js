@@ -156,6 +156,10 @@ export default function Safeinfo() {
             margin-left: auto;
             margin-right: 0px;
           }
+
+          .nav-link {
+            font-size: 28px;
+          }
         }
       `}</style>
     </>

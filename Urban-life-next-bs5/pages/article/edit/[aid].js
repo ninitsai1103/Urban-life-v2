@@ -9,9 +9,12 @@ export default function Edit() {
   const router = useRouter()
   const { aid } = router.query // 從 URL 獲取文章ID
   const { articles } = useArticles()
+  const [previewURL, setPreviewURL] = useState(null)
+
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [categoryId, setCategoryId] = useState('')
+  const [selectedFile, setSelectedFile] = useState(null)
 
   // member的hooks
   const { member } = useMemberInfo()
@@ -62,15 +65,59 @@ export default function Edit() {
 
   useEffect(() => {
     console.log('Updated article:', article)
+    setPreviewURL(`http://localhost:3005/images/article/${article.img}`)
   }, [article])
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
     setArticle({ ...article, [name]: value })
   }
+  const handleFileUpload = (file = null) => {
+    if (!file) {
+      if (!selectedFile) {
+        alert('請選擇一個檔案')
+        return
+      }
+      file = selectedFile
+    }
+    console.log('upload')
 
+    const formData = new FormData()
+    formData.append('articleImage', file)
+
+    fetch('http://localhost:3005/api/upload2', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('成功上傳:', data)
+        // 假設data.url是後端返回的圖片URL
+        const file_name = data.url.split('/').pop()
+        console.log(file_name)
+        setArticle({ ...article, img: file_name })
+      })
+      .catch((error) => {
+        console.error('上傳錯誤:', error)
+      })
+  }
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]
+    setSelectedFile(file)
+    setPreviewURL(URL.createObjectURL(file))
+    handleFileUpload(file)
+  }
+  function updateImageSrc(htmlContent) {
+    // 使用正則表達式匹配img標籤並更新src屬性
+    return htmlContent.replace(
+      /(<img\s+[^>]*src=")(\/[^"]*)(")/g,
+      '$1http://localhost:3005$2$3'
+    )
+  }
   const handleContentChange = (input_content) => {
     console.log("handleContentChange's", article)
+    console.log(input_content)
+    input_content = updateImageSrc(input_content)
     setContent(input_content)
     // setArticle({ ...article, content: content })
   }
@@ -110,6 +157,7 @@ export default function Edit() {
       .then((response) => response.json())
       .then((data) => {
         console.log('成功:', data)
+        router.push(`/article/${aid}`)
       })
       .catch((error) => {
         console.error('錯誤:', error)
@@ -164,7 +212,23 @@ export default function Edit() {
               )}
             </div>
             <div className="add-content my-3">
-              <p>內容</p>
+              <h5>圖片上傳與預覽</h5>
+              <input type="file" onChange={handleFileChange} />
+              <hr />
+              {/* <button onClick={handleFileUpload}>上傳</button> */}
+              {selectedFile && (
+                <>
+                  <h3>檔案資訊</h3>
+                  <p>檔名(filename): {selectedFile.name}</p>
+                  <p>類型(type): {selectedFile.type}</p>
+                  <p>大小(size): {selectedFile.size}</p>
+                </>
+              )}
+              <h5>預覽</h5>
+              {/* if has previewURL, render it */}
+              {previewURL && <img src={previewURL} alt="" />}
+              <p className="mt-3">內容</p>
+
               <div
                 style={{
                   height: 'auto',
@@ -172,7 +236,7 @@ export default function Edit() {
                   overflowY: 'auto',
                 }}
               >
-               {/* Myeditor需要吃到html */}
+                {/* Myeditor需要吃到html */}
                 <Myeditor
                   name="content"
                   onChange={handleContentChange}

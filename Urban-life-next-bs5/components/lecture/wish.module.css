@@ -36,6 +36,7 @@
     padding: 20px;
     border: none;
     outline: none;
+    width: 813px;
 }
 
 .wishBtn {
@@ -54,3 +55,39 @@
     align-items: center;
     gap: 10px;
 }
+
+@media (max-width: 1200px) {
+    .card {
+      width: 390px;
+      padding: 10px 15px;
+      justify-content: center; /* 水平置中 */
+      align-items: center; /* 垂直置中 */
+    }
+    .wishTitle {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    }
+
+    .wishInfo {
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+    .textarea {
+        padding: 10px;
+        border: none;
+        outline: none;
+        width: 360px;
+    }
+
+    .wishArea {
+        padding: 10px;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between
+    }
+  }

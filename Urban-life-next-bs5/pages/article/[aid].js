@@ -105,6 +105,8 @@ export default function Detail() {
       )
       const result = await response.text()
       console.log(result)
+      // refresh
+      window.location.reload()
     } catch (error) {
       console.log('error', error)
     }
@@ -127,7 +129,11 @@ export default function Detail() {
 
     fetch('http://localhost:3005/api/del', requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((result) => {
+        console.log(result)
+        router.push('/article/list')
+      })
+
       .catch((error) => console.log('error', error))
   }
 
@@ -245,8 +251,8 @@ export default function Detail() {
               </Link>
             </div>
           </div>
-          <div className="col-sm-12">
-            <div className="d-flex justify-content-center vh-100">
+          <div className="">
+            <div className="d-flex justify-content-center  w-auto">
               <img
                 src={`http://localhost:3005/images/article/${article?.img}`}
                 className="m-3 "
@@ -256,7 +262,13 @@ export default function Detail() {
 
             {/* <p className="m-5">{article?.content}</p> */}
             <div
-              className="m-5"
+              className="m-5 article-content "
+              style={{
+                maxWidth: '100%',
+                wordWrap: 'break-word',
+                margin: '0 auto',
+                overflow: 'hidden',
+              }}
               dangerouslySetInnerHTML={{ __html: article?.content }}
             ></div>
           </div>

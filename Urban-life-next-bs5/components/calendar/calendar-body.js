@@ -5,6 +5,7 @@ import getWeeksInMonth from './utils'
 export default function CalendarBody({ calendarMain, cardData }) {
   let weekContentList = getWeeksInMonth(calendarMain)
   const WeekDayNameList = ['Sun', 'Mon', 'Tue', 'Wen', 'Thr', 'Fri', 'Sat']
+  const WeekDayNameListChinese = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
   let result = []
 
   // 點擊日期後的會出現當天日期的資訊
@@ -57,11 +58,11 @@ export default function CalendarBody({ calendarMain, cardData }) {
     <>
       <div className="body mt-4">
         {/* MONDAY,TUESDAY, .....SUNDAY的呈現 */}
-        <div className="d-flex justify-content-between ">
-          {WeekDayNameList.map((day) => {
+        <div className="calendar">
+          {WeekDayNameListChinese.map((day, index) => {
             return (
               <>
-                <div className="day-block ">{day}</div>
+                <div className={`day-block day-${index}`}>{day}</div>
               </>
             )
           })}
@@ -74,7 +75,7 @@ export default function CalendarBody({ calendarMain, cardData }) {
           result.push({ aWeek })
         })}
         {result.map((item, idx) => (
-          <div key={idx} className="d-flex justify-content-between ">
+          <div key={idx} className="calendar">
             {item.aWeek.map((day, dIdx) => (
               <div
                 className="date-block"
@@ -107,14 +108,30 @@ export default function CalendarBody({ calendarMain, cardData }) {
         ))}
       </div>
       <style jsx>{`
+        .calendar {
+          display: flex;
+          justify-content: space-between;
+        }
+
         .day-block {
           width: 80px;
-          height: 50px;
-          
+          height: 30px;
+          text-align: center; /* 將文字置中 */ 
+          font-family: 'Zen Kaku Gothic New';
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;        
         }
         .date-block {
-          width: 80px;
-          height: 100px;
+          width: calc(100% / 7); /* 平均分配寬度 */
+          height: 125px;
+          text-align: center; /* 將文字置中 */
+          font-family: 'Zen Kaku Gothic New';
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
         }
         .myCalendarLecture {
           background-color: #f3b454;
@@ -122,6 +139,48 @@ export default function CalendarBody({ calendarMain, cardData }) {
           text-align: center;
           padding: 2px;
           animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @media screen and (max-width: 1200px) {
+          .day-block:not(:nth-child(1)):not(:nth-child(7)),
+          .date-block:not(:nth-child(1)):not(:nth-child(7)) {
+            display: none;
+          }
+
+          .day-block {
+            order: initial;
+          }
+          .day-block:nth-child(1) {
+            order: 2;
+          }
+          .day-block:nth-child(7) {
+            order: 1;
+          }
+          .day-block {
+            height: 40px;            
+          }
+
+          .date-block {
+            order: initial;
+          }
+          .date-block:nth-child(1) {
+            order: 2;
+          }
+          .date-block:nth-child(7) {
+            order: 1;
+          }
+          .date-block {
+            height: 100px;
+          }
+
+          .calendar {
+            display: flex;
+            justify-content: space-between; /* 將元素置於左右兩端 */
+          }
+          
+          .calendar > * {
+            flex-grow: 1; /* 平分寬度 */
+          }
         }
 
          {

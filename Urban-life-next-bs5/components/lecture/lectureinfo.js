@@ -76,16 +76,10 @@ export default function LectureInfo({ lecture, collections = [] }) {
         <div className={`${styles.infotext} pt-4`}>※請詳閱下方購課須知</div>
       </div>
       <div className={styles.infogroup}>
-        <div className={styles.info}>
+        <div className={styles.info1}>
           <div className={styles.infotext}>NT： {lecture.price}</div>
           <div>
             <div className={styles.infotext}>
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/d3c2f7f38bd5ecac06bed75055428d2f11131e5b875663805124a8c6c6b704c4?"
-                className={styles.icon}
-                alt="icon"
-              />
               體驗人數：{lecture.amount} 人
             </div>
           </div>
@@ -96,23 +90,23 @@ export default function LectureInfo({ lecture, collections = [] }) {
           </div>
           <div className={styles.infotext}>開課人數：{lecture.amount} 人</div>
         </div>
-        <div className={styles.info}>
+        <div className={styles.info2}>
           <div className={styles.infotext}>開始報名：{lecture.sign_up_starting.split(' ')[0]}</div>
           <div className={styles.infotext}>報名截止：{lecture.sign_up_deadline.split(' ')[0]}</div>
           <div className={styles.infotext}>上課日期：{lecture.lecture_date.split(' ')[0]}</div>
           <div className={styles.infotext}>上課時間：{lecture.starting_time.split('.')[0]}</div>
         </div>
       </div>
-      <div className="input-group mb-1 w-75">
+      <div className="input-group mb-2 w-75">
         <div className={styles.infotext}>報名人數：{lecture.amount} 人</div>
       </div>
       <div>
         <div className={styles.btnarea}>
-          <button className="btn btn-add px-5 py-2" onClick={handleAddToCart}>
+          <button className="btn btn-add " onClick={handleAddToCart}>
             <BsCart3 className="me-2" style={{ fontSize: '20px' }} />
             {isPastDeadline ? '已過報名日期' : '加入購物車'}
           </button>
-          <button className="btn btn-add px-5 py-2" onClick={toggleCollection}>
+          <button className="btn btn-add " onClick={toggleCollection}>
             {isCollected ? (
               <FaHeart style={{ fontSize: '23px', cursor: 'pointer', color: '#ff4136' }} />
             ) : (

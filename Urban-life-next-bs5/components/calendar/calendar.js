@@ -28,8 +28,13 @@ export default function Calendar({ setNowTime, cardData }) {
       <style jsx>{`
         .container {
           border: 1px solid black;
-          padding-top:10px;
-          padding-left:40px
+          padding: 15px;
+        }
+        @media (max-width: 1200px) {
+          .container {
+            width: 390px;
+            padding:10px;
+          }
         }
       `}</style>
     </>
