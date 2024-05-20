@@ -25,8 +25,8 @@ export default function OrderList({ order }) {
   // 商品課程評論的資料
   const [comments, setComments] = useState([])
 
-    // 利用use-member-info的hooks抓取localStorage的會員資訊
-    const { member } = useMemberInfo()
+  // 利用use-member-info的hooks抓取localStorage的會員資訊
+  const { member } = useMemberInfo()
 
   // 每個商品與課程都有獨立的評分狀態
   const [productRatings, setProductRatings] = useState({})
@@ -52,12 +52,6 @@ export default function OrderList({ order }) {
       const newComments = data.data.comments
 
       setComments(newComments)
-      console.log(newComments)
-
-      // newComments.map((newComment) => {
-      //   handleProductRatingChange(newComment.name, newComment.star)
-      //   handleLectureRatingChange(newComment.name, newComment.star)
-      // })
 
       // 讀取資料的評論內容並設定到狀態裡面
       setProductRatings((prevRatings) => {
@@ -140,6 +134,8 @@ export default function OrderList({ order }) {
 
   // 提交評論
   const handleSubmit = async (rating, comment, id) => {
+    // 利用use-member-info的hooks抓取localStorage的會員資訊
+
     let url = 'http://localhost:3005/api/product_lecture_comment'
     console.log(rating, comment, id)
 
@@ -150,7 +146,7 @@ export default function OrderList({ order }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: 42,
+          user_id: member.id,
           star: rating,
           comment: comment,
           product_lecture_id: id,
@@ -167,6 +163,7 @@ export default function OrderList({ order }) {
       console.error('Error submitting comment:', error.message)
     }
   }
+  // 訂單上面各訂單加起來的數字
   const realTotal = items.reduce(
     (total, item) => (total += item.price * item.amount),
     0
@@ -189,7 +186,7 @@ export default function OrderList({ order }) {
       <tbody>
         <tr className="align-middle tab">
           <td>{order_id}</td>
-          <td>{(date).slice(0, 19).replace('T', ' ')}</td>
+          <td>{date.slice(0, 19).replace('T', ' ')}</td>
           <td>{total}</td>
           <td>
             <div className="button">
@@ -656,7 +653,7 @@ export default function OrderList({ order }) {
                       {coupon_id !== null ? (
                         <>
                           <div>優惠券折扣：</div>
-                          <div> { realTotal-total } 元</div>
+                          <div> {realTotal - total} 元</div>
                         </>
                       ) : (
                         <div></div>
@@ -668,12 +665,11 @@ export default function OrderList({ order }) {
                       <div>總金額： </div>
                       {total < 1000 ? (
                         <>
-                        <div>{total+60} 元</div>
+                          <div>{total + 60} 元</div>
                         </>
                       ) : (
                         <div>{total} 元</div>
                       )}
-                      
                     </div>
                   </div>
                 </div>

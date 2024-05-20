@@ -89,12 +89,10 @@ export default function Carousel({ productId }) {
       )}
       {getImg().map((imageUrl, index) => (
         <SwiperSlide key={`thumb-detail-${index}`} style={{ cursor: 'pointer' }}>
-          <img src={imageUrl} alt={`Product Image ${index + 1}`}/>
+          <img className='showIng' src={imageUrl} alt={`Product Image ${index + 1}`}/>
         </SwiperSlide>
       ))}
       </Swiper>
-
-
     </>
   )
 }

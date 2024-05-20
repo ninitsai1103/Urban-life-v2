@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import data from '@/data/coupon.json'
 
-export default function CouponAdd(props) {
+export default function CouponAdd({setCouponAdd}) {
 
   //props.setCouponAdd()是此元件要傳給coupon主頁面的參數 
 
@@ -13,12 +13,12 @@ export default function CouponAdd(props) {
  
   function handleSubmit() {
     // 在這裡處理提交邏輯，例如驗證優惠券代碼是否有效等
-    console.log("優惠券代碼已提交:", newCoupon);
-    // 清空輸入框
+    // console.log("優惠券代碼已提交:", newCoupon);
+
+    // 每提交一次清空輸入框
     setNewCoupon('');
     // 傳給coupon頁面的狀態
-    // 傳給父元素
-    props.setCouponAdd(newCoupon)
+    setCouponAdd(newCoupon)
     
   }
 
@@ -26,15 +26,6 @@ export default function CouponAdd(props) {
     setNewCoupon(e.target.value)
   }
 
-  // function addCoupon(newCoupon) {
-  //   // 創立一個假資料試試看
-  //   let url = './coupon.json'
-
-  //   fetch(url, { method: 'POST' })
-  //     .then((response) => response.json)
-  //     .then((data) => console.log(data))
-  //     .catch((err) => console.log(error))
-  // }
   return (
     <>
       <div className="search col-12 col-lg-5 ">

@@ -3,14 +3,16 @@ const router = express.Router()
 
 // 一般sql
 import db from '#configs/mysql.js'
-
+// 獲取所有訂單資料的API
 router.get('/', async function (req, res) {
-
-  let id 
-  if( req.query.user_id){
+  // 判斷是否有傳入user_id (登入的使用者)
+  let id
+  if (req.query.user_id) {
     id = req.query.user_id
-  }else{id=42}
-  // order_detail資料庫 SQL
+  } else {
+    id = 42
+  }
+
   const sqlOrder = `SELECT 
   order_detail.*,
   cart.*,
@@ -28,7 +30,7 @@ router.get('/', async function (req, res) {
   WHERE order_detail.user_id = ?;`
 
   try {
-    const [rows, fields] = await db.query(sqlOrder,[id])
+    const [rows, fields] = await db.query(sqlOrder, [id])
 
     // 標準回傳JSON
     return res.json({

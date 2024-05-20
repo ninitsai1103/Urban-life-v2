@@ -80,17 +80,18 @@ export default function CheckoutProductsTable() {
   }
   return (
     <>
-      {items.length > 0 && 
-      <div className='ms-2'>
-        <input
-          type="checkbox"
-          checked={checkAll}
-          onClick={(e) => {
-            handleToggleCheckedAll(e)
-          }}
-        /> 選取全部商品課程
-      </div>
-    }
+      {items.length > 0 && (
+        <div className="ms-2">
+          <input
+            type="checkbox"
+            checked={checkAll}
+            onClick={(e) => {
+              handleToggleCheckedAll(e)
+            }}
+          />{' '}
+          選取全部商品課程
+        </div>
+      )}
       {items.filter((item) => item.pdlt_id === 1).length > 0 && ( // 條件渲染：只有在有商品時渲染 thead
         <table className="table">
           <thead>
@@ -129,11 +130,16 @@ export default function CheckoutProductsTable() {
                     <td className="w-50">
                       <div className="d-flex align-items-center">
                         <div className={styles.d_img}>
-                          <img src={`/images/product/product_cover/${v.cover}`} className="img-fluid" />
+                          <img
+                            src={`/images/product/product_cover/${v.cover}`}
+                            className="img-fluid"
+                          />
                         </div>
                         <div className="ps-sm-2">
                           <div className={styles.name}>
-                            {v.name} ({v.size})
+                            {v.size == ''
+                              ? v.name
+                              : `${v.name}(${v.size})`}
                           </div>
                           <div className={styles.d_cell_price}>
                             單價：{v.price}

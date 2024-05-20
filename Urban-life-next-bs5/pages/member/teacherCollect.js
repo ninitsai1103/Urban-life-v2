@@ -51,7 +51,7 @@ export default function Collect({}) {
       <div className="container">
         <div className="row margin-padding">
           <div className="col-lg-3 col-md-12 aside">
-            <AsideAccount />
+            <TeacherAsideAccount />
           </div>
           <div className="col-lg-9 col-md-12 main-content">
             <div className="d-flex align-items-center justify-content-between title-margin mb-3">

@@ -79,6 +79,7 @@ export default function AsideAccount() {
       }, 3000)
     } catch (error) {
       toast.error(`登出失敗`)
+      
     }
   }
 

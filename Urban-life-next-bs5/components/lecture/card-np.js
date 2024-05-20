@@ -36,7 +36,7 @@ export default function LectureMyCardNp({
   } = lecture
 
   // 確認日期是否在今天之前
-  const isBeforeToday = new Date(sign_up_deadline) < new Date()
+  const isBeforeToday = new Date(lecture_date) < new Date()
 
   // 新增一個狀態，切換商品是否有加入行事曆，進而去改變它的按鈕
   const [isAddedtoCalendar, setIsAddedtoCalendar] = useState(true)
@@ -95,63 +95,74 @@ export default function LectureMyCardNp({
     )
   }, [collections, lecture.id])
 
-    //兆妮修正
-    const [canCollect, setCanCollect] = useState(false)
+  //兆妮修正
+  const [canCollect, setCanCollect] = useState(false)
 
-    useEffect(() => {
-      const memberInfo = JSON.parse(localStorage.getItem('member-info'))
-      if (memberInfo !== null && memberInfo !== undefined) {
-        setCanCollect(true)
-      } else {
-        setCanCollect(false)
-      }
-    })
-  
-    const handleReminder = () => {
-      notifySA('尚未登入', '幫您轉跳登入頁面，登入後才能使用收藏功能喔！', 'error');
-      setTimeout(() => {
-          window.location.href = '/member/login';
-      }, 3000); // 等待3秒（3000毫秒）
+  useEffect(() => {
+    const memberInfo = JSON.parse(localStorage.getItem('member-info'))
+    if (memberInfo !== null && memberInfo !== undefined) {
+      setCanCollect(true)
+    } else {
+      setCanCollect(false)
+    }
+  })
+
+  const handleReminder = () => {
+    notifySA(
+      '尚未登入',
+      '幫您轉跳登入頁面，登入後才能使用收藏功能喔！',
+      'error'
+    )
+    setTimeout(() => {
+      window.location.href = '/member/login'
+    }, 3000) // 等待3秒（3000毫秒）
   }
-    
-    //兆妮修正完畢
+
+  //兆妮修正完畢
 
   return (
     <>
       <div className={styles.card}>
         <div className={styles.cardBodyName}>
-          <div className={styles.lectureName}><a href={`/lecture/${lecture.id}`} style={{ textDecoration: 'none' }}>{lecture.name}</a></div>
+          <div className={styles.lectureName}>
+            <a
+              href={`/lecture/${lecture.id}`}
+              style={{ textDecoration: 'none' }}
+            >
+              {lecture.name}
+            </a>
+          </div>
           {canCollect ? (
-          <button className="btn btn-like">
-            {isCollected ? (
-              <FaHeart
-                style={{
-                  fontSize: '23px',
-                  cursor: 'pointer',
-                  color: '#ff4136',
-                }}
-                onClick={(e) => {
-                  e.preventDefault()
-                  toggleCollection(lecture)
-                }}
-              />
-            ) : (
-              <FaRegHeart
-                style={{
-                  fontSize: '23px',
-                  cursor: 'pointer',
-                  color: '#ff4136',
-                }}
-                onClick={(e) => {
-                  e.preventDefault()
-                  toggleCollection(lecture)
-                }}
-              />
-            )}
-          </button>
-          ):(
+            <button className="btn btn-like">
+              {isCollected ? (
+                <FaHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection(lecture)
+                  }}
+                />
+              ) : (
+                <FaRegHeart
+                  style={{
+                    fontSize: '23px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    toggleCollection(lecture)
+                  }}
+                />
+              )}
+            </button>
+          ) : (
             <button className="btn btn-like" onClick={handleReminder}>
-            <FaRegHeart
+              <FaRegHeart
                 style={{
                   fontSize: '23px',
                   cursor: 'pointer',
@@ -162,14 +173,19 @@ export default function LectureMyCardNp({
           )}
         </div>
         <div className={styles.cardBodyArea}>
-          <div className={styles.lectureText}><a href={`/teacher/${lecture.teacher_id}`} style={{ textDecoration: 'none' }}>{lecture.teacher_name}</a></div>
+          <div className={styles.lectureText}>
+            <a
+              href={`/teacher/${lecture.teacher_id}`}
+              style={{ textDecoration: 'none' }}
+            >
+              {lecture.teacher_name}
+            </a>
+          </div>
           <div className={styles.lectureText}>{lecture_date}</div>
         </div>
         <div className={styles.cardBodyArea}>
           <div className="flex gap-2.5 font-medium">
-            <div className={styles.lectureText}>
-              體驗人數：{amount}
-            </div>
+            <div className={styles.lectureText}>報名人數上限：{amount}</div>
           </div>
           <div className={styles.cardBodyArea}>
             <div className={styles.lectureText}>
@@ -180,8 +196,14 @@ export default function LectureMyCardNp({
         </div>
         <div className={styles.cardBodyPrice}>
           <div className={styles.priceText}>NT：{price}</div>
-          {/* 根據日期是否在今天之前來決定按鈕樣式 */}
-          {isAddedtoCalendar ? (
+          {isBeforeToday ? (
+            <button
+              className="btn btn-cantusecoupon"
+              style={{ maxWidth: '106px' }}
+            >
+              已過期
+            </button>
+          ) : isAddedtoCalendar ? (
             <button
               className="btn btn-main"
               style={{ maxWidth: '106px' }}

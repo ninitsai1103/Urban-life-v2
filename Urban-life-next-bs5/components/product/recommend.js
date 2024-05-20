@@ -6,28 +6,28 @@ import { FaHeart } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { TbStarFilled, TbStar } from 'react-icons/tb'
 
-export default function Recommend({ product,collections }) {
-//   const [recommended, setRecommended] = useState([])
-  const {addCollection, removeCollection} =useColloections();
-  const [isCollected, setIsCollected] =useState([]) //商品是否有被收藏
-    const {products} = useProducts();
+export default function Recommend({ product, collections }) {
+  //   const [recommended, setRecommended] = useState([])
+  const { addCollection, removeCollection } = useColloections()
+  const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
+  const { products } = useProducts()
 
   useEffect(() => {
     // 檢查當前商品是否在收藏列表中
-  setIsCollected(collections.find(item => item.product_id == products.id && item.valid == 1))
-  // console.log(isCollected);
-  },[collections, products])
-  
-  
+    setIsCollected(
+      collections.find(
+        (item) => item.product_id == products.id && item.valid == 1
+      )
+    )
+    // console.log(isCollected);
+  }, [collections, products])
+
   //切換商品的收藏狀態
-    const toggleCollection = () => {
-      setIsCollected(!isCollected);
-      const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
-        toast.success(message, {
-        })
-      }
-
-
+  const toggleCollection = () => {
+    setIsCollected(!isCollected)
+    const message = isCollected ? '商品已取消收藏!' : '商品已加入收藏!'
+    toast.success(message, {})
+  }
 
   return (
     <>
@@ -44,9 +44,9 @@ export default function Recommend({ product,collections }) {
           <div className="card-body">
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
-                {product.id > 440 && product.id < 451
+                {product.size == ''
                   ? product.name
-                  : `${product.name}(${product.size})`}
+                  :  `${product.name}(${product.size})`}
               </h5>
               <Toaster position="top-center" reverseOrder={false} />
 
@@ -95,19 +95,19 @@ export default function Recommend({ product,collections }) {
       </div>
       {/* 手機版:1 */}
 
-      <div className="col d-lg-none gy-3" key={`mobile1-${product.id}`}>
+      <div className="col d-lg-none gy-1" key={`mobile1-${product.id}`}>
         <div className="card h-100">
           <div className="imgWrap">
-            <img
-              src={`/images/product/product_cover/${product.cover}`}
-              className="img-fluid card-img-top"
-              alt="..."
-            />
+          <img
+            src={`/images/product/product_cover/${product.cover}`}
+            className="img-fluid card-img-top"
+            alt="..."
+          />
           </div>
           <div className="card-body ">
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
-              {product.id > 440 && product.id < 451
+                {product.id > 440 && product.id < 451
                   ? product.name
                   : `${product.name}(${product.size})`}
               </h5>
@@ -148,7 +148,11 @@ export default function Recommend({ product,collections }) {
                 />
               ) : (
                 <FaRegHeart
-                  style={{ fontSize: '20px', cursor: 'pointer', color: '#ff4136' }}
+                  style={{
+                    fontSize: '20px',
+                    cursor: 'pointer',
+                    color: '#ff4136',
+                  }}
                   onClick={(e) => {
                     e.preventDefault()
                     toggleCollection()
@@ -160,8 +164,6 @@ export default function Recommend({ product,collections }) {
           </div>
         </div>
       </div>
-
-      
 
       <style jsx>{`
         .card {
@@ -187,18 +189,20 @@ export default function Recommend({ product,collections }) {
           z-index: 1000; /* 確保顯示在最上層 */
         }
         .card-body {
+          width: 294px;
           border-top: 1px solid #a9a6a6;
         }
         .imgWrap {
           width: 294px;
           height: 294px;
-          background-color:black;
-          display:flex;
+          background-color: black;
+          display: flex;
           justify-content: center;
         }
-        .imgWrap img {
-          width: 100%;
+        img {
+          width: auto;
           height: 100%;
+
           object-fit: contain;
         }
         .text-through {
@@ -236,6 +240,16 @@ export default function Recommend({ product,collections }) {
             width: 169px;
             height: 169px;
           }
+          .card-body {
+          width: 169px;
+          border-top: 1px solid #a9a6a6;
+        }
+        .imgWrap img {
+          width: 100%;
+          height: 100%;
+          
+          object-fit: contain;
+        }
         }
       `}</style>
     </>

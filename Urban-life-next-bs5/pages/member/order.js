@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import AsideAccount from '@/components/member/aside-account'
 import OrderList from '@/components/member/order-list'
 import OrderCard from '@/components/member/order-card'
-import Page from '@/components/product/pagination'
 
 import { useMemberInfo } from '@/hooks/use-member-info'
 export default function OrderMainPage() {
@@ -13,19 +12,23 @@ export default function OrderMainPage() {
   const { member } = useMemberInfo()
 
   // 連線至order_detail
-  const getOrderDetail = async (id) => {
-    const url = `http://localhost:3005/api/order?user_id=${id}`
+  const getOrderDetail = async (memberID) => {
+    const url = `http://localhost:3005/api/order?user_id=${memberID}`
 
-    // fetch抓資料
+    // 抓取order_detail並JOIN cart和prodcut_lecture 的資料
+    // 形成每個商品購買的紀錄
+    // 再透過函式將每筆訂單相同的order_id整理成一張表
     try {
       const res = await fetch(url)
       const data = await res.json()
-      console.log(data)
+      // console.log(data)
 
       const orders = data.data.order
       // console.log(orders)
+
       // 將相同order_id的東西儲存成一個物件
-      // 新增一個key專門儲存product的資料
+      // 新增一個key:items專門儲存product的資料
+
       const mergedOrders = orders.reduce((acc, order) => {
         const existingOrder = acc.find(
           (item) => item.order_id === order.order_id
@@ -47,7 +50,6 @@ export default function OrderMainPage() {
             order_id: order.order_id,
             user_id: order.user_id,
             pay: order.pay,
-            // order_code: order.order_code,
             name: order.name,
             phone: order.phone,
             address: order.address,
@@ -71,7 +73,7 @@ export default function OrderMainPage() {
         return acc
       }, [])
 
-      console.log(mergedOrders)
+      // console.log(mergedOrders)
       setOrders(mergedOrders)
     } catch (error) {
       console.log(error)
