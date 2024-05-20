@@ -49,14 +49,14 @@ export default function ProductCard({ product, collections, isIconChange }) {
           <div
             className="card-body set-border-top"
             data-tooltip={
-              product.id > 440 && product.id < 451
+              product.size == ''
                 ? product.name
                 : `${product.name}(${product.size})`
             }
           >
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
-                {product.id > 440 && product.id < 451
+                {product.size == ''
                   ? product.name
                   : `${product.name}(${product.size})`}
               </h5>
