@@ -19,7 +19,10 @@ export default function CollectArticleCard({ collect }) {
           {collect.article_title}
           </div>
           <div className="article_card_content article_card_margin_bottom">
-          {collect.article_content}
+          <div
+            dangerouslySetInnerHTML={{ __html: collect?.article_content }}
+          ></div>
+          {/* {collect.article_content} */}
           </div>
           <div className="article_card_bottom d-flex justify-content-between w-100">
             <div className="article_card_left_bottom d-flex">

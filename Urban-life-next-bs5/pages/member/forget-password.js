@@ -58,6 +58,7 @@ export default function ForgetPassword() {
 
     if (res.data.status === 'success') {
       toast.success('資訊 - 密碼已成功修改')
+      window.location.href = '/member'
     } else {
       toast.error(`錯誤 - ${res.data.message}`)
     }

@@ -32,7 +32,10 @@ export default function ArticleCard({ article,identityId }) {
             {article.title}
           </div>
           <div className="article_card_content article_card_margin_bottom">
-            {article.content}
+          <div
+            dangerouslySetInnerHTML={{ __html: article?.content }}
+          ></div>
+            {/* {article.content} */}
           </div>
           <div className="article_card_bottom d-flex justify-content-between w-100">
             <div className="article_card_left_bottom d-flex">
