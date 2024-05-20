@@ -267,7 +267,7 @@ export default function LectureAddModal({ identityId }) {
                   className="btn btn-add-r ms-3"
                   style={{ fontSize: '14px' }}
                   onClick={() => {
-                    setName('科技與創新推動都市永續農業')
+                    setName('科技推動都市農業')
                     setDescription(
                       '參訪城市都市農業中心，探索都市農業的創新與科技應用，以及推動城市永續農業的發展。學員將了解都市農業科技的最新發展，參與相關示範和實驗，深入了解永續農業的實踐和挑戰。'
                     )
@@ -373,7 +373,8 @@ export default function LectureAddModal({ identityId }) {
                           </td>
                         </tr>
                         <tr>
-                          <th>報名開始時間：</th>
+                          <th className="small-remove">報名開始時間：</th>
+                          <th className="d-none small-display">報名<br />開始時間：</th>
                           <td>
                             {showSignUpStartDateError && (
                               <div
@@ -396,7 +397,8 @@ export default function LectureAddModal({ identityId }) {
                           </td>
                         </tr>
                         <tr>
-                          <th>報名截止時間：</th>
+                          <th className="small-remove">報名截止時間：</th>
+                          <th className="d-none small-display">報名<br />截止時間：</th>
                           <td>
                             {showSignUpEndDateError && (
                               <div
@@ -491,7 +493,7 @@ export default function LectureAddModal({ identityId }) {
                           <td>
                             <div className="d-flex my-3">
                               <div>
-                                <div className="fw-bold">*第一張圖為封面圖</div>
+                                <div className="fw-bold img-title">*第一張圖為封面圖</div>
                                 <input
                                   type="file"
                                   onChange={(e) => handleFileChange(e, 1)}
@@ -499,7 +501,7 @@ export default function LectureAddModal({ identityId }) {
                                 />
                                 {selectedFile1 && ( // 只有當 selectedFile1 不為 null 時顯示圖片預覽
                                   <>
-                                    <div>圖片預覽：</div>
+                                    <div className="img-title">圖片預覽：</div>
                                     <div className="d-flex justify-content-center">
                                       <img
                                         className="updateImg"
@@ -512,7 +514,7 @@ export default function LectureAddModal({ identityId }) {
                               </div>
 
                               <div>
-                                <div className="fw-bold">第二張：</div>
+                                <div className="fw-bold img-title">第二張：</div>
                                 <input
                                   type="file"
                                   onChange={(e) => handleFileChange(e, 2)}
@@ -520,7 +522,7 @@ export default function LectureAddModal({ identityId }) {
                                 />
                                 {selectedFile2 && ( // 只有當 selectedFile2 不為 null 時顯示圖片預覽
                                   <>
-                                    <div>圖片預覽：</div>
+                                    <div className="img-title">圖片預覽：</div>
                                     <div className="d-flex justify-content-center">
                                       <img
                                         className="updateImg"
@@ -535,7 +537,7 @@ export default function LectureAddModal({ identityId }) {
 
                             <div className="d-flex mb-3">
                               <div>
-                                <div className="fw-bold">第三張：</div>
+                                <div className="fw-bold img-title">第三張：</div>
                                 <input
                                   type="file"
                                   onChange={(e) => handleFileChange(e, 3)}
@@ -543,7 +545,7 @@ export default function LectureAddModal({ identityId }) {
                                 />
                                 {selectedFile3 && ( // 只有當 selectedFile3 不為 null 時顯示圖片預覽
                                   <>
-                                    <div>圖片預覽：</div>
+                                    <div className="img-title">圖片預覽：</div>
                                     <div className="d-flex justify-content-center">
                                       <img
                                         className="updateImg"
@@ -556,7 +558,7 @@ export default function LectureAddModal({ identityId }) {
                               </div>
 
                               <div>
-                                <div className="fw-bold">第四張：</div>
+                                <div className="fw-bold img-title">第四張：</div>
                                 <input
                                   type="file"
                                   onChange={(e) => handleFileChange(e, 4)}
@@ -564,7 +566,7 @@ export default function LectureAddModal({ identityId }) {
                                 />
                                 {selectedFile4 && ( // 只有當 selectedFile4 不為 null 時顯示圖片預覽
                                   <>
-                                    <div>圖片預覽：</div>
+                                    <div className="img-title">圖片預覽：</div>
                                     <div className="d-flex justify-content-center">
                                       <img
                                         className="updateImg"
@@ -668,6 +670,29 @@ export default function LectureAddModal({ identityId }) {
             margin: 5px;
             margin-left: 7px; */
             }
+          }
+        }
+
+        @media (max-width: 576px) {
+          .custom-modal-width {
+            max-width: 500px; /* modal寬度 */
+          }
+          .updateImg{
+            height: 80px !important;
+            width: auto;
+          }
+          .img-title{
+            font-size: 12px;
+          }
+          th {
+            font-size: 16px;
+            padding: 5px 2px !important;
+          }
+          .small-remove{
+            display: none;
+          }
+          .small-display{
+            display: table-cell !important;
           }
         }
       `}</style>
