@@ -68,7 +68,7 @@ export default function Home() {
   }
 
   const handleMemberClick = () => {
-    window.location.href = `/member/login`
+    window.location.href = `/member/register`
   }
 
   return (
@@ -388,6 +388,7 @@ export default function Home() {
             <button
               className="btn btn-detail w-auto d-flex justify-content-center align-items-center gap-2"
               onClick={handleMemberClick}
+              
             >
               立即加入 <FaRunning />
             </button>

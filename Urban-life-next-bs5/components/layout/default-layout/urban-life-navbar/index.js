@@ -2,9 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { TfiMenu } from 'react-icons/tfi'
 import { FaUser } from 'react-icons/fa'
 import { FaShoppingCart } from 'react-icons/fa'
+import { IoIosLogOut } from 'react-icons/io'
 import Link from 'next/link'
 import { identity } from 'lodash'
 import { useCheckout } from '@/hooks/use-checkout'
+
+import useFirebase from '@/hooks/use-firebase'
+import { logout } from '@/services/user'
+import toast, { Toaster } from 'react-hot-toast'
+
+import { useMemberInfo } from '@/hooks/use-member-info'
 export default function MyNavbar() {
   const { totalItems } = useCheckout()
   const [phoneNav, setPhoneNav] = useState(false)
@@ -18,6 +25,9 @@ export default function MyNavbar() {
 
   // 會員網址
   const [memberUrl, setMemberUrl] = useState('')
+  // 登出用
+  const { logoutFirebase } = useFirebase()
+  const { member } = useMemberInfo()
 
   // 渲染以後才能拿到localStorage
   useEffect(() => {
@@ -48,6 +58,38 @@ export default function MyNavbar() {
       }
     }
   }, [user])
+
+  // 登出
+  const handleLogout = async () => {
+    try {
+      logoutFirebase()
+
+      await logout()
+
+      const response = await fetch('http://localhost:3005/api/user/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${member?.token}`, // 替換為有效的 JWT
+        },
+      })
+      await await response.json()
+      localStorage.removeItem('member-info')
+      localStorage.removeItem('selectedCoupon')
+      localStorage.removeItem('warning')
+      localStorage.removeItem('items')
+      localStorage.removeItem('pricePayable')
+      localStorage.removeItem('Checked-info')
+      localStorage.removeItem('discount')
+      toast.success('已成功登出，將重新導向首頁，請等待3秒')
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 3000)
+    } catch (error) {
+      toast.error(`登出失敗`)
+      console.log(error)
+    }
+  }
   return (
     <>
       <div className="header">
@@ -88,6 +130,20 @@ export default function MyNavbar() {
             </ul>
           </div>
           <div className="nav-right">
+            <div>
+              {member ? (
+                <a
+                  className="d-block py-2 px-2 text-decoration-none d-flex align-items-center"
+                  style={{ color: 'white' }}
+                  onClick={handleLogout}
+                >
+                  登出
+                  <IoIosLogOut />
+                </a>
+              ) : (
+                <></>
+              )}
+            </div>
             <div className="user">
               <p className="mx-2">{user}</p>
               <FaUser style={{ color: 'white', fontSize: '24px' }} />
@@ -100,6 +156,7 @@ export default function MyNavbar() {
             </div>
           </div>
         </div>
+        <Toaster />
       </div>
       {!phoneNav ? (
         <></>
@@ -110,7 +167,12 @@ export default function MyNavbar() {
               <a href="http://localhost:3000/">首頁</a>
             </div>
             <div className="nav-down">
-              <a className='phone-link' href="http://localhost:3000/product/list">商品總覽</a>
+              <a
+                className="phone-link"
+                href="http://localhost:3000/product/list"
+              >
+                商品總覽
+              </a>
             </div>
             <div className="nav-down">
               <a href="http://localhost:3000/lecture">課程</a>
@@ -122,9 +184,7 @@ export default function MyNavbar() {
               <a href="http://localhost:3000/teacher">講師陣容</a>
             </div>
             <div className="nav-down">
-              <a href={`http://localhost:3000/member${memberUrl}`}>
-                會員專區
-              </a>
+              <a href={`http://localhost:3000/member${memberUrl}`}>會員專區</a>
             </div>
           </div>
         </div>
