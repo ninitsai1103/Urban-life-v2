@@ -105,7 +105,7 @@ export default function ProductCard({ product, collections, isIconChange }) {
                         // console.log(isCollected)
                       })
                       .catch((error) => {
-                        alert('請先登入會員再進行收藏功能')
+                        alert('請先登入會員再進行收藏功能，為您導向登入畫面。')
                         window.location.href = '/member/login'
                         console.error(
                           'Failed to add collection:',

@@ -103,7 +103,14 @@ export default function MyNavbar() {
     }
   })
   const handleReminder = () => {
-    alert('請先登入會員')
+  //   alert('請先登入會員')
+  //   setTimeout(() => {
+  //     window.location.href = '/member/login';
+  // }, 3000); // 等待3秒（3000毫秒）
+  toast.success('請先登入才能使用購物車喔，為您導向登入畫面。')
+      setTimeout(() => {
+        window.location.href = '/member/login'
+      }, 3000)
   }
   return (
     <>
