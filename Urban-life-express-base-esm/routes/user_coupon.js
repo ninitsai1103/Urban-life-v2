@@ -11,12 +11,9 @@ const { coupon } = sequelize.models
 // 一般sql
 import db from '#configs/mysql.js'
 
+// 獲取該會員擁有的優惠券API
 router.get('/', async function (req, res) {
-  // user_coupon資料庫 SQL
-  // DEMO
-  // const user_id = 42
-  // 實際要連線登入者的ID
-  // const user_id = req.query.user_id
+  // 判斷是否有傳入user_id (登入的使用者)
   let user_id
   if (req.query.user_id) {
     user_id = req.query.user_id
@@ -42,7 +39,7 @@ router.get('/', async function (req, res) {
     console.log(error)
   }
 })
-
+// 新增優惠券的API
 router.post('/', async function (req, res) {
   try {
     console.log(req.body)
@@ -55,7 +52,8 @@ router.post('/', async function (req, res) {
     return res.json({
       status: 'success',
       data: {
-        user_coupon: rows,
+        // user_coupon: rows,
+        message: '新增優惠券成功',
       },
     })
   } catch (error) {
@@ -68,33 +66,34 @@ router.post('/', async function (req, res) {
   }
 })
 
+// 檢查訂單是否使用優惠券API
 router.put('/', async function (req, res) {
   try {
-    const couponID = req.query.coupon_id;
-  
+    const couponID = req.query.coupon_id
+
     const changeCouponStatus = `UPDATE user_coupon 
                                 SET status = '已使用' 
-                                WHERE coupon_id = ?`;
-  
-    
-    const [rows, fields] = await db.query(changeCouponStatus, [couponID]);
-  
+                                WHERE coupon_id = ?`
+
+    const [rows, fields] = await db.query(changeCouponStatus, [couponID])
+
     return res.json({
       status: 'success',
       data: {
         user_coupon: rows,
       },
-    });
+    })
   } catch (error) {
     return res.json({
       status: 'error',
       data: {
-        error: error.message,  
+        error: error.message,
       },
-    });
+    })
   }
 })
 
+// 刪除優惠券的PI
 router.delete('/', async function (req, res) {
   try {
     console.log(req.body)

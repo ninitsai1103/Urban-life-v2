@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 
-export default function TopNavItem(props) {
+export default function TopNavItem({setCouponFilter}) {
+  // 判定點選的狀態
   const [activeStatus, setActiveStatus] = useState('可使用')
   const handleStatusClick = (status) => {
     setActiveStatus(status)
-    
   }
+  // 狀態改變的話要傳回coupon父元件
   useEffect(() => {
-    props.setCouponFilter(activeStatus)
+    setCouponFilter(activeStatus)
   },[activeStatus])
 
   return (

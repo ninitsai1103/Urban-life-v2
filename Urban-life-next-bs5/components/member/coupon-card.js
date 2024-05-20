@@ -10,35 +10,27 @@ import { CiHeart } from 'react-icons/ci'
 import { FaCommentDots, FaArrowRight } from 'react-icons/fa6'
 import styles from './member.module.css'
 
-export default function CouponCard({
-  id,
-  name,
-  code,
-  amount,
-  started_at,
-  deadline,
-  status,
-  min_price,
-  condition,
-  deleteCoupon,
-}) {
+export default function CouponCard({ filteredCoupon, deleteCoupon }) {
   // 利用use-member-info的hooks抓取localStorage的會員資訊
   const { member } = useMemberInfo()
 
-  // 按下"立即使用"存入localStorage並且轉到購物車頁面
-  const handleUseCoupon = (
+  // 把coupon屬性一一抓出來
+  const {
     id,
     name,
     code,
     amount,
     started_at,
-    deadline,
-    updated_at,
     created_at,
+    updated_at,
+    deadline,
     status,
     min_price,
-    condition
-  ) => {
+    condition,
+  } = filteredCoupon
+
+  // 按下"立即使用"存入localStorage並且轉到購物車頁面
+  const handleUseCoupon = () => {
     const selectedCoupon = {
       id: id,
       user_id: member.id,
@@ -72,32 +64,19 @@ export default function CouponCard({
         <div className="card-top d-flex justify-content-between">
           <h3 className="fw-bold">{name}</h3>
           <div className="button-cancel-container gap-2">
-            {/* 按鈕樣式的判斷式:可使用:綠色的
-                    已使用、已過期:灰色的 */}
+            {/* 按鈕樣式的判斷式:可使用:綠色的已使用、已過期:灰色的 */}
             {status === '可使用' ? (
               <>
                 <Link
-                  href="/cart"
+                  href=""
                   className="btn btn-main"
                   onClick={() => {
-                    handleUseCoupon(
-                      id,
-                      name,
-                      code,
-                      amount,
-                      started_at,
-                      deadline,
-                      status,
-                      min_price,
-                      condition,
-                      deleteCoupon
-                    )
+                    handleUseCoupon()
                   }}
                 >
                   立即使用
                 </Link>
-                {/* 出現刪除按鈕的判斷式: 已使用不會出現
-                                    已過期會出現*/}
+                {/* 出現刪除按鈕的判斷式: 已使用不會出現已過期會出現*/}
               </>
             ) : (
               <>

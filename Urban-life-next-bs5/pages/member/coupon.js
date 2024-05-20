@@ -11,11 +11,16 @@ import { useUserCoupon } from '@/hooks/use-usercoupon'
 import { useMemberInfo } from '@/hooks/use-member-info'
 
 export default function CouponMainPage() {
+  // 會員資訊 (從localStorge取得user的所有資料)
   const { member } = useMemberInfo()
+  // 使用者擁有的優惠券狀態
   const [userCoupons, setUserCoupons] = useState([])
+  // 接收優惠券代碼的狀態(從coupon-add傳過來)
   const [couponAdd, setCouponAdd] = useState('')
+  // 優惠券篩選的狀態(最初是"可使用")
   const [couponFilter, setCouponFilter] = useState('可使用')
 
+  // 從該登入的會員去抓他所擁有的優惠券，執行完一個動作以後也要再抓一次
   const getCoupons = async (id) => {
     try {
       const url = `http://localhost:3005/api/user_coupon?user_id=${id}`
@@ -33,48 +38,128 @@ export default function CouponMainPage() {
     }
   }
 
+  // 檢查各訂單是否有使用過優惠券，如果有把優惠券的狀態改成"已使用"
   const checkOrderCouponStatus = async () => {
     try {
       const url = `http://localhost:3005/api/order`
       const res = await fetch(url)
       const data = await res.json()
       const order = data.data.order
-      
-      for(let i = 0; i < order.length; i++) {
-      if (order[i].coupon_id) {
-        const couponUrl = `http://localhost:3005/api/user_coupon?coupon_id=${order[i].coupon_id}`
-        const couponRes = await fetch(couponUrl, { method: 'PUT' })
-        const couponData = await couponRes.json()
-        console.log(couponData);
-      }
+
+      for (let i = 0; i < order.length; i++) {
+        if (order[i].coupon_id) {
+          const couponUrl = `http://localhost:3005/api/user_coupon?coupon_id=${order[i].coupon_id}`
+          const couponRes = await fetch(couponUrl, { method: 'PUT' })
+          // const couponData = await couponRes.json()
+          // console.log(couponData);
+        }
       }
     } catch (error) {
       console.log(error)
     }
   }
+  // 檢查增加的優惠券是否存在在使用者的資料庫裏面
+  const checkCoupon = async (couponCode, userID) => {
+    try {
+      const url = `http://localhost:3005/api/user_coupon?user_id=${userID}`
+      const res = await fetch(url)
+      const data = await res.json()
+      const userCoupons = data.data.user_coupon
+      const userCouponsCode = userCoupons.map((userCoupon) => userCoupon.code)
+      return userCouponsCode.includes(couponCode)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  useEffect(() => {
-    checkOrderCouponStatus()
-  }, [])
+  const addCoupon = async (userID) => {
+    try {
+      // 先檢查優惠券使否存在總優惠券資料庫當中
+      const url = `http://localhost:3005/api/coupons`
+      const res = await fetch(url)
+      const data = await res.json()
+      const coupons = data.data.coupons
+      // 將資料庫所有的優惠券的code集合在一個陣列當中
+      const couponsCodes = coupons.map((coupon) => coupon.code)
 
+      let newCoupon
+      if (couponsCodes.includes(couponAdd)) {
+        // 尋找第一個符合條件的優惠券
+        newCoupon = coupons.find((coupon) => coupon.code === couponAdd)
+
+        // 先檢查使用者是否擁有該優惠券
+        if (!(await checkCoupon(newCoupon.code, userID))) {
+          // 如果優惠券過期的話就掰掰
+          if (new Date(newCoupon.deadline) < new Date()) {
+            notifyAddExpired(couponAdd)
+            setCouponAdd('')
+          } else {
+            // 沒有過的話就可以增加啦~
+            const userCouponUrl = `http://localhost:3005/api/user_coupon`
+            const res = await fetch(userCouponUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ user_id: userID, newCoupon: newCoupon }),
+            })
+
+            notifyAddSuccess(newCoupon.name)
+            setCouponAdd('')
+            await getCoupons(userID)
+          }
+        } else {
+          notifyAddFailed(couponAdd)
+          setCouponAdd('')
+        }
+      } else {
+        notifyAddExist(couponAdd)
+        setCouponAdd('')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // 刪除優惠券
+  const deleteCoupon = async (couponID, memberID) => {
+    try {
+      const url = `http://localhost:3005/api/user_coupon?user_id=${memberID}`
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: couponID }),
+      })
+      const data = await res.json()
+      // console.log(data.data.message);
+
+      // 執行刪除的動作以後，還要再抓一次使用者擁有甚麼valid=1的優惠券
+      await getCoupons(memberID)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // 獲取優惠券
   useEffect(() => {
     if (member) {
       getCoupons(member.id)
+      checkOrderCouponStatus()
     }
   }, [member])
 
+  // 新增優惠券
   useEffect(() => {
     const fetchData = async () => {
-      if (member) {
-        if (couponAdd !== '') {
-          await addCoupon(member.id)
-          await getCoupons(member.id)
-        }
+      if (member && couponAdd) {
+        await addCoupon(member.id)
+        await getCoupons(member.id)
       }
     }
     fetchData()
   }, [couponAdd, member])
 
+  // 提醒的東西~
   const notifyAddSuccess = (couponName) => {
     Swal.fire({
       title: `新增優惠券成功`,
@@ -106,78 +191,20 @@ export default function CouponMainPage() {
       icon: 'error',
     })
   }
-
-  const checkCoupon = async (couponCode, id) => {
-    try {
-      const url = `http://localhost:3005/api/user_coupon?user_id=${id}`
-      const res = await fetch(url)
-      const data = await res.json()
-      const userCoupons = data.data.user_coupon
-      const userCouponsCode = userCoupons.map((userCoupon) => userCoupon.code)
-      return userCouponsCode.includes(couponCode)
-    } catch (error) {
-      console.log(error)
+  // 依照status篩選過後的優惠券
+  const filteredCoupons = userCoupons.filter((coupon) => {
+    const now = new Date()
+    switch (couponFilter) {
+      case '可使用':
+        return coupon.status === '可使用' && new Date(coupon.deadline) > now
+      case '已使用':
+        return coupon.status === '已使用'
+      case '已過期':
+        return new Date(coupon.deadline) < now
+      default:
+        return true
     }
-  }
-
-  const addCoupon = async (id) => {
-    try {
-      const url = `http://localhost:3005/api/coupons`
-      const res = await fetch(url)
-      const data = await res.json()
-      const coupons = data.data.coupons
-      const couponsCode = coupons.map((coupon) => coupon.code)
-      let newCoupon = null
-
-      if (couponsCode.includes(couponAdd)) {
-        newCoupon = coupons.find((coupon) => coupon.code === couponAdd)
-
-        if (!(await checkCoupon(newCoupon.code, id))) {
-          if (new Date(newCoupon.deadline) < new Date()) {
-            notifyAddExpired(couponAdd)
-            setCouponAdd('')
-          } else {
-            const userCouponUrl = `http://localhost:3005/api/user_coupon`
-            const res = await fetch(userCouponUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ user_id: id, newCoupon: newCoupon }),
-            })
-
-            notifyAddSuccess(newCoupon.name)
-            setCouponAdd('')
-            await getCoupons(id)
-          }
-        } else {
-          notifyAddFailed(couponAdd)
-          setCouponAdd('')
-        }
-      } else {
-        notifyAddExist(couponAdd)
-        setCouponAdd('')
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const deleteCoupon = async (couponID, id) => {
-    try {
-      const url = `http://localhost:3005/api/user_coupon?user_id=${id}`
-      const res = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: couponID }),
-      })
-      await getCoupons(id)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  })
 
   return (
     <>
@@ -196,63 +223,18 @@ export default function CouponMainPage() {
             </div>
             <div className="coupon-margin-bottom">
               <div className="row">
-                {userCoupons
-                  .filter((coupon) => {
-                    switch (couponFilter) {
-                      case '可使用':
-                        return (
-                          coupon.status === '可使用' &&
-                          new Date(coupon.deadline) > new Date()
-                        )
-                      case '已使用':
-                        return coupon.status === '已使用'
-                      case '已過期':
-                        return (
-                          coupon.status === '已過期' &&
-                          new Date(coupon.deadline) < new Date()
-                        )
-                      default:
-                        return true
-                    }
-                  })
-                  .map((filteredCoupon) => {
-                    const {
-                      id,
-                      name,
-                      code,
-                      amount,
-                      started_at,
-                      created_at,
-                      updated_at,
-                      deadline,
-                      status,
-                      min_price,
-                      condition,
-                    } = filteredCoupon
-                    return (
-                      <div className="col-12 col-lg-6 g-2" key={code}>
-                        <CouponCard
-                          id={id}
-                          name={name}
-                          code={code}
-                          amount={amount}
-                          started_at={started_at}
-                          created_at={created_at}
-                          updated_at={updated_at}
-                          deadline={deadline}
-                          status={status}
-                          min_price={min_price}
-                          condition={condition}
-                          deleteCoupon={deleteCoupon}
-                        />
-                      </div>
-                    )
-                  })}
+                {filteredCoupons.map((filteredCoupon, i) => {
+                  return (
+                    <div className="col-12 col-lg-6 g-2" key={i}>
+                      <CouponCard
+                        filteredCoupon={filteredCoupon}
+                        deleteCoupon={deleteCoupon}
+                      />
+                    </div>
+                  )
+                })}
               </div>
             </div>
-            {/* <div>
-              <Page />
-            </div> */}
           </div>
         </div>
       </div>
