@@ -22,7 +22,7 @@ export default function LectureDetail() {
   const [teacherLectures, setTeacherLectures] = useState([])
   const [articlesList, setArticlesList] = useState([])
 
-  // 根據 tid 獲取講師信息
+  // 根據 tid 獲取講師資訊
   useEffect(() => {
     if (tid && teachers.length > 0) {
       const fetchedTeacher = teachers.find(
@@ -41,32 +41,32 @@ export default function LectureDetail() {
       setTeacherLectures(fetchedLectures)
     }
   }, [lectures, tid])
-
+  
+  // 根據 tid 獲取講師的文章
+  useEffect(() => {
+    if (tid && articles.length > 0) {
+      const fetchedArticles = articles
+      .filter((article) => article.user_id === parseInt(tid, 10))
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      setArticlesList(fetchedArticles)
+    }
+  }, [articles, tid])
+  
+  const [activeIndex, setActiveIndex] = useState('開授的課程')
+  
+  const safeInfoClick = (index) => {
+    setActiveIndex(index)
+  }
+  
   // 檢查當前課程是否在收藏列表中
   useEffect(() => {
     setIsCollected(
       collections.filter(
         (item) =>
-          item.article_id == tid && item.valid == 1
+          item.product_id == tid && item.valid == 1
       )
     )
   }, [collections])
-
-  // 根據 tid 獲取講師的文章
-  useEffect(() => {
-    if (tid && articles.length > 0) {
-      const fetchedArticles = articles
-        .filter((article) => article.user_id === parseInt(tid, 10))
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-      setArticlesList(fetchedArticles)
-    }
-  }, [articles, tid])
-
-  const [activeIndex, setActiveIndex] = useState('開授的課程')
-
-  const safeInfoClick = (index) => {
-    setActiveIndex(index)
-  }
 
   return (
     <>
