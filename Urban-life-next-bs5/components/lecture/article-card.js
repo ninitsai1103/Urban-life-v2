@@ -11,10 +11,9 @@ export default function ArticleCard({ articlesList, collections = [] }) {
 
   useEffect(() => {
     const initialCollectedMap = articlesList.reduce((map, article) => {
-      const isCollected = collections.some(
-        (item) => article.id && item.valid === 1
+      map[article.id] = collections.some(
+        (item) => item.article_id === article.id && item.valid === 1
       )
-      map[article.id] = isCollected
       return map
     }, {})
     setIsCollectedMap(initialCollectedMap)
@@ -35,7 +34,7 @@ export default function ArticleCard({ articlesList, collections = [] }) {
   )
 
   const toggleCollection = useCallback(
-    (articleId) => {
+    async (articleId) => {
       setIsCollectedMap((prevMap) => {
         const newMap = { ...prevMap }
         const newCollected = !newMap[articleId]

@@ -58,7 +58,7 @@ export default function OrderList({ order }) {
       setProductRatings((prevRatings) => {
         const newRatings = { ...prevRatings }
         newComments.forEach((newComment) => {
-          if (newComment.pdlt_id == 1) {
+          if (newComment.pdlt_id == 1 ) {
             newRatings[newComment.name] = newComment.star
           }
         })

@@ -116,9 +116,9 @@ export function CartProvider({ children }) {
   }, [])
   //setItem
   useEffect(() => {
-    if (items.length > 0) {
+    // if (items.length > 0) {
       window.localStorage.setItem('items', JSON.stringify(items))
-    }
+    // }
   }, [items])
   // useEffect(() => {
   //   if (localStorage.getItem('items')) {
