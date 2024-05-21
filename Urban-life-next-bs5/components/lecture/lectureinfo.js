@@ -103,6 +103,8 @@ export default function LectureInfo({ lecture, collections = [] }) {
         window.location.href = '/member/login';
     }, 3000); // 等待3秒（3000毫秒）
 }
+
+console.log(`${lecture.total_bought}`);
     
     //兆妮修正完畢
   return (
@@ -117,7 +119,7 @@ export default function LectureInfo({ lecture, collections = [] }) {
           <div className={styles.infotext}>NT： {lecture.price}</div>
           <div>
             <div className={styles.infotext}>
-              體驗人數：{lecture.amount} 人
+              已體驗人數：{lecture.amount} 人
             </div>
           </div>
           <div className="flex gap-2.5">
@@ -125,7 +127,7 @@ export default function LectureInfo({ lecture, collections = [] }) {
               評價 : {lecture.star} <TbStarFilled style={{ color: '#F6A404', fontSize: '20px' }} />
             </div>
           </div>
-          <div className={styles.infotext}>開課人數：{lecture.amount} 人</div>
+          <div className={styles.infotext}>開課人數上限：{lecture.amount} 人</div>
         </div>
         <div className={styles.info2}>
           <div className={styles.infotext}>開始報名：{lecture.sign_up_starting.split(' ')[0]}</div>
@@ -135,7 +137,7 @@ export default function LectureInfo({ lecture, collections = [] }) {
         </div>
       </div>
       <div className="input-group mb-2 w-75">
-        <div className={styles.infotext}>報名人數：{lecture.amount} 人</div>
+        <div className={styles.infotext}>已報名人數：{lecture.total_bought} 人</div>
       </div>
       <div>
         <div className={styles.btnarea}>

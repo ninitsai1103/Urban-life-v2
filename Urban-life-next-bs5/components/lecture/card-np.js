@@ -185,7 +185,7 @@ export default function LectureMyCardNp({
         </div>
         <div className={styles.cardBodyArea}>
           <div className="flex gap-2.5 font-medium">
-            <div className={styles.lectureText}>體驗人數：{amount}</div>
+            <div className={styles.lectureText}>報名人數上限：{amount}</div>
           </div>
           <div className={styles.cardBodyArea}>
             <div className={styles.lectureText}>

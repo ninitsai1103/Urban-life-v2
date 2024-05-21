@@ -44,9 +44,9 @@ export default function Recommend({ product, collections }) {
           <div className="card-body">
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
-                {product.id > 440 && product.id < 451
+                {product.size == ''
                   ? product.name
-                  : `${product.name}(${product.size})`}
+                  :  `${product.name}(${product.size})`}
               </h5>
               <Toaster position="top-center" reverseOrder={false} />
 
@@ -97,13 +97,13 @@ export default function Recommend({ product, collections }) {
 
       <div className="col d-lg-none gy-1" key={`mobile1-${product.id}`}>
         <div className="card h-100">
-          {/* <div className="imgWrap"> */}
+          <div className="imgWrap">
           <img
             src={`/images/product/product_cover/${product.cover}`}
             className="img-fluid card-img-top"
             alt="..."
           />
-          {/* </div> */}
+          </div>
           <div className="card-body ">
             <div className="product-name d-flex justify-content-between">
               <h5 className="card-title fs-6">
@@ -168,8 +168,6 @@ export default function Recommend({ product, collections }) {
       <style jsx>{`
         .card {
           border-radius: 8px;
-          width: 294px;
-          height: 294px;
         }
         .card-title {
           white-space: nowrap; /* 保持文字在一行內 */
@@ -202,7 +200,7 @@ export default function Recommend({ product, collections }) {
           justify-content: center;
         }
         img {
-          width: 100%;
+          width: auto;
           height: 100%;
 
           object-fit: contain;
@@ -242,6 +240,16 @@ export default function Recommend({ product, collections }) {
             width: 169px;
             height: 169px;
           }
+          .card-body {
+          width: 169px;
+          border-top: 1px solid #a9a6a6;
+        }
+        .imgWrap img {
+          width: 100%;
+          height: 100%;
+          
+          object-fit: contain;
+        }
         }
       `}</style>
     </>

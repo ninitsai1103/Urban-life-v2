@@ -72,6 +72,7 @@ export default function List() {
   
   //排序狀態和邏輯(初始值代入分類後的產品)
   const { sortDatas, handleSortDatas } = UseSortDatas(secProducts)
+  const [selectSortText, setSelectSortText] = useState('排序')
 
   const filteredProducts = useMemo(() => {
     //設定篩選的產品
@@ -1747,7 +1748,7 @@ export default function List() {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      排序
+                      {selectSortText}
                     </button>
                     <ul
                       className="dropdown-menu"
@@ -1761,6 +1762,7 @@ export default function List() {
                             e.preventDefault();
                             changeSort('', 'ascending')
                             setSecProducts(products)
+                            setSelectSortText('全部商品')
                           }}
                         >
                           全部商品
@@ -1773,6 +1775,7 @@ export default function List() {
                           onClick={(e) => {
                             e.preventDefault()
                             changeSort('price', 'descending')
+                            setSelectSortText('價格由高到低')
                           }}
                         >
                           價格由高到低
@@ -1785,6 +1788,7 @@ export default function List() {
                           onClick={(e) => {
                             e.preventDefault()
                             changeSort('price', 'ascending')
+                            setSelectSortText('價格由低到高')
                           }}
                         >
                           價格由低到高
@@ -1797,6 +1801,7 @@ export default function List() {
                           onClick={(e) => {
                             e.preventDefault()
                             changeSort('star', 'descending')
+                            setSelectSortText('評價由高到低')
                           }}
                         >
                           評價由高到低
@@ -1809,6 +1814,7 @@ export default function List() {
                           onClick={(e) => {
                             e.preventDefault()
                             changeSort('star', 'ascending')
+                            setSelectSortText('評價由低到高')
                           }}
                         >
                           評價由低到高

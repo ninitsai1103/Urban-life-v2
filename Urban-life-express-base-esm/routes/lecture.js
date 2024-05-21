@@ -21,7 +21,8 @@ router.get('/', async function (req, res) {
   SELECT 
     product_lecture.*,
     location.name AS location_name,
-    user_teacher.name AS teacher_name
+    user_teacher.name AS teacher_name,
+    COALESCE(SUM(cart.amount), 0) AS total_bought
   FROM 
     product_lecture
   LEFT JOIN
@@ -32,8 +33,14 @@ router.get('/', async function (req, res) {
     user_teacher
   ON
     product_lecture.teacher_id = user_teacher.id
+  LEFT JOIN
+    cart
+  ON
+    product_lecture.id = cart.product_id
   WHERE 
   product_lecture.valid = 1 AND product_lecture.pdlt_id = 2
+  GROUP BY 
+    product_lecture.id, location.name
     `
 
   try {

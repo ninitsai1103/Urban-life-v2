@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 import moment from 'moment'
 
-import reducers from './reducers'
 
 import CalendarBody from './calendar-body'
 import CalendarHeader from './calendar-header'
