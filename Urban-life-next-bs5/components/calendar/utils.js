@@ -2,10 +2,10 @@
 import React from 'react'
 import moment from 'moment'
 
-// GLobal Vars
-const SEVENDAYS = 7 // 建立一個通用變數，存放一週有7天
+// 建立一個通用變數，存放一週有7天
+const SEVENDAYS = 7 
 
-// 處理上個月跟下個月的日期(未完成)
+// 處理這個月份，上個月跟下個月的日期(未完成)
 
 // 處理每週的資訊
 function processWeekDays(mmt, isFirstWeek = false) {

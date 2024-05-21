@@ -135,8 +135,8 @@ export default function OrderList({ order }) {
   // 提交評論
   const handleSubmit = async (rating, comment, id) => {
     // 利用use-member-info的hooks抓取localStorage的會員資訊
-
-    let url = 'http://localhost:3005/api/product_lecture_comment'
+    
+    let url = `http://localhost:3005/api/product_lecture_comment`
     console.log(rating, comment, id)
 
     try {
@@ -158,7 +158,7 @@ export default function OrderList({ order }) {
       }
       await getComments()
       const data = await res.json()
-      console.log('Comment submitted successfully:', data)
+      // console.log('Comment submitted successfully:', data)
     } catch (error) {
       console.error('Error submitting comment:', error.message)
     }

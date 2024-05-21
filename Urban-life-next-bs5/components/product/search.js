@@ -17,10 +17,7 @@ export default function Search({ searchedProducts, setInputText}) {
           />
           <button className="btn p-1 " type="button" >
             <CiSearch style={{fontSize:'30px'}}
-            onClick={
-              searchedProducts
-            } 
-
+            onClick={searchedProducts} 
             />
           </button>
           <br />

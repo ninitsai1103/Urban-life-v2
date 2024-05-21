@@ -103,14 +103,14 @@ export default function MyNavbar() {
     }
   })
   const handleReminder = () => {
-  //   alert('請先登入會員')
-  //   setTimeout(() => {
-  //     window.location.href = '/member/login';
-  // }, 3000); // 等待3秒（3000毫秒）
-  toast.success('請先登入才能使用購物車喔，為您導向登入畫面。')
-      setTimeout(() => {
-        window.location.href = '/member/login'
-      }, 3000)
+    //   alert('請先登入會員')
+    //   setTimeout(() => {
+    //     window.location.href = '/member/login';
+    // }, 3000); // 等待3秒（3000毫秒）
+    toast.success('請先登入才能使用購物車喔，為您導向登入畫面。')
+    setTimeout(() => {
+      window.location.href = '/member/login'
+    }, 3000)
   }
   return (
     <>
@@ -152,7 +152,7 @@ export default function MyNavbar() {
             </ul>
           </div>
           <div className="nav-right">
-            <div>
+            <div className="logout">
               {member ? (
                 <a
                   className="d-block py-2 px-2 text-decoration-none d-flex align-items-center signOut_text"
@@ -176,7 +176,7 @@ export default function MyNavbar() {
                   <FaShoppingCart
                     style={{ color: 'white', fontSize: '24px' }}
                   />
-                  <span>{totalItems}</span>
+                  <span style={{  fontSize: '14px' }}>{totalItems}</span>
                 </Link>
               ) : (
                 <>
@@ -184,7 +184,7 @@ export default function MyNavbar() {
                     style={{ color: 'white', fontSize: '24px' }}
                     onClick={handleReminder}
                   />
-                  <span>{totalItems}</span>
+                  
                 </>
               )}
             </div>
@@ -281,6 +281,9 @@ export default function MyNavbar() {
 
         @media (max-width: 1200px) {
           .nav-middle {
+            display: none;
+          }
+          .logout {
             display: none;
           }
         }

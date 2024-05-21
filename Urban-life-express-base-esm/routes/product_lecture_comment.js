@@ -41,14 +41,14 @@ router.get('/', async function (req, res) {
   }
 })
 
-// 接收商品或課程評價的路由
+// 接收商品或課程評價的API
 router.post('/', async function (req, res) {
   try {
     const { user_id, comment, star, product_lecture_id } = req.body
-    let userID = 43
+    
     let date = new Date()
     let addtoCommentCoupon = `INSERT INTO product_lecture_comment (user_id,comment,star,product_lecture_id,created_at,valid)VALUES(?,?,?,?,?,1)`
-    const values = [userID, comment, star, product_lecture_id, date]
+    const values = [user_id, comment, star, product_lecture_id, date]
     const [rows, fields] = await db.query(addtoCommentCoupon, values)
     return res.json({
       status: 'success',
