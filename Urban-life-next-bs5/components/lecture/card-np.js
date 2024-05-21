@@ -72,16 +72,15 @@ export default function LectureMyCardNp({
     localStorage.setItem('calendarLectures', JSON.stringify(calendarLectures))
   }
 
-  const localStorageLecture = JSON.parse(
-    localStorage.getItem('calendarLectures')
-  )
-  console.log(localStorageLecture);
+  const localStorageLecture =
+    JSON.parse(localStorage.getItem('calendarLectures')) || []
+  // console.log(localStorageLecture)
 
   const getLectureValue = (name) => {
-    for (let lecture of localStorageLecture) {
+    for (const lecture of localStorageLecture) {
       if (lecture.hasOwnProperty(name)) {
-        console.log(!lecture[name])
-        return !lecture[name];
+        // console.log(!lecture[name])
+        return !lecture[name]
       }
     }
   }
