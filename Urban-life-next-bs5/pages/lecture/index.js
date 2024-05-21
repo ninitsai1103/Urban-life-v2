@@ -149,6 +149,8 @@ export default function LectureHome() {
     }
   }, [teachers])
 
+  
+
   return (
     <>
       <section className="slider">

@@ -52,6 +52,7 @@ export default function OrderList({ order }) {
       const newComments = data.data.comments
 
       setComments(newComments)
+      console.log(newComments);
 
       // 讀取資料的評論內容並設定到狀態裡面
       setProductRatings((prevRatings) => {

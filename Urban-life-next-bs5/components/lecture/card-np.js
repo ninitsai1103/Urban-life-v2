@@ -53,7 +53,44 @@ export default function LectureMyCardNp({
     }
     setCardData(lectureData)
     setIsAddedtoCalendar(!isAddedtoCalendar)
+
+    // localStorage.setItem("calendarLecture", JSON.stringify({[name]:!isAddedtoCalendar}))// 从localStorage获取已存在的日历讲座
+    const calendarLectures =
+      JSON.parse(localStorage.getItem('calendarLectures')) || []
+
+    const index = calendarLectures.findIndex((lecture) =>
+      lecture.hasOwnProperty(name)
+    )
+
+    if (index !== -1) {
+      calendarLectures[index][name] = !calendarLectures[index][name]
+    } else {
+      calendarLectures.push({ [name]: !isAddedtoCalendar })
+    }
+
+    // 更新localStorage
+    localStorage.setItem('calendarLectures', JSON.stringify(calendarLectures))
   }
+
+  const localStorageLecture = JSON.parse(
+    localStorage.getItem('calendarLectures')
+  )
+  console.log(localStorageLecture);
+
+  const getLectureValue = (name) => {
+    for (let lecture of localStorageLecture) {
+      if (lecture.hasOwnProperty(name)) {
+        console.log(!lecture[name])
+        return !lecture[name];
+      }
+    }
+  }
+
+  // useEffect(() => {
+  //   return () => {
+  //     localStorage.removeItem("calendarLecture")
+  //   }
+  // }, [])
 
   const [isCollected, setIsCollected] = useState([]) //商品是否有被收藏
   const { addCollection, removeCollection } = useColloections()
@@ -203,11 +240,14 @@ export default function LectureMyCardNp({
             >
               已過期
             </button>
-          ) : isAddedtoCalendar ? (
+          ) : !getLectureValue(name) ? (
             <button
               className="btn btn-main"
               style={{ maxWidth: '106px' }}
-              onClick={handleAddtoCalendar}
+              onClick={() => {
+                handleAddtoCalendar()
+                getLectureValue(name)
+              }}
             >
               加入行事曆
             </button>
@@ -215,7 +255,10 @@ export default function LectureMyCardNp({
             <button
               className="btn btn-delete"
               style={{ maxWidth: '106px' }}
-              onClick={handleAddtoCalendar}
+              onClick={() => {
+                handleAddtoCalendar()
+                getLectureValue(name)
+              }}
             >
               刪除
             </button>
