@@ -1,2 +1,3 @@
 # Urban-life
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/"YOUR_VIDEO_ID"/0.jpg)](https://www.youtube.com/watch?v="YOUR_VIDEO_ID" "YOUR_VIDEO_TITLE")
+
+[![資展國際MFEE48第三組Urban-life城市生機](http://img.youtube.com/vi/5x6MTkCCukY/0.jpg)](https://www.youtube.com/watch?v=5x6MTkCCukY "Sample Video")
